@@ -41,11 +41,13 @@ Spider2-Text2SQL is a realistic and challenging Text-to-SQL dataset, significant
 ## 🚀 Quickstart
 You don't need to download any data. The current version of the database is entirely in the cloud.
 
-If your method doesn't require dynamic interaction with the databases, you can make full use of the data in the `databases` and the content in the `documents`.
+If your method doesn't require dynamic interaction with the databases, you can make full use of the data in the [`databases`](https://github.com/xlang-ai/Spider2/tree/main/Spider2-Text2SQL/databases) and the content in the [`externel_information`](https://github.com/xlang-ai/Spider2/tree/main/Spider2-Text2SQL/externel_information).
 
-If your method requires dynamic interaction with the database, in addition to these, you can use the scripts in the `interface` to interact with the cloud database.
+If your method requires dynamic interaction with the database, in addition to these, you can use the scripts in the [`interface`](https://github.com/xlang-ai/Spider2/tree/main/Spider2-Text2SQL/interface) to interact with the cloud database.
 
 In addition, if you want to view the data in more detail, you need to register for a BigQuery account. Here is a [tutorial].
+
+If you want to quickly view the database schema in this repository rather than use Bigquery WebUI, you can check [databases/bigquery/metadata_markdown](https://github.com/xlang-ai/Spider2/Spider2-Text2SQL/databases/bigquery/metadata_markdown).
 
 
 ## Data Content and Format
@@ -69,6 +71,9 @@ Each file in `spider2sql.json` contains the following fields:
 ```
 
 The gold SQLs are shown in [evaluation_suite/gold/sql](https://github.com/xlang-ai/Spider2/tree/main/Spider2-Text2SQL/evaluation_suite/gold/sql)
+
+If you want to 
+
 
 ## Evaluation
 
