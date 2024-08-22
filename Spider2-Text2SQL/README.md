@@ -45,7 +45,7 @@ If your method doesn't require dynamic interaction with the databases, you can m
 
 If your method requires dynamic interaction with the database, in addition to these, you can use the scripts in the [`interface`](https://github.com/xlang-ai/Spider2/tree/main/Spider2-Text2SQL/interface) to interact with the cloud database.
 
-In addition, if you want to view the data in more detail, you need to register for a BigQuery account. Here is a [tutorial].
+In addition, if you want to view the data in more detail, you need to register for a BigQuery account. Here is a [Bigquery Guideline]().
 
 If you want to quickly view the database schema in this repository rather than use Bigquery WebUI, you can check [databases/bigquery/metadata_markdown](https://github.com/xlang-ai/Spider2/Spider2-Text2SQL/databases/bigquery/metadata_markdown).
 
