@@ -7,7 +7,7 @@ Spider2-Text2SQL is a realistic and challenging Text-to-SQL dataset, significant
 - Writing advanced and real-world industrial SQL. Beyond extensive use of SELECT, WHERE, and JOIN operations, it also requires incorporating various external knowledge, SQL dialects, special functions, and more.
 
 
-## Structure
+## Folder
 
 ```
 .
@@ -40,6 +40,9 @@ You don't need to download any data. The current version of the database is enti
 If your method doesn't require dynamic interaction with the databases, you can make full use of the data in the `databases` and the content in the `documents`.
 
 If your method requires dynamic interaction with the database, in addition to these, you can use the scripts in the `interface` to interact with the cloud database.
+
+In addition, if you want to view the data in more detail, you need to register for a BigQuery account. Here is a [tutorial].
+
 
 ## Data Content and Format
 
