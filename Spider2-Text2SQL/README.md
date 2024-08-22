@@ -20,6 +20,7 @@ Spider2-Text2SQL is a realistic and challenging Text-to-SQL dataset, significant
 │   ├── local                   # The DB of the local databases
 │   └── snowflake               # The information of DB on Snowflake
 ├── interface                   # Scripts for interacting with the database.
+├── externel_info               # All externel information used for Text2SQL   
 ├── evaluation_suite            # Evaluation Suite for Spider2-Text2SQL
 │   ├── README.md
 │   ├── bigquery_credential.json
@@ -61,6 +62,8 @@ Each file in `spider2sql.json` contains the following fields:
     "external_knowledge": "ga4_dimensions_and_metrics.md"
 }
 ```
+
+The gold SQLs are shown in [evaluation_suite/gold/sql](https://github.com/xlang-ai/Spider2/tree/main/Spider2-Text2SQL/evaluation_suite/gold/sql)
 
 ## Evaluation
 
