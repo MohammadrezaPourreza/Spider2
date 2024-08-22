@@ -1,6 +1,3 @@
-import debugpy; debugpy.connect(('127.0.0.1', 5696))
-
-
 import json
 import re
 import pandas as pd
@@ -213,6 +210,8 @@ def evaluate_spider2sql(args):
         
     
     print(output_results)      
+    score = sum([item['score'] for item in output_results]) / len(output_results)
+    print(f"Final score: {score}")
 
 
 

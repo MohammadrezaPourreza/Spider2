@@ -12,6 +12,6 @@
 
 To facilitate the use and promotion of Spider2 within the community, we have divided Spider2 into two settings, focusing on Advanced Text2SQL and general coding agent tasks, respectively. Most examples in these two settings overlap, differing mainly in the settings themselves.
 
-[Spider2-Text2SQL](https://github.com/xlang-ai/Spider2/tree/main/Spider2-Text2SQL): **Traditional Text2SQL Setting**. Focusing on Text2SQL, with detailed database metadata and excluding project-level tasks.
+[Spider2-Text2SQL](https://github.com/xlang-ai/Spider2/tree/main/Spider2-Text2SQL): **Traditional Text2SQL Setting**. Focusing on Text2SQL, with detailed database metadata and excluding project-level tasks. （Progress: 60%)
 
-[Spider2-C](https://github.com/xlang-ai/Spider2/tree/main/Spider2-C): **Comprehensive code agent setting**. It needs to automatically explore complex database, using Python, SQL, and Command-line to solve complex SQL generation and project-level tasks.
+[Spider2-C](https://github.com/xlang-ai/Spider2/tree/main/Spider2-C): **Comprehensive code agent setting**. It needs to automatically explore complex database, using Python, SQL, and Command-line to solve complex SQL generation and project-level tasks. (Progress: 20%)
