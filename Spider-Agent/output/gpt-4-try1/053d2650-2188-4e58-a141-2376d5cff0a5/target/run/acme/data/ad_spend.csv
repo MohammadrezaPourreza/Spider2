@@ -1,0 +1,13 @@
+
+    
+    
+    
+    create table playbook.main.ad_spend (date_day date,utm_source text,utm_medium text,utm_campaign text,spend integer)
+  ;
+    -- dbt seed --
+    
+          COPY playbook.main.ad_spend FROM '/Users/leifangyu/workspace/Spider2-C/evaluation_examples/dbt/source/dbt001/data/ad_spend.csv' (FORMAT CSV, HEADER TRUE, DELIMITER ',')
+        
+
+;
+  
