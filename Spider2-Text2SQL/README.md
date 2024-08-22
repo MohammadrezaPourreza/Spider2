@@ -15,12 +15,15 @@ Spider2-Text2SQL is a realistic and challenging Text-to-SQL dataset, significant
 ├── bigquery_credential.json
 ├── databases                   # DB/DB metadata for Spider2 dataset
 │   ├── bigquery                # The information of DB on Bigquery
-│   │   ├── metadata               # The details data of each DB, including DB DDL, table, column information, and sample data.
-│   │   └── metadata_markdown      # Some human-readable Schema markdown documentation
+│   │   ├── metadata                 # The details data of each DB, including DB DDL, table, column information, and sample data.
+│   │   └── metadata_markdown        # Some human-readable Schema markdown documentation
 │   ├── local                   # The DB of the local databases
 │   └── snowflake               # The information of DB on Snowflake
 ├── interface                   # Scripts for interacting with the database.
-├── externel_info               # All externel information used for Text2SQL   
+├── externel_information        # All externel information used for Spider2-Text2SQL
+│   ├── externel_knowledge          
+│   ├── bigquery_grammar          
+│   └── bigquery_functions 
 ├── evaluation_suite            # Evaluation Suite for Spider2-Text2SQL
 │   ├── README.md
 │   ├── bigquery_credential.json
@@ -52,6 +55,7 @@ Each file in `spider2sql.json` contains the following fields:
 - `db`: the database id to which this question is addressed.
 - `question`: the natural language question
 - `external_knowledge`: The filenames of external knowledge, documentation, and information required to answer this question are stored in documents.
+- `special_functions`: Special functions that may be needed to answer this question.
 
 
 ```
@@ -59,7 +63,8 @@ Each file in `spider2sql.json` contains the following fields:
     "instance_id": "ga010",
     "db": "bigquery-public-data.ga4_obfuscated_sample_ecommerce",
     "question": "Can you give me an overview of our website traffic for December 2020? I'm particularly interested in the channel with the fourth highest number of sessions.",
-    "external_knowledge": "ga4_dimensions_and_metrics.md"
+    "external_knowledge": "ga4_dimensions_and_metrics.md",
+    "special_functions": ["unnest_operator","array_agg","regexp_contains"]
 }
 ```
 
