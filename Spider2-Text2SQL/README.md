@@ -72,7 +72,6 @@ Each file in `spider2sql.json` contains the following fields:
 
 The gold SQLs are shown in [evaluation_suite/gold/sql](https://github.com/xlang-ai/Spider2/tree/main/Spider2-Text2SQL/evaluation_suite/gold/sql)
 
-If you want to 
 
 
 ## Evaluation
