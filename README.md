@@ -19,7 +19,7 @@ To facilitate the use and promotion of Spider2 within the community, we have div
 
 ## Baselines
 
-For Spider2-Text2SQL, we proposed a baseline based on the widely used method Dail-SQL.
+For Spider2-Text2SQL, we proposed a baseline based on the widely used method [`Dail-SQL`](https://github.com/xlang-ai/Spider2/tree/main/Spider2-Text2SQL-baselines/DailSQL) and [`CodeS`](https://github.com/xlang-ai/Spider2/tree/main/Spider2-Text2SQL-baselines/CodeS).
 
 For Spider2-C, we proposed an agent framework [`Spider-Agent`](https://github.com/xlang-ai/Spider2/tree/main/Spider-Agent) baseline with interactive environment. 
 
