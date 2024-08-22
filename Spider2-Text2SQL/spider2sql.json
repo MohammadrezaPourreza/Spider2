@@ -157,13 +157,13 @@
     },
     {
         "instance_id": "bq182",
-        "db": "bigquery-public-data.github_repos\ngithubarchive.day",
+        "db": "bigquery-public-data.github_repos",
         "question": "Which primary programming languages, determined by the highest number of bytes in each repository, have its repositories having at least a total of 100 pull requests on January 18, 2023?",
         "external_knowledge": null
     },
     {
         "instance_id": "bq182_1",
-        "db": "bigquery-public-data.github_repos\ngithubarchive.day",
+        "db": "bigquery-public-data.github_repos",
         "question": "How many pull requests in total were created in repositories that include JavaScript as one of their languages, considering data from January 18, 2023?",
         "external_knowledge": null
     },

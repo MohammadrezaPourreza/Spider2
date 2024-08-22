@@ -36,7 +36,30 @@ Spider2-Text2SQL is a realistic and challenging Text-to-SQL dataset, significant
 
 ## 🚀 Quickstart
 You don't need to download any data. The current version of the database is entirely in the cloud.
-For Spider2-Text2SQL, 
 
+If your method doesn't require dynamic interaction with the databases, you can make full use of the data in the `databases` and the content in the `documents`.
+
+If your method requires dynamic interaction with the database, in addition to these, you can use the scripts in the `interface` to interact with the cloud database.
 
 ## Data Content and Format
+
+Each file in `spider2sql.json` contains the following fields:
+- `instance_id`: the unique example id
+- `db`: the database id to which this question is addressed.
+- `question`: the natural language question
+- `external_knowledge`: The filenames of external knowledge, documentation, and information required to answer this question are stored in documents.
+
+
+```
+{
+    "instance_id": "ga010",
+    "db": "bigquery-public-data.ga4_obfuscated_sample_ecommerce",
+    "question": "Can you give me an overview of our website traffic for December 2020? I'm particularly interested in the channel with the fourth highest number of sessions.",
+    "external_knowledge": "ga4_dimensions_and_metrics.md"
+}
+```
+
+## Evaluation
+
+We create [evaluation suite](https://github.com/xlang-ai/Spider2/tree/main/Spider2-Text2SQL/evaluation_suite) for Spider2-Text2SQL.
+
