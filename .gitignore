@@ -1,0 +1,58 @@
+
+Spider2-C/evaluation_suite/*
+Spider2-C/release_data/spider2c.jsonl
+Spider2-C/evaluation_suite/gold/spider2c_eval.jsonl
+get_doc.py
+get_bigquery_schema.py
+.vscode/*
+
+Spider2-Text2SQL/evaluation_suite/*
+
+!Spider2-Text2SQL/evaluation_suite/README.md
+!Spider2-Text2SQL/evaluation_suite/gold/
+!Spider2-Text2SQL/evaluation_suite/bigquery_credential.json
+!Spider2-Text2SQL/evaluation_suite/evaluate.py
+!Spider2-Text2SQL/evaluation_suite/spider2sql_eval_config_file.py
+
+
+# Do not ignore specific files and directories
+!Spider2-C/evaluation_suite/README.md
+!Spider2-C/evaluation_suite/bigquery_credential.json
+!Spider2-C/evaluation_suite/evaluate.py
+!Spider2-C/evaluation_suite/gold/
+!Spider2-C/evaluation_suite/eval_utils.py
+!Spider2-C/evaluation_suite/example_submission_folder/
+
+
+# Byte-compiled / optimized / DLL files
+**/__pycache__/
+**/launch.json
+logs/*
+
+*.DS_Store
+*.pyc
+**/logs/*
+
+
+
+# Dail-SQL
+Spider2-SQL/DailSQL/third_party/
+Spider2-SQL/DailSQL/vector_cache/
+
+Spider2-SQL/DailSQL/preprocessed_data/*
+!Spider2-SQL/DailSQL/preprocessed_data/spider2_preprocess.py
+Spider2-SQL/DailSQL/postprocessed_data/*
+!Spider2-SQL/DailSQL/postprocessed_data/spider2_postprocess.py
+
+
+# CodeS
+Spider2-SQL/CodeS/sic_ckpts/
+Spider2-SQL/CodeS/SimCSE/
+Spider2-SQL/CodeS/preprocessed_data/*
+!Spider2-SQL/CodeS/preprocessed_data/spider2_preprocess.py
+Spider2-SQL/CodeS/postprocessed_data/*
+!Spider2-SQL/CodeS/postprocessed_data/spider2_postprocess.py
+
+# yuxiao's tmp code
+Spider2-SQL/yyx_tmp/
+**/toy.json
