@@ -2,6 +2,8 @@ import sqlite3
 import json
 import os
 import random
+from tqdm import tqdm
+import pandas as pd
 
 def local_db_tables(db_name):
     conn = sqlite3.connect(db_name)
@@ -199,7 +201,7 @@ def map_data_types(data_types):
     
     return mapped_types
 
-def get_bq_metadata(db_name, output_path):
+def get_bq_metadata(db_name):
     source_path = "../databases/bigquery_metadata/"
     
     output_list = []
@@ -253,6 +255,85 @@ def get_bq_metadata(db_name, output_path):
     return output_list
 
 
+def get_bigquery_metadata(project_name, dataset_name):
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "bigquery_credential.json"
+    client = bigquery.Client()
+    
+    dataset_metadata = None
+    output = {}
+    
+    # 1. get the tables
+    query = f"""
+    SELECT
+        table_name, ddl
+    FROM
+     `{project_name}.{dataset_name}.INFORMATION_SCHEMA.TABLES`
+    WHERE table_type != 'VIEW'
+    """
+    query_job = client.query(query)
+    dataset_metadata = query_job.result().to_dataframe()
+
+    tables_metadata = []
+
+    # 2. Get the columns 3. get the nested columns
+    for table in tqdm(dataset_metadata['table_name'].tolist()):
+        table_metadata = {}
+        
+        query = f"""
+            SELECT column_name, data_type
+            FROM `{project_name}.{dataset_name}.INFORMATION_SCHEMA.COLUMNS`
+            WHERE table_name = '{table}';
+        """
+        query_job = client.query(query)
+        output = query_job.result().to_dataframe()
+        column_names, data_types = output['column_name'].tolist(), output['data_type'].tolist()
+        
+        query = f"""
+            SELECT field_path, data_type, description
+            FROM `{project_name}.{dataset_name}.INFORMATION_SCHEMA.COLUMN_FIELD_PATHS`
+            WHERE table_name = '{table}';
+        """
+        query_job = client.query(query)
+        output = query_job.result().to_dataframe()
+        nested_column_names, nested_column_types, description = output['field_path'].tolist(), output['data_type'].tolist(), output['description'].tolist()
+    
+        
+        table_metadata['table_name'] = table
+        table_metadata['table_fullname'] = f"{project_name}.{dataset_name}.{table}"
+        table_metadata['column_names'] = column_names
+        table_metadata['column_types'] = data_types
+        table_metadata['nested_column_names'] = nested_column_names
+        table_metadata['nested_column_types'] = nested_column_types
+        table_metadata['description'] = description
+        
+        query = f"""
+                SELECT
+                *
+                FROM
+                `{project_name}.{dataset_name}.{table}`
+                TABLESAMPLE SYSTEM (0.0001 PERCENT)
+                LIMIT 5
+                ;
+        """  
+        query_job = client.query(query)
+        output = query_job.result().to_dataframe()
+        sample_rows = output.to_dict(orient='records')
+        table_metadata['sample_rows'] = sample_rows
+        tables_metadata.append(table_metadata)
+    
+    return dataset_metadata, tables_metadata
+
+# from datetime import datetime, date
+# from decimal import Decimal
+# from uuid import UUID
+# def custom_serializer(obj):
+#     if isinstance(obj, (datetime, date)):
+#         return obj.isoformat()
+#     elif isinstance(obj, Decimal):
+#         return float(obj)
+#     elif isinstance(obj, UUID):
+#         return str(obj)
+#     raise TypeError(f"Type {obj} not serializable")
 
 
 
@@ -273,33 +354,56 @@ if __name__ == "__main__":
             else:
                 bq_db_name.add(data['db'])
                 
-    import pdb; pdb.set_trace()
-                
-            
 
-    exist_tables = json.load(open('tables.json', 'r'))
-    db_ids = [table['db_id'] for table in exist_tables]
+    db_ids = []
+    root_dir = './databases/bigquery/metadata'
+    for folder_name_a in os.listdir(root_dir):
+        folder_path_a = os.path.join(root_dir, folder_name_a)
+        if os.path.isdir(folder_path_a):  # Check if it's a directory
+            for folder_name_b in os.listdir(folder_path_a):
+                folder_path_b = os.path.join(folder_path_a, folder_name_b)
+                if os.path.isdir(folder_path_b):  # Check if it's a directory
+                    # Check if there's at least one .json file in folder b
+                    has_json = any(file.endswith('.json') for file in os.listdir(folder_path_b))
+                    if has_json:
+                        db_ids.append(f"{folder_name_a}.{folder_name_b}")
     
-    local_db_name = list(local_db_name - set(db_ids))
+    # local_db_name = list(local_db_name - set(db_ids))
     bq_db_name = list(bq_db_name - set(db_ids))
-    
-    for root, dirs, files in os.walk('../databases/'):
-        for file in files:
-            if file.endswith(('.db', '.sqlite')) and os.path.splitext(file)[0] in local_db_name:
-                full_path = os.path.join(root, file)
-                local_db_path.append(full_path)
+    for db_name in tqdm(bq_db_name):
+        try:
+            project_name, dataset_name = db_name.split('.')[0], db_name.split('.')[1]
+        except:
+            import pdb; pdb.set_trace()
+        print(f"{project_name}.{dataset_name}")
+        dataset_metadata, tables_metadata = get_bigquery_metadata(project_name, dataset_name)
 
-    
-    output_path = "tables.json"
-    
-    local_output_list = get_local_metadata(local_db_path, output_path)
-    bq_output_list = get_bq_metadata(bq_db_name, output_path)
-    
-    new_output_list = local_output_list + bq_output_list
-    
-    new_output_table_list = exist_tables + new_output_list
 
-    with open('tables.json', 'w') as file:
-        json.dump(new_output_table_list, file, indent=4)
+        directory = os.path.join(root_dir, project_name, dataset_name)
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+        df = pd.DataFrame(dataset_metadata)
+        ddl_csv_path = os.path.join(directory, 'DDL.csv')
+        df.to_csv(ddl_csv_path, index=False)
+
+        for table_meta in tables_metadata:
+            table_name = table_meta['table_name']
+            file_path = os.path.join(directory, f"{table_name}.json")
+            json_data = json.dumps(table_meta, indent=4, default=str)
+            with open(file_path, 'w') as json_file: 
+                json_file.write(json_data)
+        
+    
+    # output_path = "tables.json"
+    
+    # # local_output_list = get_local_metadata(local_db_path, output_path)
+    # bq_output_list = get_bq_metadata(bq_db_name)
+    
+    # new_output_list = local_output_list + bq_output_list
+    
+    # new_output_table_list = exist_tables + new_output_list
+
+    # with open('tables.json', 'w') as file:
+    #     json.dump(new_output_table_list, file, indent=4)
     
     
