@@ -9,7 +9,7 @@ import ast
 import tempfile
 import platform
 from spider_agent.configs.sql_template import SQL_TEMPLATE
-logger = logging.getLogger("spider.pycontroller")
+logger = logging.getLogger("spider_agent.pycontroller")
 
 
 class PythonController:

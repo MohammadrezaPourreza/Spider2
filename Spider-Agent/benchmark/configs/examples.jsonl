@@ -1,1 +1,0 @@
-{"id": "01af54f8-59ee-4c19-93e4-9458ef184530", "type": "Data Insights", "instruction": "Do you have some book data here, can you tell me who the protagonist is in each book? Save result in 'result.csv'.", "config": [{"type": "copy_all_subfiles", "parameters": {"dirs": ["./benchmark/source/01af54f8-59ee-4c19-93e4-9458ef184530"]}}], "post_process": [], "name": "di003"}

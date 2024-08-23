@@ -1,1 +1,0 @@
-{"id": "01af54f8-59ee-4c19-93e4-9458ef184530", "config": {"task": "EDA"}, "func": ["compare_csv"], "result": [{"file": ["result.csv"]}], "options": [{}], "name": "di003"}
