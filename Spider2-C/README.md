@@ -8,9 +8,9 @@ And for query related examples, many examples in Spider2-C share the same core S
 
 #### Resource 1: Database Access
 We don't provide complete detailed schema file like Spider2-Text2SQL and other previous works. Instead,
-    - Only given the cloud DB interface / the local DB, need the method to explore DBs automatically
-    - Given some partial schema with different types (Markdown, IMG, PDF, YAML, Create.sql, JSON). **A real SQL DB System can handle different schema types**
-    - Can't access DB any (must combine with resource 3 in this case)
+  - Only given the cloud DB interface / the local DB, need the method to explore DBs automatically
+  - Given some partial schema with different types (Markdown, IMG, PDF, YAML, Create.sql, JSON). **A real SQL DB System can handle different schema types**
+  - Can't access DB any (must combine with resource 3 in this case)
 
 #### Resource 2: Retrieving external documents
 Spider2SQL specifies the exact documents and functions needed for each example and processes them in advance. In contrast, Spider2C provides a realistic set of documents that require retrieval and selection.

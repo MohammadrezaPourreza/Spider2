@@ -4,6 +4,7 @@ import os
 import random
 from tqdm import tqdm
 import pandas as pd
+import random
 
 def local_db_tables(db_name):
     conn = sqlite3.connect(db_name)
@@ -323,24 +324,12 @@ def get_bigquery_metadata(project_name, dataset_name):
     
     return dataset_metadata, tables_metadata
 
-# from datetime import datetime, date
-# from decimal import Decimal
-# from uuid import UUID
-# def custom_serializer(obj):
-#     if isinstance(obj, (datetime, date)):
-#         return obj.isoformat()
-#     elif isinstance(obj, Decimal):
-#         return float(obj)
-#     elif isinstance(obj, UUID):
-#         return str(obj)
-#     raise TypeError(f"Type {obj} not serializable")
-
 
 
 if __name__ == "__main__":
 
     
-    with open("spider2sql.json", 'r', encoding='utf-8') as file:
+    with open("spider2-sql.json", 'r', encoding='utf-8') as file:
         spider2_data = json.load(file)
         
     local_db_name, bq_db_name = set(), set()
@@ -370,6 +359,7 @@ if __name__ == "__main__":
     
     # local_db_name = list(local_db_name - set(db_ids))
     bq_db_name = list(bq_db_name - set(db_ids))
+    
     for db_name in tqdm(bq_db_name):
         try:
             project_name, dataset_name = db_name.split('.')[0], db_name.split('.')[1]

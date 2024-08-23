@@ -1,5 +1,11 @@
 [
     {
+        "instance_id": "bq011",
+        "db": "bigquery-public-data.ga4_obfuscated_sample_ecommerce",
+        "question": "How many pseudo users were active in the last 7 days but inactive in the last 2 days as of January 7, 2021?",
+        "external_knowledge": "ga4_obfuscated_sample_ecommerce.events.md"
+    },
+    {
         "instance_id": "bq010",
         "db": "bigquery-public-data.google_analytics_sample",
         "question": "Find the top-selling product among customers who bought 'Youtube Men\u2019s Vintage Henley' in July 2017, excluding itself.",
@@ -126,6 +132,24 @@
         "external_knowledge": "patents_info.md"
     },
     {
+        "instance_id": "bq221",
+        "db": "patents-public-data.patents",
+        "question": "Identify the CPC technology areas with the highest exponential moving average of patent filings each year (smoothing factor 0.2), and provide the full title and the best year for each CPC group at level 5.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq222",
+        "db": "patents-public-data.patents",
+        "question": "Find the CPC technology areas in Germany with the highest exponential moving average of patent filings each year (smoothing factor 0.1) for patents granted in December 2016. Show me the full title, CPC group and the best year for each CPC group at level 4.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq223",
+        "db": "patents-public-data.patents",
+        "question": "Which assignee and primary CPC subclass full title most frequently cite patents assigned to 'AAAA'?",
+        "external_knowledge": null
+    },
+    {
         "instance_id": "bq052",
         "db": "patents-public-data.patentsview",
         "question": "I wonder which patents within CPC subsection 'C05' or group 'A01G' in the USA have at least one forward or backward citations within one month of their application dates. Give me the ids, titles, application date, forward/backward citation counts and summary texts.",
@@ -157,13 +181,13 @@
     },
     {
         "instance_id": "bq182",
-        "db": "bigquery-public-data.github_repos",
+        "db": "bigquery-public-data.github_repos\ngithubarchive.day",
         "question": "Which primary programming languages, determined by the highest number of bytes in each repository, have its repositories having at least a total of 100 pull requests on January 18, 2023?",
         "external_knowledge": null
     },
     {
         "instance_id": "bq182_1",
-        "db": "bigquery-public-data.github_repos",
+        "db": "bigquery-public-data.github_repos\ngithubarchive.day",
         "question": "How many pull requests in total were created in repositories that include JavaScript as one of their languages, considering data from January 18, 2023?",
         "external_knowledge": null
     },
@@ -332,6 +356,12 @@
         "external_knowledge": null
     },
     {
+        "instance_id": "bq131",
+        "db": "bigquery-public-data.geo_openstreetmap",
+        "question": "What is the number of bus stops for the bus network with the most stops within the multipolygon boundary of San Francisco (as defined by Wikidata ID 'Q62')?",
+        "external_knowledge": null
+    },
+    {
         "instance_id": "bq106",
         "db": "bigquery-public-data.geo_openstreetmap\nspider2-public-data.noaa_global_forecast_system",
         "question": "For the two-week forecast made on November 28th, 2021, how much did temperatures in Sudan deviate from the predicted value?",
@@ -374,9 +404,28 @@
         "external_knowledge": null
     },
     {
+        "instance_id": "bq059",
+        "db": "bigquery-public-data.san_francisco_bikeshare",
+        "question": "What is the highest average speed (rounded to 1 decimal, in metric m/s) for bike trips in Berkeley with trip distance greater than 1000 meters?",
+        "external_knowledge": null
+    },
+    {
         "instance_id": "bq006",
         "db": "bigquery-public-data.austin_incidents",
         "question": "What is the date with the second highest Z-score for daily counts of 'PUBLIC INTOXICATION' incidents in Austin for the year 2016? List the date in the format of '2016-xx-xx'.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq187",
+        "db": "bigquery-public-data.ethereum_blockchain",
+        "question": "What is the total circulating supply balances of the 'BNB' token for all addresses (excluding the zero address), based on the amount they have received (converted by dividing by 10^18) minus the amount they have sent?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq014",
+        "db": "bigquery-public-data.thelook_ecommerce",
+        "question": "Can you help me figure out the revenue for the product category that has the highest number of customers making a purchase in their first non-cancelled and non-returned order?",
+        "temporal": "Yes",
         "external_knowledge": null
     },
     {
@@ -384,6 +433,19 @@
         "db": "bigquery-public-data.thelook_ecommerce",
         "question": "What is the average time in minutes that users spend per visit on the product category with the highest total quantity purchased?",
         "temporal": "Yes",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq189",
+        "db": "bigquery-public-data.thelook_ecommerce",
+        "question": "What is the average monthly revenue growth rate for the product category with the highest average monthly order growth rate based on completed orders?",
+        "temporal": "Yes",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq262",
+        "db": "bigquery-public-data.thelook_ecommerce",
+        "question": "Help me generate a monthly analysis report on e-commerce sales in the second half of 2019, which should contain the total sum of order count/revenue/profit as well as their growth rates for each product category monthly. Please sort the results by months (e.g., 2019-07) and product categories in ascending order.",
         "external_knowledge": null
     },
     {
@@ -424,6 +486,12 @@
         "external_knowledge": null
     },
     {
+        "instance_id": "bq338",
+        "db": "bigquery-public-data.census_bureau_acs\nbigquery-public-data.geo_census_tracts",
+        "question": "Which Brooklyn census tract (by geo ID) had the largest increase in median income from 2010 to 2017?",
+        "external_knowledge": null
+    },
+    {
         "instance_id": "bq088",
         "db": "bigquery-public-data.covid19_symptom_search",
         "question": "Can you provide the average levels of anxiety and depression symptoms in the United States for the years 2019 and 2020, and calculate the percentage increase in these symptoms from 2019 to 2020?",
@@ -442,6 +510,12 @@
         "external_knowledge": null
     },
     {
+        "instance_id": "bq060",
+        "db": "bigquery-public-data.census_bureau_international",
+        "question": "Which top 3 countries had the highest net migration in 2017 among those with an area greater than 500 square kilometers? And what are their migration rates?",
+        "external_knowledge": null
+    },
+    {
         "instance_id": "bq061",
         "db": "bigquery-public-data.census_bureau_acs\nbigquery-public-data.geo_census_tracts",
         "question": "Which census tract has witnessed the largest increase in median income between 2015 and 2018 in California? Tell me the tract code.",
@@ -454,18 +528,6 @@
         "external_knowledge": null
     },
     {
-        "instance_id": "bq113",
-        "db": "bigquery-public-data.bls_qcew",
-        "question": "Which Utah county has witnessed the greatest percentage increase of construction jobs from 2000 to 2018? And what is the corresponding increase rate?",
-        "external_knowledge": null
-    },
-    {
-        "instance_id": "bq112",
-        "db": "bigquery-public-data.bls_qcew\nbigquery-public-data.bls",
-        "question": "Did the increase on average annual wages for all industries in Allegheny County, Pittsburgh keep pace with inflation of all consumer items between 1998 and 2017? Tell me their growth rates respectively (2 decimals).",
-        "external_knowledge": null
-    },
-    {
         "instance_id": "bq016",
         "db": "spider2-public-data.deps_dev_v1",
         "question": "Considering only the highest release versions of PYPI packages, which one and its version has the most dependent packages?",
@@ -474,7 +536,7 @@
     {
         "instance_id": "bq062",
         "db": "spider2-public-data.deps_dev_v1",
-        "question": "Which is the most frequently used license by different packages for each system?",
+        "question": "What is the most frequently used license by packages in each system?",
         "external_knowledge": null
     },
     {
@@ -490,9 +552,21 @@
         "external_knowledge": null
     },
     {
+        "instance_id": "bq022",
+        "db": "bigquery-public-data.chicago_taxi_trips",
+        "question": "Given the taxi trip data in Chicago, tell me the total number of trips and average fare for each 10-minute interval (using rounded-off minutes) of trip durations no more than 1 hour.",
+        "external_knowledge": null
+    },
+    {
         "instance_id": "bq076",
         "db": "bigquery-public-data.chicago_crime",
         "question": "Which month generally has the greatest number of motor vehicle thefts in 2016?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq077",
+        "db": "bigquery-public-data.chicago_crime",
+        "question": "For each year from 2010 to 2016, what is the highest number of motor thefts in one month?",
         "external_knowledge": null
     },
     {
@@ -505,6 +579,18 @@
         "instance_id": "bq351_1",
         "db": "open-targets-prod.platform",
         "question": "Which target approved symbol has the overall association score closest to the mean score for psoriasis?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq109",
+        "db": "open-targets-genetics.genetics",
+        "question": "Find the average, variance, max-min difference, and the QTL source(right study) of the maximum log2(h4/h3) for data where right gene id is \"ENSG00000169174\", h4 > 0.8, h3 < 0.02, reported trait includes \"lesterol levels\", right biological feature is \"IPSC\", and the variant is '1_55029009_C_T'.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq352",
+        "db": "bigquery-public-data.sdoh_cdc_wonder_natality\nbigquery-public-data.census_bureau_acs",
+        "question": "Please list the average number of prenatal weeks in 2018 for counties in Wisconsin where more than 5% of the employed population had commutes of 45-59 minutes in 2017.",
         "external_knowledge": null
     },
     {
@@ -521,6 +607,12 @@
         "external_knowledge": null
     },
     {
+        "instance_id": "bq126",
+        "db": "bigquery-public-data.the_met",
+        "question": "What are the titles, artist names, mediums, and original image URLs of objects with 'Photograph' in their names from the 'Photographs' department, created by known artists, with an object end date of 1839 or earlier?",
+        "external_knowledge": null
+    },
+    {
         "instance_id": "bq042",
         "db": "bigquery-public-data.noaa_gsod",
         "question": "Help me analyze the weather conditions (including temperature, wind speed and precipitation) at NYC's airport LaGuardia for June 12, year over year, starting from 2011 to 2020.",
@@ -529,7 +621,7 @@
     {
         "instance_id": "bq047",
         "db": "bigquery-public-data.noaa_gsod\nbigquery-public-data.new_york",
-        "question": "Could you help me analyze the relationship between each complaint type and daily temperature in New York city, focusing on data in airports LaGuardia and JFK over the 10 years starting from 2008? Calculate the total complaint count, the total day count, and the correlation (rounded to 4 decimals) between temperature and both the count and percentage of each common (>5000 occurrences) and strongly correlated (absolute value > 0.5) complaint type.",
+        "question": "Could you help me analyze the relationship between each complaint type and daily temperature in New York city, focusing on data in airports LaGuardia and JFK over the 10 years starting from 2008? Calculate the total complaint count, the total day count, and the Pearson correlation coefficient (rounded to 4 decimals) between temperature and both the count and percentage of each common (>5000 occurrences) and strongly correlated (absolute value > 0.5) complaint type.",
         "external_knowledge": null
     },
     {
@@ -560,6 +652,12 @@
         "instance_id": "bq325",
         "db": "bigquery-public-data.open_targets_genetics",
         "question": "What are the top 10 genes with the lowest p-values across studies?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq326",
+        "db": "bigquery-public-data.world_bank_health_population",
+        "question": "How many countries experienced both a change in population and a change in Current health expenditure per capita, PPP (current international $) of greater than 1 in the year 2018?",
         "external_knowledge": null
     },
     {
@@ -623,6 +721,12 @@
         "external_knowledge": null
     },
     {
+        "instance_id": "ga032",
+        "db": "bigquery-public-data.ga4_obfuscated_sample_ecommerce",
+        "question": "Can you pull up the sequence of pages our customer 1362228 visited on January 28th 2021, linking them with '>>' between each page? I want to see their navigation flow through our site. Please merge adjacent identical pages into one, and refer to the docs to convert the corresponding pages to PDP, PLP if necessary.",
+        "external_knowledge": "ga4_page_category.md"
+    },
+    {
         "instance_id": "ga006",
         "db": "bigquery-public-data.ga4_obfuscated_sample_ecommerce",
         "question": "Provide the IDs and the average spending per session for users who were engaged in multiple purchase sessions in November 2020",
@@ -659,9 +763,45 @@
         "external_knowledge": null
     },
     {
+        "instance_id": "ga019",
+        "db": "firebase-public-project.analytics_153293282",
+        "question": "Could you determine what percentage of users either did not uninstall our app within seven days or never uninstalled it after installing during August and September 2018?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "ga030",
+        "db": "firebase-public-project.analytics_153293282",
+        "question": "Can you group users by the week they first used the app starting from July 2, 2018 and show which group has the most active users remained in the next four weeks, with each group named by the Monday date of that week? Please answer in the format of \" YYYY-MM-DD\".",
+        "external_knowledge": "retention_rate.md"
+    },
+    {
+        "instance_id": "ga030_1",
+        "db": "firebase-public-project.analytics_153293282",
+        "question": "Can you group users by the week they first used the app, starting from July 9, 2018? I'd like to see the retention rate for each group over the next two weeks.",
+        "external_knowledge": "retention_rate.md"
+    },
+    {
         "instance_id": "ga028",
         "db": "firebase-public-project.analytics_153293282",
         "question": "Using the 7-day retention calculation method, find the number of users who first used the app in the week starting on \"2018-07-02\" and tell me the number of retained users for each week from 0 to 4 weeks.",
         "external_knowledge": "retention_rate.md"
+    },
+    {
+        "instance_id": "ga020",
+        "db": "firebase-public-project.analytics_153293282",
+        "question": "Which quickplay event type had the lowest user retention rate during the second week after their initial engagement, for users who first engaged between August 1 and August 15, 2018?",
+        "external_knowledge": "retention_rate.md"
+    },
+    {
+        "instance_id": "ga020_1",
+        "db": "firebase-public-project.analytics_153293282",
+        "question": "What is the retention rate for users two weeks after their initial quickplay event within the period from July 2, 2018, to July 16, 2018, calculated separately for each quickplay event type?",
+        "external_knowledge": "retention_rate.md"
+    },
+    {
+        "instance_id": "ga025",
+        "db": "firebase-public-project.analytics_153293282",
+        "question": "For all users who first opened the app in September 2018 and then uninstalled within seven days, I want to know what percentage of them experienced an app crash.",
+        "external_knowledge": null
     }
 ]
