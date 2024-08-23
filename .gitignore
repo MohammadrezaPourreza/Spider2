@@ -36,23 +36,23 @@ logs/*
 
 
 # Dail-SQL
-Spider2-SQL/DailSQL/third_party/
-Spider2-SQL/DailSQL/vector_cache/
+Spider2-baselines/DailSQL/third_party/
+Spider2-baselines/DailSQL/vector_cache/
 
-Spider2-SQL/DailSQL/preprocessed_data/*
-!Spider2-SQL/DailSQL/preprocessed_data/spider2_preprocess.py
-Spider2-SQL/DailSQL/postprocessed_data/*
-!Spider2-SQL/DailSQL/postprocessed_data/spider2_postprocess.py
+Spider2-baselines/DailSQL/preprocessed_data/*
+!Spider2-baselines/DailSQL/preprocessed_data/spider2_preprocess.py
+Spider2-baselines/DailSQL/postprocessed_data/*
+!Spider2-baselines/DailSQL/postprocessed_data/spider2_postprocess.py
 
 
 # CodeS
-Spider2-SQL/CodeS/sic_ckpts/
-Spider2-SQL/CodeS/SimCSE/
-Spider2-SQL/CodeS/preprocessed_data/*
-!Spider2-SQL/CodeS/preprocessed_data/spider2_preprocess.py
-Spider2-SQL/CodeS/postprocessed_data/*
-!Spider2-SQL/CodeS/postprocessed_data/spider2_postprocess.py
+Spider2-baselines/CodeS/sic_ckpts/
+Spider2-baselines/CodeS/SimCSE/
+Spider2-baselines/CodeS/preprocessed_data/*
+!Spider2-baselines/CodeS/preprocessed_data/spider2_preprocess.py
+Spider2-baselines/CodeS/postprocessed_data/*
+!Spider2-baselines/CodeS/postprocessed_data/spider2_postprocess.py
 
 # yuxiao's tmp code
-Spider2-SQL/yyx_tmp/
+Spider2-baselines/yyx_tmp/
 **/toy.json

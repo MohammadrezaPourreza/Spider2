@@ -8,7 +8,7 @@ from utils.linking_utils.application import get_question_pattern_with_schema_lin
 proj_dir = osp.dirname(osp.dirname(osp.abspath(__file__)))
 
 class BasicDataset(object):
-    def __init__(self, path_data, pre_test_result=None):
+    def __init__(self, path_data, args):
         self.path_data = path_data
         # self.path_db = os.path.join(self.path_data, "database")
         self.test_json = os.path.join(self.path_data, self.test_json)
@@ -16,14 +16,14 @@ class BasicDataset(object):
         self.train_json = os.path.join(self.path_data, self.train_json)
         self.train_gold = os.path.join(self.path_data, self.train_gold)
         self.table_json = os.path.join(self.path_data, self.table_json)
-        self.path_test_schema_linking = os.path.join(self.path_data, "preprocessed_data/enc/test_schema-linking.jsonl")
-        self.path_train_schema_linking = os.path.join(self.path_data, "preprocessed_data/enc/train_schema-linking.jsonl")
+        self.path_test_schema_linking = os.path.join(self.path_data, f"preprocessed_data/{args.dev}/enc/test_schema-linking.jsonl")
+        self.path_train_schema_linking = os.path.join(self.path_data, f"preprocessed_data/{args.dev}/enc/train_schema-linking.jsonl")
         if self.mini_test_index_json:
             self.mini_test_index_json = os.path.join(self.path_data, self.mini_test_index_json)
         else:
             self.mini_test_index_json = None
 
-        self.pre_test_result = pre_test_result
+        self.pre_test_result = args.pre_test_result
             
         # lazy load for tables
         self.databases = None
@@ -219,16 +219,18 @@ class BasicDataset(object):
 
 class Spider2CForDailSQL_Dataset(BasicDataset):
 
-    name = "Spider2C-for-DailSQL"  
-    test_json = "preprocessed_data/spider2_dev_preprocessed.json"
-    test_gold = ""  
-    train_json = "dummy.json"
-    train_gold = ""  
-    table_json = "preprocessed_data/tables_preprocessed.json"
-    mini_test_index_json = None
+    def __init__(self, path_data, args):
+        self.name = "Spider2C-for-DailSQL"  
+        self.test_json = f"preprocessed_data/{args.dev}/{args.dev}_preprocessed.json"
+        self.test_gold = ""  
+        self.train_json = "dummy.json"
+        self.train_gold = ""  
+        self.table_json = "preprocessed_data/tables_preprocessed.json"
+        self.mini_test_index_json = None        
 
-    def __init__(self, path_data, pre_test_result=None):
-        super(Spider2CForDailSQL_Dataset, self).__init__(path_data, pre_test_result)
+        super(Spider2CForDailSQL_Dataset, self).__init__(
+            path_data, 
+            args)
         self.path_db = None
 
     def get_path_db(self, db_id):
@@ -244,14 +246,3 @@ class Spider2CForDailSQL_Dataset(BasicDataset):
             self.databases[db_id] = tables
             return tables
 
-
-
-
-
-
-
-def load_data(data_type, path_data, pre_test_result=None):
-    if data_type.lower() == "spider2c":
-        return Spider2CForDailSQL_Dataset(path_data, pre_test_result)
-    else:
-        raise RuntimeError()

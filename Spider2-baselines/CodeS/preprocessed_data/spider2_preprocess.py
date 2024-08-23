@@ -11,10 +11,10 @@ proj_dir = osp.dirname(osp.dirname(osp.abspath(__file__)))
 
 def preprocess_table_json():
     # 读取tables.json文件
-    with open(osp.join(proj_dir, '../DailSQL/data/tables.json'), 'r') as f:
+    with open(osp.join(proj_dir, '../data/tables.json'), 'r') as f:
         tables = json.load(f)
     # 读取data.pkl文件
-    with open(osp.join(proj_dir, '../DailSQL/data/tables_rows.pkl'), 'rb') as f:
+    with open(osp.join(proj_dir, '../data/tables_rows.pkl'), 'rb') as f:
         data = pickle.load(f)
 
     # 处理data中的sample_rows，将不可序列化的对象转换为字符串格式
@@ -124,7 +124,7 @@ def preprocess_table_json():
 
 def preprocess_dev_json(args):
 
-    with open(osp.join(proj_dir, f'../DailSQL/data/{args.dev}.json'), 'r', encoding='utf-8') as file:
+    with open(osp.join(proj_dir, f'../data/{args.dev}.json'), 'r', encoding='utf-8') as file:
         data = json.load(file)
 
     os.makedirs(osp.join(proj_dir, f'preprocessed_data/{args.dev}'), exist_ok=True)
@@ -132,7 +132,7 @@ def preprocess_dev_json(args):
     for item in data:
         # step. 获取gold_sql
 
-        gold_sql_file = osp.join(proj_dir, f"../evaluation_suite/gold/sql/{item['instance_id']}.sql")
+        gold_sql_file = osp.join(proj_dir, f"../../Spider2/evaluation_suite/gold/sql/{item['instance_id']}.sql")
         if not os.path.exists(gold_sql_file):
             print(f"找不到文件：{gold_sql_file}")
             item['sql'] = ''
@@ -145,9 +145,11 @@ def preprocess_dev_json(args):
         item['text'] = item['question']
         item['db_id'] = item['db']
         del item['db']
-        item['evidence'] = (item['plan'] or '') + (item['external_knowledge'] or '')  # TODO: 看下evidence的读逻辑，这样拼接是否合理
-        del item['plan']
-        del item['external_knowledge']
+        item['evidence'] = (item.get('plan', '') or '') + (item.get('external_knowledge', '') or '')  # TODO: 看下evidence的读逻辑，这样拼接是否合理
+        if 'plan' in item:
+            del item['plan']
+        if 'external_knowledge' in item:
+            del item['external_knowledge']
         item['table_labels'] = None
         item['column_labels'] = None
         item['matched_contents'] = {}
