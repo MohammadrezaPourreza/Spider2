@@ -5,9 +5,9 @@ An Agent Method Baseline for Spider2-C based on Docker ENV
 
 ## 🚀 Quickstart
 
-#### Setup
+### Setup
 
-##### 1. Conda Env
+#### 1. Conda Env
 ```
 # Clone the Spider2 repository
 git clone https://github.com/xlang-ai/OSWorld
@@ -20,18 +20,32 @@ pip install -r requirements.txt
 # Install required dependencies
 pip install -r requirements.txt
 ```
-##### 2. Docker
+#### 2. Docker
 
 docker: Learn more [here](https://docs.docker.com/get-started/get-docker/) to install. Before running the below code, make sure the Docker daemon/application is running locally.
 
 
-#### Run Spider-Agent
+### Run Spider-Agent
+
+#### Set LLM API Key
+
+```
+export AZURE_API_KEY=your_azure_api_key
+export AZURE_ENDPOINT=your_azure_endpoint
+export OPENAI_API_KEY=your_openai_api_key
+export GEMINI_API_KEY=your_genmini_api_key
+```
+
+#### Run 
+
+
 ```python
 python run.py --suffix <The name of this experiment>
 python run.py --suffix gpt-4-try2
 ```
 
-#### Extract Results
+
+### Extract Results
 
 Reorganize run results into a standard submission format, here we store the answer directly into the evaluation suite
 
@@ -40,9 +54,10 @@ python get_spider2c_submission_data.py --experiment_suffix <The name of this exp
 python get_spider2c_submission_data.py --experiment_suffix gpt-4-try2 --results_folder_name ../Spider2-C/evaluation_suite/gpt-4-try1
 ```
 
-#### Evaluation
+### Evaluation
 
 You can run `evaluate.py` in the evaluation suite folder of `Spider2-C` to get the evaluation results.
+
 
 ## Agent Framework
 
