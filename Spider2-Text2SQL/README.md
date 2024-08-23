@@ -56,6 +56,7 @@ Each file in `spider2-sql.json` contains the following fields:
 - `instance_id`: the unique example id
 - `db`: the database id to which this question is addressed.
 - `question`: the natural language question
+- `plan`: detailed instruction / reference plan for solving this problem
 - `external_knowledge`(Not required): The filenames of external knowledge, documentation, and information required to answer this question are stored in documents.
 - `special_functions`(Not required): Special functions that may be needed to answer this question.
 - `database_tutorial`(Not required): For difficult databases, we provide some introductions to SQL-related knowledge in databases.
@@ -65,9 +66,10 @@ Each file in `spider2-sql.json` contains the following fields:
     "instance_id": "ga010",
     "db": "bigquery-public-data.ga4_obfuscated_sample_ecommerce",
     "question": "Can you give me an overview of our website traffic for December 2020? I'm particularly interested in the channel with the fourth highest number of sessions.",
+    "plan":"1.First, read the document to understand how traffic is divided into 18 channel groups, primarily based on the metrics of source, medium, and campaign.\n2.Extract all visits from the database for December, each visit having a unique user ID and session ID. Retrieve the source, medium, and campaign for each visit.\n3.Based on the classification standards for channel groups in the document, write conditional statements to determine which channel each set of data belongs to, mainly using regular expressions. If the data source (source) contains any of the 4.following: 'badoo', 'facebook', 'fb', 'instagram', 'linkedin', 'pinterest', 'tiktok', 'twitter', or 'whatsapp', and the medium (medium) includes 'cp', 'ppc', or starts with 'paid', then categorize it as 'Paid Social'.\n5.Calculate the number of sessions for each channel based on the channel grouping.\n6.Select the name of the channel ranked fourth as the answer."
     "external_knowledge": "ga4_dimensions_and_metrics.md",
     "special_functions": ["unnest_operator","array_agg","regexp_contains"],
-    "database_tutorial": "ga4_tutorial.txt"
+    "database_tutorial": "ga4_tutorial.txt",
 }
 ```
 

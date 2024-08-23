@@ -33,13 +33,13 @@ You can run `evaluate.py` in the evaluation suite folder of `Spider2-C` to get t
 
 #### Action
 
-- `Python`: 
+- `Python`: write code in Python file
 - `Bash`: Check the information of files. run some code. run DBT
-- `SQL query`:
-  - `get schema`: 
-  - `schema tailoring`
-  - `sample rows`
-  - `sample specific columns`
-  - `run sql`
+- `SQL`:
+  - `get schema`: get the schema of different kinds of DBs
+  - `schema tailoring`: Preliminary screening of schemas related to the problem
+  - `sample rows`: sample n rows of this DB
+  - `sample specific columns`: View the distinct value in a column
+  - `run sql`: Run a SQL query on a specified DB
 
 
