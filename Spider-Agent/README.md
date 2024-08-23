@@ -10,7 +10,7 @@ An Agent Method Baseline for Spider2-World based on Docker ENV
 #### 1. Conda Env
 ```
 # Clone the Spider2 repository
-git clone https://github.com/xlang-ai/OSWorld
+git clone https://github.com/xlang-ai/Spider2.git
 pip install -r requirements.txt
 
 # Optional: Create a Conda environment for Spider2
