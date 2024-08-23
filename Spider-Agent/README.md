@@ -41,7 +41,7 @@ export GEMINI_API_KEY=your_genmini_api_key
 
 ```python
 python run.py --suffix <The name of this experiment>
-python run.py --suffix gpt-4-try2
+python run.py --model gpt-4o --suffix try1
 ```
 
 
