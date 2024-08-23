@@ -1,6 +1,6 @@
 # Spider-Agent
 
-An Agent Method Baseline for Spider2-C based on Docker ENV
+An Agent Method Baseline for Spider2-World based on Docker ENV
 
 
 ## 🚀 Quickstart
@@ -45,18 +45,21 @@ python run.py --suffix gpt-4-try2
 ```
 
 
-### Extract Results
+
+### Evaluation
+
+#### Extract Results
 
 Reorganize run results into a standard submission format, here we store the answer directly into the evaluation suite
 
 ```python
 python get_spider2c_submission_data.py --experiment_suffix <The name of this experiment> --results_folder_name <Standard Submission Folders>
-python get_spider2c_submission_data.py --experiment_suffix gpt-4-try2 --results_folder_name ../Spider2-C/evaluation_suite/gpt-4-try1
+python get_spider2c_submission_data.py --experiment_suffix gpt-4-try2 --results_folder_name ../Spider2-World/evaluation_suite/gpt-4-try1
 ```
 
-### Evaluation
+#### Run Evaluation Scripts
 
-You can run `evaluate.py` in the evaluation suite folder of `Spider2-C` to get the evaluation results.
+You can run `evaluate.py` in the evaluation suite folder of `Spider2-World` to get the evaluation results.
 
 
 ## Agent Framework
