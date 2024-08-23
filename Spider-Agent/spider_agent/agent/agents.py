@@ -9,12 +9,12 @@ from http import HTTPStatus
 from io import BytesIO
 from typing import Dict, List
 from spider_agent.agent.prompts import SYS_PROMPT_IN_OUR_CODE
-from spider_agent.agent.action import Bash, Action, Terminate, Python, SQL
+from spider_agent.agent.action import Bash, Terminate, CreateFile, EditFile, LOCAL_DB_SQL, BIGQUERY_EXEC_SQL, BQ_GET_TABLES, BQ_GET_TABLE_INFO, BQ_SAMPLE_ROWS
 from spider_agent.envs.spider_agent import Spider_Agent_Env
 from openai import AzureOpenAI
 from typing import Dict, List, Optional, Tuple, Any, TypedDict
 
-from agent.models import call_llm
+from spider_agent.agent.models import call_llm
 
 MAX_OBSERVATION_LENGTH = 2000
 TIME_OUT_ACTION = 600
@@ -49,7 +49,7 @@ class PromptAgent:
         self.history_messages = []
         self.env = None
         self.codes = []
-        self._AVAILABLE_ACTION_CLASSES = [Bash, Python, Terminate]
+        self._AVAILABLE_ACTION_CLASSES = [Bash, Terminate, CreateFile, EditFile, LOCAL_DB_SQL, BIGQUERY_EXEC_SQL, BQ_GET_TABLES, BQ_GET_TABLE_INFO, BQ_SAMPLE_ROWS]
         # self._AVAILABLE_ACTION_CLASSES = [Bash, Python, SQL, Terminate]
         # self._AVAILABLE_ACTION_CLASSES = [Bash, Terminate]
         self.work_dir = "/workspace"

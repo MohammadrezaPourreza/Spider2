@@ -52,8 +52,13 @@ def postprocess(args):
         if not os.path.isdir(os.path.join(output_dir, instance_id)):
             continue
         json_file_path = os.path.join(output_dir, instance_id, "spider", "result.json")
-
-        instance_result_data = json.load(open(json_file_path, 'r'))
+        try:
+            with open(json_file_path, 'r') as file:
+                instance_result_data = json.load(file)
+        except FileNotFoundError:
+            print(f"Error: File not found - {json_file_path}")
+            continue
+        
         result_folder_root_path = os.path.join(output_dir, instance_id)
         
         answer_or_path = instance_result_data['result']

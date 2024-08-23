@@ -6,7 +6,7 @@ from google.cloud.bigquery.dataset import DatasetListItem
 from typing import List, Tuple, Union
 
 
-logger = logging.getLogger("desktopenv.setup")
+logger = logging.getLogger("spider.setup")
 
 
 def bigquery_empty_project(client: bigquery.Client, **config):
