@@ -59,7 +59,7 @@ BQ_SAMPLE_ROWS_TEMPLATE = """
 import os
 import pandas as pd
 from google.cloud import bigquery
-
+import json
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "bigquery_credential.json"
 client = bigquery.Client()
 
@@ -96,7 +96,9 @@ from google.cloud import bigquery
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "bigquery_credential.json"
 client = bigquery.Client()
 
-query_job = client.query({sql_query})
+sql_query = f\"\"\"{sql_query}\"\"\"
+
+query_job = client.query(sql_query)
 
 try:
     results = query_job.result().to_dataframe()
