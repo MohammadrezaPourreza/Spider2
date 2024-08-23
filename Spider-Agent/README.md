@@ -6,6 +6,8 @@ An Agent Method Baseline for Spider2-C based on Docker ENV
 ## 🚀 Quickstart
 
 #### Setup
+
+##### 1. Conda Env
 ```
 # Clone the Spider2 repository
 git clone https://github.com/xlang-ai/OSWorld
@@ -17,8 +19,11 @@ pip install -r requirements.txt
 
 # Install required dependencies
 pip install -r requirements.txt
-
 ```
+##### 2. Docker
+
+docker: Learn more [here](https://docs.docker.com/get-started/get-docker/) to install. Before running the below code, make sure the Docker daemon/application is running locally.
+
 
 #### Run Spider-Agent
 ```python
