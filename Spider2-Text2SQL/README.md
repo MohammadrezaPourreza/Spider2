@@ -52,13 +52,13 @@ If you want to quickly view the database schema in this repository rather than u
 
 ## Data Content and Format
 
-Each file in `spider2sql.json` contains the following fields:
+Each file in `spider2-sql.json` contains the following fields:
 - `instance_id`: the unique example id
 - `db`: the database id to which this question is addressed.
 - `question`: the natural language question
-- `external_knowledge`: The filenames of external knowledge, documentation, and information required to answer this question are stored in documents.
-- `special_functions`: Special functions that may be needed to answer this question.
-
+- `external_knowledge`(Not required): The filenames of external knowledge, documentation, and information required to answer this question are stored in documents.
+- `special_functions`(Not required): Special functions that may be needed to answer this question.
+- `database_tutorial`(Not required): For difficult databases, we provide some introductions to SQL-related knowledge in databases.
 
 ```
 {
@@ -66,7 +66,8 @@ Each file in `spider2sql.json` contains the following fields:
     "db": "bigquery-public-data.ga4_obfuscated_sample_ecommerce",
     "question": "Can you give me an overview of our website traffic for December 2020? I'm particularly interested in the channel with the fourth highest number of sessions.",
     "external_knowledge": "ga4_dimensions_and_metrics.md",
-    "special_functions": ["unnest_operator","array_agg","regexp_contains"]
+    "special_functions": ["unnest_operator","array_agg","regexp_contains"],
+    "database_tutorial": "ga4_tutorial.txt"
 }
 ```
 
