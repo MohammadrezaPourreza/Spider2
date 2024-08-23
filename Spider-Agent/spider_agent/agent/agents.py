@@ -9,7 +9,7 @@ from http import HTTPStatus
 from io import BytesIO
 from typing import Dict, List
 from spider_agent.agent.prompts import SYS_PROMPT_IN_OUR_CODE
-from spider_agent.agent.action import Bash, Terminate, CreateFile, EditFile, LOCAL_DB_SQL, BIGQUERY_EXEC_SQL, BQ_GET_TABLES, BQ_GET_TABLE_INFO, BQ_SAMPLE_ROWS
+from spider_agent.agent.action import Action, Bash, Terminate, CreateFile, EditFile, LOCAL_DB_SQL, BIGQUERY_EXEC_SQL, BQ_GET_TABLES, BQ_GET_TABLE_INFO, BQ_SAMPLE_ROWS
 from spider_agent.envs.spider_agent import Spider_Agent_Env
 from openai import AzureOpenAI
 from typing import Dict, List, Optional, Tuple, Any, TypedDict
@@ -50,8 +50,6 @@ class PromptAgent:
         self.env = None
         self.codes = []
         self._AVAILABLE_ACTION_CLASSES = [Bash, Terminate, CreateFile, EditFile, LOCAL_DB_SQL, BIGQUERY_EXEC_SQL, BQ_GET_TABLES, BQ_GET_TABLE_INFO, BQ_SAMPLE_ROWS]
-        # self._AVAILABLE_ACTION_CLASSES = [Bash, Python, SQL, Terminate]
-        # self._AVAILABLE_ACTION_CLASSES = [Bash, Terminate]
         self.work_dir = "/workspace"
         
     def set_env_and_task(self, env: Spider_Agent_Env):
@@ -104,7 +102,7 @@ class PromptAgent:
             })
             response = response.strip()
             if not status:
-                if response in ["context_length_exceeded","rate_limit_exceeded","max_tokens"]:
+                if response in ["context_length_exceeded","rate_limit_exceeded","max_tokens","unknown_error"]:
                     self.history_messages = [self.history_messages[0]] + self.history_messages[3:]
                 else:
                     raise Exception(f"Failed to call LLM, response: {response}")
@@ -129,10 +127,11 @@ class PromptAgent:
         self.thoughts.append(thought)
         self.responses.append(response)
         self.actions.append(action)
-        if action is not None:
-            self.codes.append(action.code)
-        else:
-            self.codes.append(None)
+
+        # if action is not None:
+        #     self.codes.append(action.code)
+        # else:
+        #     self.codes.append(None)
 
         return response, action
         
@@ -242,7 +241,7 @@ class PromptAgent:
                 "observation": self.observations[i],
                 "thought": self.thoughts[i],
                 "action": str(self.actions[i]),
-                "code": self.codes[i],
+                # "code": self.codes[i],
                 "response": self.responses[i]
             })
         trajectory_log = {
@@ -252,19 +251,6 @@ class PromptAgent:
         }
         return trajectory_log
 
-
-    
-    # @backoff.on_exception(
-    #     backoff.expo,
-    #     # here you should add more model exceptions as you want,
-    #     # but you are forbidden to add "Exception", that is, a common type of exception
-    #     # because we want to catch this kind of Exception in the outside to ensure each example won't exceed the time limit
-    #     (openai.RateLimitError,
-    #      openai.BadRequestError,
-    #      openai.InternalServerError,
-    #      InvalidArgument),
-    #     max_tries=5
-    # )
 
 if __name__ == "__main__":
     agent = PromptAgent()

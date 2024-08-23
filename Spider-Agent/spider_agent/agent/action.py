@@ -196,7 +196,7 @@ class LOCAL_DB_SQL(Action):
 
 @dataclass
 class BIGQUERY_EXEC_SQL(Action):
-    sql_file_path: str = field(metadata={"help": 'path to save SQL file'})
+    action_type: str = field(default="execute_bigquery_SQL",init=False,repr=False,metadata={"help": 'type of action, c.f., "exec_bq_sql"'})
     sql_query: str = field(metadata={"help": 'SQL query to execute'})
     is_save: bool = field(metadata={"help": 'whether to save result to CSV'})
     save_path: str = field(default=None, metadata={"help": 'path where the output CSV file is saved if is_save is True'})
@@ -205,26 +205,24 @@ class BIGQUERY_EXEC_SQL(Action):
     def get_action_description(cls) -> str:
         return """
 ## BIGQUERY_EXEC_SQL Action
-* Signature: BIGQUERY_EXEC_SQL(sql_file_path="path/to/your_sql_file.sql", sql_query="SELECT * FROM your_table", is_save=True, save_path="path/to/output_file.csv")
-* Description: Executes a SQL query on Google Cloud BigQuery. It first saves the SQL query to a local file, then executes it. If `is_save` is True, the results are saved to a specified CSV file; otherwise, results are printed.
-* Constraints:
-  - SQL commands must be valid and formatted to prevent security issues such as SQL injection.
+* Signature: BIGQUERY_EXEC_SQL(sql_query="SELECT * FROM your_table", is_save=True, save_path="path/to/output_file.csv")
+* Description: Executes a SQL query on Google Cloud BigQuery. If `is_save` is True, the results are saved to a specified CSV file; otherwise, results are printed.es.
 * Examples:
-  - Example1: BIGQUERY_EXEC_SQL(sql_file_path="query1.sql", sql_query="SELECT count(*) FROM sales", is_save=False)
-  - Example2: BIGQUERY_EXEC_SQL(sql_file_path="query2.sql", sql_query="SELECT user_id, sum(purchases) FROM transactions GROUP BY user_id", is_save=True, save_path="summary.csv")
+  - Example1: BIGQUERY_EXEC_SQL(sql_query="SELECT count(*) FROM sales", is_save=False)
+  - Example2: BIGQUERY_EXEC_SQL(sql_query="SELECT user_id, sum(purchases) FROM transactions GROUP BY user_id", is_save=True, save_path="summary.csv")
 """
 
     @classmethod
     def parse_action_from_text(cls, text: str) -> Optional['BIGQUERY_EXEC_SQL']:
-        matches = re.findall(r'BIGQUERY_EXEC_SQL\(sql_file_path=(.*?), sql_query=(.*?), is_save=(.*?), save_path=(.*?)\)', text, flags=re.DOTALL)
+        matches = re.findall(r'BIGQUERY_EXEC_SQL\(sql_query=(.*?), is_save=(.*?), save_path=(.*?)\)', text, flags=re.DOTALL)
         if matches:
-            sql_file_path, sql_query, is_save, save_path = (item.strip() for item in matches[-1])
-            return cls(sql_file_path=remove_quote(sql_file_path), sql_query=remove_quote(sql_query), is_save=eval(is_save), save_path=remove_quote(save_path))
+            sql_query, is_save, save_path = (item.strip() for item in matches[-1])
+            return cls(sql_query=remove_quote(sql_query), is_save=eval(is_save), save_path=remove_quote(save_path))
         return None
 
     def __repr__(self) -> str:
         save_info = f', save_path="{self.save_path}"' if self.is_save else ""
-        return f'BIGQUERY_EXEC_SQL(sql_file_path="{self.sql_file_path}", sql_query="{self.sql_query}", is_save={self.is_save}{save_info})'
+        return f'BIGQUERY_EXEC_SQL(sql_query="{self.sql_query}", is_save={self.is_save}{save_info})'
 
     
     
@@ -234,7 +232,7 @@ class BQ_GET_TABLES(Action):
 
     action_type: str = field(default="get_tables",init=False,repr=False,metadata={"help": 'type of action, c.f., "get_tables"'})
 
-    project_name: str = field(metadata={"help": 'Google Cloud project name'})
+    database_name: str = field(metadata={"help": 'Google Cloud project name'})
 
     dataset_name: str = field(metadata={"help": 'Dataset name within the project'})
 
@@ -244,24 +242,23 @@ class BQ_GET_TABLES(Action):
     def get_action_description(cls) -> str:
         return """
 ## GET_TABLES Action
-* Signature: GET_TABLES(project_name="your_project_name", dataset_name="your_dataset_name", save_path="path/to/output_file.csv")
+* Signature: GET_TABLES(database_name="your_database_name", dataset_name="your_dataset_name", save_path="path/to/output_file.csv")
 * Description: Executes a query to fetch all table names and their corresponding DDL from the specified dataset in Google Cloud BigQuery. The results are saved to the specified CSV file.
 * Constraints:
-  - The specified project and dataset must exist in Google Cloud BigQuery and be accessible using the provided credentials.
-  - The output path must be writable.
+  - The BigQuery id of a table is usually in the form of database_name.dataset_name.table_name. This action mainly focuses on the tables under dataset_name.
 * Examples:
-  - Example1: GET_TABLES(project_name="bigquery-public-data", dataset_name="new_york", save_path="dataset_metadata.csv")
+  - Example1: GET_TABLES(database_name="bigquery-public-data", dataset_name="new_york", save_path="dataset_metadata.csv")
 """
     @classmethod
     def parse_action_from_text(cls, text: str) -> Optional[Action]:
-        matches = re.findall(r'GET_TABLES\(project_name=(.*?), dataset_name=(.*?), save_path=(.*?)\)', text, flags=re.DOTALL)
+        matches = re.findall(r'GET_TABLES\(database_name=(.*?), dataset_name=(.*?), save_path=(.*?)\)', text, flags=re.DOTALL)
         if matches:
-            project_name, dataset_name, save_path = (item.strip() for item in matches[-1])
-            return cls(project_name=remove_quote(project_name), dataset_name=remove_quote(dataset_name), save_path=remove_quote(save_path))
+            database_name, dataset_name, save_path = (item.strip() for item in matches[-1])
+            return cls(database_name=remove_quote(database_name), dataset_name=remove_quote(dataset_name), save_path=remove_quote(save_path))
         return None
 
     def __repr__(self) -> str:
-        return f'{self.__class__.__name__}(project_name="{self.project_name}", dataset_name="{self.dataset_name}", save_path="{self.save_path}")'
+        return f'{self.__class__.__name__}(database_name="{self.database_name}", dataset_name="{self.dataset_name}", save_path="{self.save_path}")'
     
     
 @dataclass
@@ -269,7 +266,7 @@ class BQ_GET_TABLE_INFO(Action):
 
     action_type: str = field(default="get_table_info",init=False,repr=False,metadata={"help": 'type of action, c.f., "get_table_info"'})
 
-    project_name: str = field(metadata={"help": 'Google Cloud project name'})
+    database_name: str = field(metadata={"help": 'Google Cloud project name'})
 
     dataset_name: str = field(metadata={"help": 'Dataset name within the project'})
 
@@ -281,24 +278,22 @@ class BQ_GET_TABLE_INFO(Action):
     def get_action_description(cls) -> str:
         return """
 ## GET_TABLE_INFO Action
-* Signature: GET_TABLE_INFO(project_name="your_project_name", dataset_name="your_dataset_name", table="table_name", save_path="path/to/output_file.csv")
+* Signature: GET_TABLE_INFO(database_name="your_database_name", dataset_name="your_dataset_name", table="table_name", save_path="path/to/output_file.csv")
 * Description: Executes a query to fetch all column information (field path, data type, and description) from the specified table in the dataset in Google Cloud BigQuery. The results are saved to the specified CSV file.
-* Constraints:
-  - The specified project, dataset, and table must exist in Google Cloud BigQuery and be accessible using the provided credentials.
-  - The output path must be writable.
+ - The BigQuery id of a table is usually in the form of database_name.dataset_name.table_name.
 * Examples:
-  - Example1: GET_TABLE_INFO(project_name="bigquery-public-data", dataset_name="samples", table="shakespeare", save_path="shakespeare.info.csv")
+  - Example1: GET_TABLE_INFO(database_name="bigquery-public-data", dataset_name="samples", table="shakespeare", save_path="shakespeare_info.csv")
 """
     @classmethod
     def parse_action_from_text(cls, text: str) -> Optional[Action]:
-        matches = re.findall(r'GET_TABLE_INFO\(project_name=(.*?), dataset_name=(.*?), table=(.*?), save_path=(.*?)\)', text, flags=re.DOTALL)
+        matches = re.findall(r'GET_TABLE_INFO\(database_name=(.*?), dataset_name=(.*?), table=(.*?), save_path=(.*?)\)', text, flags=re.DOTALL)
         if matches:
-            project_name, dataset_name, table, save_path = (item.strip() for item in matches[-1])
-            return cls(project_name=remove_quote(project_name), dataset_name=remove_quote(dataset_name), table=remove_quote(table), save_path=remove_quote(save_path))
+            database_name, dataset_name, table, save_path = (item.strip() for item in matches[-1])
+            return cls(database_name=remove_quote(database_name), dataset_name=remove_quote(dataset_name), table=remove_quote(table), save_path=remove_quote(save_path))
         return None
 
     def __repr__(self) -> str:
-        return f'{self.__class__.__name__}(project_name="{self.project_name}", dataset_name="{self.dataset_name}", table="{self.table}", save_path="{self.save_path}")'
+        return f'{self.__class__.__name__}(database_name="{self.database_name}", dataset_name="{self.dataset_name}", table="{self.table}", save_path="{self.save_path}")'
 
 
 @dataclass
@@ -306,7 +301,7 @@ class BQ_SAMPLE_ROWS(Action):
 
     action_type: str = field(default="bq_sample_rows",init=False,repr=False,metadata={"help": 'type of action, c.f., "bq_sample_rows"'})
 
-    project_name: str = field(metadata={"help": 'Google Cloud project name'})
+    database_name: str = field(metadata={"help": 'Google Cloud project name'})
 
     dataset_name: str = field(metadata={"help": 'Dataset name within the project'})
 
@@ -320,24 +315,21 @@ class BQ_SAMPLE_ROWS(Action):
     def get_action_description(cls) -> str:
         return """
 ## BQ_SAMPLE_ROWS Action
-* Signature: BQ_SAMPLE_ROWS(project_name="your_project_name", dataset_name="your_dataset_name", table="table_name", row_number=3, save_path="path/to/output_file.json")
+* Signature: BQ_SAMPLE_ROWS(database_name="your_database_name", dataset_name="your_dataset_name", table="table_name", row_number=3, save_path="path/to/output_file.json")
 * Description: Executes a query to sample a specified number of rows from the table in the dataset in Google Cloud BigQuery using the TABLESAMPLE SYSTEM method. The results are saved in JSON format to the specified path.
-* Constraints:
-  - The specified project, dataset, table, and row number must exist in Google Cloud BigQuery and be accessible using the provided credentials.
-  - The output path must be writable.
 * Examples:
-  - Example1: BQ_SAMPLE_ROWS(project_name="bigquery-public-data", dataset_name="samples", table="shakespeare", row_number=3, save_path="shakespeare_sample_data.json")
+  - Example1: BQ_SAMPLE_ROWS(database_name="bigquery-public-data", dataset_name="samples", table="shakespeare", row_number=3, save_path="shakespeare_sample_data.json")
 """
     @classmethod
     def parse_action_from_text(cls, text: str) -> Optional[Action]:
-        matches = re.findall(r'BQ_SAMPLE_ROWS\(project_name=(.*?), dataset_name=(.*?), table=(.*?), row_number=(.*?), save_path=(.*?)\)', text, flags=re.DOTALL)
+        matches = re.findall(r'BQ_SAMPLE_ROWS\(database_name=(.*?), dataset_name=(.*?), table=(.*?), row_number=(.*?), save_path=(.*?)\)', text, flags=re.DOTALL)
         if matches:
-            project_name, dataset_name, table, row_number, save_path = (item.strip() for item in matches[-1])
-            return cls(project_name=remove_quote(project_name), dataset_name=remove_quote(dataset_name), table=remove_quote(table), row_number=int(row_number), save_path=remove_quote(save_path))
+            database_name, dataset_name, table, row_number, save_path = (item.strip() for item in matches[-1])
+            return cls(database_name=remove_quote(database_name), dataset_name=remove_quote(dataset_name), table=remove_quote(table), row_number=int(row_number), save_path=remove_quote(save_path))
         return None
 
     def __repr__(self) -> str:
-        return f'{self.__class__.__name__}(project_name="{self.project_name}", dataset_name="{self.dataset_name}", table="{self.table}", row_number={self.row_number}, save_path="{self.save_path}")'
+        return f'{self.__class__.__name__}(database_name="{self.database_name}", dataset_name="{self.dataset_name}", table="{self.table}", row_number={self.row_number}, save_path="{self.save_path}")'
     
 
 

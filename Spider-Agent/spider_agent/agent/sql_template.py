@@ -10,7 +10,7 @@ query = f\"\"\"
 SELECT
     table_name, ddl
 FROM
-    `{project_name}.{dataset_name}.INFORMATION_SCHEMA.TABLES`
+    `{database_name}.{dataset_name}.INFORMATION_SCHEMA.TABLES`
 WHERE
     table_type != 'VIEW'
 \"\"\"
@@ -28,7 +28,7 @@ except Exception as e:
     print("Error occurred while fetching data: ", e)
 """
 
-BQ_GET_TABLE_INFO = """
+BQ_GET_TABLE_INFO_TEMPLATE = """
 import os
 import pandas as pd
 from google.cloud import bigquery
@@ -38,7 +38,7 @@ client = bigquery.Client()
 
 query = f\"\"\"
     SELECT field_path, data_type, description
-    FROM `{project_name}.{dataset_name}.INFORMATION_SCHEMA.COLUMN_FIELD_PATHS`
+    FROM `{database_name}.{dataset_name}.INFORMATION_SCHEMA.COLUMN_FIELD_PATHS`
     WHERE table_name = '{table}';
 \"\"\"
 
@@ -55,7 +55,7 @@ except Exception as e:
     print("Error occurred while fetching data: ", e)
 """
 
-BQ_SAMPLE_ROWS = """
+BQ_SAMPLE_ROWS_TEMPLATE = """
 import os
 import pandas as pd
 from google.cloud import bigquery
@@ -67,7 +67,7 @@ query = f\"\"\"
     SELECT
     *
     FROM
-    `{project_name}.{dataset_name}.{table}`
+    `{database_name}.{dataset_name}.{table}`
     TABLESAMPLE SYSTEM (0.0001 PERCENT)
     LIMIT {row_number};
 \"\"\"
@@ -80,41 +80,13 @@ try:
         print("No data found for the specified query.")
     else:
         sample_rows = output.to_dict(orient='records')
-        with open("{save_path}", 'w') as json_file:
-            import json
-            json.dump(sample_rows, json_file, indent=4)
+        json_data = json.dumps(sample_rows, indent=4, default=str)
+        with open("{save_path}", 'w') as json_file: 
+            json_file.write(json_data)
         print(f"Sample rows saved to {save_path}")
 except Exception as e:
     print("Error occurred while fetching data: ", e)
 """
-
-BQ_GET_COLUMN_DISTINCT_VALUE = """
-import os
-import pandas as pd
-from google.cloud import bigquery
-
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "bigquery_credential.json"
-client = bigquery.Client()
-
-query = f\"\"\"
-    SELECT DISTINCT {column_name}
-    FROM `{project_name}.{dataset_name}.{table}`
-\"\"\"
-
-query_job = client.query(query)
-
-try:
-    output = query_job.result().to_dataframe() 
-    if output.empty:
-        print("No distinct values found for the specified column.")
-    else:
-        output.to_csv("{save_path}", index=False)
-        print(f"Distinct values saved to {save_path}")
-except Exception as e:
-    print("Error occurred while fetching data: ", e)
-"""
-
-
 
 BQ_EXEC_SQL_QUERY_TEMPLATE = """
 import os
@@ -124,15 +96,7 @@ from google.cloud import bigquery
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "bigquery_credential.json"
 client = bigquery.Client()
 
-sql_file_path = "{sql_file_path}"
-
-with open(sql_file_path, 'w') as file:
-    file.write(f\"\"\"{sql_query}\"\"\")
-
-with open(sql_file_path, 'r') as file:
-    sql_query = file.read()
-
-query_job = client.query(sql_query)
+query_job = client.query({sql_query})
 
 try:
     results = query_job.result().to_dataframe()
@@ -146,4 +110,44 @@ try:
             print(results)
 except Exception as e:
     print("Error occurred while fetching data: ", e)
+"""
+
+
+LOCAL_SQL_TEMPLATE = """
+import sqlite3
+import pandas as pd
+import os
+
+def execute_sql(file_path, command, output_path):
+    # make sure the file path is correct
+    if not os.path.exists(file_path):
+        print(f"ERROR: File not found: {{file_path}}")
+        return
+
+    # Connect to the SQLite database
+    conn = sqlite3.connect(file_path)
+    
+    try:
+        # Execute the SQL command and fetch the results
+        df = pd.read_sql_query(command, conn)
+        
+        # Check if the output should be saved to a CSV file or printed directly
+        if output_path.lower().endswith(".csv"):
+            df.to_csv(output_path, index=False)
+            print(f"Output saved to: {{output_path}}")
+        else:
+            print(df)
+    except Exception as e:
+        print(f"ERROR: {{e}}")
+    finally:
+        # Close the connection to the database
+        conn.close()
+
+# Example usage
+file_path = "{file_path}"  # Path to your SQLite database file
+command = "{code}"             # SQL command to be executed
+output_path = "{output}" # Path to save the output as a CSV or "directly"
+
+execute_sql(file_path, command, output_path)
+
 """

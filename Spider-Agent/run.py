@@ -51,12 +51,12 @@ def config() -> argparse.Namespace:
         description="Run end-to-end evaluation on the benchmark"
     )
     
-    parser.add_argument("--max_steps", type=int, default=20)
+    parser.add_argument("--max_steps", type=int, default=30)
     
-    parser.add_argument("--max_memory_length", type=int, default=15)
+    parser.add_argument("--max_memory_length", type=int, default=20)
     parser.add_argument("--suffix", '-s', type=str, default="gpt-4-try1")
     
-    parser.add_argument("--model", type=str, default="gpt-4")
+    parser.add_argument("--model", type=str, default="gpt-4o")
     parser.add_argument("--temperature", type=float, default=0.0)
     parser.add_argument("--top_p", type=float, default=0.9)
     parser.add_argument("--max_tokens", type=int, default=1500)

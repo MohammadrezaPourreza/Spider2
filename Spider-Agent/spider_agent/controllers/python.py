@@ -8,7 +8,7 @@ import os
 import ast
 import tempfile
 import platform
-from spider_agent.configs.sql_template import SQL_TEMPLATE
+from spider_agent.agent.sql_template import LOCAL_SQL_TEMPLATE, BQ_GET_TABLES_TEMPLATE, BQ_GET_TABLE_INFO_TEMPLATE, BQ_SAMPLE_ROWS_TEMPLATE, BQ_EXEC_SQL_QUERY_TEMPLATE
 logger = logging.getLogger("spider_agent.pycontroller")
 
 
@@ -113,7 +113,7 @@ class PythonController:
         return self.execute_command(create_command)
     
     def execute_sql_code(self,file_path, code, output: str) -> str:
-        script_content = SQL_TEMPLATE.format(file_path=file_path, code=code, output=output)
+        script_content = LOCAL_SQL_TEMPLATE.format(file_path=file_path, code=code, output=output)
         temp_file_path = "/tmp/temp_sql_script.py"
         script_content = script_content.replace('"', '\\"').replace('`', '\\`').replace('$', '\\$')
         command = f'echo """{script_content}""" > {temp_file_path} && python3 {temp_file_path}'
@@ -121,6 +121,51 @@ class PythonController:
         if observation.startswith('File "/tmp/temp_sql_script.py"'):
             observation = observation.split("\n", 1)[1]
         return observation
+    
+    def execute_bq_get_tables(self, action):
+        database_name, dataset_name, save_path = action.database_name, action.dataset_name, action.save_path 
+        script_content = BQ_GET_TABLES_TEMPLATE.format(database_name=database_name, dataset_name=dataset_name, save_path=save_path)
+        temp_file_path = "temp_sql_script.py" 
+        observation = self.execute_python_file(temp_file_path, script_content)
+        self.execute_command(f"rm {temp_file_path}")
+        if observation.startswith(f'File "{temp_file_path}"'):
+            observation = observation.split("\n", 1)[1]
+        return observation
+    
+    def execute_bq_get_table_info(self, action):
+        database_name, dataset_name, table, save_path = action.database_name, action.dataset_name, action.table, action.save_path
+        script_content = BQ_GET_TABLE_INFO_TEMPLATE.format(
+            database_name=database_name, dataset_name=dataset_name, table=table, save_path=save_path)
+        temp_file_path = "temp_sql_script.py" 
+        observation = self.execute_python_file(temp_file_path, script_content)
+        self.execute_command(f"rm {temp_file_path}")
+        if observation.startswith(f'File "{temp_file_path}"'):
+            observation = observation.split("\n", 1)[1]
+        return observation
+
+    def execute_bq_sample_rows(self, action):
+        database_name, dataset_name, table, row_number, save_path = action.database_name, action.dataset_name, action.table, action.row_number, action.save_path
+        script_content = BQ_SAMPLE_ROWS_TEMPLATE.format(
+            database_name=database_name, dataset_name=dataset_name, table=table, row_number=row_number, save_path=save_path)
+        temp_file_path = "temp_sql_script.py" 
+        observation = self.execute_python_file(temp_file_path, script_content)
+        self.execute_command(f"rm {temp_file_path}")
+        if observation.startswith(f'File "{temp_file_path}"'):
+            observation = observation.split("\n", 1)[1]
+        return observation
+
+    def execute_bq_exec_sql_query(self, action):
+        sql_query, is_save, save_path = action.sql_query, action.is_save, action.save_path
+        script_content = BQ_EXEC_SQL_QUERY_TEMPLATE.format(
+            sql_query=sql_query, is_save=is_save, save_path=save_path)
+        temp_file_path = "temp_sql_script.py" 
+        observation = self.execute_python_file(temp_file_path, script_content)
+        self.execute_command(f"rm {temp_file_path}")
+        if observation.startswith(f'File "{temp_file_path}"'):
+            observation = observation.split("\n", 1)[1]
+        return observation
+    
+    
     
     def create_file(self, file_path: str, content: str):
         escaped_content = content.replace('"', '\\"').replace('`', '\\`').replace('$', '\\$')

@@ -21,5 +21,7 @@ def query_data(sql_query, is_save):
 
 if __name__ == "__main__":
     sql_query = """
+  SELECT *
+FROM `firebase-public-project.analytics_153293282.events_20180915`
     """
     query_data(sql_query, is_save=True)

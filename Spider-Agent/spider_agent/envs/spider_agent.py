@@ -15,7 +15,7 @@ from spider_agent.controllers.python import PythonController
 from spider_agent.controllers.setup import SetupController
 from spider_agent.envs.utils import *
 from spider_agent import configs
-from spider_agent.agent.action import Bash, Action, Terminate, Python, SQL
+from spider_agent.agent.action import Action, Bash, Terminate, CreateFile, EditFile, LOCAL_DB_SQL, BIGQUERY_EXEC_SQL, BQ_GET_TABLES, BQ_GET_TABLE_INFO, BQ_SAMPLE_ROWS
 import signal
 
 logger = logging.getLogger("spider_agent.env")
@@ -193,17 +193,24 @@ class Spider_Agent_Env(gym.Env):
     def step(self, action: Action):
         try:
             with timeout(DEFAULT_TIME_OUT,"Action execution time exceeded!"):
+                # Bash, Terminate, CreateFile, EditFile, LOCAL_DB_SQL, BIGQUERY_EXEC_SQL, BQ_GET_TABLES, BQ_GET_TABLE_INFO, BQ_SAMPLE_ROWS
                 done = False
                 if isinstance(action, Bash):
                     observation = self.execute_code_action(action)
-                elif isinstance(action, SQL):
+                elif isinstance(action, BQ_GET_TABLES):
+                    observation = self.controller.execute_bq_get_tables(action)
+                elif isinstance(action, BQ_GET_TABLE_INFO):
+                    observation = self.controller.execute_bq_get_table_info(action)
+                elif isinstance(action, BQ_SAMPLE_ROWS):
+                    observation = self.controller.execute_bq_sample_rows(action)
+                elif isinstance(action, BIGQUERY_EXEC_SQL):
+                    observation = self.controller.execute_bq_exec_sql_query(action)
+                elif isinstance(action, LOCAL_DB_SQL):
                     observation = self.execute_sql_action(action)
-                # elif isinstance(action, CreateFile):
-                #     observation = self.create_file_action(action)
-                # elif isinstance(action, EditFile):
-                #     observation = self.edit_file_action(action)
-                elif isinstance(action, Python):
-                    observation = self.execute_python_action(action)
+                elif isinstance(action, CreateFile):
+                    observation = self.create_file_action(action)
+                elif isinstance(action, EditFile):
+                    observation = self.edit_file_action(action)
                 elif isinstance(action, Terminate):
                     observation = "Terminate"
                     done = True
@@ -233,15 +240,40 @@ class Spider_Agent_Env(gym.Env):
         
         return obs
 
-    def execute_python_action(self, action: Python):
-        """ Execute action in python """
-        obs = self.controller.execute_python_file(action.filepath, action.code)
+    
+    def execute_sql_action(self, action: LOCAL_DB_SQL):
+        """ Execute action in sql"""
+        obs = self.controller.execute_sql_code(action.file_path, action.code, action.output)
         if obs is None or obs == '':
-            obs = f"{action.filepath} executed successfully. No output."
+            obs = f"SQL command executed successfully. No output."
         
         return obs
     
-    def execute_sql_action(self, action: Python):
+    def create_file_action(self, action: CreateFile):
+        obs = self.controller.create_file(action.filepath, action.code)
+        if obs is None or obs == '':
+            real_file_path = self.controller.get_real_file_path(action.filepath)
+            valid, error = is_file_valid(real_file_path)
+            if valid:
+                obs = f"File {action.filepath} created and written successfully."
+            else:
+                obs = f"Falied to validate file {action.filepath}, error: {error}"
+        return obs
+    
+    def edit_file_action(self, action: EditFile):
+        obs = self.controller.edit_file(action.filepath, action.code)
+        if obs is None or obs == '':
+            real_file_path = self.controller.get_real_file_path(action.filepath)
+            valid, error = is_file_valid(real_file_path)
+            if valid:
+                obs = f"File {action.filepath} edited successfully."
+            else:
+                obs = f"Falied to validate file {action.filepath}, error: {error}"
+        return obs
+    
+    
+    
+    def execute_tmp_action(self, action: Union[BQ_GET_TABLES, BQ_GET_TABLE_INFO, BQ_SAMPLE_ROWS]):
         """ Execute action in sql"""
         obs = self.controller.execute_sql_code(action.file_path, action.code, action.output)
         if obs is None or obs == '':

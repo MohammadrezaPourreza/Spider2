@@ -22,9 +22,10 @@ def query_data(sql_query, is_save):
 if __name__ == "__main__":
     sql_query = """
     SELECT
-      user_pseudo_id,
-      COUNTIF(event_name IN ('in_app_purchase', 'purchase')) AS purchase_event_count
+      user_pseudo_id
     FROM `bigquery-public-data.ga4_obfuscated_sample_ecommerce`
+      WHERE
+        _TABLE_SUFFIX BETWEEN '20201101' AND '20201130'
     """
     query_data(sql_query, is_save=False)
 
