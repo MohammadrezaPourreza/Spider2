@@ -43,7 +43,7 @@ def schema_linking_producer(test, train, table, db, dataset_dir, compute_cv_link
     '''
 
     word_emb = GloVe(kind='42B', lemmatize=True)
-    linking_processor = SpiderEncoderV2Preproc(dataset_dir,  # 这里会调用corenlp的服务
+    linking_processor = SpiderEncoderV2Preproc(dataset_dir,
             min_freq=4,
             max_count=5000,
             include_table_name_in_column=False,
@@ -74,15 +74,15 @@ def schema_linking_producer(test, train, table, db, dataset_dir, compute_cv_link
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--data_type", type=str, choices=["spider", "bird"], default="spider")
+    parser.add_argument('--dev', default='spider2_dev', type=str, help='the name of dev file')
     parser.add_argument("--debug", action='store_true')
     args = parser.parse_args()
 
     data_type = args.data_type
     if data_type == "spider":
-
         # schema-linking between questions and databases for Spider
-        spider_dev = osp.join(proj_dir, 'preprocessed_data/spider2_dev_preprocessed.json')
-        spider_train = osp.join(proj_dir, 'data/dummy.json')
+        spider_dev = osp.join(proj_dir, f'preprocessed_data/{args.dev}/{args.dev}_preprocessed.json')
+        spider_train = osp.join(proj_dir, '../data/dummy.json')
         spider_table = osp.join(proj_dir, 'preprocessed_data/tables_preprocessed.json') 
         spider_db = osp.join(proj_dir, '../databases')  
         schema_linking_producer(spider_dev, spider_train, spider_table, spider_db, proj_dir, args=args)

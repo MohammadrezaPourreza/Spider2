@@ -2,6 +2,7 @@ import os
 import json
 import re
 import os.path as osp
+import argparse
 
 proj_dir = osp.dirname(osp.dirname(osp.abspath(__file__)))
 
@@ -60,8 +61,14 @@ def main(root_path, dev_json, table_json):
                         sql_file.write(new_sql_content)
 
 if __name__ == "__main__":
-    root_path = osp.join(proj_dir, 'postprocessed_data/SPIDER2C-TEST_SQL_0-SHOT_CTX-200_ANS-4096/RESULTS_MODEL-gpt-3.5-turbo-SQL')
-    dev_json = osp.join(proj_dir, 'preprocessed_data/spider2_dev_preprocessed.json')
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--dev', default='spider2_dev', type=str, help='the name of dev file')
+    parser.add_argument('--model', default='gpt-3.5-turbo', type=str)
+    args = parser.parse_args()
+
+    root_path = osp.join(proj_dir, f'postprocessed_data/{args.dev}_SQL_0-SHOT_CTX-200_ANS-4096/RESULTS_MODEL-{args.model}-SQL')
+    dev_json = osp.join(proj_dir, f'preprocessed_data/{args.dev}/{args.dev}_preprocessed.json')
     table_json = osp.join(proj_dir, 'preprocessed_data/tables_preprocessed.json')
 
     main(root_path, dev_json, table_json)

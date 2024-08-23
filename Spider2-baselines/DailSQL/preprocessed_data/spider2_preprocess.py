@@ -7,6 +7,7 @@ import os.path as osp
 import corenlp
 import spacy
 import requests
+import argparse
 
 
 proj_dir = osp.dirname(osp.dirname(osp.abspath(__file__)))
@@ -16,7 +17,7 @@ def convert_original_for_table_json():
     根据table_names_original得到table_names，放入dev.json
     '''
 
-    with open(osp.join(proj_dir, 'data/tables.json'), 'r', encoding='utf-8') as file:
+    with open(osp.join(proj_dir, '../data/tables.json'), 'r', encoding='utf-8') as file:
         data = json.load(file)
 
     # 处理每个字典
@@ -64,7 +65,7 @@ def convert_original_for_table_json():
 #         return tokens
 
 
-def get_questionTok_and_gold_query_for_dev_json():
+def get_questionTok_and_gold_query_for_dev_json(args):
     '''
     使用分词器，将分词后的question放入dev.json
     '''
@@ -72,9 +73,10 @@ def get_questionTok_and_gold_query_for_dev_json():
     # corenlp_instance.test_connection()
     nlp = spacy.load("en_core_web_sm")
     
-    with open(osp.join(proj_dir, 'data/spider2_dev.json'), 'r', encoding='utf-8') as file:
+    with open(osp.join(proj_dir, f'../data/{args.dev}.json'), 'r', encoding='utf-8') as file:
         data = json.load(file)
 
+    os.makedirs(osp.join(proj_dir, f'preprocessed_data/{args.dev}'), exist_ok=True)
     # 处理每个字典
     for item in data:
         # step1. 分词
@@ -83,7 +85,7 @@ def get_questionTok_and_gold_query_for_dev_json():
         item['question_toks'] = [token.text for token in doc]
 
         # step2. 获取gold_sql
-        gold_sql_file = osp.join(proj_dir, f"../evaluation_suite/gold/sql/{item['instance_id']}.sql")
+        gold_sql_file = osp.join(proj_dir, f"../../Spider2/evaluation_suite/gold/sql/{item['instance_id']}.sql")
         # gold_sql_file = osp.normpath(gold_sql_file)
         if not os.path.exists(gold_sql_file):
             print(f"找不到文件：{gold_sql_file}")
@@ -98,16 +100,21 @@ def get_questionTok_and_gold_query_for_dev_json():
         del item['db']
 
     # 将修改后的数据写回到新的 JSON 文件中
-    with open(osp.join(proj_dir, 'preprocessed_data/spider2_dev_preprocessed.json'), 'w', encoding='utf-8') as file:
+    with open(osp.join(proj_dir, f'preprocessed_data/{args.dev}/{args.dev}_preprocessed.json'), 'w', encoding='utf-8') as file:
         json.dump(data, file, ensure_ascii=False, indent=4)
 
-    print("【预处理】完成，结果已保存到preprocessed_data/spider2_dev_preprocessed.json")
+    print(f"【预处理】完成，结果已保存到{args.dev}/{args.dev}_preprocessed.json")
 
 
 
 if __name__ == '__main__':
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--dev', default='spider2_dev', type=str, help='the name of dev file')
+    args = parser.parse_args()
+
     convert_original_for_table_json()
-    get_questionTok_and_gold_query_for_dev_json()
+    get_questionTok_and_gold_query_for_dev_json(args)
 
 
 

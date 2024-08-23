@@ -122,7 +122,7 @@ class SpiderEncoderV2Preproc(abstract_preproc.AbstractPreproc):
         else:
             self.word_emb = word_emb
 
-        self.data_dir = os.path.join(save_path, 'preprocessed_data/enc')
+        self.data_dir = os.path.join(save_path, f'preprocessed_data/{args.dev}/enc')
         self.include_table_name_in_column = include_table_name_in_column
         # self.count_tokens_in_word_emb_for_vocab = count_tokens_in_word_emb_for_vocab
         self.fix_issue_16_primary_keys = fix_issue_16_primary_keys
