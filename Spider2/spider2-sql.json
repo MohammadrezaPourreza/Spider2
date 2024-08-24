@@ -1443,7 +1443,7 @@
     {
         "instance_id": "ga001",
         "db": "bigquery-public-data.ga4_obfuscated_sample_ecommerce",
-        "question": "I want to know the preferences of customers who purchased the Google Navy Speckled Tee in December 2020. What other product was most frequently purchased alongside this item?",
+        "question": "I want to know the preferences of customers who purchased the Google Navy Speckled Tee in December 2020. What other product was purchased with the highest total quantity alongside this item?",
         "external_knowledge": null,
         "plan": "1. Focus on the item named \"Google Navy Speckled Tee.\"\n2. Select all purchase-type events from December 2020.\n3. Extract the IDs of individuals who purchased the \"Google Navy Speckled Tee\" during these events.\n4. Calculate all items purchased by these IDs and retain the top 10 items by purchase volume.",
         "special_function": [
