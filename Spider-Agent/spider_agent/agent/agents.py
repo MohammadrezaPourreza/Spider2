@@ -221,7 +221,7 @@ class PromptAgent:
                     if repeat_action:
                         return False, "ERROR: Repeated action"
                     else:
-                        obs = "The action is the same as the last one, please provide a different action."
+                        obs = "The action is the same as the last one, please provide a different SQL code or Python Code or different action."
                         repeat_action = True
                 else:
                     obs, done = self.env.step(action)
