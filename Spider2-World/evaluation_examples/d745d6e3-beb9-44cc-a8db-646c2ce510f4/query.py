@@ -30,14 +30,20 @@ def query_data(sql_query, is_save, save_path="result.csv"):
 
 if __name__ == "__main__":
 
-    # Write your SQL query in the sql_query variable to interact with the database, the SQL here is just an example
+    # Complete the SQL query in the sql_query variable to interact with the database, partial SQL query is provided below
     sql_query = """
       SELECT
-        *
+        provider_state,
+        provider_city,
+        provider_id,
+        provider_name,
+        SUM(average_total_payments*outpatient_services)/SUM(outpatient_services) AS average_OP_cost
       FROM
-        `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
-      WHERE
-        _TABLE_SUFFIX BETWEEN '20201101' AND '20201130'
-      LIMIT 1
+        `bigquery-public-data.cms_medicare.outpatient_charges_2014`
+      GROUP BY
+        provider_state,
+        provider_city,
+        provider_id,
+        provider_name
     """
     query_data(sql_query, is_save=True, save_path="result.csv")

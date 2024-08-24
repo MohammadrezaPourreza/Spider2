@@ -30,14 +30,23 @@ def query_data(sql_query, is_save, save_path="result.csv"):
 
 if __name__ == "__main__":
 
-    # Write your SQL query in the sql_query variable to interact with the database, the SQL here is just an example
+    # Complete the SQL query in the sql_query variable to interact with the database, partial SQL query is provided below
     sql_query = """
-      SELECT
-        *
-      FROM
-        `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
-      WHERE
-        _TABLE_SUFFIX BETWEEN '20201101' AND '20201130'
-      LIMIT 1
+    SELECT
+      event_name,
+      event_date,
+      event_timestamp,
+      user_pseudo_id,
+      user_id,
+      device,
+      geo,
+      traffic_source,
+      event_params,
+      user_properties
+    FROM
+      `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
+    WHERE
+      _table_suffix = '20210101'
+    AND event_name IN ('page_view')
     """
     query_data(sql_query, is_save=True, save_path="result.csv")

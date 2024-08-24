@@ -30,14 +30,21 @@ def query_data(sql_query, is_save, save_path="result.csv"):
 
 if __name__ == "__main__":
 
-    # Write your SQL query in the sql_query variable to interact with the database, the SQL here is just an example
+    # Complete the SQL query in the sql_query variable to interact with the database, partial SQL query is provided below
     sql_query = """
       SELECT
-        *
+        languages.language
       FROM
-        `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
+        languages
+      INNER JOIN
+        `bigquery-public-data.github_repos.sample_contents` AS contents
+      ON
+        contents.id = languages.id
       WHERE
-        _TABLE_SUFFIX BETWEEN '20201101' AND '20201130'
-      LIMIT 1
+        languages.language IS NOT NULL
+        AND contents.content IS NOT NULL
+      GROUP BY languages.language
+      ORDER BY COUNT(*) DESC
+      LIMIT 3;
     """
     query_data(sql_query, is_save=True, save_path="result.csv")
