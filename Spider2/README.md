@@ -21,7 +21,8 @@ Spider2 is a realistic and challenging Text-to-SQL dataset, significantly more d
 │   └── snowflake               # The information of DB on Snowflake
 ├── interface                   # Scripts for interacting with the database.
 ├── externel_information        # All externel information used for Spider2
-│   ├── externel_knowledge      # Knowledge pool of Spider2     
+│   ├── externel_knowledge      # Knowledge pool of Spider2   
+│   ├── bigquery_documents  
 │   ├── bigquery_functions         
 │   └── bigquery_functions.json 
 ├── evaluation_suite            # Evaluation Suite for Spider2
@@ -58,17 +59,29 @@ Each file in `spider2-sql.json` contains the following fields:
 - `question`: the natural language question
 - `external_knowledge`: The filenames of external knowledge, documentation, and information required to answer this question are stored in documents.
 - `plan`: detailed instruction / reference plan for solving this problem
-- `special_functions`(Not required): Special functions that may be needed to answer this question.
+- `special_functions`: Special functions that may be needed to answer this question.
+
+**Note that** `plan` and `special_functions` are **not** standard inputs of Spider2 challenge; they are used for ablation experiments and analysis.
+
+The [`databases`](https://github.com/xlang-ai/Spider2/tree/main/Spider2/databases) and the content in [`external_information`](https://github.com/xlang-ai/Spider2/tree/main/Spider2/externel_information) are resources you can use when benchmarking methods.
+
+
 
 ```
 {
     "instance_id": "ga010",
     "db": "bigquery-public-data.ga4_obfuscated_sample_ecommerce",
     "question": "Can you give me an overview of our website traffic for December 2020? I'm particularly interested in the channel with the fourth highest number of sessions.",
-    "plan":"1.First, read the document to understand how traffic is divided into 18 channel groups, primarily based on the metrics of source, medium, and campaign.\n2.Extract all visits from the database for December, each visit having a unique user ID and session ID. Retrieve the source, medium, and campaign for each visit.\n3.Based on the classification standards for channel groups in the document, write conditional statements to determine which channel each set of data belongs to, mainly using regular expressions. If the data source (source) contains any of the 4.following: 'badoo', 'facebook', 'fb', 'instagram', 'linkedin', 'pinterest', 'tiktok', 'twitter', or 'whatsapp', and the medium (medium) includes 'cp', 'ppc', or starts with 'paid', then categorize it as 'Paid Social'.\n5.Calculate the number of sessions for each channel based on the channel grouping.\n6.Select the name of the channel ranked fourth as the answer."
     "external_knowledge": "ga4_dimensions_and_metrics.md",
-    "special_functions": ["unnest_operator","array_agg","regexp_contains"],
-    "database_tutorial": "ga4_tutorial.txt",
+    "plan": "1.First, read the document to understand how traffic is divided into 18 channel groups, primarily based on the metrics of source, medium, and campaign.\n2.Extract all visits from the database for December, each visit having a unique user ID and session ID. Retrieve the source, medium, and campaign for each visit.\n3.Based on the classification standards for channel groups in the document, write conditional statements to determine which channel each set of data belongs to, mainly using regular expressions. If the data source (source) contains any of the 4.following: 'badoo', 'facebook', 'fb', 'instagram', 'linkedin', 'pinterest', 'tiktok', 'twitter', or 'whatsapp', and the medium (medium) includes 'cp', 'ppc', or starts with 'paid', then categorize it as 'Paid Social'.\n5.Calculate the number of sessions for each channel based on the channel grouping.\n6.Select the name of the channel ranked fourth as the answer.",
+    "special_function": [
+        "aggregate-functions/ARRAY_AGG",
+        "aggregate-functions/COUNT",
+        "aggregate-functions/GROUPING",
+        "differentially-private-aggregate-functions/COUNT",
+        "string-functions/CONCAT",
+        "string-functions/REGEXP_CONTAINS"
+    ]
 }
 ```
 
