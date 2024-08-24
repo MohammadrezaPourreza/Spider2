@@ -8,7 +8,8 @@
         "special_function": [
             "timestamp-functions/TIMESTAMP",
             "timestamp-functions/TIMESTAMP_SUB",
-            "timestamp-functions/UNIX_MICROS"
+            "timestamp-functions/UNIX_MICROS",
+            "other-functions/UNNEST"
         ]
     },
     {
@@ -17,7 +18,9 @@
         "question": "Find the top-selling product among customers who bought 'Youtube Men\u2019s Vintage Henley' in July 2017, excluding itself.",
         "external_knowledge": "google_analytics_sample.ga_sessions.md",
         "plan": "1. Extract a distinct list of customers (`fullVisitorId`) who purchased the \"YouTube Men's Vintage Henley\" in July 2017.\n2. Find other products purchased by these customers in July 2017.\n3. Filter out the \"YouTube Men's Vintage Henley\" product itself and aggregate other products purchased by the same customers.\n4. Sort to find the most purchased product.",
-        "special_function": null
+        "special_function": [
+            "other-functions/UNNEST"
+        ]
     },
     {
         "instance_id": "bq009",
@@ -44,7 +47,9 @@
             "date-functions/PARSE_DATE",
             "json-functions/STRING",
             "time-functions/TIME",
-            "timestamp-functions/STRING"
+            "timestamp-functions/STRING",
+            "other-functions/DECLARE",
+            "other-functions/UNNEST"
         ]
     },
     {
@@ -64,7 +69,9 @@
             "time-functions/EXTRACT",
             "time-functions/TIME",
             "timestamp-functions/EXTRACT",
-            "timestamp-functions/STRING"
+            "timestamp-functions/STRING",
+            "other-functions/DECLARE",
+            "other-functions/UNNEST"
         ]
     },
     {
@@ -81,7 +88,8 @@
             "interval-functions/EXTRACT",
             "string-functions/CONCAT",
             "time-functions/EXTRACT",
-            "timestamp-functions/EXTRACT"
+            "timestamp-functions/EXTRACT",
+            "other-functions/UNNEST"
         ]
     },
     {
@@ -90,7 +98,9 @@
         "question": "What's the most popular other purchased product in July 2017 with consumers who bought products relevant to YouTube?",
         "external_knowledge": "google_analytics_sample.ga_sessions.md",
         "plan": "1. Identify visitors who purchased any YouTube product in July 2017.\n2. Calculate the total quantity of each product (excluding YouTube products) purchased by visitors who bought any YouTube product in July 2017.\n3. Retrieve the product name with the highest total quantity.",
-        "special_function": null
+        "special_function": [
+            "other-functions/UNNEST"
+        ]
     },
     {
         "instance_id": "bq008",
@@ -102,7 +112,8 @@
             "navigation-functions/LEAD",
             "numbering-functions/RANK",
             "string-functions/REGEXP_CONTAINS",
-            "timestamp-functions/TIMESTAMP"
+            "timestamp-functions/TIMESTAMP",
+            "other-functions/UNNEST"
         ]
     },
     {
@@ -115,7 +126,6 @@
             "aggregate-functions/ANY_VALUE",
             "array-functions/ARRAY_LENGTH",
             "conversion-functions/CAST",
-            "json-functions/INT64",
             "mathematical-functions/FLOOR"
         ]
     },
@@ -131,9 +141,11 @@
             "aggregate-functions/GROUPING",
             "aggregate-functions/STRING_AGG",
             "conversion-functions/CAST",
-            "json-functions/INT64",
             "mathematical-functions/FLOOR",
-            "string-functions/REGEXP_CONTAINS"
+            "string-functions/REGEXP_CONTAINS",
+            "conditional-functions/IF",
+            "other-functions/UNNEST",
+            "other-functions/ARRAY_SUBSCRIPT"
         ]
     },
     {
@@ -148,9 +160,10 @@
             "array-functions/ARRAY",
             "conversion-functions/CAST",
             "date-functions/DATE",
-            "json-functions/INT64",
             "mathematical-functions/FLOOR",
-            "string-functions/REGEXP_CONTAINS"
+            "string-functions/REGEXP_CONTAINS",
+            "conditional-functions/IF",
+            "other-functions/UNNEST"
         ]
     },
     {
@@ -165,9 +178,10 @@
             "aggregate-functions/GROUPING",
             "aggregate-functions/STRING_AGG",
             "conversion-functions/CAST",
-            "json-functions/INT64",
             "mathematical-functions/FLOOR",
-            "string-functions/REGEXP_CONTAINS"
+            "string-functions/REGEXP_CONTAINS",
+            "other-functions/UNNEST",
+            "other-functions/ARRAY_SUBSCRIPT"
         ]
     },
     {
@@ -185,7 +199,8 @@
             "date-functions/PARSE_DATE",
             "json-functions/STRING",
             "string-functions/LOWER",
-            "timestamp-functions/STRING"
+            "timestamp-functions/STRING",
+            "other-functions/UNNEST"
         ]
     },
     {
@@ -199,7 +214,8 @@
             "date-functions/DATE_ADD",
             "date-functions/PARSE_DATE",
             "json-functions/STRING",
-            "timestamp-functions/STRING"
+            "timestamp-functions/STRING",
+            "other-functions/UNNEST"
         ]
     },
     {
@@ -210,7 +226,8 @@
         "plan": "1. **Define the Initial Dataset**: Create a temporary dataset that includes the publication number and application number of patents.\n    - Filter for patents from a specific country.\n    - Ensure the patents have a grant date within the first week of January 2018.\n    - Exclude any entries without a grant date.\n    - Include only patents with a specific kind code.\n\n2. **Create the Main Query**: Use the temporary dataset to find the required information.\n    - Select the publication number from the temporary dataset.\n\n3. **Join with Citation Data**: Perform a left join with another table that contains citation details.\n    - Extract the citing publication number, cited publication number, and category from the citation details.\n    - Ensure that the citation category contains a specific keyword.\n\n4. **Join with Publication Data Again**: Perform another left join to link the cited publication number with the application number from the publication data.\n\n5. **Aggregate the Results**: Group the results by the publication number from the initial dataset.\n    - Count the distinct application numbers that are cited by the patents in the specified category.\n\n6. **Order the Results**: Sort the final results by the publication number.",
         "special_function": [
             "string-functions/CONTAINS_SUBSTR",
-            "string-functions/LEFT"
+            "string-functions/LEFT",
+            "other-functions/UNNEST"
         ]
     },
     {
@@ -220,7 +237,8 @@
         "external_knowledge": null,
         "plan": "1. **Extract Relevant Patent Data**: Create a temporary dataset by selecting publication numbers and their associated claims from the main data source. Ensure that only patents granted in the US between the years 2015 and 2018 are included. Also, filter to include only those patents whose publication numbers end with 'B2'.\n\n2. **Unnest Claims**: Expand the nested claims data so that each claim associated with a patent is treated as a separate row in the temporary dataset.\n\n3. **Filter Claims Text**: Check each claim text to see if it does not contain the word 'claim'. Count the number of such claims for each publication number.\n\n4. **Group by Publication Number**: Aggregate the results by publication number, counting how many claims per patent do not contain the word 'claim'.\n\n5. **Filter Non-zero Counts**: From the aggregated data, select only those patents that have at least one claim not containing the word 'claim'.\n\n6. **Final Count**: Count the number of patents that meet the criteria established in the previous steps. This final result represents the number of US B2 patents granted between 2015 and 2018 that have at least one claim not containing the word 'claim'.",
         "special_function": [
-            "aggregate-functions/COUNTIF"
+            "aggregate-functions/COUNTIF",
+            "other-functions/UNNEST"
         ]
     },
     {
@@ -238,7 +256,8 @@
         "external_knowledge": "patents_info.md",
         "plan": "1.Data Retrieval: Access patents-public-data.patents.publications, unnest IPC codes, and filter for US patents granted in April 2015 with a 'B2' kind code.\n2.IPC Analysis: Extract the first four characters of each IPC code, count their occurrences within each patent, and group by publication number and IPC subcategory.\n3.Determine Dominance: For each patent, identify the most frequent IPC subcategory using a combination of concatenation and maximum count comparison within the grouped data.\n4.Result Extraction: Order the results by the count of IPC occurrences and limit the output to the top entry to find the single most prevalent IPC subcategory.",
         "special_function": [
-            "string-functions/SUBSTR"
+            "string-functions/SUBSTR",
+            "other-functions/UNNEST"
         ]
     },
     {
@@ -249,7 +268,8 @@
         "plan": "1. **Create an Interim Table:**\n   - Select the publication number and extract the first 4 characters of the IPC code.\n   - Count the occurrences of each 4-character IPC code for each publication.\n   - Filter records to include only those from the specified country and date range, ensuring the grant date is valid and the publication format matches the specified pattern.\n   - Group the results by publication number and the 4-character IPC code.\n\n2. **Identify Most Frequent IPC Code:**\n   - In the interim table, determine the most frequent 4-character IPC code for each publication.\n   - Concatenate the publication number with the count of the most frequent IPC code.\n   - Use this concatenated value to filter the interim table, ensuring you select rows where the IPC code count matches the maximum count for each publication.\n\n3. **Filter by Frequency:**\n   - Further filter the results to include only those rows where the most frequent IPC code appears 20 or more times.\n\n4. **Final Selection:**\n   - From the filtered results, select and list the publication numbers and their corresponding 4-character IPC codes.",
         "special_function": [
             "string-functions/CONCAT",
-            "string-functions/SUBSTR"
+            "string-functions/SUBSTR",
+            "other-functions/UNNEST"
         ]
     },
     {
@@ -269,7 +289,8 @@
             "numbering-functions/ROW_NUMBER",
             "time-functions/EXTRACT",
             "timestamp-functions/EXTRACT",
-            "timestamp-functions/STRING"
+            "timestamp-functions/STRING",
+            "other-functions/UNNEST"
         ]
     },
     {
@@ -300,7 +321,8 @@
         "special_function": [
             "mathematical-functions/POWER",
             "string-functions/CONCAT",
-            "string-functions/SUBSTR"
+            "string-functions/SUBSTR",
+            "other-functions/UNNEST"
         ]
     },
     {
@@ -313,8 +335,10 @@
             "aggregate-functions/ANY_VALUE",
             "aggregate-functions/ARRAY_AGG",
             "conversion-functions/CAST",
-            "json-functions/INT64",
-            "mathematical-functions/FLOOR"
+            "mathematical-functions/FLOOR",
+            "conditional-functions/IF",
+            "other-functions/CREATE_FUNCTION",
+            "other-functions/UNNEST"
         ]
     },
     {
@@ -327,8 +351,10 @@
             "aggregate-functions/ANY_VALUE",
             "aggregate-functions/ARRAY_AGG",
             "conversion-functions/CAST",
-            "json-functions/INT64",
-            "mathematical-functions/FLOOR"
+            "mathematical-functions/FLOOR",
+            "conditional-functions/IF",
+            "other-functions/CREATE_FUNCTION",
+            "other-functions/UNNEST"
         ]
     },
     {
@@ -338,7 +364,8 @@
         "external_knowledge": null,
         "plan": "1. Firstly, extract citing publication and cited publication details, including only the primary CPC code.\n2. Combine the citing and cited data according the publication number.\n3. Join with CPC definition information to extract CPC subclass title.\n4. Add filter to include only relevant citations.\n5. Group the results by citing assignee and CPC full title, count the citations and order the result by count.\nWe only return the most frequent assignee and CPC subclass title.",
         "special_function": [
-            "string-functions/SUBSTR"
+            "string-functions/SUBSTR",
+            "other-functions/UNNEST"
         ]
     },
     {
@@ -351,7 +378,8 @@
             "conversion-functions/SAFE_CAST",
             "date-functions/DATE",
             "date-functions/DATE_ADD",
-            "date-functions/DATE_SUB"
+            "date-functions/DATE_SUB",
+            "conditional-functions/IFNULL"
         ]
     },
     {
@@ -362,10 +390,10 @@
         "plan": "1.Select Independent Claims: Extract patent number, claim number, and word count for independent claims.\n2.Match Publication Numbers: Join with the match table to get the corresponding publication numbers.\n3.Match Application Numbers and Publication Information: Join with the publications table to get application details and select the earliest publication for each application.\n4.Select and Order Results: Retrieve all fields, order by word count in descending order, and limit to the top 100 records.",
         "special_function": [
             "conversion-functions/CAST",
-            "json-functions/INT64",
             "json-functions/STRING",
             "numbering-functions/ROW_NUMBER",
-            "timestamp-functions/STRING"
+            "timestamp-functions/STRING",
+            "conditional-functions/IF"
         ]
     },
     {
@@ -385,7 +413,8 @@
             "time-functions/EXTRACT",
             "timestamp-functions/EXTRACT",
             "timestamp-functions/STRING",
-            "timestamp-functions/TIMESTAMP_SECONDS"
+            "timestamp-functions/TIMESTAMP_SECONDS",
+            "other-functions/UNNEST"
         ]
     },
     {
@@ -397,7 +426,8 @@
         "special_function": [
             "string-functions/REGEXP_CONTAINS",
             "string-functions/REGEXP_EXTRACT",
-            "string-functions/SPLIT"
+            "string-functions/SPLIT",
+            "other-functions/UNNEST"
         ]
     },
     {
@@ -410,7 +440,8 @@
             "string-functions/LEFT",
             "string-functions/REGEXP_CONTAINS",
             "string-functions/REGEXP_EXTRACT",
-            "string-functions/SPLIT"
+            "string-functions/SPLIT",
+            "other-functions/UNNEST"
         ]
     },
     {
@@ -426,7 +457,9 @@
             "navigation-functions/FIRST_VALUE",
             "string-functions/REGEXP_REPLACE",
             "time-functions/EXTRACT",
-            "timestamp-functions/EXTRACT"
+            "timestamp-functions/EXTRACT",
+            "conditional-functions/IF",
+            "other-functions/UNNEST"
         ]
     },
     {
@@ -441,7 +474,9 @@
             "interval-functions/EXTRACT",
             "string-functions/REGEXP_REPLACE",
             "time-functions/EXTRACT",
-            "timestamp-functions/EXTRACT"
+            "timestamp-functions/EXTRACT",
+            "conditional-functions/IF",
+            "other-functions/UNNEST"
         ]
     },
     {
@@ -460,7 +495,9 @@
         "question": "Which repository with an approved license in `licenses.md` had the highest combined total of forks, issues, and watches in April 2022?",
         "external_knowledge": null,
         "plan": "1. Filter only those repositories whose licenses are listed in the provided array of approved licenses.\n2. Select repository names and count distinct users who watched the repositories, that is to include only `WatchEvent` types.\n3. Similarly, select repository names and count the number of issues (`IssuesEvent`) and forks (`ForkEvent`).\n4. Combine the data and calculate the total counts of forks, issue events, and watches for each repository.\n5. Sort the results in descending order and only return the top repository name.",
-        "special_function": null
+        "special_function": [
+            "other-functions/UNNEST"
+        ]
     },
     {
         "instance_id": "bq192",
@@ -469,7 +506,8 @@
         "external_knowledge": null,
         "plan": "1. **Define Allowed Repos:**\r\n   - Create a Common Table Expression (CTE) named `allowed_repos` to filter repositories that have specific licenses (`artistic-2.0`, `isc`, `mit`, `apache-2.0`).\r\n   - Select `repo_name` and `license` from the `bigquery-public-data.github_repos.licenses` table where the license matches one of the specified values.\r\n\r\n2. **Calculate Watch Counts:**\r\n   - Create a CTE named `watch_counts` to calculate the number of unique watch events per repository.\r\n   - Select the repository name and count the distinct `actor.login` from the `githubarchive.month.202204` table where the event type is `WatchEvent`.\r\n   - Group by repository name.\r\n\r\n3. **Calculate Issue Counts:**\r\n   - Create a CTE named `issue_counts` to calculate the number of issue events per repository.\r\n   - Select the repository name and count the total number of events from the `githubarchive.month.202204` table where the event type is `IssuesEvent`.\r\n   - Group by repository name.\r\n\r\n4. **Calculate Fork Counts:**\r\n   - Create a CTE named `fork_counts` to calculate the number of fork events per repository.\r\n   - Select the repository name and count the total number of events from the `githubarchive.month.202204` table where the event type is `ForkEvent`.\r\n   - Group by repository name.\r\n\r\n5. **Combine Metadata:**\r\n   - Create a CTE named `metadata` to combine the information from `allowed_repos`, `fork_counts`, `issue_counts`, and `watch_counts`.\r\n   - Perform INNER JOIN operations between `allowed_repos` and the other CTEs (`fork_counts`, `issue_counts`, and `watch_counts`) on `repo_name`.\r\n   - Select `repo_name`, `license`, `forks`, `issue_events`, and `watches` from the combined data.\r\n\r\n6. **Identify Repos with Python Files:**\r\n   - Create a CTE named `github_files_at_head` to identify repositories that have Python files at the head of the master branch.\r\n   - Select `repo_name` from the `bigquery-public-data.github_repos.sample_files` table where `ref` is `\"refs/heads/master\"`, the file path ends with `.py`, and `symlink_target` is `NULL`.\r\n   - Group by `repo_name`.\r\n\r\n7. **Select Top Repository:**\r\n   - Perform an INNER JOIN between `metadata` and `github_files_at_head` on `repo_name`.\r\n   - Select the `repo_name` from `metadata` as `repository`.\r\n   - Order the results by the sum of `forks`, `issue_events`, and `watches` in descending order.\r\n   - Limit the result to the top repository.\r\n\r\n8. **Return Result:**\r\n   - The final query returns the repository name of the top repository with the highest combined count of forks, issue events, and watches among those that have Python files at the head of the master branch and have an allowed license.",
         "special_function": [
-            "string-functions/ENDS_WITH"
+            "string-functions/ENDS_WITH",
+            "other-functions/UNNEST"
         ]
     },
     {
@@ -494,7 +532,9 @@
             "string-functions/REGEXP_CONTAINS",
             "string-functions/REGEXP_EXTRACT_ALL",
             "string-functions/REPLACE",
-            "string-functions/SPLIT"
+            "string-functions/SPLIT",
+            "conditional-functions/IF",
+            "other-functions/UNNEST"
         ]
     },
     {
@@ -509,7 +549,9 @@
             "string-functions/REGEXP_CONTAINS",
             "string-functions/REGEXP_EXTRACT_ALL",
             "string-functions/REPLACE",
-            "string-functions/SPLIT"
+            "string-functions/SPLIT",
+            "conditional-functions/IF",
+            "other-functions/UNNEST"
         ]
     },
     {
@@ -521,7 +563,8 @@
         "special_function": [
             "string-functions/LOWER",
             "string-functions/SPLIT",
-            "string-functions/TRIM"
+            "string-functions/TRIM",
+            "other-functions/UNNEST"
         ]
     },
     {
@@ -545,7 +588,9 @@
             "string-functions/REGEXP_CONTAINS",
             "string-functions/REGEXP_EXTRACT_ALL",
             "string-functions/REPLACE",
-            "string-functions/SPLIT"
+            "string-functions/SPLIT",
+            "conditional-functions/IF",
+            "other-functions/UNNEST"
         ]
     },
     {
@@ -556,7 +601,6 @@
         "plan": "1. Decide which table to work on:  `bigquery-public-data.cms_medicare.inpatient_charges_2014`\n2. Rank all the diagnostic conditions by national number of cases to find the most common diagnostic condition.\n3. Group the data by diagnostic condition name, city and state, and calculate the citywise number of cases, citywise average payment for each entry.\n4. Accordingly, rank the cities by citywise number of cases for the most common diagnostic condition, and calculate the national avg. payments.\n5. Limit to the top 3 cities.",
         "special_function": [
             "conversion-functions/CAST",
-            "json-functions/INT64",
             "mathematical-functions/ROUND",
             "numbering-functions/RANK"
         ]
@@ -611,7 +655,10 @@
             "mathematical-functions/ROUND",
             "string-functions/LENGTH",
             "string-functions/REGEXP_CONTAINS",
-            "string-functions/SUBSTR"
+            "string-functions/SUBSTR",
+            "conditional-functions/CASE_EXPR",
+            "conditional-functions/CASE",
+            "conditional-functions/NULLIF"
         ]
     },
     {
@@ -709,7 +756,6 @@
         "special_function": [
             "conversion-functions/CAST",
             "date-functions/DATE",
-            "json-functions/INT64",
             "mathematical-functions/LEAST"
         ]
     },
@@ -729,8 +775,7 @@
         "plan": "1. Calculate the total number of days in 2022 that it records the temperature data (not missing) for each station.\n2. Find out the total number of valid stations.\n3. Leverage the knowledge that 2022 has 365 days.\n4. Join the table with the stations table to find out the stations which records for at least 90% of days in 2022.\n5. Calculate the percentage of stations with over 90% records .",
         "special_function": [
             "conversion-functions/CAST",
-            "date-functions/DATE",
-            "json-functions/INT64"
+            "date-functions/DATE"
         ]
     },
     {
@@ -762,8 +807,6 @@
         "special_function": [
             "conversion-functions/CAST",
             "date-functions/DATE",
-            "json-functions/FLOAT64",
-            "json-functions/INT64",
             "mathematical-functions/ROUND",
             "navigation-functions/LAG"
         ]
@@ -780,7 +823,11 @@
             "datetime-functions/DATETIME_ADD",
             "geography-functions/ST_DWITHIN",
             "geography-functions/ST_GEOGPOINT",
-            "time-functions/TIME"
+            "time-functions/TIME",
+            "conditional-functions/CASE_EXPR",
+            "conditional-functions/CASE",
+            "conditional-functions/IF",
+            "other-functions/UNNEST"
         ]
     },
     {
@@ -794,7 +841,8 @@
             "geography-functions/ST_ASTEXT",
             "geography-functions/ST_DISTANCE",
             "geography-functions/ST_DWITHIN",
-            "geography-functions/ST_GEOGPOINT"
+            "geography-functions/ST_GEOGPOINT",
+            "other-functions/UNNEST"
         ]
     },
     {
@@ -810,10 +858,10 @@
             "geography-functions/ST_DWITHIN",
             "geography-functions/ST_LENGTH",
             "interval-functions/EXTRACT",
-            "json-functions/INT64",
             "string-functions/FORMAT",
             "time-functions/EXTRACT",
-            "timestamp-functions/EXTRACT"
+            "timestamp-functions/EXTRACT",
+            "other-functions/UNNEST"
         ]
     },
     {
@@ -828,7 +876,8 @@
             "geography-functions/ST_DWITHIN",
             "interval-functions/EXTRACT",
             "time-functions/EXTRACT",
-            "timestamp-functions/EXTRACT"
+            "timestamp-functions/EXTRACT",
+            "other-functions/UNNEST"
         ]
     },
     {
@@ -840,7 +889,8 @@
         "special_function": [
             "geography-functions/ST_WITHIN",
             "mathematical-functions/MOD",
-            "time-functions/TIME"
+            "time-functions/TIME",
+            "other-functions/UNNEST"
         ]
     },
     {
@@ -859,12 +909,14 @@
             "geography-functions/ST_CONTAINS",
             "geography-functions/ST_GEOGPOINT",
             "interval-functions/EXTRACT",
-            "json-functions/INT64",
             "mathematical-functions/ROUND",
             "navigation-functions/LAG",
             "statistical-aggregate-functions/STDDEV",
             "time-functions/EXTRACT",
-            "timestamp-functions/EXTRACT"
+            "timestamp-functions/EXTRACT",
+            "conditional-functions/CASE_EXPR",
+            "conditional-functions/CASE",
+            "conditional-functions/IFNULL"
         ]
     },
     {
@@ -880,7 +932,9 @@
             "mathematical-functions/GREATEST",
             "mathematical-functions/LEAST",
             "string-functions/LOWER",
-            "timestamp-functions/STRING"
+            "timestamp-functions/STRING",
+            "other-functions/DECLARE",
+            "other-functions/UNNEST"
         ]
     },
     {
@@ -892,7 +946,8 @@
         "special_function": [
             "array-functions/GENERATE_DATE_ARRAY",
             "date-functions/DATE",
-            "navigation-functions/LEAD"
+            "navigation-functions/LEAD",
+            "other-functions/UNNEST"
         ]
     },
     {
@@ -941,7 +996,8 @@
             "interval-functions/EXTRACT",
             "mathematical-functions/ABS",
             "time-functions/EXTRACT",
-            "timestamp-functions/EXTRACT"
+            "timestamp-functions/EXTRACT",
+            "conditional-functions/CASE"
         ]
     },
     {
@@ -978,8 +1034,8 @@
         "plan": "1. **Identify the Token:** Select the address of the specified token from the token details table.\n   \n2. **Calculate Received Amounts:**\n   - Filter transactions where the token matches the specified token.\n   - Exclude transactions to the zero address.\n   - Sum the received amounts for each address, converting the values to a standard unit.\n\n3. **Calculate Sent Amounts:**\n   - Filter transactions where the token matches the specified token.\n   - Exclude transactions from the zero address.\n   - Sum the sent amounts for each address, converting the values to a standard unit.\n\n4. **Compute Balances:**\n   - Combine the received and sent amounts for each address.\n   - Subtract the total sent amounts from the total received amounts to determine the balance for each address.\n\n5. **Aggregate Total Circulating Supply:**\n   - Sum the balances of all addresses to compute the total circulating supply of the token.",
         "special_function": [
             "conversion-functions/CAST",
-            "json-functions/FLOAT64",
-            "mathematical-functions/POWER"
+            "mathematical-functions/POWER",
+            "conditional-functions/COALESCE"
         ]
     },
     {
@@ -1007,7 +1063,8 @@
             "mathematical-functions/ROUND",
             "navigation-functions/LEAD",
             "string-functions/REPLACE",
-            "timestamp-functions/STRING"
+            "timestamp-functions/STRING",
+            "conditional-functions/CASE"
         ]
     },
     {
@@ -1020,7 +1077,8 @@
         "special_function": [
             "date-functions/FORMAT_DATE",
             "mathematical-functions/ROUND",
-            "navigation-functions/LAG"
+            "navigation-functions/LAG",
+            "conditional-functions/NULLIF"
         ]
     },
     {
@@ -1041,7 +1099,10 @@
         "question": "What is the count of the youngest and oldest users respectively, broken down by gender from January 2019 to April 2022?",
         "external_knowledge": null,
         "plan": "1. **Determine Age Ranges**:\n   - Create two subsets to find the minimum and maximum ages for each gender within the specified date range.\n\n2. **Identify Users with Extreme Ages**:\n   - For each gender, select users whose ages match the previously identified minimum or maximum ages within the specified date range.\n\n3. **Combine Users**:\n   - Combine the users from both genders into a single set, ensuring that only users with the extreme ages (youngest and oldest) are included.\n\n4. **Tag Users**:\n   - Add a tag to each user indicating whether they are in the 'Youngest' or 'Oldest' age group based on their age.\n\n5. **Count Users by Group**:\n   - Group the tagged users by gender and tag, then count the number of users in each group.\n\n6. **Output the Results**:\n   - Select and order the results by gender and tag to present a clear summary of the counts for each group.",
-        "special_function": null
+        "special_function": [
+            "conditional-functions/CASE_EXPR",
+            "conditional-functions/CASE"
+        ]
     },
     {
         "instance_id": "bq197",
@@ -1063,7 +1124,9 @@
         "question": "What is the name of the reference sequence with the highest variant density in the given cannabis genome dataset?",
         "external_knowledge": null,
         "plan": "1. **Identify Relevant Tables**:\n   - Utilize two tables: one containing variant data and another containing reference sequence data.\n\n2. **Join Tables**:\n   - Perform an inner join on the tables based on matching reference sequence names to combine variant information with reference sequence details.\n\n3. **Filter Variants**:\n   - Include only those variants where there is at least one genotype value greater than zero within the variant calls. This ensures that only relevant variants are considered.\n\n4. **Calculate Variant Density**:\n   - For each reference sequence, calculate the density of variants by dividing the count of variants by the length of the reference sequence. Also, compute the total count of variants and store the reference sequence length for later use.\n\n5. **Group and Aggregate Data**:\n   - Group the results by reference sequence name and reference sequence length to compute the variant counts and densities for each reference sequence.\n\n6. **Order by Density**:\n   - Sort the grouped results in descending order of variant density to prioritize sequences with the highest density of variants.\n\n7. **Select Top Result**:\n   - Limit the results to a single entry to identify the reference sequence with the highest variant density.\n\n8. **Output**:\n   - Extract and display the name of the reference sequence with the highest variant density.",
-        "special_function": null
+        "special_function": [
+            "other-functions/UNNEST"
+        ]
     },
     {
         "instance_id": "bq020_2",
@@ -1071,7 +1134,9 @@
         "question": "What is the variant density of the cannabis reference with the longest reference length?",
         "external_knowledge": null,
         "plan": "1. **Data Preparation (CTE Setup)**:\n   - Create a common table expression (CTE) to compute necessary metrics for each reference.\n   \n2. **Join Data**:\n   - Join two datasets: one containing variant data and another containing reference length information based on matching reference names.\n\n3. **Filter Data**:\n   - Apply a filter to ensure only those variants are considered where at least one genotype call is greater than zero.\n\n4. **Aggregation**:\n   - Group the data by reference name and reference length.\n   - Calculate the total count of variants for each reference.\n   - Compute the variant density by dividing the count of variants by the reference length.\n\n5. **Final Selection**:\n   - Select all data from the aggregated CTE.\n\n6. **Sorting and Limiting**:\n   - Order the results by reference length in descending order.\n   - In case of ties in reference length, order by reference name.\n   - Limit the result to one row to get the reference with the longest length and its variant density.",
-        "special_function": null
+        "special_function": [
+            "other-functions/UNNEST"
+        ]
     },
     {
         "instance_id": "bq025",
@@ -1109,8 +1174,7 @@
         "plan": "1. **Data Source Selection**:\r\n   - The query utilizes the `bigquery-public-data.covid19_symptom_search.symptom_search_country_weekly` dataset from BigQuery's public data.\r\n\r\n2. **Subquery for 2020 Data**:\r\n   - A subquery (`table_2020`) is executed to calculate the average levels of anxiety and depression symptoms for the year 2020.\r\n   - The `WHERE` clause filters the records to include only those from the US (`country_region_code = \"US\"`) and within the date range from January 1, 2020, to December 31, 2020.\r\n   - The `AVG` function calculates the average for `symptom_Anxiety` and `symptom_Depression`, casting these values to `FLOAT64` for precision.\r\n\r\n3. **Subquery for 2019 Data**:\r\n   - Another subquery (`table_2019`) is executed to calculate the average levels of anxiety and depression symptoms for the year 2019.\r\n   - Similar to the 2020 subquery, the `WHERE` clause filters the records to include only those from the US and within the date range from January 1, 2019, to December 31, 2019.\r\n   - The `AVG` function calculates the average for `symptom_Anxiety` and `symptom_Depression`, casting these values to `FLOAT64` for precision.\r\n\r\n4. **Main Query**:\r\n   - The main query selects the average values calculated in the subqueries:\r\n     - `table_2019.avg_symptom_Anxiety_2019`\r\n     - `table_2020.avg_symptom_Anxiety_2020`\r\n     - `table_2019.avg_symptom_Depression_2019`\r\n     - `table_2020.avg_symptom_Depression_2020`\r\n   - Additionally, it calculates the percentage increase in anxiety and depression symptoms from 2019 to 2020 using the formula:\r\n     - `((table_2020.avg_symptom_Anxiety_2020 - table_2019.avg_symptom_Anxiety_2019)/table_2019.avg_symptom_Anxiety_2019) * 100` as `percent_increase_anxiety`\r\n     - `((table_2020.avg_symptom_Depression_2020 - table_2019.avg_symptom_Depression_2019)/table_2019.avg_symptom_Depression_2019) * 100` as `percent_increase_depression`\r\n\r\n5. **Output**:\r\n   - The final output includes the average levels of anxiety and depression for both 2019 and 2020, along with the calculated percentage increases for both symptoms between the two years.",
         "special_function": [
             "conversion-functions/CAST",
-            "date-functions/DATE",
-            "json-functions/FLOAT64"
+            "date-functions/DATE"
         ]
     },
     {
@@ -1139,8 +1203,7 @@
         "external_knowledge": null,
         "plan": "1. **Filter and Select Data for 2017**: First, select the relevant columns (country name, net migration, and country code) from the dataset containing information about growth rates for the year 2017.\n\n2. **Filter and Join on Country Area**: Next, filter another dataset to include only countries with an area greater than 500 square kilometers. Join this filtered dataset with the previous one on the country code to combine the net migration data with the area data.\n\n3. **Sort and Retrieve Top Country**: Sort the combined data by net migration in descending order and limit the result to the top 3 entry. Finally, select the country name and net migration fields from this result to identify the country with the highest net migration.",
         "special_function": [
-            "conversion-functions/CAST",
-            "json-functions/INT64"
+            "conversion-functions/CAST"
         ]
     },
     {
@@ -1178,7 +1241,8 @@
         "external_knowledge": null,
         "plan": "1. Generate a Common Table Expression (CTE) that aggregates the number of distinct packages using each license within each system.\n- Use `CROSS JOIN UNNEST` to handle the array of licenses, effectively normalizing the data for easier counting.\n- Group the results by `System` and `License`.\n2. Generate another CTE that ranks the licenses within each system based on the number of distinct packages using them.\n- Use the `ROW_NUMBER()` window function partitioned by `System` and ordered by `NPackages` in descending order to assign a rank to each license within each system.\n3. Select and output only top ranked licenses for each system.",
         "special_function": [
-            "numbering-functions/ROW_NUMBER"
+            "numbering-functions/ROW_NUMBER",
+            "other-functions/UNNEST"
         ]
     },
     {
@@ -1191,7 +1255,8 @@
             "json-functions/STRING",
             "numbering-functions/ROW_NUMBER",
             "string-functions/LOWER",
-            "timestamp-functions/STRING"
+            "timestamp-functions/STRING",
+            "other-functions/UNNEST"
         ]
     },
     {
@@ -1256,7 +1321,10 @@
         "question": "Please display the drug id, drug type and withdrawal status for approved drugs with a black box warning and known drug type among 'Keytruda', 'Vioxx', 'Premarin', and 'Humira'",
         "external_knowledge": null,
         "plan": "1. **Initialize a List of Drug Names**: Start by declaring a list that contains specific drug names of interest ('Keytruda', 'Vioxx', 'Humira', and 'Premarin').\n\n2. **Select Relevant Columns**: Prepare to select the drug ID, trade name, drug type, and withdrawal status from the dataset.\n\n3. **Unnest Trade Names**: Expand the nested list of trade names associated with each drug entry to allow for individual trade names to be examined.\n\n4. **Filter by Trade Name**: Ensure that only those drugs whose trade name matches one of the names in the initialized list are included.\n\n5. **Filter by Approval Status**: Further restrict the results to only include drugs that have been approved.\n\n6. **Filter by Black Box Warning**: Additionally, include only those drugs that have a black box warning.\n\n7. **Exclude Unknown Drug Types**: Finally, exclude any drugs where the drug type is listed as 'Unknown'.\n\nBy following these steps, the query will return the desired information about the specific drugs of interest that meet all the given criteria.",
-        "special_function": null
+        "special_function": [
+            "other-functions/SET",
+            "other-functions/UNNEST"
+        ]
     },
     {
         "instance_id": "bq351_1",
@@ -1302,10 +1370,11 @@
             "date-functions/EXTRACT",
             "datetime-functions/EXTRACT",
             "interval-functions/EXTRACT",
-            "json-functions/INT64",
             "mathematical-functions/ROUND",
             "time-functions/EXTRACT",
-            "timestamp-functions/EXTRACT"
+            "timestamp-functions/EXTRACT",
+            "conditional-functions/CASE",
+            "other-functions/SET"
         ]
     },
     {
@@ -1342,11 +1411,10 @@
         "special_function": [
             "conversion-functions/CAST",
             "date-functions/DATE",
-            "json-functions/FLOAT64",
-            "json-functions/INT64",
             "string-functions/CONCAT",
             "string-functions/REPLACE",
-            "timestamp-functions/TIMESTAMP"
+            "timestamp-functions/TIMESTAMP",
+            "conditional-functions/IF"
         ]
     },
     {
@@ -1358,13 +1426,13 @@
         "special_function": [
             "conversion-functions/CAST",
             "date-functions/DATE",
-            "json-functions/INT64",
             "mathematical-functions/ABS",
             "mathematical-functions/ROUND",
             "statistical-aggregate-functions/CORR",
             "string-functions/CONCAT",
             "string-functions/REPLACE",
-            "timestamp-functions/TIMESTAMP"
+            "timestamp-functions/TIMESTAMP",
+            "conditional-functions/IF"
         ]
     },
     {
@@ -1376,13 +1444,12 @@
         "special_function": [
             "conversion-functions/CAST",
             "date-functions/DATE",
-            "json-functions/FLOAT64",
-            "json-functions/INT64",
             "mathematical-functions/ROUND",
             "statistical-aggregate-functions/CORR",
             "string-functions/CONCAT",
             "string-functions/REPLACE",
-            "timestamp-functions/TIMESTAMP"
+            "timestamp-functions/TIMESTAMP",
+            "conditional-functions/IF"
         ]
     },
     {
