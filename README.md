@@ -14,7 +14,7 @@ To meet the diverse research needs, we set up Spider2 with two settings, focusin
 
 [Spider2](https://github.com/xlang-ai/Spider2/tree/main/Spider2): **Traditional Text2SQL Setting**. Focusing on Text2SQL, with detailed database metadata.（This Version: 20%)
 
-[Spider2-World](https://github.com/xlang-ai/Spider2/tree/main/Spider2-World): **Code agent setting**. A fully realistic SQL generation setting. It needs to automatically explore complex database, using Python, SQL, and Command-line to solve complex SQL generation and project-level tasks. (Progress: 10%)
+[Spider2-World](https://github.com/xlang-ai/Spider2/tree/main/Spider2-World): **Code agent setting**. SQL generation in a real-**world** setting requires automatically exploring complex databases, using Python, SQL, and command-line tools to solve complex SQL generation tasks across different databases and to perform project-level code agent tasks. (Progress: 10%)
 
 
 ## Baselines
