@@ -2,7 +2,7 @@
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # DEV=toy
-DEV=spider2_dev
+DEV=spider2-sql
 
 LLM=/data1/llms/codes-1b
 # LLM=/data1/llms/codes-7b-merged

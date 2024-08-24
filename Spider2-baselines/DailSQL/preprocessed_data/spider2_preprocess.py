@@ -54,10 +54,11 @@ def column_description_length_histogram():
     # plt.show()
 
 
-def db_statistic(args):
+def process_table_json(args):
 
     with open(osp.join(proj_dir, f'../../Spider2/{args.dev}.json'), 'r', encoding='utf-8') as file:
         dev_data = json.load(file)
+    os.makedirs(osp.join(proj_dir, f'preprocessed_data/{args.dev}'), exist_ok=True)
     # all db_ids
     db_ids = set([item['db'] for item in dev_data])
 
@@ -161,8 +162,15 @@ def db_statistic(args):
     print(f"Average No. of columns across all Database: {avg_total_column_count_per_db:.2f}")
     print(f"Average Avg. No. of columns per table across all Databases: {avg_avg_column_per_table_per_db:.2f}")
 
+    # 适用于DailSQL的处理
+    for item in db_stats_list:
+        if 'table_names_original' in item:
+            item['table_names'] = item['table_names_original']
+            item['column_names'] = item['column_names_original']
+    
     # 将统计数据保存为JSON文件（以列表形式存储）
-    with open(f"preprocessed_data/{args.dev}/tables.json", "w", encoding="utf-8") as json_file:
+     
+    with open(osp.join(proj_dir, f"preprocessed_data/{args.dev}/tables_preprocessed.json"), "w", encoding="utf-8") as json_file:
         json.dump(db_stats_list, json_file, indent=4, ensure_ascii=False)
 
     # with open("tables_toy.json", "w", encoding="utf-8") as json_file:
@@ -206,30 +214,6 @@ def db_statistic(args):
 
 
 
-
-
-def convert_original_for_table_json(args): 
-    '''
-    根据table_names_original得到table_names，放入dev.json
-    '''
-
-    with open(f"preprocessed_data/{args.dev}/tables.json", 'r', encoding='utf-8') as file:
-        data = json.load(file)
-
-    # 处理每个字典
-    for item in data:
-        if 'table_names_original' in item:
-            item['table_names'] = item['table_names_original']
-            item['column_names'] = item['column_names_original']
-
-
-    # 将修改后的数据写回到新的 JSON 文件中
-    with open(f"preprocessed_data/{args.dev}/tables_preprocessed.json", 'w', encoding='utf-8') as file:
-        json.dump(data, file, ensure_ascii=False, indent=4)
-
-    print(f"【预处理】完成，结果已保存到preprocessed_data/{args.dev}/tables_preprocessed.json")
-
-    
 
 
 def process_dev_json(args):
@@ -319,8 +303,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     # column_description_length_histogram()
-    db_statistic(args)
-    convert_original_for_table_json(args)
+    process_table_json(args)
     process_dev_json(args)
 
 
