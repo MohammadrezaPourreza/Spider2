@@ -87,4 +87,10 @@ For `Spider2-World`, we proposed an agent framework [`Spider-Agent`](https://git
 
 
 
+#### Evaluation Results
 
+
+| Method                     | Score |
+| -------------------------- | ---- | 
+| Spider-Agent (GPT-4o)   | 10.00% | 
+| DailSQL+Func+Plan (GPT-4o) | 4.00% |
