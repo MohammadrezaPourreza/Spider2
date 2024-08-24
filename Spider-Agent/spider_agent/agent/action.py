@@ -143,7 +143,7 @@ Signature: EditFile(filepath="path/to/file"):
 ```
 file_content
 ```
-Description: This action will overwrite the file specified in the filepath field with the content wrapped in paired ``` symbols. Normally, you need to read the file before deciding to use EditFile to modify it.
+Description: This action will overwrite the file specified in the filepath field with the content wrapped in paired ``` symbols. Normally, you need to read the file before deciding to use EditFile to modify it. Please use this action when modifying files.
 Example: EditFile(filepath="hello_world.py"):
 ```
 print("Hello, world!")
@@ -173,7 +173,7 @@ class LOCAL_DB_SQL(Action):
     def get_action_description(cls) -> str:
         return """
 ## SQL Action
-* Signature: LOCAL_DB_SQL(file_path="path/to/database_file", command="sql_command", output="path/to/output_file.csv" or "direct")
+* Signature: LOCAL_DB_SQL(file_path="database.db", command="sql_command", output="path/to/output_file.csv" or "direct")
 * Description: Executes an SQL command on the specified database file(SQLITE or Duckdb). If `output` is set to a file path, the results are saved to this CSV file; if set to 'direct', results are displayed directly.
 * Examples:
   - Example1: LOCAL_DB_SQL(file_path="data.db", command="SELECT name FROM sqlite_master WHERE type='table'", output="directly")
