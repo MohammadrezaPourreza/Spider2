@@ -30,7 +30,7 @@ def query_data(sql_query, is_save, save_path="result.csv"):
 
 if __name__ == "__main__":
 
-    # Write your SQL query in the sql_query variable to interact with the database, the SQL here is just an example
+    # # Complete the SQL query in the sql_query variable to interact with the database, partial SQL query is provided below
     sql_query = """
     SELECT
         pubs.publication_number AS citing_publication_number,
