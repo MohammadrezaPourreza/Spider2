@@ -1,9 +1,11 @@
 #!/bin/bash
 
+export OPENAI_API_KEY=sk-None-jssDNZiOLkRVL6xIWjxdT3BlbkFJp1rYPxbQJDhFh2coxQ6e
+
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 DEV=spider2_dev
-#DEV=toy
+# DEV=toy
 LLM=gpt-4o
 
 # step1. preprocess
@@ -12,8 +14,7 @@ python preprocessed_data/spider2_preprocess.py --dev $DEV
 
 # step2. run DAIL-SQL
 python data_preprocess.py --dev $DEV 
-python generate_question.py --dev $DEV --model $LLM --tokenizer $LLM --prompt_repr SQL --k_shot 0 \
- --use_potential_function --use_plan
+python generate_question.py --dev $DEV --model $LLM --tokenizer $LLM --prompt_repr SQL --k_shot 0
 python ask_llm.py --openai_api_key $OPENAI_API_KEY --model $LLM --n 1 --question postprocessed_data/${DEV}_CTX-200 | tee ${script_dir}/postprocessed_data/${DEV}_CTX-200/ask_llm.log
 
 # step3. postprocess
