@@ -1,30 +1,40 @@
-{"instance_id": "1d009ac3-1c75-447b-a7e0-49ccc2b5fbf9", "evaluation": [{"func": "table_match", "parameters": {"gold": ["result.csv", "result_1.csv"], "condition_cols": [[1], [0, 1, 2]], "ignore_order": [true, false]}}, {"func": "number_match", "parameters": {"gold": [20.471182412358875, 34.16923076923077, 28.18181818181818], "conj": "and"}}]}
-{"instance_id": "e1c62309-43cd-4d1c-be22-3d4c5fd8a242", "evaluation": [{"func": "string_match", "parameters": {"gold": ["C", "JavaScript", "Java"], "conj": "and"}}, {"func": "table_match", "parameters": {"gold": "result.csv"}}]}
-{"instance_id": "f9f50a48-022c-47fa-b02f-a79f96c0a59c", "evaluation": [{"func": "number_match", "parameters": {"gold": "7.8573421918436059"}}, {"func": "table_match", "parameters": {"gold": "result.csv", "condition_cols": [2]}}]}
 {"instance_id": "06e7f50f-373c-4351-b795-86c7044fce9a", "evaluation": [{"func": "table_match", "parameters": {"gold": "result.csv", "condition_cols": [1, 2]}}]}
-{"instance_id": "4728031f-3be4-4606-922f-e4a5b0017a91", "evaluation": [{"func": "table_match", "parameters": {"gold": "result.csv"}}]}
-{"instance_id": "69846f18-c7c6-4719-9317-c652f7d7d064", "evaluation": [{"func": "number_match", "parameters": {"gold": "45.3745696771496", "percentage": true}}, {"func": "table_match", "parameters": {"gold": "result.csv"}}]}
-{"instance_id": "5d16f91a-01fa-46b2-9f08-7207cf3e0e81", "evaluation": [{"func": "table_match", "parameters": {"gold": "result.csv"}}]}
-{"instance_id": "fd046fdc-9d5c-4e3c-9d70-afa047dd2a59", "evaluation": [{"func": "table_match", "parameters": {"gold": "result.csv", "condition_cols": [3]}}]}
-{"instance_id": "b544e853-00b3-45bc-b3ea-81f195739c60", "evaluation": [{"func": "number_match", "parameters": {"gold": "17.5056918795851%", "percentage": true}}, {"func": "table_match", "parameters": {"gold": "result.csv"}}]}
-{"instance_id": "caae42a9-0d24-4dfb-bcf0-e5274b51af30", "evaluation": [{"func": "string_match", "parameters": {"gold": ["django", "os", "sys"], "conj": "and"}}, {"func": "table_match", "parameters": {"gold": "result.csv", "condition_cols": [0]}}]}
+{"instance_id": "0bcfa8c4-bc4c-4cd8-9fe5-dd60a2c1f956", "evaluation": [{"func": "string_match", "parameters": {"gold": ["Google 24oz Ring Bottle Blue"], "exclude": ["Google Pen White", "Google Metallic Notebook Set", "Google Red Speckled Tee", "Google Mouse Pad Navy"]}}, {"func": "table_match", "parameters": {"gold": "result.csv"}}]}
+{"instance_id": "1d009ac3-1c75-447b-a7e0-49ccc2b5fbf9", "evaluation": [{"func": "table_match", "parameters": {"gold": ["result.csv", "result_1.csv"], "condition_cols": [[1], [0, 1, 2]], "ignore_order": [true, false]}}, {"func": "number_match", "parameters": {"gold": [20.471182412358875, 34.16923076923077, 28.18181818181818], "conj": "and"}}]}
+{"instance_id": "27c1aab9-ed94-47ea-ba3a-1dbfcd4856a2", "evaluation": [{"func": "string_match", "parameters": {"gold": ["2002"]}}, {"func": "table_match", "parameters": {"gold": "result.csv"}}]}
+{"instance_id": "335fb285-c9fd-45ff-ba8d-fe89a62016f7", "evaluation": [{"func": "number_match", "parameters": {"gold": "7.03"}}, {"func": "table_match", "parameters": {"gold": "result.csv"}}]}
+{"instance_id": "4728031f-3be4-4606-922f-e4a5b0017a91", "evaluation": [{"func": "table_match", "parameters": {"gold": "result.csv"}, "ignore_order": [true]}]}
+{"instance_id": "478fa226-daac-4bc0-8d18-35c1e19fb5cf", "evaluation": [{"func": "table_match", "parameters": {"gold": "result.csv", "condition_cols": [1, 2]}}]}
+{"instance_id": "47ac6231-35f7-4dd4-ae33-5f6bd05ad4e0", "evaluation": [{"func": "string_match", "parameters": {"gold": ["US-2016100312-A1"]}}, {"func": "table_match", "parameters": {"gold": "result.csv"}}]}
 {"instance_id": "4a0c3053-46ac-450e-971f-4684cdf861cd", "evaluation": [{"func": "table_match", "parameters": {"gold": "result.csv"}}]}
+{"instance_id": "54e2ea3a-0439-4f96-a88e-982a41807eff", "evaluation": [{"func": "string_match", "parameters": {"gold": ["US,EP,IL,WO,CA"]}}, {"func": "table_match", "parameters": {"gold": "result.csv"}}]}
+{"instance_id": "5d16f91a-01fa-46b2-9f08-7207cf3e0e81", "evaluation": [{"func": "table_match", "parameters": {"gold": "result.csv"}}]}
+{"instance_id": "69846f18-c7c6-4719-9317-c652f7d7d064", "evaluation": [{"func": "number_match", "parameters": {"gold": "45.3745696771496", "percentage": true}}, {"func": "table_match", "parameters": {"gold": "result.csv"}}]}
 {"instance_id": "6e420b07-316c-489a-9e41-61281de78a29", "evaluation": [{"func": "table_match", "parameters": {"gold": "result.csv"}}]}
-{"instance_id": "edb7b33b-2579-49c0-a43a-ffde9a3e1517", "evaluation": [{"func": "table_match", "parameters": {"gold": "result.csv"}}]}
+{"instance_id": "6f345f12-e034-4a9d-b456-93e5b585075e", "evaluation": [{"func": "number_match", "parameters": {"gold": "24.426213134588817"}}, {"func": "table_match", "parameters": {"gold": "result.csv", "condition_cols": [4]}}]}
+{"instance_id": "73d1af34-d03e-455a-9111-148192548574", "evaluation": [{"func": "table_match", "parameters": {"gold": "result.csv"}}]}
 {"instance_id": "9457e049-fbe5-430c-a839-0327c7438bb9", "evaluation": [{"func": "number_match", "parameters": {"gold": "235034.75046277"}}, {"func": "table_match", "parameters": {"gold": "result.csv"}}]}
 {"instance_id": "949e0490-4c4c-47b6-bd0a-1f2ba01d09b5", "evaluation": [{"func": "string_match", "parameters": {"gold": ["US-9868268-B2"]}}, {"func": "table_match", "parameters": {"gold": "result.csv"}}]}
-{"instance_id": "335fb285-c9fd-45ff-ba8d-fe89a62016f7", "evaluation": [{"func": "number_match", "parameters": {"gold": "7.03"}}, {"func": "table_match", "parameters": {"gold": "result.csv"}}]}
-{"instance_id": "cf46d8be-fa20-47a7-a2ac-d0263cb67924", "evaluation": [{"func": "number_match", "parameters": {"gold": [21656, 18324, 23056], "conj": "and"}}, {"func": "table_match", "parameters": {"gold": "result.csv", "condition_cols": [4]}}]}
-{"instance_id": "47ac6231-35f7-4dd4-ae33-5f6bd05ad4e0", "evaluation": [{"func": "string_match", "parameters": {"gold": ["US-2016100312-A1"]}}, {"func": "table_match", "parameters": {"gold": "result.csv"}}]}
-{"instance_id": "e4a35097-4ff3-4ca7-8304-f593e039735b", "evaluation": [{"func": "table_match", "parameters": {"gold": "202101.csv"}}]}
-{"instance_id": "27c1aab9-ed94-47ea-ba3a-1dbfcd4856a2", "evaluation": [{"func": "string_match", "parameters": {"gold": ["2002"]}}, {"func": "table_match", "parameters": {"gold": "result.csv"}}]}
-{"instance_id": "478fa226-daac-4bc0-8d18-35c1e19fb5cf", "evaluation": [{"func": "table_match", "parameters": {"gold": "result.csv", "condition_cols": [1, 2]}}]}
-{"instance_id": "d745d6e3-beb9-44cc-a8db-646c2ce510f4", "evaluation": [{"func": "string_match", "parameters": {"gold": ["UNITY MEDICAL AND SURGICAL HOSPITAL"]}}, {"func": "table_match", "parameters": {"gold": "result.csv"}}]}
-{"instance_id": "9cecf6c2-c633-418c-a627-fbf31d4043a8", "evaluation": [{"func": "number_match", "parameters": {"gold": "12212"}}, {"func": "table_match", "parameters": {"gold": "result.csv"}}]}
-{"instance_id": "73d1af34-d03e-455a-9111-148192548574", "evaluation": [{"func": "table_match", "parameters": {"gold": "result.csv"}}]}
-{"instance_id": "54e2ea3a-0439-4f96-a88e-982a41807eff", "evaluation": [{"func": "string_match", "parameters": {"gold": ["US,EP,IL,WO,CA"]}}, {"func": "table_match", "parameters": {"gold": "result.csv"}}]}
 {"instance_id": "69846f18-c7c6-4719-9317-c652f7d7d064", "evaluation": [{"func": "table_match", "parameters": {"gold": "result.csv", "condition_cols": [1, 2]}}]}
 {"instance_id": "9adb6e30-40b9-4fe3-b254-b54bd0448f44", "evaluation": [{"func": "table_match", "parameters": {"gold": "result.csv", "condition_cols": [1, 2]}}]}
-{"instance_id": "0bcfa8c4-bc4c-4cd8-9fe5-dd60a2c1f956", "evaluation": [{"func": "string_match", "parameters": {"gold": ["Google 24oz Ring Bottle Blue"], "exclude": ["Google Pen White", "Google Metallic Notebook Set", "Google Red Speckled Tee", "Google Mouse Pad Navy"]}}, {"func": "table_match", "parameters": {"gold": "result.csv"}}]}
-{"instance_id": "6f345f12-e034-4a9d-b456-93e5b585075e", "evaluation": [{"func": "number_match", "parameters": {"gold": "24.426213134588817"}}, {"func": "table_match", "parameters": {"gold": "result.csv", "condition_cols": [4]}}]}
+{"instance_id": "9cecf6c2-c633-418c-a627-fbf31d4043a8", "evaluation": [{"func": "number_match", "parameters": {"gold": "12212"}}, {"func": "table_match", "parameters": {"gold": "result.csv"}}]}
+{"instance_id": "b544e853-00b3-45bc-b3ea-81f195739c60", "evaluation": [{"func": "number_match", "parameters": {"gold": "17.5056918795851%", "percentage": true}}, {"func": "table_match", "parameters": {"gold": "result.csv"}}]}
+{"instance_id": "caae42a9-0d24-4dfb-bcf0-e5274b51af30", "evaluation": [{"func": "string_match", "parameters": {"gold": ["django", "os", "sys"], "conj": "and"}}, {"func": "table_match", "parameters": {"gold": "result.csv", "condition_cols": [0]}}]}
+{"instance_id": "cf46d8be-fa20-47a7-a2ac-d0263cb67924", "evaluation": [{"func": "number_match", "parameters": {"gold": [21656, 18324, 23056], "conj": "and"}}, {"func": "table_match", "parameters": {"gold": "result.csv", "condition_cols": [4]}}]}
 {"instance_id": "d30b2fcf-037c-4e90-9471-9d4a0a9f5e7b", "evaluation": [{"func": "table_match", "parameters": {"gold": "result.csv", "condition_cols": [0]}}]}
+{"instance_id": "d745d6e3-beb9-44cc-a8db-646c2ce510f4", "evaluation": [{"func": "string_match", "parameters": {"gold": ["UNITY MEDICAL AND SURGICAL HOSPITAL"]}}, {"func": "table_match", "parameters": {"gold": "result.csv"}}]}
+{"instance_id": "e1c62309-43cd-4d1c-be22-3d4c5fd8a242", "evaluation": [{"func": "string_match", "parameters": {"gold": ["C", "JavaScript", "Java"], "conj": "and"}}, {"func": "table_match", "parameters": {"gold": "result.csv"}}]}
+{"instance_id": "e4a35097-4ff3-4ca7-8304-f593e039735b", "evaluation": [{"func": "table_match", "parameters": {"gold": "202101.csv"}}]}
+{"instance_id": "edb7b33b-2579-49c0-a43a-ffde9a3e1517", "evaluation": [{"func": "table_match", "parameters": {"gold": "result.csv"}}]}
+{"instance_id": "f9f50a48-022c-47fa-b02f-a79f96c0a59c", "evaluation": [{"func": "number_match", "parameters": {"gold": "7.8573421918436059"}}, {"func": "table_match", "parameters": {"gold": "result.csv", "condition_cols": [2]}}]}
+{"instance_id": "fd046fdc-9d5c-4e3c-9d70-afa047dd2a59", "evaluation": [{"func": "table_match", "parameters": {"gold": "result.csv", "condition_cols": [3]}}]}
+{"instance_id": "8604257c-7a9d-4cc0-9fc0-c6408dc1e5a3", "evaluation": [{"func": "string_match", "parameters": {"gold": ["HELEN VOIGHT"], "exclude": ["PENELOPE GUINESS", "NICK WAHLBERG"]}}, {"func": "table_match", "parameters": {"gold": ["result.csv", "result_1.csv"]}}]}
+{"instance_id": "f624e71e-ad2c-4bdb-a85a-bdb465211087", "evaluation": [{"func": "number_match", "parameters": {"gold": ["4.14333333333333"]}}, {"func": "table_match", "parameters": {"gold": ["result.csv"]}}]}
+{"instance_id": "053d2650-2188-4e58-a141-2376d5cff0a5", "evaluation": {"func": "duckdb_match", "parameters": {"gold": "playbook.duckdb", "condition_tabs": ["attribution_touches", "cpa_and_roas"], "condition_cols": [[15, 16, 17, 18], [0, 1, 2]], "ignore_orders": [true, true]}}}
+{"instance_id": "12444719-63fc-4b14-ad1d-6d9e286856ee", "evaluation": {"func": "number_match", "parameters": {"gold": "5"}}}
+{"instance_id": "1c8c6d04-9999-4660-ad70-92fe951cbd96", "evaluation": {"func": "duckdb_match", "parameters": {"gold": "mrr.duckdb", "condition_tabs": ["mrr"], "condition_cols": [[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]], "ignore_orders": [true]}}}
+{"instance_id": "43d5ad49-0f99-4b90-a6df-d3afc5c216ff", "evaluation": {"func": "number_match", "parameters": {"gold": "3"}}}
+{"instance_id": "51e48d81-13d7-49ae-b0d4-ef8a04dfe78a", "evaluation": {"func": "number_match", "parameters": {"gold": "0.0917212220403709"}}}
+{"instance_id": "8fa59610-dc3f-49a7-af84-3e85b8cd581a", "evaluation": {"func": "duckdb_match", "parameters": {"gold": "mrr.duckdb", "condition_tabs": ["mrr"], "condition_cols": [[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]], "ignore_orders": [true]}}}
+{"instance_id": "b6e64da5-6178-4ba3-96cd-17a83f0e9f88", "evaluation": {"func": "duckdb_match", "parameters": {"gold": "playbook.duckdb", "condition_tabs": ["attribution_touches", "cpa_and_roas"], "condition_cols": [[15, 16, 17, 18], [0, 1, 2]], "ignore_orders": [true, true]}}}
+{"instance_id": "bc879f19-b4ef-469e-9be3-40aa0e9fa715", "evaluation": {"func": "number_match", "parameters": {"gold": "141.4"}}}

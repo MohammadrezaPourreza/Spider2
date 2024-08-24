@@ -1,4 +1,4 @@
-# Spider2-C Evaluation Suite
+# Evaluation Suite
 
 ## Folder Structure
 
