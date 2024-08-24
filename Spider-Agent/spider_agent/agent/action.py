@@ -357,7 +357,7 @@ class Terminate(Action):
         return """
 ## Terminate Action
 * Signature: Terminate(output="literal_answer_or_output_path")
-* Description: This action denotes the completion of the entire task and returns the final answer or the output file/folder path. If you think the answer is a table, tell me the name of the CSV file. If the answer is not a table, just tell me the answer. Make sure the output file is located in the initial workspace directory. 
+* Description: This action denotes the completion of the entire task and returns the final answer or the output file/folder path. If the answer is a table, it must be saved in a CSV file, and you should tell me the file name. If the answer is not a table, just tell me the answer. Make sure the output file is located in the initial workspace directory. 
 * Examples:
   - Example1: Terminate(output="New York")
   - Example2: Terminate(output="result.csv")
