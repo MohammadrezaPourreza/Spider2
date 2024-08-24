@@ -16,9 +16,6 @@ from typing import Dict, List, Optional, Tuple, Any, TypedDict
 
 from spider_agent.agent.models import call_llm
 
-MAX_OBSERVATION_LENGTH = 2000
-TIME_OUT_ACTION = 600
-
 
 logger = logging.getLogger("spider_agent")
 

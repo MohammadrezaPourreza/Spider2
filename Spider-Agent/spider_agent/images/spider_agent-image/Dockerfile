@@ -1,4 +1,4 @@
-FROM python:3.9
+FROM python:3.11
 
 WORKDIR /workspace
 
@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y \
 # Upgrade pip and install Python packages
 RUN pip install --upgrade pip
 
-RUN pip install google-cloud-bigquery db-dtypes pandas matplotlib scikit-learn seaborn numpy scipy statsmodels xgboost plotly tabulate snowflake-connector-python duckdb openpyxl
+RUN pip install google-cloud-bigquery pyarrow db-dtypes pandas matplotlib scikit-learn seaborn numpy scipy statsmodels xgboost plotly tabulate snowflake-connector-python duckdb openpyxl
 RUN pip install dbt-duckdb
 # Set the default command to run when starting the container
 CMD ["/bin/bash"]

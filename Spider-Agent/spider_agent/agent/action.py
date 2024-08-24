@@ -175,9 +175,6 @@ class LOCAL_DB_SQL(Action):
 ## SQL Action
 * Signature: LOCAL_DB_SQL(file_path="path/to/database_file", command="sql_command", output="path/to/output_file.csv" or "direct")
 * Description: Executes an SQL command on the specified database file. If `output` is set to a file path, the results are saved to this CSV file; if set to 'direct', results are displayed directly.
-* Constraints:
-  - The database file must be accessible and in a format compatible with SQLite (e.g., .sqlite, .db).
-  - SQL commands must be valid and safely formatted to prevent security issues such as SQL injection.
 * Examples:
   - Example1: LOCAL_DB_SQL(file_path="data.sqlite", command="SELECT name FROM sqlite_master WHERE type='table'", output="directly")
   - Example2: LOCAL_DB_SQL(file_path="data.db", command="SELECT * FROM users", output="users_output.csv")
@@ -207,7 +204,7 @@ class BIGQUERY_EXEC_SQL(Action):
 ## BIGQUERY_EXEC_SQL Action
 * Signature: BIGQUERY_EXEC_SQL(sql_query="SELECT * FROM your_table", is_save=True, save_path="path/to/output_file.csv")
 * Description: Executes a SQL query on Google Cloud BigQuery. If `is_save` is True, the results are saved to a specified CSV file; otherwise, results are printed.
-
+If you estimate that the number of returned rows is smaller than 10, you can set is_save=False and directly view the results. If you estimate that the number of returned rows is large, be sure to set is_save = True.
 * Examples:
   - Example1: BIGQUERY_EXEC_SQL(sql_query="SELECT count(*) FROM sales", is_save=False)
   - Example2: BIGQUERY_EXEC_SQL(sql_query="SELECT user_id, sum(purchases) FROM transactions GROUP BY user_id", is_save=True, save_path="summary.csv")
@@ -245,7 +242,6 @@ class BQ_GET_TABLES(Action):
 ## GET_TABLES Action
 * Signature: GET_TABLES(database_name="your_database_name", dataset_name="your_dataset_name", save_path="path/to/output_file.csv")
 * Description: Executes a query to fetch all table names and their corresponding DDL from the specified dataset in Google Cloud BigQuery. The results are saved to the specified CSV file.
-* Constraints:
   - The BigQuery id of a table is usually in the form of database_name.dataset_name.table_name. This action mainly focuses on the tables under dataset_name.
 * Examples:
   - Example1: GET_TABLES(database_name="bigquery-public-data", dataset_name="new_york", save_path="dataset_metadata.csv")
