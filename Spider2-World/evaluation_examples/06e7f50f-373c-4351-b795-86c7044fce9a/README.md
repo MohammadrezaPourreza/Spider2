@@ -1,2 +1,2 @@
-1. Please query `patents-public-data.github_repos` database to solve this problem.
+1. Don't make use of information from these four tables `bigquery-public-data.github_repos.files`, `bigquery-public-data.github_repos.contents`, `bigquery-public-data.github_repos.commits` and `bigquery-public-data.github_repos.repos`. Instead, please query `bigquery-public-data.github_repos.sample_files`, `bigquery-public-data.github_repos.sample_contents`, `bigquery-public-data.github_repos.sample_commits` and `bigquery-public-data.github_repos.sample_repos` to solve this problem.
 2. Please fill in the file result.csv with your answer.

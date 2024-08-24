@@ -63,7 +63,7 @@ class SQLPrompt(BasicPrompt):
                 print("Sample rows info too long, skip. length: ", len(new))
         if args.use_external_knowledge and example['external_knowledge'] is not None:
             # TODO 路径hard-code
-            with open(osp.join('/data1/yyx/text2sql/Spider2/Spider2/externel_information/externel_knowledge/', example['external_knowledge']), "r", encoding="utf-8") as file:
+            with open(osp.join('/data1/yyx/text2sql/Spider2/Spider2/external_information', example['external_knowledge']), "r", encoding="utf-8") as file:
                 content = file.read()
             new = self.external_knowledge_info.format(content)
             if check_length(prompt_components, new):
