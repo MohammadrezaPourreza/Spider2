@@ -1,5 +1,7 @@
 ## CEILING
 
 CEILING(X)
+
 **Description**
+
 Synonym of CEIL(X)

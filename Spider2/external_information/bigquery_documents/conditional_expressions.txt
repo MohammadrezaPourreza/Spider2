@@ -1122,10 +1122,7 @@ logo.svg) ](/)
 
 Send feedback
 
-#  Conditional expressions
-
-Stay organized with collections  Save and categorize content based on your
-preferences.
+#  Conditional functions
 
 GoogleSQL for BigQuery supports conditional expressions. Conditional
 expressions impose constraints on the evaluation order of their inputs. In
@@ -1135,7 +1132,21 @@ functions are evaluated before calling the function. Short-circuiting in
 conditional expressions can be exploited for error handling or performance
 tuning.
 
-###  ` CASE expr `
+
+###  Function list
+
+Name  |  Summary
+---|---
+` CASE_EXPR ` |  Compares the given expression to each successive WHEN clause and produces the first result where the values are equal.
+` CASE ` |  Evaluates the condition of each successive WHEN clause and produces the first result where the condition evaluates to TRUE.
+` COALESCE ` |  Produces the value of the first non-NULL expression, if any, otherwise NULL.
+` IF ` |  If an expression evaluates to TRUE, produces a specified result, otherwise produces the evaluation for an else result.
+` IFNULL ` |  If an expression evaluates to NULL, produces a specified result, otherwise produces the expression.
+` NULLIF ` |  Produces NULL if the first expression that matches another evaluates to TRUE, otherwise returns the first expression.
+
+
+
+###  ` CASE_EXPR `
 
 
 
