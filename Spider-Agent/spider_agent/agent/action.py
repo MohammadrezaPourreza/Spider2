@@ -143,7 +143,7 @@ Signature: EditFile(filepath="path/to/file"):
 ```
 file_content
 ```
-Description: This action will overwrite the file specified in the filepath field with the content wrapped in paired ``` symbols. Normally, you need to read the file before deciding to use EditFile to modify it. Please use this action when modifying files.
+Description: This action will overwrite the file specified in the filepath field with the content wrapped in paired ``` symbols. Normally, you need to read the file before deciding to use EditFile to modify it.
 Example: EditFile(filepath="hello_world.py"):
 ```
 print("Hello, world!")
