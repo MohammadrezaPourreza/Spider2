@@ -30,7 +30,7 @@ def query_data(sql_query, is_save, save_path="result.csv"):
 
 if __name__ == "__main__":
 
-    # Write your SQL query in the sql_query variable to interact with the database, the SQL is just an example
+    # Write your SQL query in the sql_query variable to interact with the database, the SQL here is just an example
     sql_query = """
       SELECT
         *

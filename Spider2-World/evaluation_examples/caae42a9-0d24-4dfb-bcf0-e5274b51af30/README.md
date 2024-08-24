@@ -1,0 +1,1 @@
+1. please query `bigquery-public-data.github_repos.sample_files` and `bigquery-public-data.github_repos.sample_contents` database to solve this problem
