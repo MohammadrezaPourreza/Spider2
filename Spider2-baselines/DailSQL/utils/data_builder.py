@@ -3,6 +3,7 @@ import os
 import os.path as osp
 from utils.utils import get_tables, get_tables_from_tables_json, sql2skeleton
 from utils.linking_utils.application import get_question_pattern_with_schema_linking
+from tqdm import tqdm
 
 
 proj_dir = osp.dirname(osp.dirname(osp.abspath(__file__)))
@@ -39,9 +40,9 @@ class BasicDataset(object):
             #     self.databases[db_id] = self.get_tables(db_id)
             with open(self.table_json) as f:
                 tables = json.load(f)
-                for tj in tables:
-                    db_id = tj["db_id"]
-                    self.databases[db_id] = self.get_tables(db_id)
+            for tj in tqdm(tables, desc="Loading tables.json"):
+                db_id = tj["db_id"]
+                self.databases[db_id] = self.get_tables(db_id)
         return self.databases
 
     def get_tables(self, db_id):
@@ -225,7 +226,7 @@ class Spider2CForDailSQL_Dataset(BasicDataset):
         self.test_gold = ""  
         self.train_json = "dummy.json"
         self.train_gold = ""  
-        self.table_json = "preprocessed_data/tables_preprocessed.json"
+        self.table_json = f"preprocessed_data/{args.dev}/tables_preprocessed.json"
         self.mini_test_index_json = None        
 
         super(Spider2CForDailSQL_Dataset, self).__init__(
@@ -241,7 +242,7 @@ class Spider2CForDailSQL_Dataset(BasicDataset):
             return self.databases[db_id]
         else:
             # print('第1)处，执行了我修改后的逻辑，根据tables.json得到databases')
-            tables_json = json.load(open(osp.join(proj_dir, 'preprocessed_data/tables_preprocessed.json'), 'r', encoding='utf-8'))
+            tables_json = json.load(open(osp.join(proj_dir, self.table_json), 'r', encoding='utf-8'))
             tables = get_tables_from_tables_json(db_id, tables_json)  
             self.databases[db_id] = tables
             return tables

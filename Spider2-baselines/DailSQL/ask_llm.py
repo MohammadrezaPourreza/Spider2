@@ -1,4 +1,4 @@
-# import debugpy; debugpy.connect(('127.0.0.1', 5690))
+# import debugpy; debugpy.connect(('127.0.0.1', 5696))
 
 import argparse
 import os
@@ -27,7 +27,9 @@ if __name__ == '__main__':
                                                       LLM.GPT_35_TURBO_0613,
                                                       # LLM.TONG_YI_QIAN_WEN,
                                                       LLM.GPT_35_TURBO_16K,
-                                                      LLM.GPT_4],
+                                                      LLM.GPT_4, 
+                                                      LLM.GPT_4o,
+                                                      ],
                         default=LLM.GPT_35_TURBO)
     parser.add_argument("--start_index", type=int, default=0)
     parser.add_argument("--end_index", type=int, default=1000000)  # 设置这个，以仅对前n个问题进行处理，节省token消耗
@@ -58,10 +60,10 @@ if __name__ == '__main__':
     if args.mini_index_path:
         mini_index = json.load(open(args.mini_index_path, 'r'))
         questions = [questions[i] for i in mini_index]
-        out_file = f"{args.question}/RESULTS_MODEL-{args.model}_MINI.txt"
+        # out_file = f"{args.question}/RESULTS_MODEL-{args.model}_MINI.txt"
         json_out_file = f"{args.question}/RESULTS_MODEL-{args.model}_MINI.json"
     else:
-        out_file = f"{args.question}/RESULTS_MODEL-{args.model}.txt"
+        # out_file = f"{args.question}/RESULTS_MODEL-{args.model}.txt"
         json_out_file = f"{args.question}/RESULTS_MODEL-{args.model}.json"
 
     # Create submit folder if not exists
@@ -73,7 +75,7 @@ if __name__ == '__main__':
     token_cnt = 0
     results_json = []
 
-    with open(out_file, mode) as f, open(json_out_file, mode) as json_f:
+    with open(json_out_file, mode) as json_f:
         for i, batch in enumerate(tqdm(question_loader)):
             if i < args.start_index:
                 continue
@@ -95,9 +97,6 @@ if __name__ == '__main__':
                     if not sql.startswith("SELECT"):
                         sql = "SELECT " + sql
                     
-                    # output to .txt
-                    writted = f"{instance_id}: {sql}\n"
-                    f.write(writted)
                     # output to .json
                     results_json.append({
                         "instance_id": instance_id,
@@ -124,9 +123,6 @@ if __name__ == '__main__':
                     final_sqls = get_sqls_without_exec([result], args.n, args.db_dir)
 
                     for sql in final_sqls:
-                        # output to .txt
-                        writted = f"{instance_id}: {sql}\n"
-                        f.write(writted)
                         # output to .json
                         results_json.append({
                             "instance_id": instance_id,

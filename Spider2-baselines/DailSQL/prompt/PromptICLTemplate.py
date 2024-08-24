@@ -41,9 +41,9 @@ class BasicICLPrompt(object):
         else:
             return 1
 
-    def format(self, target: dict, max_seq_len: int, max_ans_len: int, scope_factor: int, cross_domain=False, *args, **kwargs):  
+    def format(self, target: dict, max_seq_len: int, max_ans_len: int, scope_factor: int, cross_domain=False, args=None):  
         # target question
-        prompt_target = self.format_target(target)
+        prompt_target = self.format_target(target, args)
         sum_tokens = count_tokens(prompt_target, tokenizer=self.tokenizer)
         
         if self.NUM_EXAMPLE != 0:

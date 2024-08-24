@@ -3,6 +3,7 @@ import json
 import os
 import re
 import sqlite3
+import pandas as pd
 
 from transformers import AutoTokenizer
 from utils.enums import LLM
@@ -205,30 +206,60 @@ def get_sql_for_database(path_db=None, cur=None):
     ret = [_[0][0] for _ in sqls]
     return ret
 
+def get_sample_rows_for_database_from_tables_json(db_id, tables_json):
 
-def get_sql_for_database_from_tables_json(db_id, tables_json):
+    def to_markdown(sample_rows):
+        markdown_string = ""
+        for key, data in sample_rows.items():
+            df = pd.DataFrame(data)
+            df = df.head(1)  # only use the first rows, avoid too long prompt
+            markdown_table = df.to_markdown(index=False)
+            markdown_string += f"table {key}:\n{markdown_table}\n\n"
+        return markdown_string
+
+    for db in tables_json:
+        if db["db_id"] != db_id: continue
+        
+        sample_rows = db["sample_rows"]
+        md_rows = to_markdown(sample_rows)
+
+        return md_rows
+    raise ValueError(f"Database '{db_id}' not found")
+
+def get_sql_for_database_from_tables_json(db_id, tables_json, use_column_desc=False):
+
     for db in tables_json:
         if db["db_id"] != db_id: continue
        
         table_names = db["table_names_original"]
         columns = db["column_names_original"]
         column_types = db["column_types"]
+        column_descs = db["column_descriptions"] 
         primary_keys = db["primary_keys"]
         foreign_keys = db["foreign_keys"]
+        sample_rows = db["sample_rows"]
         
+        if len(columns) != len(column_descs):
+            print(f'-----------------\n存在nested column的db:{db_id}, 先不使用column_descs\n-----------------')
+            COLUMN_DESC_FLAG = False
+        else:
+            print(f'-----------------\n不存在nested column的db:{db_id}, 使用column_descs\n-----------------')
+            COLUMN_DESC_FLAG = True
+            
         create_statements = []
-        
         for table_index, table_name in enumerate(table_names):
-            # table_columns = [
-            #     (col[1], column_types[columns.index(col)])
-            #     for col in columns if col[0] == table_index
-            # ]
+
             table_columns = []
             for col in columns:
                 if col[0] == table_index:
                     col_name = col[1]
                     col_type = column_types[columns.index(col)]
-                    table_columns.append((col_name, col_type))
+                    if COLUMN_DESC_FLAG:
+                        col_desc = column_descs[columns.index(col)]
+                        assert col_desc[0] == table_index
+                        table_columns.append((col_name, col_type, col_desc[1]))
+                    else:
+                        table_columns.append((col_name, col_type, ''))
             
             table_primary_keys = [
                 columns[pk][1] for pk in primary_keys if columns[pk][0] == table_index
@@ -243,8 +274,11 @@ def get_sql_for_database_from_tables_json(db_id, tables_json):
                     table_foreign_keys.append(f'FOREIGN KEY ("{fk_column}") REFERENCES `{ref_table}` ("{ref_column}")')
             
             column_defs = []
-            for col_name, col_type in table_columns:
+            for col_name, col_type, col_desc in table_columns:
                 column_def = f'"{col_name}" {col_type.upper()}'
+                if use_column_desc and col_desc and col_desc != '':  # key: add column_desc
+                    column_def += f' COMMENT "{col_desc}"'
+
                 if col_name in table_primary_keys:
                     column_def += ' PRIMARY KEY'
                 column_defs.append(column_def)
@@ -256,9 +290,9 @@ def get_sql_for_database_from_tables_json(db_id, tables_json):
                 create_statement += ',\r\n    ' + ',\r\n    '.join(table_foreign_keys)
             
             create_statement += '\r\n)'
-            
+
             create_statements.append(create_statement)
-            
+        
         return create_statements
     raise ValueError(f"Database '{db_id}' not found")
 
@@ -407,79 +441,83 @@ def sql_normalization(sql):
 
 
 def sql2skeleton(sql: str, db_schema):
-    sql = sql_normalization(sql)
+    try:
+        sql = sql_normalization(sql)
 
-    table_names_original, table_dot_column_names_original, column_names_original = [], [], []
-    column_names_original.append("*")
-    for table_id, table_name_original in enumerate(db_schema["table_names_original"]):
-        table_names_original.append(table_name_original.lower())
-        table_dot_column_names_original.append(table_name_original + ".*")
-        for column_id_and_name in db_schema["column_names_original"]:
-            column_id = column_id_and_name[0]
-            column_name_original = column_id_and_name[1]
-            table_dot_column_names_original.append(table_name_original.lower() + "." + column_name_original.lower())
-            column_names_original.append(column_name_original.lower())
+        table_names_original, table_dot_column_names_original, column_names_original = [], [], []
+        column_names_original.append("*")
+        for table_id, table_name_original in enumerate(db_schema["table_names_original"]):
+            table_names_original.append(table_name_original.lower())
+            table_dot_column_names_original.append(table_name_original + ".*")
+            for column_id_and_name in db_schema["column_names_original"]:
+                column_id = column_id_and_name[0]
+                column_name_original = column_id_and_name[1]
+                table_dot_column_names_original.append(table_name_original.lower() + "." + column_name_original.lower())
+                column_names_original.append(column_name_original.lower())
 
-    parsed_sql = Parser(sql)
-    new_sql_tokens = []
-    for token in parsed_sql.tokens:
-        # mask table names
-        if token.value in table_names_original:
-            new_sql_tokens.append("_")
-        # mask column names
-        elif token.value in column_names_original \
-                or token.value in table_dot_column_names_original:
-            new_sql_tokens.append("_")
-        # mask string values
-        elif token.value.startswith("'") and token.value.endswith("'"):
-            new_sql_tokens.append("_")
-        # mask positive int number
-        elif token.value.isdigit():
-            new_sql_tokens.append("_")
-        # mask negative int number
-        elif isNegativeInt(token.value):
-            new_sql_tokens.append("_")
-        # mask float number
-        elif isFloat(token.value):
-            new_sql_tokens.append("_")
-        else:
-            new_sql_tokens.append(token.value.strip())
+        parsed_sql = Parser(sql)
+        new_sql_tokens = []
+        for token in parsed_sql.tokens:
+            # mask table names
+            if token.value in table_names_original:
+                new_sql_tokens.append("_")
+            # mask column names
+            elif token.value in column_names_original \
+                    or token.value in table_dot_column_names_original:
+                new_sql_tokens.append("_")
+            # mask string values
+            elif token.value.startswith("'") and token.value.endswith("'"):
+                new_sql_tokens.append("_")
+            # mask positive int number
+            elif token.value.isdigit():
+                new_sql_tokens.append("_")
+            # mask negative int number
+            elif isNegativeInt(token.value):
+                new_sql_tokens.append("_")
+            # mask float number
+            elif isFloat(token.value):
+                new_sql_tokens.append("_")
+            else:
+                new_sql_tokens.append(token.value.strip())
 
-    sql_skeleton = " ".join(new_sql_tokens)
+        sql_skeleton = " ".join(new_sql_tokens)
 
-    # remove JOIN ON keywords
-    sql_skeleton = sql_skeleton.replace("on _ = _ and _ = _", "on _ = _")
-    sql_skeleton = sql_skeleton.replace("on _ = _ or _ = _", "on _ = _")
-    sql_skeleton = sql_skeleton.replace(" on _ = _", "")
-    pattern3 = re.compile("_ (?:join _ ?)+")
-    sql_skeleton = re.sub(pattern3, "_ ", sql_skeleton)
+        # remove JOIN ON keywords
+        sql_skeleton = sql_skeleton.replace("on _ = _ and _ = _", "on _ = _")
+        sql_skeleton = sql_skeleton.replace("on _ = _ or _ = _", "on _ = _")
+        sql_skeleton = sql_skeleton.replace(" on _ = _", "")
+        pattern3 = re.compile("_ (?:join _ ?)+")
+        sql_skeleton = re.sub(pattern3, "_ ", sql_skeleton)
 
-    # "_ , _ , ..., _" -> "_"
-    while ("_ , _" in sql_skeleton):
-        sql_skeleton = sql_skeleton.replace("_ , _", "_")
+        # "_ , _ , ..., _" -> "_"
+        while ("_ , _" in sql_skeleton):
+            sql_skeleton = sql_skeleton.replace("_ , _", "_")
 
-    # remove clauses in WHERE keywords
-    ops = ["=", "!=", ">", ">=", "<", "<="]
-    for op in ops:
-        if "_ {} _".format(op) in sql_skeleton:
-            sql_skeleton = sql_skeleton.replace("_ {} _".format(op), "_")
-    while ("where _ and _" in sql_skeleton or "where _ or _" in sql_skeleton):
-        if "where _ and _" in sql_skeleton:
-            sql_skeleton = sql_skeleton.replace("where _ and _", "where _")
-        if "where _ or _" in sql_skeleton:
-            sql_skeleton = sql_skeleton.replace("where _ or _", "where _")
+        # remove clauses in WHERE keywords
+        ops = ["=", "!=", ">", ">=", "<", "<="]
+        for op in ops:
+            if "_ {} _".format(op) in sql_skeleton:
+                sql_skeleton = sql_skeleton.replace("_ {} _".format(op), "_")
+        while ("where _ and _" in sql_skeleton or "where _ or _" in sql_skeleton):
+            if "where _ and _" in sql_skeleton:
+                sql_skeleton = sql_skeleton.replace("where _ and _", "where _")
+            if "where _ or _" in sql_skeleton:
+                sql_skeleton = sql_skeleton.replace("where _ or _", "where _")
 
-    # remove additional spaces in the skeleton
-    while "  " in sql_skeleton:
-        sql_skeleton = sql_skeleton.replace("  ", " ")
+        # remove additional spaces in the skeleton
+        while "  " in sql_skeleton:
+            sql_skeleton = sql_skeleton.replace("  ", " ")
 
-    # double check for order by
-    split_skeleton = sql_skeleton.split(" ")
-    for i in range(2, len(split_skeleton)):
-        if split_skeleton[i-2] == "order" and split_skeleton[i-1] == "by" and split_skeleton[i] != "_":
-            split_skeleton[i] = "_"
-    sql_skeleton = " ".join(split_skeleton)
+        # double check for order by
+        split_skeleton = sql_skeleton.split(" ")
+        for i in range(2, len(split_skeleton)):
+            if split_skeleton[i-2] == "order" and split_skeleton[i-1] == "by" and split_skeleton[i] != "_":
+                split_skeleton[i] = "_"
+        sql_skeleton = " ".join(split_skeleton)
 
+    except Exception as e:
+        print('warning: ', e)
+        sql_skeleton = " "
     return sql_skeleton
 
 

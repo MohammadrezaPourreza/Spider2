@@ -1,3 +1,4 @@
+# import debugpy; debugpy.connect(('127.0.0.1', 5696))
 import os
 import json
 import re
@@ -31,6 +32,7 @@ def main(root_path, dev_json, table_json):
 
     # 构建instance_id到db_id的映射
     instance_id_to_db_id = {item["instance_id"]: item["db_id"] for item in json1}
+    # instance_id_to_project = {item["instance_id"]: item["db_id"].split('.')[0] for item in json1}
 
     # 创建新的保存路径
     new_root_path = root_path + "-postprocessed"
@@ -67,9 +69,9 @@ if __name__ == "__main__":
     parser.add_argument('--model', default='gpt-3.5-turbo', type=str)
     args = parser.parse_args()
 
-    root_path = osp.join(proj_dir, f'postprocessed_data/{args.dev}_SQL_0-SHOT_CTX-200_ANS-4096/RESULTS_MODEL-{args.model}-SQL')
+    root_path = osp.join(proj_dir, f'postprocessed_data/{args.dev}_CTX-200/RESULTS_MODEL-{args.model}-SQL')
     dev_json = osp.join(proj_dir, f'preprocessed_data/{args.dev}/{args.dev}_preprocessed.json')
-    table_json = osp.join(proj_dir, 'preprocessed_data/tables_preprocessed.json')
+    table_json = osp.join(proj_dir, f'preprocessed_data/{args.dev}/tables_preprocessed.json')
 
     main(root_path, dev_json, table_json)
 
