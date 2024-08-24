@@ -11,10 +11,16 @@ from typing import Dict, List
 from spider_agent.agent.prompts import SYS_PROMPT_IN_OUR_CODE
 from spider_agent.agent.action import Action, Bash, Terminate, CreateFile, EditFile, LOCAL_DB_SQL, BIGQUERY_EXEC_SQL, BQ_GET_TABLES, BQ_GET_TABLE_INFO, BQ_SAMPLE_ROWS
 from spider_agent.envs.spider_agent import Spider_Agent_Env
+from spider_agent.agent.models import call_llm
+
+# from prompts import SYS_PROMPT_IN_OUR_CODE
+# from action import Action, Bash, Terminate, CreateFile, EditFile, LOCAL_DB_SQL, BIGQUERY_EXEC_SQL, BQ_GET_TABLES, BQ_GET_TABLE_INFO, BQ_SAMPLE_ROWS
+# from ..envs.spider_agent import Spider_Agent_Env
+
 from openai import AzureOpenAI
 from typing import Dict, List, Optional, Tuple, Any, TypedDict
 
-from spider_agent.agent.models import call_llm
+
 
 
 logger = logging.getLogger("spider_agent")
@@ -251,7 +257,41 @@ class PromptAgent:
 
 if __name__ == "__main__":
     agent = PromptAgent()
-    response = """Bash(code=\"\"ls -a\"):\n\n(Note: I am using the 'ls -a' command to list all files, including hidden ones, in the working directory. This will help me ensure that I am in the correct directory and provide a reference for the file paths.\")"""
-    import pdb; pdb.set_trace()
+    response = """
+BIGQUERY_EXEC_SQL(sql_query=\"\"\"
+WITH purchase_users AS (
+  SELECT DISTINCT user_pseudo_id
+  FROM `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
+  WHERE event_name = 'purchase' AND _TABLE_SUFFIX BETWEEN '20201201' AND '20201231'
+),
+pageviews AS (
+  SELECT user_pseudo_id, COUNT(*) AS pageviews
+  FROM `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
+  WHERE event_name = 'page_view' AND _TABLE_SUFFIX BETWEEN '20201201' AND '20201231'
+  GROUP BY user_pseudo_id
+),
+pageviews_by_user AS (
+  SELECT 
+    p.user_pseudo_id, 
+    p.pageviews,
+    CASE WHEN pu.user_pseudo_id IS NOT NULL THEN 'purchaser' ELSE 'non-purchaser' END AS user_type
+  FROM pageviews p
+  LEFT JOIN purchase_users pu ON p.user_pseudo_id = pu.user_pseudo_id
+)
+SELECT user_type, AVG(pageviews) AS avg_pageviews
+FROM pageviews_by_user
+GROUP BY user_type
+\"\"\", is_save=True, save_path="avg_pageviews_dec_2020.csv")
+"""
+
+    response = """
+BIGQUERY_EXEC_SQL(sql_query=\"\"\"
+SELECT DISTINCT user_pseudo_id
+FROM bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*
+WHERE event_name = 'purchase' AND _TABLE_SUFFIX BETWEEN '20201201' AND '20201231'
+\"\"\", is_save=False)
+"""
+
+
     action = agent.parse_action(response)
     print(action)

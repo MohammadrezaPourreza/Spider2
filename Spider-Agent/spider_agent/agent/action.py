@@ -204,7 +204,7 @@ class BIGQUERY_EXEC_SQL(Action):
 ## BIGQUERY_EXEC_SQL Action
 * Signature: BIGQUERY_EXEC_SQL(sql_query="SELECT * FROM your_table", is_save=True, save_path="path/to/output_file.csv")
 * Description: Executes a SQL query on Google Cloud BigQuery. If `is_save` is True, the results are saved to a specified CSV file; otherwise, results are printed.
-If you estimate that the number of returned rows is smaller than 10, you can set is_save=False and directly view the results. If you estimate that the number of returned rows is large, be sure to set is_save = True.
+If you estimate that the number of returned rows is small, you can set is_save=False, to directly view the results. If you estimate that the number of returned rows is large, be sure to set is_save = True.
 * Examples:
   - Example1: BIGQUERY_EXEC_SQL(sql_query="SELECT count(*) FROM sales", is_save=False)
   - Example2: BIGQUERY_EXEC_SQL(sql_query="SELECT user_id, sum(purchases) FROM transactions GROUP BY user_id", is_save=True, save_path="summary.csv")
@@ -212,11 +212,23 @@ If you estimate that the number of returned rows is smaller than 10, you can set
 
     @classmethod
     def parse_action_from_text(cls, text: str) -> Optional['BIGQUERY_EXEC_SQL']:
-        matches = re.findall(r'BIGQUERY_EXEC_SQL\(sql_query=(.*?), is_save=(.*?), save_path=(.*?)\)', text, flags=re.DOTALL)
+        pattern = r'BIGQUERY_EXEC_SQL\(sql_query=(\"\"\"(.*?)\"\"\"|\"(.*?)\"), is_save=(True|False)(, save_path=\"(.*?)\")?\)'
+        matches = re.findall(pattern, text, flags=re.DOTALL)
         if matches:
-            sql_query, is_save, save_path = (item.strip() for item in matches[-1])
-            return cls(sql_query=remove_quote(sql_query), is_save=eval(is_save), save_path=remove_quote(save_path))
+            for match in matches:
+
+                sql_query_multiline, sql_query_single, is_save, save_path = match[1], match[2], match[3], match[5]
+
+                sql_query = sql_query_multiline if sql_query_multiline else sql_query_single
+                sql_query = sql_query.strip().strip('"').strip("'")
+                if save_path is None:
+                    save_path = ""
+                else:
+                    save_path = save_path.strip().strip('"').strip("'")
+                is_save = is_save.strip().lower() == 'true'
+                return cls(sql_query=sql_query, is_save=is_save, save_path=save_path)
         return None
+
 
     def __repr__(self) -> str:
         save_info = f', save_path="{self.save_path}"' if self.is_save else ""

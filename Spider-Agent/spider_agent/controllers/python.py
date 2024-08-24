@@ -155,7 +155,9 @@ class PythonController:
         return observation
 
     def execute_bq_exec_sql_query(self, action):
-        sql_query, is_save, save_path = action.sql_query, action.is_save, action.save_path
+        sql_query, is_save = action.sql_query, action.is_save
+        save_path = getattr(action, 'save_path', "")
+
         script_content = BQ_EXEC_SQL_QUERY_TEMPLATE.format(
             sql_query=sql_query, is_save=is_save, save_path=save_path)
         temp_file_path = "temp_sql_script.py" 
