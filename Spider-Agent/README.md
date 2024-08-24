@@ -66,13 +66,13 @@ You can run `evaluate.py` in the evaluation suite folder of `Spider2-World` to g
 
 #### Action
 
-- `Python`: write code in Python file
-- `Bash`: Check the information of files. run some code. run DBT
-- `SQL`:
-  - `get schema`: get the schema of different kinds of DBs
-  - `schema tailoring`: Preliminary screening of schemas related to the problem
-  - `sample rows`: sample n rows of this DB
-  - `sample specific columns`: View the distinct value in a column
-  - `run sql`: Run a SQL query on a specified DB
+- `Bash`: Executes shell commands, such as checking file information, running code, or executing DBT commands.
+- `CREATE_FILE`: Creates a new file with specified content.
+- `EDIT_FILE`: Edits or overwrites the content of an existing file.
+- `BIGQUERY_EXEC_SQL`: Executes a SQL query on BigQuery, with an option to save the results.
+- `BQ_GET_TABLES`: Retrieves all table names and schemas from a specified BigQuery dataset.
+- `BQ_GET_TABLE_INFO`: Retrieves detailed column information for a specific table in BigQuery.
+- `BQ_SAMPLE_ROWS`: Samples a specified number of rows from a BigQuery table and saves them as JSON.
+- `Terminate`: Marks the completion of the task, returning the final result or file path.
 
 
