@@ -84,8 +84,8 @@ def run_evaluation(result_dir, gold_dir):
         output_dict['score'] = score
         output_list.append(output_dict)
         
-                
-    print(output_list)
+    for item in output_list:
+        print(item)
     print(sum([entry['score'] for entry in output_list])/len(output_list), sum([entry['score'] for entry in output_list]), len(output_list))
 
 
