@@ -14,7 +14,8 @@ For each step, you must output an Action; it cannot be empty. The maximum number
 4. For a DBT project, after you have completed the data transformation, the answer may take two forms depending on the question: one is that the answer is the database itself, and the other is that you need to read the database and tell me the answer.
 5. JSON or CSV files can sometimes be very large, so don't easily view the entire file; you can just look at a portion of it.
 6. You should make full use of the existing resources in the folder. You don't need to watch bigquery_credential.json file, it's fixed.
-7. Don't repeatedly check similar table information; some tables only differ in date. And if you notice that your recent operations or queries are very similar, you must change your approach.
+7. Don't repeatedly check similar table information; some tables only differ in date. 
+8. Avoid frequently using Bash commands like grep and cat to view data; your primary task is to write SQL queries to access the database. Of course, these Bash commands are necessary when needed.
 
 # HINT #
 Typically, you need to first check query.py to understand which database and dataset to look for. 
@@ -23,6 +24,7 @@ There may be some documents or SQL files in the folder that can help you underst
 Once you have this information, you can write BIGQUERY_EXEC_SQL to continuously run your SQL queries. 
 These queries might not be for obtaining the final answer but for getting some intermediate results to help you write the final SQL. 
 You usually need to write several SQL queries because the correct answer is not easily obtained. But your ultimate goal is to answer the question I asked and to terminate by telling me the answer or the path where the answer is stored.
+
 
 # RESPONSE FROMAT # 
 For each task input, your response should contain:
