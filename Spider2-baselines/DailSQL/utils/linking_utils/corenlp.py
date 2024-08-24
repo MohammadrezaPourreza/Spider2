@@ -39,7 +39,7 @@ class CoreNLP:
                 f'''Please install Stanford CoreNLP and put it at {os.environ['CORENLP_HOME']}.
                 Direct URL: http://nlp.stanford.edu/software/stanford-corenlp-full-2018-10-05.zip
                 Landing page: https://stanfordnlp.github.io/CoreNLP/''')
-        self.client = corenlp.CoreNLPClient(endpoint="http://localhost:9001")  # TODO hardcode 尝试使用9001端口
+        self.client = corenlp.CoreNLPClient(endpoint="http://localhost:9001")  
 
     def __del__(self):
         self.client.stop()

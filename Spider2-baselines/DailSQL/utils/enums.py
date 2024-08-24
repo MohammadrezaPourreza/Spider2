@@ -51,6 +51,7 @@ class LLM:
     GPT_35_TURBO_16K = "gpt-3.5-turbo-16k"
     GPT_35_TURBO_0301 = "gpt-3.5-turbo-0301"
     GPT_4 = "gpt-4"
+    GPT_4o = "gpt-4o"
 
     # LLMs that use openai completion api
     TASK_COMPLETIONS = [
@@ -64,7 +65,8 @@ class LLM:
         GPT_35_TURBO_0613,
         GPT_35_TURBO_16K,
         GPT_35_TURBO_0301,
-        GPT_4
+        GPT_4,
+        GPT_4o
     ]
 
     # LLMs that can run in batch
@@ -80,7 +82,8 @@ class LLM:
         GPT_35_TURBO_0613: 0.0020,
         GPT_35_TURBO_16K: 0.003,
         GPT_35_TURBO_0301: 0.0020,
-        GPT_4: 0.03
+        GPT_4: 0.03,
+        GPT_4o: 0.005
     }
 
     # local LLMs

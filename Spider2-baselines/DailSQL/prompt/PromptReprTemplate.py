@@ -1,4 +1,4 @@
-from utils.utils import get_sql_for_database, get_sql_for_database_from_tables_json
+from utils.utils import get_sql_for_database, get_sql_for_database_from_tables_json, get_sample_rows_for_database_from_tables_json
 import json
 import os
 import os.path as osp
@@ -11,8 +11,8 @@ class BasicPrompt(object):
         # used to avoid empty init function in 0-shot prompt
         pass
 
-    def format_target(self, example: dict):
-        return self.format_question(example) + "\nSELECT "
+    def format_target(self, example: dict, args):
+        return self.format_question(example, args) + "\nSELECT "
 
     def format_question(self, example: dict):
         raise NotImplementedError()
@@ -22,25 +22,81 @@ class BasicPrompt(object):
 
 
 class SQLPrompt(BasicPrompt):
+
+
     template_info =   "/* Given the following database schema: */\n" \
                       "{}"
-    template_question =  "/* Answer the following: {} */"
-
-    def format_question(self, example: dict):
+    sample_rows_info = "/* Sample rows from the tables: */\n" \
+                      "{}"
+    external_knowledge_info = "/* External knowledge: */\n" \
+                      "{}"
+    potential_functions_info = "/* Potential functions with their usage: */\n" \
+                      "{}"
+    plan_info = "/* A plan that is useful for guiding the generation of components of a complete SQL query: */\n" \
+                      "{}"
+    
+    template_question = {
+        'gpt-4': "/* Answer the following: {} */",
+        'gpt-4o': "/* Answer the following without any explanation and don't use ```sql```: {} */",
+    }
+     
+    def format_question(self, example: dict, args):
         # print('第2)处，执行了我修改后的逻辑，根据tables.json得到【数据库创建语言】')
-        tables_json = json.load(open(osp.join(proj_dir, 'preprocessed_data/tables_preprocessed.json'), 'r', encoding='utf-8'))
-        sqls = get_sql_for_database_from_tables_json(example["db_id"], tables_json)
+        tables_json = json.load(open(osp.join(proj_dir, f'preprocessed_data/{args.dev}/tables_preprocessed.json'), 'r', encoding='utf-8'))
+        sqls = get_sql_for_database_from_tables_json(example["db_id"], tables_json, use_column_desc=args.use_column_desc)
 
         prompt_info = self.template_info.format("\n\n".join(sqls))
         prompt_extra_info = self.get_extra_info(example["db_id"])
-        prompt_question = self.template_question.format(example["question"])
+        prompt_question = self.template_question[args.model].format(example["question"])
 
-        if prompt_extra_info is None or prompt_extra_info == "":
-            prompt_components = [prompt_info, prompt_question]
-        else:
-            prompt_components = [prompt_info, prompt_extra_info, prompt_question]
+        def check_length(prompt_components, new):
+            return len("\n\n".join(prompt_components)) + len(prompt_question) + len(new) < 1048576
 
-        prompt = "\n\n".join(prompt_components)
+        # 组装变长prompt，越早组装的component优先级越高
+        prompt_components = [prompt_info]
+        if args.use_sample_rows:
+            sample_rows = get_sample_rows_for_database_from_tables_json(example["db_id"], tables_json)  
+            new = self.sample_rows_info.format(sample_rows)
+            if check_length(prompt_components, new):
+                prompt_components.append(new)
+            else:
+                print("Sample rows info too long, skip. length: ", len(new))
+        if args.use_external_knowledge and example['external_knowledge'] is not None:
+            # TODO 路径hard-code
+            with open(osp.join('/data1/yyx/text2sql/Spider2/Spider2/externel_information/externel_knowledge/', example['external_knowledge']), "r", encoding="utf-8") as file:
+                content = file.read()
+            new = self.external_knowledge_info.format(content)
+            if check_length(prompt_components, new):
+                prompt_components.append(new)
+            else:
+                print("External knowledge too long, skip. length: ", len(new))
+            
+        if args.use_potential_functions and example['potential_functions'] is not None:
+            strs = [f"{item['name']}: {item['summary']}" for item in example['potential_functions']]
+            potential_functions = "\n".join(strs)
+            new = self.potential_functions_info.format(potential_functions)
+            if check_length(prompt_components, new):
+                prompt_components.append(new)
+            else:
+                print("Potential functions info too long, skip. length: ", len(new))
+        if args.use_plan and example['plan'] is not None:
+            new = self.plan_info.format(example['plan'])
+            if check_length(prompt_components, new):
+                prompt_components.append(new)
+            else:
+                print("Plan too long, skip. length: ", len(new))
+
+            
+        if not (prompt_extra_info is None or prompt_extra_info == ""):
+            new = prompt_extra_info
+            if check_length(prompt_components, new):
+                prompt_components.append(new)
+            else:
+                print("Extra info too long, skip")
+
+        prompt_components.append(prompt_question)
+
+        prompt = "\n\n".join(prompt_components) 
         return prompt
 
 
@@ -272,9 +328,9 @@ class SQLWithRulePrompt(BasicPrompt):
                       "{}"
     template_question =  "/* Answer the following with no explanation: {} */"
 
-    def format_question(self, example: dict):
+    def format_question(self, example: dict, args):
         # print('第2)处，执行了我修改后的逻辑，根据tables.json得到【数据库创建语言】')
-        tables_json = json.load(open(osp.join(proj_dir, 'preprocessed_data/tables_preprocessed.json', 'r', encoding='utf-8')))
+        tables_json = json.load(open(osp.join(proj_dir, f'preprocessed_data/{args.dev}/tables_preprocessed.json', 'r', encoding='utf-8')))
         sqls = get_sql_for_database_from_tables_json(example["db_id"], tables_json)
 
         prompt_info = self.template_info.format("\n\n".join(sqls))
@@ -365,9 +421,9 @@ class SQLCOTPrompt(BasicPrompt):
                       "{}"
     template_question =  "/* Let's think step by step. Answer the following: {} */"
 
-    def format_question(self, example: dict):
+    def format_question(self, example: dict, args):
         # print('第2)处，执行了我修改后的逻辑，根据tables.json得到【数据库创建语言】')
-        tables_json = json.load(open(osp.join(proj_dir, 'preprocessed_data/tables_preprocessed.json', 'r', encoding='utf-8')))
+        tables_json = json.load(open(osp.join(proj_dir, f'preprocessed_data/{args.dev}/tables_preprocessed.json', 'r', encoding='utf-8')))
         sqls = get_sql_for_database_from_tables_json(example["db_id"], tables_json)
 
         prompt_info = self.template_info.format("\n\n".join(sqls))
