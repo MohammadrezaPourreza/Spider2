@@ -193,7 +193,6 @@ class Spider_Agent_Env(gym.Env):
     def step(self, action: Action):
         try:
             with timeout(DEFAULT_TIME_OUT,"Action execution time exceeded!"):
-                # Bash, Terminate, CreateFile, EditFile, LOCAL_DB_SQL, BIGQUERY_EXEC_SQL, BQ_GET_TABLES, BQ_GET_TABLE_INFO, BQ_SAMPLE_ROWS
                 done = False
                 if isinstance(action, Bash):
                     observation = self.execute_code_action(action)

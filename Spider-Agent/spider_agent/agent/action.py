@@ -174,10 +174,10 @@ class LOCAL_DB_SQL(Action):
         return """
 ## SQL Action
 * Signature: LOCAL_DB_SQL(file_path="path/to/database_file", command="sql_command", output="path/to/output_file.csv" or "direct")
-* Description: Executes an SQL command on the specified database file. If `output` is set to a file path, the results are saved to this CSV file; if set to 'direct', results are displayed directly.
+* Description: Executes an SQL command on the specified database file(SQLITE or Duckdb). If `output` is set to a file path, the results are saved to this CSV file; if set to 'direct', results are displayed directly.
 * Examples:
-  - Example1: LOCAL_DB_SQL(file_path="data.sqlite", command="SELECT name FROM sqlite_master WHERE type='table'", output="directly")
-  - Example2: LOCAL_DB_SQL(file_path="data.db", command="SELECT * FROM users", output="users_output.csv")
+  - Example1: LOCAL_DB_SQL(file_path="data.db", command="SELECT name FROM sqlite_master WHERE type='table'", output="directly")
+  - Example2: LOCAL_DB_SQL(file_path="data.duckdb", command="SELECT * FROM users", output="users_output.csv")
 """
     @classmethod
     def parse_action_from_text(cls, text: str) -> Optional[Action]:

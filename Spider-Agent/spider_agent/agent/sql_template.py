@@ -122,7 +122,7 @@ import sqlite3
 import duckdb
 
 def detect_db_type(file_path):
-    if file_path.endswith('.db'):
+    if file_path.endswith('.db') or file_path.endswith('.sqlite') :
         return 'sqlite'
     elif file_path.endswith('.duckdb'):
         return 'duckdb'
