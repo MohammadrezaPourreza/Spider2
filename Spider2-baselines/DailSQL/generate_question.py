@@ -1,4 +1,4 @@
-# import debugpy; debugpy.connect(('127.0.0.1', 5690))
+# import debugpy; debugpy.connect(('127.0.0.1', 5696))
 
 
 """
@@ -25,6 +25,7 @@ sys.path.append("./")
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--dev', default='spider2_dev', type=str, help='the name of dev file')
+    parser.add_argument("--model", type=str)
     parser.add_argument("--split", type=str, choices=["train", "test"], default="test")
     parser.add_argument("--k_shot", type=int, default=0, help="Number of examples")
     parser.add_argument("--prompt_repr", type=str, choices=[REPR_TYPE.CODE_REPRESENTATION,
@@ -50,7 +51,7 @@ if __name__ == '__main__':
                                                              EXAMPLE_TYPE.COMPLETE,
                                                              EXAMPLE_TYPE.QAWRULE,
                                                              EXAMPLE_TYPE.OPENAI_DEMOSTRATION_QA,
-                                                             EXAMPLE_TYPE.BASIC_QA], default=None)
+                                                             EXAMPLE_TYPE.BASIC_QA], default=EXAMPLE_TYPE.QA)
     parser.add_argument("--selector_type", type=str, choices=[SELECTOR_TYPE.COS_SIMILAR,
                                                               SELECTOR_TYPE.RANDOM,
                                                               SELECTOR_TYPE.EUC_DISTANCE,
@@ -61,12 +62,20 @@ if __name__ == '__main__':
                                                               SELECTOR_TYPE.EUC_DISTANCE_PRE_SKELETON_SIMILARITY_PLUS,
                                                               SELECTOR_TYPE.EUC_DISTANCE_MASK_PRE_SKELETON_SIMILARITY_THRESHOLD,
                                                               SELECTOR_TYPE.EUC_DISTANCE_MASK_PRE_SKELETON_SIMILARITY_THRESHOLD_SHIFT
-                                                              ], default=None)
-    parser.add_argument("--max_seq_len", type=int, default=2048, help="The maximal length that LLM takes")
+                                                              ], default=SELECTOR_TYPE.RANDOM)
+    parser.add_argument("--max_seq_len", type=int, default=2048, help="The maximal length that LLM takes")  # dummy when zero-shot
     parser.add_argument("--max_ans_len", type=int, default=200, help="The maximal length that an answer takes")
     parser.add_argument("--tokenizer", type=str, default="gpt-3.5-turbo")
     parser.add_argument("--scope_factor", type=int, default=100, help="Times of the searching scope")
     parser.add_argument("--pre_test_result", type=str, default=None)
+
+    # for spider2
+    parser.add_argument("--use_column_desc", action="store_false", default=True)
+    parser.add_argument("--use_sample_rows", action="store_false", default=True)
+    parser.add_argument("--use_external_knowledge", action="store_false", default=True)
+    parser.add_argument("--use_potential_functions", action="store_true", default=False)
+    parser.add_argument("--use_plan", action="store_true", default=False)
+
 
     args = parser.parse_args()
 
@@ -93,7 +102,8 @@ if __name__ == '__main__':
                                         max_seq_len=args.max_seq_len,
                                         max_ans_len=args.max_ans_len,
                                         scope_factor=args.scope_factor,
-                                        cross_domain=cross_domain)
+                                        cross_domain=cross_domain, 
+                                        args=args)
         
         question_format['instance_id'] = question_json['instance_id']  # yyx添加，用于评测
         questions.append(question_format)
@@ -128,8 +138,9 @@ if __name__ == '__main__':
         },
         "questions": questions
     }
+    print(questions[0]['prompt'])  # for debug
     
-    path_generate = f"postprocessed_data/{args.dev}_{prompt.name}_CTX-{args.max_ans_len}_ANS-{args.max_seq_len}"
+    path_generate = f"postprocessed_data/{args.dev}_CTX-{args.max_ans_len}"
     os.makedirs(path_generate, exist_ok=True)
     json.dump(task, open(os.path.join(path_generate, "questions.json"), "w"), indent=4)
     

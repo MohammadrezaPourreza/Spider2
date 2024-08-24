@@ -161,7 +161,6 @@ def evaluate_spider2sql(args):
     output_results = []
     
     
-    
     for id in tqdm(eval_ids):
         if mode == "sql":
             pred_sql_query = open(os.path.join(pred_result_dir, f"{id}.sql")).read()
@@ -179,7 +178,11 @@ def evaluate_spider2sql(args):
                     csv_files = [file for file in all_files if pattern.match(file)]
                     if len(csv_files) == 1:
                         gold_pd = pd.read_csv(os.path.join(gold_result_dir, f"{id}.csv"))
-                        score = compare_pandas_table(pred_pd, gold_pd, eval_standard_dict.get(id)['condition_cols'], eval_standard_dict.get(id)['ignore_order'])
+                        try:
+                            score = compare_pandas_table(pred_pd, gold_pd, eval_standard_dict.get(id)['condition_cols'], eval_standard_dict.get(id)['ignore_order'])
+                        except Exception as e:
+                            print(f"An error occurred: {e}")
+                            score = 0
                     elif len(csv_files) > 1:
                         gold_pds = [pd.read_csv(os.path.join(gold_result_dir, file)) for file in csv_files]
                         score = compare_multi_pandas_table(pred_pd, gold_pds, eval_standard_dict.get(id)['condition_cols'], eval_standard_dict.get(id)['ignore_order'])

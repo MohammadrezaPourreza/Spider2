@@ -1,4 +1,4 @@
-# import debugpy; debugpy.connect(('127.0.0.1', 5688))
+# import debugpy; debugpy.connect(('127.0.0.1', 5696))
 
 import argparse
 import json
@@ -83,7 +83,7 @@ if __name__ == '__main__':
         # schema-linking between questions and databases for Spider
         spider_dev = osp.join(proj_dir, f'preprocessed_data/{args.dev}/{args.dev}_preprocessed.json')
         spider_train = osp.join(proj_dir, '../data/dummy.json')
-        spider_table = osp.join(proj_dir, 'preprocessed_data/tables_preprocessed.json') 
+        spider_table = osp.join(proj_dir, f'preprocessed_data/{args.dev}/tables_preprocessed.json') 
         spider_db = osp.join(proj_dir, '../databases')  
         schema_linking_producer(spider_dev, spider_train, spider_table, spider_db, proj_dir, args=args)
     elif data_type == "bird":

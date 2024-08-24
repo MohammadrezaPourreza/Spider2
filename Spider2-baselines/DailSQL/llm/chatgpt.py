@@ -54,6 +54,12 @@ def ask_chat(model, messages: list, temperature, n):
 def ask_llm(model: str, batch: list, temperature: float, n:int):
     n_repeat = 0
     while True:
+
+        if n_repeat >= 1:
+            # print('Repeat for 1 times, return "SELECT" instead')
+            response = {"total_tokens": 0, "response": ["SELECT"]}
+            break
+
         try:
             if model in LLM.TASK_COMPLETIONS:
                 # TODO: self-consistency in this mode
@@ -66,9 +72,10 @@ def ask_llm(model: str, batch: list, temperature: float, n:int):
                 response = ask_chat(model, messages, temperature, n)
                 response['response'] = [response['response']]
             break
-        except openai.error.RateLimitError:
+        except openai.error.RateLimitError as e:
             n_repeat += 1
             print(f"Repeat for the {n_repeat} times for RateLimitError", end="\n")
+            print(f"Error message: {e}")
             time.sleep(1)
             continue
         except json.decoder.JSONDecodeError:
@@ -81,6 +88,8 @@ def ask_llm(model: str, batch: list, temperature: float, n:int):
             print(f"Repeat for the {n_repeat} times for exception: {e}", end="\n")
             time.sleep(1)
             continue
+
+
 
     return response
 
