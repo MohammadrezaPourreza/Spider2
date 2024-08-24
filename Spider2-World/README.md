@@ -1,31 +1,13 @@
-# Spider2-C
+# Spider2-World
 
-Spider2-C is a code generation dataset centered on SQL generation, which integrates SQL, Python, and Command Line.
+Spider2-World is a code generation dataset centered on SQL generation, which integrates SQL, Python, and Command Line.
 
-There are many project-level SQL generation tasks here, requiring the completion of a **DBT data transformation project**.
+#### Query-level Task
+The most distinctive feature of Spider2-World is that it doesn't provide predefined schema information; you need to explore the database on your own and interactively write SQL. (Somewhat similar to the setting in [`Intercode`](https://github.com/princeton-nlp/intercode))
 
-And for query related examples, many examples in Spider2-C share the same core SQL as those in Spider2-Text2SQL, but to make it a more realistic setting, we have applied the following modifications, added some resources for each SQL generation project.
+#### Project-level Task
+We propose examples based on the **DBT project**, which is a highly realistic SQL generation scenario commonly used in industry development, requires completing a complex data transformation task. (Somewhat similar to the setting in [`SWE-Bench`](https://www.swebench.com/).
 
-#### Resource 1: Database Access
-We don't provide complete detailed schema file like Spider2-Text2SQL and other previous works. Instead,
-  - Only given the cloud DB interface / the local DB, need the method to explore DBs automatically
-  - Given some partial schema with different types (Markdown, IMG, PDF, YAML, Create.sql, JSON). **A real SQL DB System can handle different schema types**
-  - Can't access DB any (must combine with resource 3 in this case)
-
-#### Resource 2: Retrieving external documents
-Spider2SQL specifies the exact documents and functions needed for each example and processes them in advance. In contrast, Spider2C provides a realistic set of documents that require retrieval and selection.
-- **Document Types**
-  - SQL Dialect Documents about syntax / functions 
-  - Background knowledge Documents
-  - Database Introduction Documents
-
-#### Resource 3: Demonstration Exemplars
-- **Content Types**
-  - Query Histories (Infer potential schema)
-  - Question-SQL Pairs  (Few-shot examples)
-  - Data-Answer Examples   (Used to check whether SQL execution is correct potentially)
-  - Requirements Documents: Described in YAML files / Other answer columns description files
-  - Partial finished Code
 
 
 ## Data content and format
@@ -50,7 +32,7 @@ All evaluation examples are in [`evaluation_examples`](https://github.com/xlang-
 
 ## Evaluation
 
-We create [evaluation suite](https://github.com/xlang-ai/Spider2/tree/main/Spider2-C/evaluation_suite) for Spider2-C.
+We create [evaluation suite](https://github.com/xlang-ai/Spider2/tree/main/Spider2-World/evaluation_suite) for Spider2-World.
 
 
 
