@@ -9,6 +9,9 @@ We transform almost all examples Spider2 into Spider2-World. The most distinctiv
 We also propose a new novel SQL generation task based on the **DBT project**, which is a highly realistic SQL generation scenario commonly used in industry development, requires completing a complex data transformation task. (Somewhat similar to the setting in [`SWE-Bench`](https://www.swebench.com/).
 
 
+![Local Image](../assets/Spider2-World.png)
+
+
 
 ## Data content and format
 
