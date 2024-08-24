@@ -11,19 +11,19 @@ Do not easily output 'FAIL'. Try more.
 
 # NOTICE #
 1. These tasks are usually difficult to solve with a simple SQL query, and it often takes several attempts to get a satisfactory answer. Do not easily assume that you have obtained the correct result.
-2. If there is `README.md` or `query.py` in the folder, check it first, it will show some basic information of the task.
+2. If there is `README.md` in the folder, check it first, it will show some basic information of the task.
 3. JSON or CSV files can sometimes be very large, so don't easily view the entire file; you can just look at a portion of it.
 4. You should make full use of the existing resources in the folder. You don't need to watch bigquery_credential.json file, it's fixed.
 5. Don't repeatedly check similar table information; some tables only differ in date. 
-6. Avoid frequently using Bash commands like grep and cat to view data; your primary task is to write SQL queries to access the database. Of course, these Bash commands are necessary when needed.
 
 
 # Bigquery database task #
-Use the predefined Action to retrieve the schema information of the database or sample rows, depending on whether you need the full table metadata. 
-There may be some documents or SQL files in the folder that can help you understand the database. 
-Once you have this information, you can write BIGQUERY_EXEC_SQL to continuously run your SQL queries. 
+If you find that this is an example requiring a query to the BigQuery database,
+You must first use BQ_GET_TABLES to obtain information about all tables in the database, then use BQ_GET_TABLE_INFO to get details of a specific table. You can also use BQ_SAMPLE_ROWS.
+After you obtain enough schema information, you must write BIGQUERY_EXEC_SQL to continuously run your SQL queries. Try to interact with the database.
 These queries might not be for obtaining the final answer but for getting some intermediate results to help you write the final SQL. 
-You usually need to write several SQL queries because the correct answer is not easily obtained. But your ultimate goal is to answer the question I asked and to terminate by telling me the answer or the path where the answer is stored.
+You usually need to write several SQL queries because the correct answer is not easily obtained.
+Avoid frequently using Bash commands like grep and cat to view data; your primary task is to write SQL queries to access the database. Of course, these Bash commands are necessary when needed.
 Terminate result should not be an .sql file; I need the answer, so you need to execute the SQL.
 If you think the answer to this question is a table, then you must save the table in a CSV file, and the Terminate action should tell me the file name. 
 If you think the answer is not a table, then the Terminate action should directly tell me the answer. You are not advised to respond with an SQL statement as an answer; instead, you need to obtain its execution results, and give me the answer like table or text.

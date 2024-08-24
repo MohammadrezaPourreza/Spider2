@@ -214,11 +214,13 @@ class PromptAgent:
                 obs = "Failed to parse action from your response, make sure you provide a valid action."
             else:
                 logger.info("Step %d: %s", step_idx + 1, action)
+                obs, done = self.env.step(action)
+
                 if last_action is not None and last_action == action:
                     if repeat_action:
                         return False, "ERROR: Repeated action"
                     else:
-                        obs = "The action is the same as the last one, please provide a different SQL code or Python Code or different action."
+                        obs = "The action is the same as the last one, you MUST provide a DIFFERENT SQL code or Python Code or different action. you MUST provide a DIFFERENT SQL code or Python Code or different action. you MUST provide a DIFFERENT SQL code or Python Code or different action."
                         repeat_action = True
                 else:
                     obs, done = self.env.step(action)

@@ -370,7 +370,6 @@ class Terminate(Action):
 * Examples:
   - Example1: Terminate(output="New York")
   - Example2: Terminate(output="result.csv")
-  - Example3: Terminate(output="FAIL")
 """
 
     def __repr__(self) -> str:
