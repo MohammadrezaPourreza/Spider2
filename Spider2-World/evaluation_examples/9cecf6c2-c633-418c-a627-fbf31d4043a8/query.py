@@ -33,11 +33,12 @@ if __name__ == "__main__":
     # Write your SQL query in the sql_query variable to interact with the database, the SQL here is just an example
     sql_query = """
       SELECT
-        *
-      FROM
-        `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
-      WHERE
-        _TABLE_SUFFIX BETWEEN '20201101' AND '20201130'
-      LIMIT 1
+          user_pseudo_id
+        FROM
+          `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*` AS T
+        CROSS JOIN
+          UNNEST(T.event_params) AS event_params
+        WHERE
+          event_params.key = 'engagement_time_msec'
     """
     query_data(sql_query, is_save=True, save_path="result.csv")

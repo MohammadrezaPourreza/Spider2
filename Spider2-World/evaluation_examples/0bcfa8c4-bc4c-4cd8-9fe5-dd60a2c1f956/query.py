@@ -32,12 +32,19 @@ if __name__ == "__main__":
 
     # Write your SQL query in the sql_query variable to interact with the database, the SQL here is just an example
     sql_query = """
-      SELECT
-        *
-      FROM
-        `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
-      WHERE
-        _TABLE_SUFFIX BETWEEN '20201101' AND '20201130'
-      LIMIT 1
+      WITH
+        Params AS (
+          SELECT 'Google Navy Speckled Tee' AS selected_product
+        ),
+        PurchaseEvents AS (
+          SELECT
+            user_pseudo_id,
+            items
+          FROM
+            `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
+          WHERE
+            _TABLE_SUFFIX BETWEEN '20201201' AND '20201231'
+            AND event_name = 'purchase'
+        ),
     """
     query_data(sql_query, is_save=True, save_path="result.csv")

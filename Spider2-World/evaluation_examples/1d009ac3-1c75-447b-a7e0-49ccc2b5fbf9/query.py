@@ -32,12 +32,17 @@ if __name__ == "__main__":
 
     # Write your SQL query in the sql_query variable to interact with the database, the SQL is just an example
     sql_query = """
-      SELECT
-        *
-      FROM
-        `firebase-public-project.analytics_153293282.events_*`
-      WHERE
-        _TABLE_SUFFIX BETWEEN '20201101' AND '20201130'
-      LIMIT 1
+      WITH EventData AS (
+          SELECT 
+              user_pseudo_id, 
+              event_timestamp, 
+              param
+          FROM 
+              `firebase-public-project.analytics_153293282.events_20180915`,
+              UNNEST(event_params) AS param
+          WHERE 
+              event_name = "level_complete_quickplay"
+              AND (param.key = "value" OR param.key = "board")
+      ),
     """
     query_data(sql_query, is_save=True, save_path="result.csv")

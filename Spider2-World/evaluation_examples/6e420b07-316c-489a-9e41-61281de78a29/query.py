@@ -32,12 +32,17 @@ if __name__ == "__main__":
 
     # Write your SQL query in the sql_query variable to interact with the database, the SQL here is just an example
     sql_query = """
-      SELECT
-        *
-      FROM
-        `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
-      WHERE
-        _TABLE_SUFFIX BETWEEN '20201101' AND '20201130'
-      LIMIT 1
+    SELECT
+        pubs.publication_number AS citing_publication_number,
+        cite.publication_number AS cited_publication_number,
+        citing_assignee_s.name AS citing_assignee,
+        SUBSTR(cpcs.code, 0, 4) AS citing_cpc_subclass
+    FROM 
+        `patents-public-data.patents.publications` AS pubs,
+        UNNEST(citation) AS cite,
+        UNNEST(assignee_harmonized) AS citing_assignee_s,
+        UNNEST(cpc) AS cpcs
+    WHERE
+        cpcs.first = TRUE
     """
     query_data(sql_query, is_save=True, save_path="result.csv")
