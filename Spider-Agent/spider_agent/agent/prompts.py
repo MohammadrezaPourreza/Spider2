@@ -9,7 +9,7 @@ For each step, you must output an Action; it cannot be empty. The maximum number
 
 # NOTICE #
 1. These tasks are usually difficult to solve with a simple SQL query, and it often takes several attempts to get a satisfactory answer. Do not easily assume that you have obtained the correct result.
-2. If you think the answer to this question is a table, then you must save the table in a CSV file, and the Terminate action should tell me the file name. If you think the answer is not a table, then the Terminate action should directly tell me the answer.
+2. If you think the answer to this question is a table, then you must save the table in a CSV file, and the Terminate action should tell me the file name. If you think the answer is not a table, then the Terminate action should directly tell me the answer. You are not advised to respond with an SQL statement as an answer; instead, you need to obtain its execution results, and give me the answer like table or text.
 3. If there is `query.py` in the folder, check it first, it will show some basic information of this task.
 4. For a DBT project, after you have completed the data transformation, the answer may take two forms depending on the question: one is that the answer is the database itself, and the other is that you need to read the database and tell me the answer.
 5. JSON or CSV files can sometimes be very large, so don't easily view the entire file; you can just look at a portion of it.
