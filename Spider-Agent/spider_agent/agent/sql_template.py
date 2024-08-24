@@ -116,18 +116,41 @@ except Exception as e:
 
 
 LOCAL_SQL_TEMPLATE = """
-import sqlite3
 import pandas as pd
 import os
+import sqlite3
+import duckdb
+
+def detect_db_type(file_path):
+    if file_path.endswith('.db'):
+        return 'sqlite'
+    elif file_path.endswith('.duckdb'):
+        return 'duckdb'
+    else:
+        try:
+            conn = duckdb.connect(database=file_path, read_only=True)
+            conn.execute('SELECT 1')
+            conn.close()
+            return 'duckdb'
+        except:
+            return 'sqlite'
 
 def execute_sql(file_path, command, output_path):
-    # make sure the file path is correct
-    if not os.path.exists(file_path):
-        print(f"ERROR: File not found: {{file_path}}")
+    db_type = detect_db_type(file_path)
+    
+    # Make sure the file path is correct
+    if not os.path.exists(file_path) and db_type == 'sqlite':
+        print(f"ERROR: Database file not found: {{file_path}}")
         return
 
-    # Connect to the SQLite database
-    conn = sqlite3.connect(file_path)
+    # Connect to the database
+    if db_type == 'sqlite':
+        conn = sqlite3.connect(file_path)
+    elif db_type == 'duckdb':
+        conn = duckdb.connect(database=file_path, read_only=True)
+    else:
+        print(f"ERROR: Unsupported database type {{db_type}}")
+        return
     
     try:
         # Execute the SQL command and fetch the results
@@ -146,10 +169,9 @@ def execute_sql(file_path, command, output_path):
         conn.close()
 
 # Example usage
-file_path = "{file_path}"  # Path to your SQLite database file
-command = "{code}"             # SQL command to be executed
-output_path = "{output}" # Path to save the output as a CSV or "directly"
+file_path = "{{file_path}}"    # Path to your database file
+command = "{{sql_command}}"    # SQL command to be executed
+output_path = "{{output_path}}"# Path to save the output as a CSV or "directly"
 
 execute_sql(file_path, command, output_path)
-
 """
