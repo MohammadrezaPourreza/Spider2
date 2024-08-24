@@ -41,6 +41,11 @@ All evaluation examples are in [`evaluation_examples`](https://github.com/xlang-
 }
 ```
 
+## Baseline
+
+We proposed an agent framework [`Spider-Agent`](https://github.com/xlang-ai/Spider2/tree/main/Spider-Agent) baseline with interactive environment. 
+
+
 
 ## Evaluation
 
