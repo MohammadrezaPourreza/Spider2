@@ -93,3 +93,11 @@ The gold SQLs are shown in [evaluation_suite/gold/sql](https://github.com/xlang-
 
 We create [evaluation suite](https://github.com/xlang-ai/Spider2/tree/main/Spider2/evaluation_suite) for Spider2.
 
+
+
+
+## DB and Task Examples
+
+Here is an illustration of the Spider2 Database and Tasks.
+
+![Local Image](../assets/Spider2_examples.png)
