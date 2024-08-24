@@ -1,18 +1,21 @@
 # Spider2-World
 
-Spider2-World is a code generation dataset centered on SQL generation, which integrates SQL, Python, and Command Line.
+Spider2-World is a challenging code generation benchmark that requires writing SQL (primarily), Python, and Command Line commands to solve problems. 😊
 
 #### Query-level Task
-The most distinctive feature of Spider2-World is that it doesn't provide predefined schema information; you need to explore the database on your own and interactively write SQL. (Somewhat similar to the setting in [`Intercode`](https://github.com/princeton-nlp/intercode))
+We transform almost all examples Spider2 into Spider2-World. The most distinctive feature is that it doesn't provide predefined schema information; the methods need to explore the database automatically and interactively write SQL. (Somewhat similar to the setting in [`Intercode`](https://github.com/princeton-nlp/intercode))
 
 #### Project-level Task
-We propose examples based on the **DBT project**, which is a highly realistic SQL generation scenario commonly used in industry development, requires completing a complex data transformation task. (Somewhat similar to the setting in [`SWE-Bench`](https://www.swebench.com/).
+We also propose a new novel SQL generation task based on the **DBT project**, which is a highly realistic SQL generation scenario commonly used in industry development, requires completing a complex data transformation task. (Somewhat similar to the setting in [`SWE-Bench`](https://www.swebench.com/).
 
 
 
 ## Data content and format
 
-All evaluation examples are in [`evaluation_examples`](https://github.com/xlang-ai/Spider2/tree/main/Spider2-C/evaluation_examples) 
+For any given example, everything needed to solve this task is provided within the folder. Please ensure your agent makes full use of these resources.
+
+
+All evaluation examples are in [`evaluation_examples`](https://github.com/xlang-ai/Spider2/tree/main/Spider2-World/evaluation_examples) 
 
 
 - `instance_id`: (str) - A formatted instance identifier, UUID.
@@ -22,10 +25,16 @@ All evaluation examples are in [`evaluation_examples`](https://github.com/xlang-
 
 ```
 {
-    "instance_id": "9863d716-0af4-422a-9bfd-65ff5684eca1", 
-    "instruction": "I cannot access the database, please help me complete the SQL. I want to figure out the average difference in pageviews between users who bought something and those who didn\u2019t in December 2020.", 
+    "instance_id": "1d009ac3-1c75-447b-a7e0-49ccc2b5fbf9", 
+    "instruction": "I'm trying to evaluate which board types were most effective on September 15, 2018. Can you find out the average scores for each board type from the quick play level completions on that day?", 
     "type": "Bigquery", 
-    "derived_from": "ga004"
+    "derived_from": "ga003"
+},
+{
+    "instance_id": "053d2650-2188-4e58-a141-2376d5cff0a5", 
+    "instruction": "Complete the project to show the metrics of each traffic source and output the transformed database, I believe every touchpoint in the conversion path is equally important, please choose the most suitable attribution method. ", 
+    "type": "DBT", 
+    "derived_from": "dbt001_1"
 }
 ```
 
