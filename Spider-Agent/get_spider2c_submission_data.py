@@ -64,6 +64,7 @@ def postprocess(args):
         answer_or_path = instance_result_data['result']
         
         if answer_or_path == '':
+            results_metadata.append({'instance_id': instance_id, 'answer_or_path': '', 'answer_type': 'answer'})
             continue        
         elif os.path.exists(os.path.join(result_folder_root_path,answer_or_path)):
             results_metadata.append({'instance_id': instance_id, 'answer_or_path': answer_or_path, 'answer_type': 'file'})
