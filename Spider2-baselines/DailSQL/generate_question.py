@@ -138,7 +138,7 @@ if __name__ == '__main__':
         },
         "questions": questions
     }
-    print(questions[0]['prompt'])  # for debug
+    # print(questions[0]['prompt'])  # for debug
     
     path_generate = f"postprocessed_data/{args.dev}_CTX-{args.max_ans_len}"
     os.makedirs(path_generate, exist_ok=True)

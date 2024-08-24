@@ -56,7 +56,7 @@ def column_description_length_histogram():
 
 def db_statistic(args):
 
-    with open(osp.join(proj_dir, f'../data/{args.dev}.json'), 'r', encoding='utf-8') as file:
+    with open(osp.join(proj_dir, f'../../Spider2/{args.dev}.json'), 'r', encoding='utf-8') as file:
         dev_data = json.load(file)
     # all db_ids
     db_ids = set([item['db'] for item in dev_data])
@@ -202,7 +202,7 @@ def db_statistic(args):
 
     plt.tight_layout()
     plt.show()
-    plt.savefig('db_statistic.png')
+    # plt.savefig('db_statistic.png')
 
 
 
@@ -264,7 +264,7 @@ def process_dev_json(args):
         return data
     
     def get_potential_functions_summary(data):
-        with open(osp.join(proj_dir, '../../Spider2/externel_information/bigquery_functions.json'), 'r', encoding='utf-8') as file:
+        with open(osp.join(proj_dir, '../../Spider2/external_information/bigquery_functions/bigquery_functions.json'), 'r', encoding='utf-8') as file:
             bigquery_functions = json.load(file)
 
         # 创建一个字典，方便快速查找summary
@@ -295,7 +295,7 @@ def process_dev_json(args):
 
         return data
 
-    with open(osp.join(proj_dir, f'../data/{args.dev}.json'), 'r', encoding='utf-8') as file:
+    with open(osp.join(proj_dir, f'../../Spider2/{args.dev}.json'), 'r', encoding='utf-8') as file:
         data = json.load(file)
 
     data = get_questionTok_and_gold_query_for_dev_json(data)

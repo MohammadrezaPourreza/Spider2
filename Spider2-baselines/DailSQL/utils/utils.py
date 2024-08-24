@@ -240,10 +240,10 @@ def get_sql_for_database_from_tables_json(db_id, tables_json, use_column_desc=Fa
         sample_rows = db["sample_rows"]
         
         if len(columns) != len(column_descs):
-            print(f'-----------------\n存在nested column的db:{db_id}, 先不使用column_descs\n-----------------')
+            # print(f'-----------------\n存在nested column的db:{db_id}, 先不使用column_descs\n-----------------')
             COLUMN_DESC_FLAG = False
         else:
-            print(f'-----------------\n不存在nested column的db:{db_id}, 使用column_descs\n-----------------')
+            # print(f'-----------------\n不存在nested column的db:{db_id}, 使用column_descs\n-----------------')
             COLUMN_DESC_FLAG = True
             
         create_statements = []
