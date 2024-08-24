@@ -62,7 +62,6 @@ bash run.sh
 ```
 this script automatically conducts all procedures: 1) converting spider2-SQL data into a format compatible with DailSQL, 2) executing Dail-SQL, 3) evaluation. You can find the output SQL in `Spider2-SQL/DailSQL/postprocessed_data`.
 
-
 #### 3. Evaluation of Dail-SQL
 
 We evaluate two approaches:
@@ -76,7 +75,9 @@ Given the large number of tables and columns in the Spider2 dataset, we leverage
 | vanilla DailSQL (GPT-4o)   | 1.79% | bq019_2, bq329                   |
 | DailSQL+Func+Plan (GPT-4o) | 4.46% | bq006, bq076, bq123, bq329, bq339 |
 
+### CodeS
 
+For a detailed guideline of using CodeS, please refer to [README of CodeS](https://github.com/xlang-ai/Spider2/tree/main/Spider2-baselines/CodeS).
 
 
 ## Spider2-World Baselines
