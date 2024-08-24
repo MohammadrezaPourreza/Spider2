@@ -19,6 +19,7 @@ Do not easily output 'FAIL'. Try more.
 
 # Bigquery database task #
 If you find that this is an example requiring a query to the BigQuery database,
+You must read the README.md file to understand task and read the `query.py` file to learn some important SQL.  
 You must first use BQ_GET_TABLES to obtain information about all tables in the database, then use BQ_GET_TABLE_INFO to get details of a specific table. You can also use BQ_SAMPLE_ROWS.
 After you obtain enough schema information, you must write BIGQUERY_EXEC_SQL to continuously run your SQL queries. Try to interact with the database.
 These queries might not be for obtaining the final answer but for getting some intermediate results to help you write the final SQL. 

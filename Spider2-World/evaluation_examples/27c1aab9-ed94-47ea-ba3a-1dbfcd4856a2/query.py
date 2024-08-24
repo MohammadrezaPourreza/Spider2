@@ -30,14 +30,19 @@ def query_data(sql_query, is_save, save_path="result.csv"):
 
 if __name__ == "__main__":
 
-    # Write your SQL query in the sql_query variable to interact with the database, the SQL here is just an example
+    # # Complete the SQL query in the sql_query variable to interact with the database, partial SQL query is provided below
     sql_query = """
-      SELECT
-        *
-      FROM
-        `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
-      WHERE
-        _TABLE_SUFFIX BETWEEN '20201101' AND '20201130'
-      LIMIT 1
+    SELECT 
+        ANY_VALUE(assignee_harmonized) AS assignee_harmonized,  -- Randomly sampling assignee data
+        ANY_VALUE(filing_date) AS filing_date,  -- Randomly sampling filing date
+        application_number  -- The unique identifier for each patent application
+    FROM 
+        `patents-public-data.patents.publications` AS pubs  -- Using the patent publications dataset
+    WHERE EXISTS (
+        -- Checks if there is a CPC code "A61K39"
+        SELECT 1 FROM UNNEST(pubs.cpc) AS c WHERE REGEXP_CONTAINS(c.code, "A61K39")
+    )
+    GROUP BY 
+        application_number  -- Grouping by application number to ensure unique entries
     """
     query_data(sql_query, is_save=True, save_path="result.csv")

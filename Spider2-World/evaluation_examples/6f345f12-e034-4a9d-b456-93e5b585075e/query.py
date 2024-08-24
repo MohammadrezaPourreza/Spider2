@@ -30,14 +30,16 @@ def query_data(sql_query, is_save, save_path="result.csv"):
 
 if __name__ == "__main__":
 
-    # Write your SQL query in the sql_query variable to interact with the database, the SQL here is just an example
+    # # Complete the SQL query in the sql_query variable to interact with the database, partial SQL query is provided below
     sql_query = """
-      SELECT
-        *
-      FROM
-        `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
-      WHERE
-        _TABLE_SUFFIX BETWEEN '20201101' AND '20201130'
-      LIMIT 1
+   SELECT 
+         Symbol AS symbol, AVG( LOG10( normalized_count + 1 )) AS data, ParticipantBarcode
+   FROM  `pancancer-atlas.Filtered.EBpp_AdjustPANCAN_IlluminaHiSeq_RNASeqV2_genExp_filtered` 
+   WHERE Study = 'LGG' AND Symbol ='DRG2' AND normalized_count IS NOT NULL
+         AND SampleBarcode  IN (SELECT * FROM barcodes)
+         
+   GROUP BY 
+         ParticipantBarcode, symbol
+   )
     """
     query_data(sql_query, is_save=True, save_path="result.csv")
