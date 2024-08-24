@@ -13,9 +13,6 @@ from spider_agent.agent.action import Action, Bash, Terminate, CreateFile, EditF
 from spider_agent.envs.spider_agent import Spider_Agent_Env
 from spider_agent.agent.models import call_llm
 
-# from prompts import SYS_PROMPT_IN_OUR_CODE
-# from action import Action, Bash, Terminate, CreateFile, EditFile, LOCAL_DB_SQL, BIGQUERY_EXEC_SQL, BQ_GET_TABLES, BQ_GET_TABLE_INFO, BQ_SAMPLE_ROWS
-# from ..envs.spider_agent import Spider_Agent_Env
 
 from openai import AzureOpenAI
 from typing import Dict, List, Optional, Tuple, Any, TypedDict
@@ -52,7 +49,7 @@ class PromptAgent:
         self.history_messages = []
         self.env = None
         self.codes = []
-        self._AVAILABLE_ACTION_CLASSES = [Bash, Terminate, CreateFile, EditFile, LOCAL_DB_SQL, BIGQUERY_EXEC_SQL, BQ_GET_TABLES, BQ_GET_TABLE_INFO, BQ_SAMPLE_ROWS]
+        self._AVAILABLE_ACTION_CLASSES = [Bash, Terminate, CreateFile, EditFile, BIGQUERY_EXEC_SQL, BQ_GET_TABLES, BQ_GET_TABLE_INFO, BQ_SAMPLE_ROWS]
         self.work_dir = "/workspace"
         
     def set_env_and_task(self, env: Spider_Agent_Env):
