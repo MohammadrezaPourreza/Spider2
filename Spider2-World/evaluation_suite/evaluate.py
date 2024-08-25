@@ -44,7 +44,7 @@ def run_evaluation(result_dir, gold_dir):
     total = 0
     output_list = []
     
-    
+
     for data in tqdm(evaluation_data):
         output_dict = data
         eval_metadata = data['evaluation']

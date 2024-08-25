@@ -1,5 +1,7 @@
 # Spider2: A Realistic and Challenging Benchmark for SQL Generation
 
+![Local Image](./assets/Spider2.png)
+
 ## 📢 Updates
 
 - 2024-08-25: We released a subset of Spider2 to allow users early access. The full dataset and the paper will be released in two weeks. Stay tuned! 🤗
