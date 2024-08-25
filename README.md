@@ -32,11 +32,11 @@ We evaluate two approaches, **Vanilla DailSQL** and **DailSQL+Func+Plan** with G
 | vanilla DailSQL (GPT-4o)   | 3.54% | 
 | DailSQL+Func+Plan (GPT-4o) | 8.84% |
 
-For a detailed guideline of running Dail-SQL and evaluation results, please refer to [README of Dail-SQL](https://github.com/xlang-ai/Spider2/tree/main/Spider2-baselines/DailSQL).
+For a detailed guideline of running Dail-SQL and evaluation results, please refer to [Dail-SQL](https://github.com/xlang-ai/Spider2/tree/main/Spider2-baselines/DailSQL).
 
 ### CodeS
 
-For a detailed guideline of running CodeS, please refer to [README of CodeS](https://github.com/xlang-ai/Spider2/tree/main/Spider2-baselines/CodeS).
+For a detailed guideline of running CodeS, please refer to [CodeS](https://github.com/xlang-ai/Spider2/tree/main/Spider2-baselines/CodeS).
 
 
 ## Spider2-World Baselines
