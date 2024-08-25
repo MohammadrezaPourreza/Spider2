@@ -9,9 +9,11 @@ A large quantities of databases in Spider2 are stored in BigQuery, including ind
 
 If you are a beginner to BigQuery, please follow the guidelines below. We will walk you through
 
-- [How to Enable BigQuery Sandbox](#how-to-enable-bigquery-sandbox)
-- [How to Check BigQuery Public Databases](#how-to-check-bigquery-public-databases)
-- [How to Get BigQuery Credential](#how-to-get-bigquery-credential)
+- [BigQuery Guideline](#bigquery-guideline)
+  - [How to Enable BigQuery Sandbox](#how-to-enable-bigquery-sandbox)
+  - [How to Check BigQuery Public Databases](#how-to-check-bigquery-public-databases)
+  - [How to Get BigQuery Credential](#how-to-get-bigquery-credential)
+  - [How to Get Access to `spider2-public-data`](#how-to-get-access-to-spider2-public-data)
 
 as well as
 
@@ -57,7 +59,7 @@ c. Click **Create**. You are redirected back to the BigQuery page in the Google 
 
 ## How to Check BigQuery Public Databases
 
-About 70% of SQLs in Spider2 refer to open-sourced `bigquery-public-data` project, which contains a large quantities of freely accessed databases, e.g., `bigquery-public-data.new_york`. To view the schema/content of these open-sourced databases and run trial SQLs on them, you can **star** the `bigquery-public-data` on your left panel (based on [official tutorial](https://cloud.google.com/bigquery/docs/bigquery-web-ui#:~:text=Star%20a%20project,-You%20can%20star&text=If%20you%20have%20access%20to,that%20you%20want%20to%20star.)). Concretely,
+About 70% of SQLs in Spider2 are contained in bigquery public projects, which contains a large quantities of freely accessed databases, e.g., `bigquery-public-data.new_york`. To view the schema/content of these open-sourced databases and run trial SQLs on them, you can **star** the `bigquery-public-data` on your left panel (based on [official tutorial](https://cloud.google.com/bigquery/docs/bigquery-web-ui#:~:text=Star%20a%20project,-You%20can%20star&text=If%20you%20have%20access%20to,that%20you%20want%20to%20star.)). Concretely,
 
 1. In the **Explorer** pane, click the button `+ ADD`.
 
@@ -141,7 +143,8 @@ for row in rows:
 
 ## How to Get Access to `spider2-public-data`
 
-The Sandbox function of BigQuery restricts the consumption/quota of free users when querying databases. On account of the large volume of some DBs in `bigquery-public-data`, we create a public project `spider2-public-data` to decrease the data size of these DBs and resolve the quota limit problem when executing some SQLs (about 30%) in our benchmark.
+The Sandbox function of BigQuery restricts the consumption/quota of free users when querying databases. On account of the large volume of some DBs in `bigquery-public-data`, we create a public project `spider2-public-data` to decrease the data size of these DBs and resolve the quota limit problem when executing some SQLs (about 30%) in our benchmark. 
+`spider2-public-data` also contains other complex databases we collected from other Internet resources.
 
 To enable successful execution and evaluation on these 30% SQLs which querying `spider2-public-data`, please fill in this [form](https://docs.google.com/forms/d/e/1FAIpQLSdrsJX-oDZDL0McIaF-0uypLeO2pYW4SX-qDeNSd88iYR_3Gg/viewform), and we will grant you permanent access within 12 hours.
 
