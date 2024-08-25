@@ -39,18 +39,18 @@ this script automatically conducts all procedures: 1) data preprocess, 2) execut
 
 ## Experimental Setting
 
-We evaluate two approaches:
+We evaluate three approaches:
 - `Vanilla DailSQL`: This method utilizes the Code Representation (CR) prompt from the original DailSQL paper. To accommodate the complexity of the Spider2 dataset, we enhance the prompt by **incorporating column descriptions, sampled rows, and external knowledge**.
-- `DailSQL+Func+Plan`: Building on Vanilla DailSQL, this approach augments the prompt with descriptions of 
-- 1) **potentially relevant SQL functions** 
-- 2) **reference plan** that assists in generating the components of a complete SQL query.
+- `DailSQL+Func+Plan`: Building on Vanilla DailSQL, this approach augments the prompt with descriptions of 1) **potentially relevant SQL functions** and 2) **reference plan** that assists in generating the components of a complete SQL query.
+- `DailSQL+Func+Plan+Debug`: Further add a SQL Debug module, which refines erroneous SQL queries according to error feedback information.
   
 Given the large number of tables and columns in the Spider2 dataset, we leverage **GPT-4o** with a 128k context window to prevent prompt size limitations. The performance of the two methods is shown as:
 
-| Method                     | EX   | Correct Queries                       |
-| -------------------------- | ---- | ------------------------------------- |
-| vanilla DailSQL (GPT-4o)   | 3.54% | bq006, 329, 076, 321                   |
-| DailSQL+Func+Plan (GPT-4o) | 8.84% | bq321, 123, 020_2, 329, 016, 062, 076, 006, 339, 020_1  |
+| Method                     | EX   |
+| -------------------------- | ---- |
+| vanilla DailSQL (GPT-4o)   | 3.54% |
+| DailSQL+Func+Plan (GPT-4o) | 8.84% |
+| DailSQL+Func+Plan (GPT-4o) | 9.73$ |
 
 ## Prompts
 
@@ -110,6 +110,15 @@ Which month generally has the greatest number of motor vehicle thefts?
 The following query summarizes the number of MOTOR VEHICLE THEFT incidents for each year and month, and ranks the month’s total from 1 to 12. Then, the outer SELECT clause limits the final result set to the first overall ranking for each year. According to the data, in 3 of the past 10 years, December had the highest number of car thefts
 
 ...
+```
+
+The additional prompt of SQL debug module is as:
+```
+/* Wrong Query */
+SELECT COUNT(DISTINCT last_7_days.user_pseudo_id) FROM ( SELECT user_pseudo_id FROM `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210101` UNION ALL SELECT user_pseudo_id FROM `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210102` UNION ALL SELECT user_pseudo_id FROM `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210103` UNION ALL SELECT user_pseudo_id FROM `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210104` UNION ALL SELECT user_pseudo_id FROM `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210105` UNION ALL SELECT user_pseudo_id FROM `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210106` UNION ALL SELECT user_pseudo_id FROM `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210107` ) last_7_days LEFT JOIN ( SELECT user_pseudo_id FROM `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210106` UNION ALL SELECT user_pseudo_id FROM `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210107` ) last_2
+
+/* Error Info */
+400 LEFT JOIN must have an immediately following ON or USING clause at [1:818]; reason: invalidQuery, location: query, message: LEFT JOIN must have an immediately following ON or USING clause at [1:818]
 ```
 
 

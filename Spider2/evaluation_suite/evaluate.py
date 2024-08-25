@@ -242,8 +242,9 @@ def evaluate_spider2sql(args):
     print(f"Final score: {score}")
 
     # 将带有error_infos的output_results写入json文件
+    DEBUG_PREFIX = "SQL_DEBUG_" if args.is_sql_debug else ""
     with open(
-        osp.join(args.result_dir, "../eval_result_with_error_infos.json"), 'w'
+        osp.join(args.result_dir, f"../{DEBUG_PREFIX}eval_result_with_error_infos.json"), 'w'
     ) as f:
         json.dump(output_results, f, indent=4)
 
@@ -255,6 +256,7 @@ if __name__ == "__main__":
     parser.add_argument("--mode", type=str, choices=["sql", "exec_result"], required=True, help="Mode of submission results")
     parser.add_argument("--result_dir", type=str, default="spider2sql_example_submit_result", help="Result directory")
     parser.add_argument("--gold_dir", type=str, default="gold", help="Result directory")
+    parser.add_argument("--is_sql_debug", action="store_true", default=False)
     args = parser.parse_args()
     
     if os.path.exists("temp"):
