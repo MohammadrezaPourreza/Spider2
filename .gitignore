@@ -6,8 +6,8 @@ get_doc.py
 get_bigquery_schema.py
 .vscode/*
 
-# spider-agent/logs/*
-# spider-agent/output/*
+spider-agent/logs/*
+spider-agent/output/*
 spider2/evaluation_suite/*
 
 !spider2/evaluation_suite/README.md
@@ -29,11 +29,11 @@ spider2/evaluation_suite/*
 # Byte-compiled / optimized / DLL files
 **/__pycache__/
 **/launch.json
-# logs/*
+logs/*
 
 *.DS_Store
 *.pyc
-# **/logs/*
+**/logs/*
 
 
 
