@@ -1,39 +1,148 @@
-# Bigquery Guideline
+# BigQuery Guideline
 
-A large number of databases in Spider2 are stored in BigQuery, including many large databases that reach TB-level. If you want to use the BigQuery Web UI to view database details, please refer to the following guidelines.
+A large quantities of databases in Spider2 are stored in BigQuery, including industrial-level databases that reach TB-level. To evaluate on our benchmark, you need to:
 
-Please note that after sign up an account, you can directly view 70% of the databases. However, for the remaining 30% of the databases (spider2-public-data), **you need to fill in your BigQuery account information in this [form](https://docs.google.com/forms/d/e/1FAIpQLSdrsJX-oDZDL0McIaF-0uypLeO2pYW4SX-qDeNSd88iYR_3Gg/viewform)**, and we will grant you permanent access within 12 hours.
+1. Register a BigQuery account and enable the BigQuery Sandbox function;
+> 🌹 You can get access to 70% SQLs of our benchmark, which query open-sourced databases in `bigquery-public-data`.
 
-## How to Sign up Bigquery Account and Create a Project
+2. Submit a [form](https://docs.google.com/forms/d/e/1FAIpQLSdrsJX-oDZDL0McIaF-0uypLeO2pYW4SX-qDeNSd88iYR_3Gg/viewform) to us, fill in your BigQuery/Google account email and request the read permission to our Google Cloud Project `spider2-public-data`, which affects 30% SQLs. (We will process your request in 12 hours.)
 
-There is the official tutorial. link
+If you are a beginner to BigQuery, please follow the guidelines below. We will walk you through
 
-ours
-#### 1.
+- [How to Enable BigQuery Sandbox](#how-to-enable-bigquery-sandbox)
+- [How to Check BigQuery Public Databases](#how-to-check-bigquery-public-databases)
+- [How to Get BigQuery Credential](#how-to-get-bigquery-credential)
 
+as well as
 
-
-#### 2.
-
-
-
-#### 3.
+- [How to Get Access to `spider2-public-data`](#how-to-get-access-to-spider2-public-data).
 
 
+## How to Enable BigQuery Sandbox
 
-## How to find the database used in Spider2
+Before using Spider2, you need to enable BigQuery Sandbox function for you Google account. This part is summarized from the [official tutorial](https://cloud.google.com/bigquery/docs/sandbox).
 
-if the database_name is `bigquery-public-data.new_york`, which means that we should use `bigquery-public-data` project
+1. In the Google Cloud console, go to the [**BigQuery**](https://console.cloud.google.com/bigquery
+) page.
 
-if the database_name is `bigquery-public-data.new_york`, which means that we should use `bigquery-public-data` project
+```txt
+https://console.cloud.google.com/bigquery
+```
 
-You need to star these project follow this [tutorial](https://cloud.google.com/bigquery/docs/bigquery-web-ui#:~:text=Star%20a%20project,-You%20can%20star&text=If%20you%20have%20access%20to,that%20you%20want%20to%20star.).
+The Google Cloud console is the graphical interface that you use to create and manage BigQuery resources and to run SQL queries.
+
+2. Authenticate with your Google Account, or create a new one.
+
+3. Click button `Select a project` on the top menu bar to select one Google Cloud Project (GCP).
+
+<p align="center">
+  <img src="assets/bigquery-select-gcp.png" alt="Select GCP" style="width: 80%; display: block; margin: 0 auto;" />
+</p>
+
+4. [Optional] If you do not have a GCP currently, create a new one. On the **New Project** page, do the following:
+a. For **Project name**, enter a name for your project.
+b. For **Organization**, keep the default `No organization` if you are not part of one.
+c. Click **Create**. You are redirected back to the BigQuery page in the Google Cloud console.
+
+<p align="center">
+  <img src="assets/bigquery-create-gcp.png" alt="Create GCP" style="width: 60%; display: block; margin: 0 auto;" />
+</p>
+
+5. Then, you have successfully created a new GCP and enable the BigQuery Sandbox function.
+
+<p align="center">
+  <img src="assets/bigquery-welcome.png" alt="Welcome" style="width: 80%; display: block; margin: 0 auto;" />
+</p>
 
 
-Then you can check the Bigquery Schema in detail.
+## How to Check BigQuery Public Databases
+
+About 70% of SQLs in Spider2 refer to open-sourced `bigquery-public-data` project, which contains a large quantities of freely accessed databases, e.g., `bigquery-public-data.new_york`. To view the schema/content of these open-sourced databases and run trial SQLs on them, you can **star** the `bigquery-public-data` on your left panel (based on [official tutorial](https://cloud.google.com/bigquery/docs/bigquery-web-ui#:~:text=Star%20a%20project,-You%20can%20star&text=If%20you%20have%20access%20to,that%20you%20want%20to%20star.)). Concretely,
+
+1. In the **Explorer** pane, click the button `+ ADD`.
+
+2. Next, in the pop-up right dialog, click the row `🔍 Star a project by name`.
+
+<p align="center">
+  <img src="assets/bigquery-star-gcp.png" alt="Star a GCP" style="width: 80%; display: block; margin: 0 auto;" />
+</p>
+
+3. Type in `bigquery-public-data` in the small pop-up dialog.
+
+4. Then, you are able to view the database schema or run sample SQLs to query the database in project `bigquery-public-data`.
+
+<p align="center">
+  <img src="assets/bigquery-view-schema.png" alt="View Schema" style="width: 48%; display: inline-block; margin: 0;" />
+  <img src="assets/bigquery-run-query.png" alt="Run Query" style="width: 48%; display: inline-block; margin: 0;" />
+</p>
 
 
-## How to get your own bigquery credential
+## How to Get BigQuery Credential
 
-There is the [official tutorial](https://developers.google.com/workspace/guides/create-credentials), carefully read it to see
-how to create credentials for a service account.
+If you want to access `bigquery-public-data` in a more elegant way, that is _using programming, API or command line interface (CLI)_, you need to set up the BigQuery credential. Typically, there are three different credential types, and we suggest using `Service Account`. Here is a step-by-step tutorial on how to get service account credentials based on [official link](https://developers.google.com/workspace/guides/create-credentials):
+
+1. Go to [Service Account](https://console.cloud.google.com/iam-admin/serviceaccounts) page in the Google Cloud console (select the GCP previously created that you want to access through the credentials).
+
+```txt
+https://console.cloud.google.com/iam-admin/serviceaccounts
+```
+
+2. Click the button `➕ CREATE SERVICE ACCOUNT` on the top menu bar.
+
+
+3. Fill in the service account details, then click the button `CREATE AND CONTINUE`.
+
+> 🔥 You can type any service account name, the globally unique service account ID will be automatically generated.
+
+4. Click the button `CONTINUE`. [Optional]: Assign roles to your service account, you can just skip this step and use the default role `Owner`. See [Granting, changing, and revoking access to resources](https://cloud.google.com/iam/docs/granting-changing-revoking-access) for more details.
+
+5. Click the button `DONE`, just leaving the two input boxes empty. [Optional]: You can also enter other users or groups that can manage this service account, see [Managing service account impersonation](https://cloud.google.com/iam/docs/impersonating-service-accounts) for more details.
+
+<p align="center">
+  <img src="assets/bigquery-service-account.png" alt="Enter Name" style="width: 32%; display: inline-block; margin: 0;" />
+  <img src="assets/bigquery-role.png" alt="Choose Role" style="width: 32%; display: inline-block; margin: 0;" />
+  <img src="assets/bigquery-done.png" alt="Done" style="width: 32%; display: inline-block; margin: 0;" />
+</p>
+
+6. Next, you will come back to the service account page. Click the three vertical dots icon `⋮` in the same row of your created service account and choose option `Manage keys`.
+
+7. In the new page, click the button `ADD KEY`, use the default `JSON` format, and click `CREATE`. The key file (which is named as `{your_service_account}-xxxx.json`) will be automatically downloaded.
+
+<p align="center">
+  <img src="assets/bigquery-manage-key.png" alt="Manage Key" style="width: 48%; display: inline-block; margin: 0;" />
+  <img src="assets/bigquery-add-key.png" alt="Add Key" style="width: 48%; display: inline-block; margin: 0;" />
+</p>
+
+8. Now, you can access your GCP using the downloaded service account credentials (`.json` file). For example, with [Python libraries](https://cloud.google.com/bigquery/docs/reference/libraries#client-libraries-install-python):
+
+> Firstly, please install necessary libraries: `pip install --upgrade google-cloud-bigquery google-api-core`.
+
+```python
+from google.oauth2 import service_account
+from google.cloud import bigquery
+
+credential_path = 'service_account.json' # path/to/your/keyfile.json
+credentials = service_account.Credentials.from_service_account_file(credential_path)
+client = bigquery.Client(credentials=credentials)
+
+# alternatively, you can also set the credential path via environment vairable
+# import os
+# os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "/path/to/keyfile.json"
+# client = bigquery.Client()
+
+# Perform a sample query.
+sql_query = 'SELECT name FROM `bigquery-public-data.usa_names.usa_1910_2013` WHERE state = "TX" LIMIT 10'
+query_job = client.query(sql_query)  # API request
+rows = query_job.result()  # Waits for query to finish
+
+for row in rows:
+    print(row.name)
+```
+
+## How to Get Access to `spider2-public-data`
+
+The Sandbox function of BigQuery restricts the consumption/quota of free users when querying databases. On account of the large volume of some DBs in `bigquery-public-data`, we create a public project `spider2-public-data` to decrease the data size of these DBs and resolve the quota limit problem when executing some SQLs (about 30%) in our benchmark.
+
+To enable successful execution and evaluation on these 30% SQLs which querying `spider2-public-data`, please fill in this [form](https://docs.google.com/forms/d/e/1FAIpQLSdrsJX-oDZDL0McIaF-0uypLeO2pYW4SX-qDeNSd88iYR_3Gg/viewform), and we will grant you permanent access within 12 hours.
+
+> You only need to fill in the Bigquery account email.
