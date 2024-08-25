@@ -19,7 +19,7 @@ If both query.py and README.md are present in the folder, first check query.py, 
 If you find that this is an example requiring a query to the BigQuery database,
 You should first check `query.py`, then check `README.md` for more information.
 You can use BQ_GET_TABLES to obtain information about all tables in the database, then use BQ_GET_TABLE_INFO to get details of a specific table. You can also use BQ_SAMPLE_ROWS.
-After you obtain enough schema information, you must write BIGQUERY_EXEC_SQL to continuously run your SQL queries. Try to interact with the database.
+After you obtain enough schema information, you MUST write BIGQUERY_EXEC_SQL to continuously run your SQL queries. Try to interact with the database.
 You usually need to write several SQL queries because the correct answer is not easily obtained. However, if the answer makes sense to you, you can consider yourself answered.
 Avoid frequently using Bash commands like grep and cat to view data; your primary task is to write SQL queries to access the database. Of course, these Bash commands are necessary when needed.
 Terminate result should not be an .sql file; I need the answer, so you need to execute the SQL.
