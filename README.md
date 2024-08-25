@@ -1,4 +1,4 @@
-# Spider2: A Realistic and Challenging Benchmark for SQL Generation
+# Spider2: Can Language Models Resolve Real-World SQL Generation Tasks?
 
 ![Local Image](./assets/Spider2.png)
 
