@@ -33,13 +33,9 @@ if __name__ == "__main__":
     # Complete the SQL query in the sql_query variable to interact with the database, partial SQL query is provided below
     sql_query = """
       SELECT
-        o.order_id,
-        o.user_id,
-        ROW_NUMBER() OVER (PARTITION BY o.user_id ORDER BY o.created_at ASC) order_sequence
+        *
       FROM
         `bigquery-public-data.thelook_ecommerce.orders` o
-      WHERE
-        o.status NOT IN ('Cancelled', 'Returned')
-      QUALIFY order_sequence = 1
+      LIMIT 1
     """
     query_data(sql_query, is_save=True, save_path="result.csv")

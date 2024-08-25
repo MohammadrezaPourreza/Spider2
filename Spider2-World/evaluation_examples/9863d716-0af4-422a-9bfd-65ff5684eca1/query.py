@@ -33,10 +33,7 @@ if __name__ == "__main__":
     # Complete the SQL query in the sql_query variable to interact with the database, partial SQL query is provided below
     sql_query = """
       SELECT
-        user_pseudo_id,
-        PARSE_DATE('%Y%m%d', event_date) AS event_date,
-        COUNTIF(event_name = 'page_view') AS page_view_count,
-        COUNTIF(event_name IN ('in_app_purchase', 'purchase')) AS purchase_event_count
+        *
       FROM `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
       WHERE _TABLE_SUFFIX BETWEEN '20201101' AND '20201130'
     """

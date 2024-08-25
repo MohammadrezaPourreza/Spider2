@@ -33,12 +33,10 @@ if __name__ == "__main__":
     # Complete the SQL query in the sql_query variable to interact with the database, partial SQL query is provided below
     sql_query = """
     SELECT
-      user_pseudo_id,
-      items
+      *
     FROM
       `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
     WHERE
       _TABLE_SUFFIX BETWEEN '20201201' AND '20201231'
-      AND event_name = 'purchase'
     """
     query_data(sql_query, is_save=True, save_path="result.csv")

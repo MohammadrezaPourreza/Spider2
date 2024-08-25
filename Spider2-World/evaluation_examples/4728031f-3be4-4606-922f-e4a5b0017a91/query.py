@@ -33,12 +33,11 @@ if __name__ == "__main__":
     # Complete the SQL query in the sql_query variable to interact with the database, partial SQL query is provided below
     sql_query = """
     SELECT
-        fullvisitorid,
-        MIN(date) AS date_first_visit
+        *
     FROM
         `bigquery-public-data.google_analytics_sample.ga_sessions_*`
     WHERE
        _TABLE_SUFFIX BETWEEN start_date AND end_date
-    GROUP BY fullvisitorid
+
     """
     query_data(sql_query, is_save=True, save_path="result.csv")

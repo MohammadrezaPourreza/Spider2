@@ -32,28 +32,6 @@ if __name__ == "__main__":
 
     # # Complete the SQL query in the sql_query variable to interact with the database, partial SQL query is provided below
     sql_query = """
-WITH extracted_modules AS (
-  SELECT 
-    file_id, 
-    repo_name, 
-    path, 
-    line, 
-    IF(
-      ENDS_WITH(path, '.py'),
-      'python',
-      IF(ENDS_WITH(path, '.r'), 'r', NULL)
-    ) AS language,
-    IF(
-      ENDS_WITH(path, '.py'),
-      ARRAY_CONCAT(
-        REGEXP_EXTRACT_ALL(line, r'\bimport\s+(\w+)'), 
-        REGEXP_EXTRACT_ALL(line, r'\bfrom\s+(\w+)')
-      ),
-      IF(
-        ENDS_WITH(path, '.r'),
-        REGEXP_EXTRACT_ALL(line, r'library\s*\(\s*([^\s)]+)\s*\)'),
-        []
-      )
-    ) AS modules
+
     """
     query_data(sql_query, is_save=True, save_path="result.csv")

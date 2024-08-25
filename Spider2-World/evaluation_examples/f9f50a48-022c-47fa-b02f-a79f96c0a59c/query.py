@@ -33,10 +33,8 @@ if __name__ == "__main__":
     # Complete the SQL query in the sql_query variable to interact with the database, partial SQL query is provided below
     sql_query = """
       SELECT 
-            Symbol AS symbol, AVG( LOG10( normalized_count + 1 )) AS data, ParticipantBarcode
+        *
       FROM  `pancancer-atlas.Filtered.EBpp_AdjustPANCAN_IlluminaHiSeq_RNASeqV2_genExp_filtered` 
-      WHERE Study = 'LGG' AND Symbol ='IGF2' AND normalized_count IS NOT NULL
-      GROUP BY 
-            ParticipantBarcode, symbol
+      LIMIT 1
     """
     query_data(sql_query, is_save=True, save_path="result.csv")

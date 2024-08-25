@@ -33,17 +33,9 @@ if __name__ == "__main__":
     # Complete the SQL query in the sql_query variable to interact with the database, partial SQL query is provided below
     sql_query = """
       SELECT
-        provider_state,
-        provider_city,
-        provider_id,
-        provider_name,
-        SUM(average_total_payments*outpatient_services)/SUM(outpatient_services) AS average_OP_cost
+        *
       FROM
         `bigquery-public-data.cms_medicare.outpatient_charges_2014`
-      GROUP BY
-        provider_state,
-        provider_city,
-        provider_id,
-        provider_name
+      LIMIT 1
     """
     query_data(sql_query, is_save=True, save_path="result.csv")

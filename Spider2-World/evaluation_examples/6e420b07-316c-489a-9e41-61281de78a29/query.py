@@ -32,17 +32,6 @@ if __name__ == "__main__":
 
     # # Complete the SQL query in the sql_query variable to interact with the database, partial SQL query is provided below
     sql_query = """
-    SELECT
-        pubs.publication_number AS citing_publication_number,
-        cite.publication_number AS cited_publication_number,
-        citing_assignee_s.name AS citing_assignee,
-        SUBSTR(cpcs.code, 0, 4) AS citing_cpc_subclass
-    FROM 
-        `patents-public-data.patents.publications` AS pubs,
-        UNNEST(citation) AS cite,
-        UNNEST(assignee_harmonized) AS citing_assignee_s,
-        UNNEST(cpc) AS cpcs
-    WHERE
-        cpcs.first = TRUE
+
     """
     query_data(sql_query, is_save=True, save_path="result.csv")

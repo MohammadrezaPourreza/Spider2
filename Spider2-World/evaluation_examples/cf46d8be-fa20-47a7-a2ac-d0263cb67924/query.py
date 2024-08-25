@@ -33,15 +33,9 @@ if __name__ == "__main__":
     # Complete the SQL query in the sql_query variable to interact with the database, partial SQL query is provided below
     sql_query = """
       SELECT
-        drg_definition,
-        SUM(total_discharges) AS national_num_cases
+        *
       FROM
         `bigquery-public-data.cms_medicare.inpatient_charges_2014`
-      GROUP BY
-        drg_definition
-      ORDER BY
-        national_num_cases DESC
-      LIMIT
-        10
+      LIMIT 1
     """
     query_data(sql_query, is_save=True, save_path="result.csv")

@@ -30,17 +30,14 @@ def query_data(sql_query, is_save, save_path="result.csv"):
 
 if __name__ == "__main__":
 
-    # Complete the SQL query in the sql_query variable to interact with the database, partial SQL query is provided below
+    # Complete the SQL query in the sql_query variable to interact with the database, example SQL query related to this task is provided below
     sql_query = """
       SELECT 
-        t1.publication_number, 
-        t1.application_number 
+        *
       FROM 
         `patents-public-data.patents.publications` t1 
       WHERE 
-        country_code = 'US'                                                        
-        AND grant_date between 20180101 AND 20180131                               
-        AND grant_date != 0                                                        
-        AND publication_number LIKE '%B2%'
+        country_code = 'US'     
+      LIMIT 1                                                   
     """
     query_data(sql_query, is_save=True, save_path="result.csv")

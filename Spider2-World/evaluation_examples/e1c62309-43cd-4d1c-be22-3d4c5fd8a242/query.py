@@ -33,18 +33,8 @@ if __name__ == "__main__":
     # Complete the SQL query in the sql_query variable to interact with the database, partial SQL query is provided below
     sql_query = """
       SELECT
-        languages.language
-      FROM
-        languages
-      INNER JOIN
+        *
         `bigquery-public-data.github_repos.sample_contents` AS contents
-      ON
-        contents.id = languages.id
-      WHERE
-        languages.language IS NOT NULL
-        AND contents.content IS NOT NULL
-      GROUP BY languages.language
-      ORDER BY COUNT(*) DESC
       LIMIT 3;
     """
     query_data(sql_query, is_save=True, save_path="result.csv")

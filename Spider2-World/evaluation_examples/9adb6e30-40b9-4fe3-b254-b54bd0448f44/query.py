@@ -33,10 +33,9 @@ if __name__ == "__main__":
     # # Complete the SQL query in the sql_query variable to interact with the database, partial SQL query is provided below
     sql_query = """
   SELECT 
-    ANY_VALUE(ARRAY_LENGTH(inventor)) AS num_inventors,
-    ANY_VALUE(country_code) AS country_code,
-    ANY_VALUE(CAST(FLOOR(filing_date / (5 * 10000)) AS INT64)) * 5 AS filing_year
+    *
   FROM 
     `patents-public-data.patents.publications` AS pubs
+  LIMIT 1
     """
     query_data(sql_query, is_save=True, save_path="result.csv")

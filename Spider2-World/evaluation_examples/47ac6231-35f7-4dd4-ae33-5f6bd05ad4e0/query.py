@@ -33,13 +33,11 @@ if __name__ == "__main__":
     # # Complete the SQL query in the sql_query variable to interact with the database, partial SQL query is provided below
     sql_query = """
         SELECT 
-            t1.publication_number, 
-            t1.application_number 
+            *
         FROM 
             `patents-public-data.patents.publications` t1 
         WHERE 
-            country_code = 'US' AND
             grant_date BETWEEN 20170101 AND 20170131 AND
-            publication_number LIKE '%B2%'
+        LIMIT 1
     """
     query_data(sql_query, is_save=True, save_path="result.csv")

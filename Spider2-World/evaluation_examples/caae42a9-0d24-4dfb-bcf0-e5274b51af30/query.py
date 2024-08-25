@@ -33,11 +33,8 @@ if __name__ == "__main__":
     # Complete the SQL query in the sql_query variable to interact with the database, partial SQL query is provided below
     sql_query = """
       SELECT
-          ct.id AS file_id, 
-          fl.repo_name, 
-          path, 
-          SPLIT(REPLACE(ct.content, "\n", " \n"), "\n") AS lines
+          *
       FROM `bigquery-public-data.github_repos.sample_files` AS fl
-      JOIN `bigquery-public-data.github_repos.sample_contents` AS ct ON fl.id = ct.id
+      LIMIT 1
     """
     query_data(sql_query, is_save=True, save_path="result.csv")

@@ -33,16 +33,9 @@ if __name__ == "__main__":
     # # Complete the SQL query in the sql_query variable to interact with the database, partial SQL query is provided below
     sql_query = """
     SELECT 
-        ANY_VALUE(assignee_harmonized) AS assignee_harmonized,  -- Randomly sampling assignee data
-        ANY_VALUE(filing_date) AS filing_date,  -- Randomly sampling filing date
-        application_number  -- The unique identifier for each patent application
+        *
     FROM 
         `patents-public-data.patents.publications` AS pubs  -- Using the patent publications dataset
-    WHERE EXISTS (
-        -- Checks if there is a CPC code "A61K39"
-        SELECT 1 FROM UNNEST(pubs.cpc) AS c WHERE REGEXP_CONTAINS(c.code, "A61K39")
-    )
-    GROUP BY 
-        application_number  -- Grouping by application number to ensure unique entries
+    LIMIT 1
     """
     query_data(sql_query, is_save=True, save_path="result.csv")

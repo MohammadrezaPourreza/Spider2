@@ -33,10 +33,8 @@ if __name__ == "__main__":
     # Complete the SQL query in the sql_query variable to interact with the database, partial SQL query is provided below
     sql_query = """
     SELECT 
-        FORMAT_DATE("%Y%m", PARSE_DATE("%Y%m%d", date)) AS month,
-        trafficSource.source AS source,
-        ROUND(SUM(totals.totalTransactionRevenue) / 1000000, 2) AS revenue
+        *
     FROM `bigquery-public-data.google_analytics_sample.ga_sessions_2017*`
-    GROUP BY 1, 2
+    LIMIT 1
     """
     query_data(sql_query, is_save=True, save_path="result.csv")

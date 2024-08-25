@@ -30,20 +30,14 @@ def query_data(sql_query, is_save, save_path="result.csv"):
 
 if __name__ == "__main__":
 
-    # Complete the SQL query in the sql_query variable to interact with the database, partial SQL query is provided below
+    # Complete the SQL query in the sql_query variable to interact with the database, example SQL query related to this task is provided below
     sql_query = """
       SELECT
-        CONCAT(EXTRACT(YEAR FROM (PARSE_DATE('%Y%m%d', date))), '0',
-            EXTRACT(MONTH FROM (PARSE_DATE('%Y%m%d', date)))) AS month,
-        SUM(totals.pageviews) / COUNT(DISTINCT fullVisitorId) AS avg_pageviews_non_purchase
+        *
     FROM
         `bigquery-public-data.google_analytics_sample.ga_sessions_2017*`,
-        UNNEST (hits) AS hits,
-        UNNEST (hits.product) AS product
     WHERE
-        _table_suffix BETWEEN '0401' AND '0731'
-        AND totals.transactions IS NULL
-        AND product.productRevenue IS NULL
-    GROUP BY month
+        _table_suffix BETWEEN '0601' AND '0731'
+    LIMIT 1
     """
     query_data(sql_query, is_save=True, save_path="result.csv")

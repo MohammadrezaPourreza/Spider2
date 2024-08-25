@@ -38,7 +38,5 @@ if __name__ == "__main__":
           `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*` AS T
         CROSS JOIN
           UNNEST(T.event_params) AS event_params
-        WHERE
-          event_params.key = 'engagement_time_msec'
     """
     query_data(sql_query, is_save=True, save_path="result.csv")
