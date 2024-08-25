@@ -27,15 +27,13 @@ if the database_name is `bigquery-public-data.new_york`, which means that we sho
 
 if the database_name is `bigquery-public-data.new_york`, which means that we should use `bigquery-public-data` project
 
-TODO
+You need to star these project follow this [tutorial](https://cloud.google.com/bigquery/docs/bigquery-web-ui#:~:text=Star%20a%20project,-You%20can%20star&text=If%20you%20have%20access%20to,that%20you%20want%20to%20star.).
 
-or
-
-the official tutorial
 
 Then you can check the Bigquery Schema in detail.
 
 
 ## How to get your own bigquery credential
 
-There is the official tutorial. link
+There is the [official tutorial](https://developers.google.com/workspace/guides/create-credentials), carefully read it to see
+how to create credentials for a service account.
