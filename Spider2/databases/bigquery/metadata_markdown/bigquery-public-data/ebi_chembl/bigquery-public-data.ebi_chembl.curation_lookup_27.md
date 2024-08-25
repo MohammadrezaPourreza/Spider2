@@ -1,9 +1,0 @@
-# `ebi_chembl.curation_lookup_27`
-`bq-1` | `bigquery-public-data`
-
-## Column details
-* [STRING]    `curated_by`
-* [STRING]    `description`
-
--------------------------------------------------------------------------------
-*Do not make edits above this line.*
