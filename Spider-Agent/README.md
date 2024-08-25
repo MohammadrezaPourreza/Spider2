@@ -54,7 +54,7 @@ Reorganize run results into a standard submission format, here we store the answ
 
 ```python
 python get_spider2c_submission_data.py --experiment_suffix <The name of this experiment> --results_folder_name <Standard Submission Folders>
-python get_spider2c_submission_data.py --experiment_suffix gpt-4-try2 --results_folder_name ../Spider2-World/evaluation_suite/gpt-4-try1
+python get_spider2c_submission_data.py --experiment_suffix gpt-4o-try1 --results_folder_name ../Spider2-World/evaluation_suite/gpt-4o-try1
 ```
 
 #### Run Evaluation Scripts

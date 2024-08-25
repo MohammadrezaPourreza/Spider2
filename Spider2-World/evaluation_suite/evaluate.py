@@ -44,7 +44,7 @@ def run_evaluation(result_dir, gold_dir):
     total = 0
     output_list = []
     
-    
+
     for data in tqdm(evaluation_data):
         output_dict = data
         eval_metadata = data['evaluation']
@@ -85,8 +85,13 @@ def run_evaluation(result_dir, gold_dir):
         output_list.append(output_dict)
         
                 
-    print(output_list)
-    print(sum([entry['score'] for entry in output_list])/len(output_list), sum([entry['score'] for entry in output_list]), len(output_list))
+    score = 0
+    for item in output_list:
+        if item['score'] == 1:
+            score += 1
+            print(item['instance_id'])
+    print(score / len(output_list), score, len(output_list))
+    
 
 
     

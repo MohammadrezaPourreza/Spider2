@@ -71,6 +71,9 @@ def config() -> argparse.Namespace:
 
     # output related
     parser.add_argument("--output_dir", type=str, default="output")
+    parser.add_argument("--plan", action="store_true")
+    
+    
     args = parser.parse_args()
 
     return args
@@ -91,6 +94,9 @@ def test(
         experiment_id = args.model.split("/")[-1]
     else:
         experiment_id = args.model.split("/")[-1] + "-" + args.suffix
+        
+    if args.plan:
+        experiment_id = f"{experiment_id}-plan"
 
     env_config = \
     {
@@ -108,6 +114,7 @@ def test(
         temperature=args.temperature,
         max_memory_length=args.max_memory_length,
         max_steps=args.max_steps,
+        use_plan=args.plan
     )
     
     ## load task configs

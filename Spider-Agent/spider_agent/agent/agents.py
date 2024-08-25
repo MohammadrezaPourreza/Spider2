@@ -8,7 +8,7 @@ import uuid
 from http import HTTPStatus
 from io import BytesIO
 from typing import Dict, List
-from spider_agent.agent.prompts import SYS_PROMPT_IN_OUR_CODE
+from spider_agent.agent.prompts import SYS_PROMPT_IN_OUR_CODE, SYS_PROMPT_WITH_PLAN_IN_OUR_CODE
 from spider_agent.agent.action import Action, Bash, Terminate, CreateFile, EditFile, LOCAL_DB_SQL, BIGQUERY_EXEC_SQL, BQ_GET_TABLES, BQ_GET_TABLE_INFO, BQ_SAMPLE_ROWS
 from spider_agent.envs.spider_agent import Spider_Agent_Env
 from spider_agent.agent.models import call_llm
@@ -32,6 +32,7 @@ class PromptAgent:
         temperature=0.5,
         max_memory_length=10,
         max_steps=15,
+        use_plan=False
     ):
         
         self.model = model
@@ -51,6 +52,7 @@ class PromptAgent:
         self.codes = []
         self._AVAILABLE_ACTION_CLASSES = [Bash, Terminate, CreateFile, EditFile, BIGQUERY_EXEC_SQL, BQ_GET_TABLES, BQ_GET_TABLE_INFO, BQ_SAMPLE_ROWS]
         self.work_dir = "/workspace"
+        self.use_plan = use_plan
         
     def set_env_and_task(self, env: Spider_Agent_Env):
         self.env = env
@@ -61,8 +63,12 @@ class PromptAgent:
         self.codes = []
         self.history_messages = []
         self.instruction = self.env.task_config['instruction']
+        self.reference_plan = self.env.task_config['plan']
         action_space = "".join([action_cls.get_action_description() for action_cls in self._AVAILABLE_ACTION_CLASSES])
-        self.system_message = SYS_PROMPT_IN_OUR_CODE.format(work_dir=self.work_dir, action_space=action_space, task=self.instruction, max_steps=self.max_steps)
+        if self.use_plan:
+            self.system_message = SYS_PROMPT_WITH_PLAN_IN_OUR_CODE.format(work_dir=self.work_dir, action_space=action_space, task=self.instruction, max_steps=self.max_steps, plan=self.reference_plan)
+        else:
+            self.system_message = SYS_PROMPT_IN_OUR_CODE.format(work_dir=self.work_dir, action_space=action_space, task=self.instruction, max_steps=self.max_steps)
         self.history_messages.append({
             "role": "system",
             "content": [

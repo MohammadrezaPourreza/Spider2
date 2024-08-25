@@ -9,7 +9,7 @@ We transform almost all examples Spider2 into Spider2-World. The most distinctiv
 We also propose a new novel SQL generation task based on the **DBT project**, which is a highly realistic SQL generation scenario commonly used in industry development, requires completing a complex data transformation task. (Somewhat similar to the setting in [`SWE-Bench`](https://www.swebench.com/).
 
 
-![Local Image](../assets/Spider2-World.png)
+<!-- ![Local Image](../assets/Spider2-World.png) -->
 
 
 
@@ -51,6 +51,15 @@ We proposed an agent framework [`Spider-Agent`](https://github.com/xlang-ai/Spid
 
 We create [evaluation suite](https://github.com/xlang-ai/Spider2/tree/main/Spider2-World/evaluation_suite) for Spider2-World.
 
+
+#### Evaluation Results
+
+
+| Method                     | Score |
+| -------------------------- | ---- | 
+| Spider-Agent (GPT-4o)   | 6.00% | 
+| Spider-Agent (Gemini) | 4.00% |
+| CodeAct-Agent (GPT-4o) | 2.00% |
 
 
 
