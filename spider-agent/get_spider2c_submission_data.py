@@ -84,6 +84,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Run evaluations for NLP models.")
     parser.add_argument("--all_results_path", type=str, default="output", help="Result directory")
     parser.add_argument("--experiment_suffix", type=str, default="gpt-4-try1", help="Result directory")
-    parser.add_argument("--results_folder_name", type=str, default="../Spider2-C/evaluation_suite/gpt-4-try1", help="Directory containing gold standard files")
+    parser.add_argument("--results_folder_name", type=str, default="../spider2-world/evaluation_suite/gpt-4-try1", help="Directory containing gold standard files")
     args = parser.parse_args()
     postprocess(args)
