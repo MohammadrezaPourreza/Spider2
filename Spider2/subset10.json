@@ -1,0 +1,125 @@
+[
+    {
+        "instance_id": "bq339",
+        "db": "bigquery-public-data.san_francisco_bikeshare",
+        "question": "Which month in 2017 had the largest absolute difference between cumulative bike usage minutes for customers and subscribers?",
+        "external_knowledge": null,
+        "plan": "1. **Create a Subquery for Monthly Totals**:\n   - Calculate the total usage minutes for each user type (e.g., type A and type B) for each month in the specified year.\n   - Group the results by month to get monthly totals for each user type.\n\n2. **Calculate Cumulative Totals**:\n   - Using the monthly totals, compute the cumulative sum of usage minutes for each user type up to each month.\n   - This involves summing the monthly totals in an ordered manner, from the beginning of the year to the end of each month.\n\n3. **Calculate Absolute Differences**:\n   - Determine the absolute difference between the cumulative totals of the two user types for each month.\n   - This provides a measure of how the cumulative usage minutes differ between the two user types at the end of each month.\n\n4. **Identify the Month with the Largest Difference**:\n   - Sort the months based on the absolute difference calculated in the previous step, in descending order.\n   - Select the month with the highest absolute difference.\n\nBy following these steps, the query identifies the month in the specified year that had the largest absolute difference in cumulative bike usage minutes between the two user types.",
+        "special_function": [
+            "date-functions/EXTRACT",
+            "datetime-functions/EXTRACT",
+            "interval-functions/EXTRACT",
+            "mathematical-functions/ABS",
+            "time-functions/EXTRACT",
+            "timestamp-functions/EXTRACT",
+            "conditional-functions/CASE"
+        ]
+    },
+    {
+        "instance_id": "bq006",
+        "db": "bigquery-public-data.austin_incidents",
+        "question": "What is the date with the second highest Z-score for daily counts of 'PUBLIC INTOXICATION' incidents in Austin for the year 2016? List the date in the format of '2016-xx-xx'.",
+        "external_knowledge": null,
+        "plan": "Analyze daily occurrences of public intoxication incidents in Austin for the year 2016. \nCalculate the total number of incidents per day and compute the Z-score for each day's incidents to identify days with significantly higher or lower incident counts. \nThe output should include the date, total number of incidents, and the Z-score.",
+        "special_function": [
+            "date-functions/DATE",
+            "mathematical-functions/ROUND",
+            "statistical-aggregate-functions/STDDEV"
+        ]
+    },
+    {
+        "instance_id": "bq020_1",
+        "db": "bigquery-public-data.genomics_cannabis",
+        "question": "What is the name of the reference sequence with the highest variant density in the given cannabis genome dataset?",
+        "external_knowledge": null,
+        "plan": "1. **Identify Relevant Tables**:\n   - Utilize two tables: one containing variant data and another containing reference sequence data.\n\n2. **Join Tables**:\n   - Perform an inner join on the tables based on matching reference sequence names to combine variant information with reference sequence details.\n\n3. **Filter Variants**:\n   - Include only those variants where there is at least one genotype value greater than zero within the variant calls. This ensures that only relevant variants are considered.\n\n4. **Calculate Variant Density**:\n   - For each reference sequence, calculate the density of variants by dividing the count of variants by the length of the reference sequence. Also, compute the total count of variants and store the reference sequence length for later use.\n\n5. **Group and Aggregate Data**:\n   - Group the results by reference sequence name and reference sequence length to compute the variant counts and densities for each reference sequence.\n\n6. **Order by Density**:\n   - Sort the grouped results in descending order of variant density to prioritize sequences with the highest density of variants.\n\n7. **Select Top Result**:\n   - Limit the results to a single entry to identify the reference sequence with the highest variant density.\n\n8. **Output**:\n   - Extract and display the name of the reference sequence with the highest variant density.",
+        "special_function": [
+            "other-functions/UNNEST"
+        ]
+    },
+    {
+        "instance_id": "bq020_2",
+        "db": "bigquery-public-data.genomics_cannabis",
+        "question": "What is the variant density of the cannabis reference with the longest reference length?",
+        "external_knowledge": null,
+        "plan": "1. **Data Preparation (CTE Setup)**:\n   - Create a common table expression (CTE) to compute necessary metrics for each reference.\n   \n2. **Join Data**:\n   - Join two datasets: one containing variant data and another containing reference length information based on matching reference names.\n\n3. **Filter Data**:\n   - Apply a filter to ensure only those variants are considered where at least one genotype call is greater than zero.\n\n4. **Aggregation**:\n   - Group the data by reference name and reference length.\n   - Calculate the total count of variants for each reference.\n   - Compute the variant density by dividing the count of variants by the reference length.\n\n5. **Final Selection**:\n   - Select all data from the aggregated CTE.\n\n6. **Sorting and Limiting**:\n   - Order the results by reference length in descending order.\n   - In case of ties in reference length, order by reference name.\n   - Limit the result to one row to get the reference with the longest length and its variant density.",
+        "special_function": [
+            "other-functions/UNNEST"
+        ]
+    },
+    {
+        "instance_id": "bq016",
+        "db": "spider2-public-data.deps_dev_v1",
+        "question": "Considering only the highest release versions of PYPI packages, which one and its version has the most dependent packages?",
+        "external_knowledge": null,
+        "plan": "1. Firstly, we declare a system variable to denote the PYPI system.\n2. Identify the highest released versions for each package.\n   - Use a subquery to:\n     - Partition data by `Name`.\n     - Order the partitions by `VersionInfo.Ordinal` in descending order to rank versions.\n     - Assign row numbers to each version within their respective partitions.\n   - Filter to include only the first row (highest version) for each package where:\n     - The `System` is 'PYPI' (using the variable `Sys`).\n     - The `VersionInfo.IsRelease` is true (indicating it is a release version).\n3. Join the table Dependencies with the table defined in Step 2.\n4. Aggregate and order dependencies by name and version.\n5. Restrict the output to only one record, which is the dependency with the highest count of dependent packages.",
+        "special_function": [
+            "json-functions/STRING",
+            "numbering-functions/ROW_NUMBER",
+            "timestamp-functions/STRING"
+        ]
+    },
+    {
+        "instance_id": "bq062",
+        "db": "spider2-public-data.deps_dev_v1",
+        "question": "What is the most frequently used license by packages in each system?",
+        "external_knowledge": null,
+        "plan": "1. Generate a Common Table Expression (CTE) that aggregates the number of distinct packages using each license within each system.\n- Use `CROSS JOIN UNNEST` to handle the array of licenses, effectively normalizing the data for easier counting.\n- Group the results by `System` and `License`.\n2. Generate another CTE that ranks the licenses within each system based on the number of distinct packages using them.\n- Use the `ROW_NUMBER()` window function partitioned by `System` and ordered by `NPackages` in descending order to assign a rank to each license within each system.\n3. Select and output only top ranked licenses for each system.",
+        "special_function": [
+            "numbering-functions/ROW_NUMBER",
+            "other-functions/UNNEST"
+        ]
+    },
+    {
+        "instance_id": "bq076",
+        "db": "bigquery-public-data.chicago_crime",
+        "question": "Which month generally has the greatest number of motor vehicle thefts in 2016?",
+        "external_knowledge": null,
+        "plan": "Which month generally has the greatest number of motor vehicle thefts?\nThe following query summarizes the number of MOTOR VEHICLE THEFT incidents for each year and month, and ranks the month\u2019s total from 1 to 12. Then, the outer SELECT clause limits the final result set to the first overall ranking for each year. According to the data, in 3 of the past 10 years, December had the highest number of car thefts",
+        "special_function": [
+            "date-functions/DATE",
+            "date-functions/EXTRACT",
+            "datetime-functions/EXTRACT",
+            "interval-functions/EXTRACT",
+            "numbering-functions/RANK",
+            "time-functions/EXTRACT",
+            "timestamp-functions/EXTRACT"
+        ]
+    },
+    {
+        "instance_id": "bq123",
+        "db": "bigquery-public-data.stackoverflow",
+        "question": "Which day of the week has the third highest percentage of questions answered within an hour?",
+        "temporal": "Yes",
+        "external_knowledge": null,
+        "plan": "Which day of the week has most questions answered within an hour?\nIn this query, we find the best day of the week to ask questions to get an answer very quickly. The query returns day of the week as integers from 1 to 7 (1 = Sunday, 2 = Monday, etc), and the number of questions and answers on each day. We also query how many of these questions received an answer within 1 hour of submission, and the corresponding percentage. The volume of questions and answers is the highest in the middle of the week (Tue, Wed, and Thur), but questions are answered within 1 hour is higher on Saturdays and Sundays",
+        "special_function": [
+            "date-functions/EXTRACT",
+            "datetime-functions/EXTRACT",
+            "interval-functions/EXTRACT",
+            "mathematical-functions/ROUND",
+            "time-functions/EXTRACT",
+            "timestamp-functions/EXTRACT",
+            "timestamp-functions/TIMESTAMP_ADD"
+        ]
+    },
+    {
+        "instance_id": "bq329",
+        "db": "bigquery-public-data.austin_bikeshare",
+        "question": "Which bike station in the Austin bikeshare system has the lowest average trip duration? I want the station ID.",
+        "external_knowledge": null,
+        "plan": "1. **Define Data Sources**:\n   - Establish temporary datasets for bike stations and trip data by selecting all relevant columns from each respective source.\n\n2. **Prepare Trip Data**:\n   - Within the trip data, ensure proper data types by safely converting necessary fields to integers and extracting the required columns for analysis.\n\n3. **Calculate Average Trip Duration**:\n   - Group the trip data by the starting station and calculate the average trip duration for each group.\n\n4. **Join Data**:\n   - Merge the average trip duration data with the station data based on the station identifier.\n\n5. **Determine Station with Lowest Average Duration**:\n   - Sort the merged dataset by the average trip duration in ascending order.\n   - Select the station identifier of the station with the lowest average trip duration.\n   - Limit the result to only one record to get the station with the absolute lowest average trip duration.",
+        "special_function": [
+            "conversion-functions/SAFE_CAST",
+            "json-functions/INT64"
+        ]
+    },
+    {
+        "instance_id": "bq321",
+        "db": "bigquery-public-data.idc_v14",
+        "question": "How many unique StudyInstanceUIDs are there from the DWI, T2 Weighted Axial, Apparent Diffusion Coefficient series, and T2 Weighted Axial Segmentations in the 'qin_prostate_repeatability' collection?",
+        "external_knowledge": null,
+        "plan": "1. **Identify Relevant Records**:\n   - Create a temporary dataset that includes unique identifiers from records that match specific criteria within a given collection.\n   - Filter these records based on a list of specified descriptions.\n\n2. **Additional Filtering with Nested Data**:\n   - Create another temporary dataset that includes unique identifiers from records that match a different specific description within the same collection.\n   - Additionally, this step involves expanding nested data fields to match the criteria.\n\n3. **Combine Results**:\n   - Combine the unique identifiers from both temporary datasets into a single dataset.\n   - Use a union operation to ensure all relevant records are included.\n\n4. **Count Unique Identifiers**:\n   - Count the number of unique identifiers in the combined dataset to determine the total number of unique instances that meet the criteria.",
+        "special_function": null
+    }
+]

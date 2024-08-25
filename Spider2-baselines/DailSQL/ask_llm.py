@@ -132,5 +132,5 @@ if __name__ == '__main__':
                         with open(os.path.join(submit_folder, f"{instance_id}.sql"), "w") as submit_file:
                             submit_file.write(sql)
 
-        json.dump(results_json, json_f, ensure_ascii=False, indent=4)
+        # json.dump(results_json, json_f, ensure_ascii=False, indent=4)  # 不保存到json了
 

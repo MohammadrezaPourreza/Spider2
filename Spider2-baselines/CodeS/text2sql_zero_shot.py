@@ -1,4 +1,4 @@
-# import debugpy; debugpy.connect(('127.0.0.1', 5696))
+import debugpy; debugpy.connect(('127.0.0.1', 5696))
 import argparse
 import os
 import torch
@@ -72,7 +72,7 @@ if __name__ == "__main__":
         args.table_num,
         args.column_num,
         args.sic_path
-    )
+    )  # 这里，完成input text的token化
 
     # TODO: current, we only support batch size = 1
     dataloader = DataLoader(eval_set, batch_size = 1)

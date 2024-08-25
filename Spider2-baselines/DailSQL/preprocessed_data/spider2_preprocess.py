@@ -54,6 +54,8 @@ def column_description_length_histogram():
     # plt.show()
 
 
+
+
 def process_table_json(args):
 
     with open(osp.join(proj_dir, f'../../Spider2/{args.dev}.json'), 'r', encoding='utf-8') as file:
