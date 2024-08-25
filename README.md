@@ -39,8 +39,8 @@ Given the large number of tables and columns in the Spider2 dataset, we leverage
 
 | Method                     | EX   | Correct Queries                       |
 | -------------------------- | ---- | ------------------------------------- |
-| vanilla DailSQL (GPT-4o)   | 1.79% | bq019_2, bq329                   |
-| DailSQL+Func+Plan (GPT-4o) | 4.46% | bq006, bq076, bq123, bq329, bq339 |
+| vanilla DailSQL (GPT-4o)   | 3.54% | bq006, 329, 076, 321                   |
+| DailSQL+Func+Plan (GPT-4o) | 8.84% | bq321, 123, 020_2, 329, 016, 062, 076, 006, 339, 020_1  |
 
 ### CodeS
 
