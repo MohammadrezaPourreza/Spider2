@@ -9,7 +9,7 @@
 
 ## ⚙️ Settings
 
-To meet the diverse research needs, we set up Spider2 with two settings, focusing on Advanced Text2SQL and general coding agent tasks, respectively. Most examples in these two settings overlap, differing mainly in the settings themselves.
+To meet the diverse research needs, we set up Spider2 with two settings, focusing on Advanced Text2SQL and general coding agent tasks, respectively. Most examples in these two **settings** overlap, differing mainly in the settings themselves.
 
 [Spider2](https://github.com/xlang-ai/Spider2/tree/main/Spider2): **Traditional Text2SQL Setting**. Focusing on Text2SQL, with detailed database metadata.（Tiny Version: 20%)
 
@@ -25,22 +25,14 @@ For `Spider2`, we proposed baselines based on the widely used method:
 
 ### Dail-SQL
 
-For a detailed guideline of running Dail-SQL, please refer to [README of Dail-SQL](https://github.com/xlang-ai/Spider2/tree/main/Spider2-baselines/DailSQL).
-
-#### Evaluation Results of Dail-SQL
-
-We evaluate two approaches:
-- **Vanilla DailSQL**: This method utilizes the Code Representation (CR) prompt from the original DailSQL paper. To accommodate the complexity of the Spider2 dataset, we enhance the prompt by **incorporating column descriptions, sampled rows, and external knowledge**.
-- **DailSQL+Func+Plan**: Building on Vanilla DailSQL, this approach augments the prompt with descriptions of 
-- 1) **potentially relevant SQL functions** 
-- 2) **reference plan** that assists in generating the components of a complete SQL query.
+We evaluate two approaches, **Vanilla DailSQL** and **DailSQL+Func+Plan** with GPT-4o:
   
-Given the large number of tables and columns in the Spider2 dataset, we leverage **GPT-4o** with a 128k context window to prevent prompt size limitations. The performance of the two methods is shown as:
+| Method                     | EX   | 
+| -------------------------- | ---- | 
+| vanilla DailSQL (GPT-4o)   | 3.54% | 
+| DailSQL+Func+Plan (GPT-4o) | 8.84% |
 
-| Method                     | EX   | Correct Queries                       |
-| -------------------------- | ---- | ------------------------------------- |
-| vanilla DailSQL (GPT-4o)   | 3.54% | bq006, 329, 076, 321                   |
-| DailSQL+Func+Plan (GPT-4o) | 8.84% | bq321, 123, 020_2, 329, 016, 062, 076, 006, 339, 020_1  |
+For a detailed guideline of running Dail-SQL and evaluation results, please refer to [README of Dail-SQL](https://github.com/xlang-ai/Spider2/tree/main/Spider2-baselines/DailSQL).
 
 ### CodeS
 
