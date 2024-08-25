@@ -18,7 +18,7 @@ Since we have only released the tiny version so far, a large amount of high-qual
 ├── databases                   # DB/DB metadata for Spider2 dataset
 │   ├── bigquery                # The information of DB on Bigquery
 │   │   ├── metadata                 # The details data of each DB, including DB DDL, table, column information, and sample data.
-│   │   └── metadata_markdown        # Some human-readable Schema markdown documentation
+│   │   └── metadata_markdown        # Some human-readable markdown documentation schema 
 │   ├── local                   # The DB of the local databases
 │   └── snowflake               # The information of DB on Snowflake
 ├── interface                   # Scripts for interacting with the database.
@@ -36,7 +36,7 @@ Since we have only released the tiny version so far, a large amount of high-qual
 │   │   ├── spider2sql_eval.jsonl
 │   │   └── sql
 │   └── spider2sql_example_submit
-└── spider2sql.json            # The standard evaluation examples of Spider2
+└── spider2-sql.json            # The standard evaluation examples of Spider2
 ```
 
 
