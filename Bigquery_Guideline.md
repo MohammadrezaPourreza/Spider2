@@ -3,9 +3,9 @@
 A large quantities of databases in Spider2 are stored in BigQuery, including industrial-level databases that reach TB-level. To evaluate on our benchmark, you need to:
 
 1. Register a BigQuery account and enable the BigQuery Sandbox function;
-> 🌹 You can get access to 70% SQLs of our benchmark, which query open-sourced databases in `bigquery-public-data`.
+> 🌹 You can get access to 70% SQLs of our benchmark, which query open-sourced databases in public Google Cloud Project `bigquery-public-data`.
 
-2. Submit a [form](https://docs.google.com/forms/d/e/1FAIpQLSdrsJX-oDZDL0McIaF-0uypLeO2pYW4SX-qDeNSd88iYR_3Gg/viewform) to us, fill in your BigQuery/Google account email and request the read permission to our Google Cloud Project `spider2-public-data`, which affects 30% SQLs. (We will process your request in 12 hours.)
+2. Submit a [form](https://docs.google.com/forms/d/e/1FAIpQLSdrsJX-oDZDL0McIaF-0uypLeO2pYW4SX-qDeNSd88iYR_3Gg/viewform) to us, fill in your BigQuery/Google account email and request the permission to our Google Cloud Project `spider2-public-data`, which affects about 30% SQLs. We will process your request in 12 hours 💪.
 
 If you are a beginner to BigQuery, please follow the guidelines below. We will walk you through
 
