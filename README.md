@@ -52,7 +52,7 @@ For `Spider2-World`, we proposed an agent framework [`Spider-Agent`](https://git
 
 
 
-#### Evaluation Results
+## Spider2-World Leaderboard
 
 
 | Method                     | Score |
