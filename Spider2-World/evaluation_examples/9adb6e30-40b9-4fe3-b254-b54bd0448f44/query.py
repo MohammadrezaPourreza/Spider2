@@ -30,7 +30,7 @@ def query_data(sql_query, is_save, save_path="result.csv"):
 
 if __name__ == "__main__":
 
-    # # Complete the SQL query in the sql_query variable to interact with the database, partial SQL query is provided below
+    # # Complete the SQL query in the sql_query variable to interact with the database, SQL example related to this task is provided below
     sql_query = """
   SELECT 
     *

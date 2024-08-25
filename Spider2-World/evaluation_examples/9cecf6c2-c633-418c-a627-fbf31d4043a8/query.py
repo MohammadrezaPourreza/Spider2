@@ -30,13 +30,12 @@ def query_data(sql_query, is_save, save_path="result.csv"):
 
 if __name__ == "__main__":
 
-    # # Complete the SQL query in the sql_query variable to interact with the database, partial SQL query is provided below
+    # # Complete the SQL query in the sql_query variable to interact with the database, SQL example related to this task is provided below
     sql_query = """
       SELECT
-          user_pseudo_id
+          *
         FROM
           `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*` AS T
-        CROSS JOIN
-          UNNEST(T.event_params) AS event_params
+      LIMIT 1
     """
     query_data(sql_query, is_save=True, save_path="result.csv")
