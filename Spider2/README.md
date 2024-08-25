@@ -6,6 +6,8 @@ Spider2 is a realistic and challenging Text-to-SQL dataset, significantly more d
 - Extremely realistic and complex SQL generation tasks, collected and rewrited from real websites, forums, and tutorials.
 - Writing advanced and real-world industrial SQL. Beyond extensive use of SELECT, WHERE, and JOIN operations, it also requires incorporating various external knowledge, SQL dialects, special functions, and more.
 
+Since we have only released the tiny version so far, a large amount of high-quality data will be announced in two weeks!
+
 
 ## Folder
 
