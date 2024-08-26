@@ -42,9 +42,9 @@ The Google Cloud console is the graphical interface that you use to create and m
 </p>
 
 4. [Optional] If you do not have a GCP currently, create a new one. On the **New Project** page, do the following:
-a. For **Project name**, enter a name for your project.
-b. For **Organization**, keep the default `No organization` if you are not part of one.
-c. Click **Create**. You are redirected back to the BigQuery page in the Google Cloud console.
+    - For **Project name**, enter a name for your project.
+    - For **Organization**, keep the default `No organization` if you are not part of one.
+    - Click **Create**. You are redirected back to the BigQuery page in the Google Cloud console.
 
 <p align="center">
   <img src="bigquery-create-gcp.png" alt="Create GCP" style="width: 60%; display: block; margin: 0 auto;" />
