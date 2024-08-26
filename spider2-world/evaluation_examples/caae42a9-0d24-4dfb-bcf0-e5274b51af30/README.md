@@ -1,1 +1,1 @@
-1. please query `bigquery-public-data.github_repos.sample_files` and `bigquery-public-data.github_repos.sample_contents` database to solve this problem
+1. please query `sample_commits`, `sample_contents`, `sample_files`, `sample_repos`, `languages` and `languages` tables in ``bigquery-public-data.github_repos` database to solve this problem

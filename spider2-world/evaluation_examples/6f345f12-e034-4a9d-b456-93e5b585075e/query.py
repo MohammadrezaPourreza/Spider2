@@ -30,12 +30,11 @@ def query_data(sql_query, is_save, save_path="result.csv"):
 
 if __name__ == "__main__":
 
-    # # Complete the SQL query in the sql_query variable to interact with the database,SQL example related to this task is provided below
+    # Write your SQL query in the sql_query variable to interact with the database, example SQL query related to this task is provided below
     sql_query = """
-   SELECT 
-         *
-   FROM  `pancancer-atlas.Filtered.EBpp_AdjustPANCAN_IlluminaHiSeq_RNASeqV2_genExp_filtered` 
-   LIMIT 1
-
+          SELECT 
+              table_name, ddl
+          FROM 
+              `pancancer-atlas.Filtered.INFORMATION_SCHEMA.TABLES`
     """
     query_data(sql_query, is_save=True, save_path="result.csv")
