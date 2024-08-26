@@ -27,10 +27,11 @@ For `Spider2`, we proposed baselines based on the widely used method:
 
 We evaluate two approaches, **Vanilla DailSQL** and **DailSQL+Func+Plan** with GPT-4o:
   
-| Method                     | EX   | 
-| -------------------------- | ---- | 
-| vanilla DailSQL (GPT-4o)   | 3.54% | 
-| DailSQL+Func+Plan (GPT-4o) | 8.84% |
+| Method                     | EX   |
+| -------------------------- | ---- |
+| vanilla DailSQL (GPT-4o)   | 6.04% (9/149) |
+| DailSQL+Func+Plan (GPT-4o) | 12.75% (19/149) |
+
 
 For a detailed guideline of running Dail-SQL and evaluation results, please refer to [Dail-SQL](https://github.com/xlang-ai/spider2/tree/main/spider2-baselines/DailSQL).
 

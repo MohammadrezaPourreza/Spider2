@@ -39,10 +39,10 @@ this script automatically conducts all procedures: 1) data preprocess, 2) execut
 
 ## Experimental Setting
 
-We evaluate three approaches:
+We evaluate the following approaches:
 - `Vanilla DailSQL`: This method utilizes the Code Representation (CR) prompt from the original DailSQL paper. To accommodate the complexity of the Spider2 dataset, we enhance the prompt by **incorporating column descriptions, sampled rows, and external knowledge**.
 - `DailSQL+Func+Plan`: Building on Vanilla DailSQL, this approach augments the prompt with descriptions of 1) **potentially relevant SQL functions** and 2) **reference plan** that assists in generating the components of a complete SQL query.
-- `DailSQL+Func+Plan+Debug`: Further add a SQL Debug module, which refines erroneous SQL queries according to error feedback information.
+<!-- - `DailSQL+Func+Plan+Debug`: Further add a SQL Debug module, which refines erroneous SQL queries according to error feedback information. -->
   
 Given the large number of tables and columns in the Spider2 dataset, we leverage **GPT-4o** with a 128k context window to prevent prompt size limitations. The performance of the two methods is shown as:
 
