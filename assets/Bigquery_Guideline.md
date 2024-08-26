@@ -22,7 +22,7 @@ as well as
 
 ## How to Enable BigQuery Sandbox
 
-Before using Spider2, you need to enable BigQuery Sandbox function for you Google account. This part is summarized from the [official tutorial](https://cloud.google.com/bigquery/docs/sandbox).
+First of all, you need to enable BigQuery Sandbox function for your Google account. This part is summarized from the [official tutorial](https://cloud.google.com/bigquery/docs/sandbox).
 
 1. In the Google Cloud console, go to the [**BigQuery**](https://console.cloud.google.com/bigquery
 ) page.
@@ -38,7 +38,7 @@ The Google Cloud console is the graphical interface that you use to create and m
 3. Click button `Select a project` on the top menu bar to select one Google Cloud Project (GCP).
 
 <p align="center">
-  <img src="assets/bigquery-select-gcp.png" alt="Select GCP" style="width: 80%; display: block; margin: 0 auto;" />
+  <img src="bigquery-select-gcp.png" alt="Select GCP" style="width: 80%; display: block; margin: 0 auto;" />
 </p>
 
 4. [Optional] If you do not have a GCP currently, create a new one. On the **New Project** page, do the following:
@@ -47,13 +47,13 @@ b. For **Organization**, keep the default `No organization` if you are not part 
 c. Click **Create**. You are redirected back to the BigQuery page in the Google Cloud console.
 
 <p align="center">
-  <img src="assets/bigquery-create-gcp.png" alt="Create GCP" style="width: 60%; display: block; margin: 0 auto;" />
+  <img src="bigquery-create-gcp.png" alt="Create GCP" style="width: 60%; display: block; margin: 0 auto;" />
 </p>
 
 5. Then, you have successfully created a new GCP and enable the BigQuery Sandbox function.
 
 <p align="center">
-  <img src="assets/bigquery-welcome.png" alt="Welcome" style="width: 80%; display: block; margin: 0 auto;" />
+  <img src="bigquery-welcome.png" alt="Welcome" style="width: 80%; display: block; margin: 0 auto;" />
 </p>
 
 
@@ -61,12 +61,12 @@ c. Click **Create**. You are redirected back to the BigQuery page in the Google 
 
 About 70% of SQLs in Spider2 are contained in bigquery public projects, which contains a large quantities of freely accessed databases, e.g., `bigquery-public-data.new_york`. To view the schema/content of these open-sourced databases and run trial SQLs on them, you can **star** the `bigquery-public-data` on your left panel (based on [official tutorial](https://cloud.google.com/bigquery/docs/bigquery-web-ui#:~:text=Star%20a%20project,-You%20can%20star&text=If%20you%20have%20access%20to,that%20you%20want%20to%20star.)). Concretely,
 
-1. In the **Explorer** pane, click the button `+ ADD`.
+1. In the **Explorer** pane, click the button `➕ ADD`.
 
 2. Next, in the pop-up right dialog, click the row `🔍 Star a project by name`.
 
 <p align="center">
-  <img src="assets/bigquery-star-gcp.png" alt="Star a GCP" style="width: 80%; display: block; margin: 0 auto;" />
+  <img src="bigquery-star-gcp.png" alt="Star a GCP" style="width: 80%; display: block; margin: 0 auto;" />
 </p>
 
 3. Type in `bigquery-public-data` in the small pop-up dialog.
@@ -74,8 +74,8 @@ About 70% of SQLs in Spider2 are contained in bigquery public projects, which co
 4. Then, you are able to view the database schema or run sample SQLs to query the database in project `bigquery-public-data`.
 
 <p align="center">
-  <img src="assets/bigquery-view-schema.png" alt="View Schema" style="width: 48%; display: inline-block; margin: 0;" />
-  <img src="assets/bigquery-run-query.png" alt="Run Query" style="width: 48%; display: inline-block; margin: 0;" />
+  <img src="bigquery-view-schema.png" alt="View Schema" style="width: 48%; display: inline-block; margin: 0;" />
+  <img src="bigquery-run-query.png" alt="Run Query" style="width: 48%; display: inline-block; margin: 0;" />
 </p>
 
 
@@ -96,14 +96,14 @@ https://console.cloud.google.com/iam-admin/serviceaccounts
 
 > 🔥 You can type any service account name, the globally unique service account ID will be automatically generated.
 
-4. Click the button `CONTINUE`. [Optional]: Assign roles to your service account, you can just skip this step and use the default role `Owner`. See [Granting, changing, and revoking access to resources](https://cloud.google.com/iam/docs/granting-changing-revoking-access) for more details.
+4. Click the button `CONTINUE`, just skipping this step and use the default role `Owner`.
 
-5. Click the button `DONE`, just leaving the two input boxes empty. [Optional]: You can also enter other users or groups that can manage this service account, see [Managing service account impersonation](https://cloud.google.com/iam/docs/impersonating-service-accounts) for more details.
+5. Click the button `DONE`, just leaving the two input boxes empty.
 
 <p align="center">
-  <img src="assets/bigquery-service-account.png" alt="Enter Name" style="width: 32%; display: inline-block; margin: 0;" />
-  <img src="assets/bigquery-role.png" alt="Choose Role" style="width: 32%; display: inline-block; margin: 0;" />
-  <img src="assets/bigquery-done.png" alt="Done" style="width: 32%; display: inline-block; margin: 0;" />
+  <img src="bigquery-service-account.png" alt="Enter Name" style="width: 32%; display: inline-block; margin: 0;" />
+  <img src="bigquery-role.png" alt="Choose Role" style="width: 32%; display: inline-block; margin: 0;" />
+  <img src="bigquery-done.png" alt="Done" style="width: 32%; display: inline-block; margin: 0;" />
 </p>
 
 6. Next, you will come back to the service account page. Click the three vertical dots icon `⋮` in the same row of your created service account and choose option `Manage keys`.
@@ -111,8 +111,8 @@ https://console.cloud.google.com/iam-admin/serviceaccounts
 7. In the new page, click the button `ADD KEY`, use the default `JSON` format, and click `CREATE`. The key file (which is named as `{your_service_account}-xxxx.json`) will be automatically downloaded.
 
 <p align="center">
-  <img src="assets/bigquery-manage-key.png" alt="Manage Key" style="width: 48%; display: inline-block; margin: 0;" />
-  <img src="assets/bigquery-add-key.png" alt="Add Key" style="width: 48%; display: inline-block; margin: 0;" />
+  <img src="bigquery-manage-key.png" alt="Manage Key" style="width: 48%; display: inline-block; margin: 0;" />
+  <img src="bigquery-add-key.png" alt="Add Key" style="width: 48%; display: inline-block; margin: 0;" />
 </p>
 
 8. Now, you can access your GCP using the downloaded service account credentials (`.json` file). For example, with [Python libraries](https://cloud.google.com/bigquery/docs/reference/libraries#client-libraries-install-python):
