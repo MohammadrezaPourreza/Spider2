@@ -20,7 +20,7 @@ If you find that the task is requiring a query to the BigQuery database,
 2. Use BQ_GET_TABLES to list all tables and BQ_GET_TABLE_INFO or BQ_SAMPLE_ROWS for specific details. After gathering schema info, use BIGQUERY_EXEC_SQL to run your SQL queries and interact with the database.
 3. Be prepared to write multiple SQL queries to find the correct answer. Once it makes sense, consider it resolved.
 4. Focus on SQL queries rather than frequently using Bash commands like grep and cat, though they can be used when necessary.
-5. If you encounter an SQL error, reconsider the database information and your previous queries, then adjust your SQL accordingly.
+5. If you encounter an SQL error, reconsider the database information and your previous queries, then adjust your SQL accordingly. Don't output same SQL queries repeatedly!!!!
 6. The final result should be an answer, not an .sql file. If the answer is a table, save it as a CSV and provide the file name. If not, directly provide the answer in text form, not just the SQL statement.
 
 
