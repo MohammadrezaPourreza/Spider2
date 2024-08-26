@@ -18,7 +18,7 @@ We also propose a new novel SQL generation task based on the **DBT project**, wh
 For any given example, everything needed to solve this task is provided within the folder. Please ensure your agent makes full use of these resources.
 
 
-All evaluation examples are in [`evaluation_examples`](https://github.com/xlang-ai/Spider2/tree/main/Spider2-World/evaluation_examples) 
+All evaluation examples are in [`evaluation_examples`](https://github.com/xlang-ai/spider2/tree/main/spider2-world/evaluation_examples) 
 
 
 - `instance_id`: (str) - A formatted instance identifier, UUID.
@@ -43,13 +43,13 @@ All evaluation examples are in [`evaluation_examples`](https://github.com/xlang-
 
 ## Baseline
 
-We proposed an agent framework [`Spider-Agent`](https://github.com/xlang-ai/Spider2/tree/main/Spider-Agent) baseline with interactive environment. 
+We proposed an agent framework [`Spider-Agent`](https://github.com/xlang-ai/spider2/tree/main/spider-agent) baseline with interactive environment. 
 
 
 
 ## Evaluation
 
-We create [evaluation suite](https://github.com/xlang-ai/Spider2/tree/main/Spider2-World/evaluation_suite) for Spider2-World.
+We create [evaluation suite](https://github.com/xlang-ai/spider2/tree/main/spider2-world/evaluation_suite) for Spider2-World.
 
 
 #### Evaluation Results
