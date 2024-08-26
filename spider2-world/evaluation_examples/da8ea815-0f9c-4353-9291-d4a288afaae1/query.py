@@ -35,7 +35,7 @@ if __name__ == "__main__":
       SELECT
         *
       FROM `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
-      WHERE _TABLE_SUFFIX BETWEEN '20201101' AND '20201130'
+      WHERE _TABLE_SUFFIX BETWEEN '20201201' AND '20201231'
       LIMIT 1
     """
     query_data(sql_query, is_save=True, save_path="result.csv")

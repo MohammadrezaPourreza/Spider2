@@ -15,6 +15,7 @@
 {"instance_id": "949e0490-4c4c-47b6-bd0a-1f2ba01d09b5", "evaluation": [{"func": "string_match", "parameters": {"gold": ["US-9868268-B2"]}}, {"func": "table_match", "parameters": {"gold": "result.csv"}}]}
 {"instance_id": "335fb285-c9fd-45ff-ba8d-fe89a62016f7", "evaluation": [{"func": "number_match", "parameters": {"gold": "7.03"}}, {"func": "table_match", "parameters": {"gold": "result.csv"}}]}
 {"instance_id": "cf46d8be-fa20-47a7-a2ac-d0263cb67924", "evaluation": [{"func": "number_match", "parameters": {"gold": [21656, 18324, 23056], "conj": "and"}}, {"func": "table_match", "parameters": {"gold": "result.csv", "condition_cols": [4]}}]}
+{"instance_id": "da8ea815-0f9c-4353-9291-d4a288afaae1", "evaluation": [{"func": "table_match", "parameters": {"gold": "result.csv", "condition_cols": [1, 2]}}]}
 {"instance_id": "47ac6231-35f7-4dd4-ae33-5f6bd05ad4e0", "evaluation": [{"func": "string_match", "parameters": {"gold": ["US-2016100312-A1"]}}, {"func": "table_match", "parameters": {"gold": "result.csv"}}]}
 {"instance_id": "e4a35097-4ff3-4ca7-8304-f593e039735b", "evaluation": [{"func": "table_match", "parameters": {"gold": "202101.csv"}}]}
 {"instance_id": "27c1aab9-ed94-47ea-ba3a-1dbfcd4856a2", "evaluation": [{"func": "string_match", "parameters": {"gold": ["2002"]}}, {"func": "table_match", "parameters": {"gold": "result.csv"}}]}
@@ -23,7 +24,6 @@
 {"instance_id": "9cecf6c2-c633-418c-a627-fbf31d4043a8", "evaluation": [{"func": "number_match", "parameters": {"gold": "12212"}}, {"func": "table_match", "parameters": {"gold": "result.csv"}}]}
 {"instance_id": "73d1af34-d03e-455a-9111-148192548574", "evaluation": [{"func": "table_match", "parameters": {"gold": "result.csv"}}]}
 {"instance_id": "54e2ea3a-0439-4f96-a88e-982a41807eff", "evaluation": [{"func": "string_match", "parameters": {"gold": ["US,EP,IL,WO,CA"]}}, {"func": "table_match", "parameters": {"gold": "result.csv"}}]}
-{"instance_id": "69846f18-c7c6-4719-9317-c652f7d7d064", "evaluation": [{"func": "table_match", "parameters": {"gold": "result.csv", "condition_cols": [1, 2]}}]}
 {"instance_id": "9adb6e30-40b9-4fe3-b254-b54bd0448f44", "evaluation": [{"func": "table_match", "parameters": {"gold": "result.csv", "condition_cols": [1, 2]}}]}
 {"instance_id": "0bcfa8c4-bc4c-4cd8-9fe5-dd60a2c1f956", "evaluation": [{"func": "string_match", "parameters": {"gold": ["Google 24oz Ring Bottle Blue"], "exclude": ["Google Pen White", "Google Metallic Notebook Set", "Google Red Speckled Tee", "Google Mouse Pad Navy"]}}, {"func": "table_match", "parameters": {"gold": "result.csv"}}]}
 {"instance_id": "6f345f12-e034-4a9d-b456-93e5b585075e", "evaluation": [{"func": "number_match", "parameters": {"gold": "24.426213134588817"}}, {"func": "table_match", "parameters": {"gold": "result.csv", "condition_cols": [4]}}]}
