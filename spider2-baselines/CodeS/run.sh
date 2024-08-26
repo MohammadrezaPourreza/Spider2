@@ -22,7 +22,7 @@ python -u text2sql_zero_shot.py \
 python postprocessed_data/spider2_postprocess.py --dev $DEV
 
 # step4. evaluate
-eval_suite_dir=$(readlink -f "${script_dir}/../../Spider2/evaluation_suite")
+eval_suite_dir=$(readlink -f "${script_dir}/../../spider2/evaluation_suite")
 cd ${eval_suite_dir}
 python evaluate.py --mode sql --result_dir ${script_dir}/postprocessed_data/${DEV}/${DEV}-pred-sqls-postprocessed
 

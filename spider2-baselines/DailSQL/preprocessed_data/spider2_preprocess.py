@@ -21,7 +21,7 @@ import matplotlib.pyplot as plt
 
 def column_description_length_histogram():
     # 定义路径
-    json_path = "../../Spider2/databases/bigquery/metadata/bigquery-public-data/**/*.json"
+    json_path = "../../spider2/databases/bigquery/metadata/bigquery-public-data/**/*.json"
 
     # 用于存储描述字符串长度的列表
     description_lengths = []
@@ -58,14 +58,14 @@ def column_description_length_histogram():
 
 def process_table_json(args):
 
-    with open(osp.join(proj_dir, f'../../Spider2/{args.dev}.json'), 'r', encoding='utf-8') as file:
+    with open(osp.join(proj_dir, f'../../spider2/{args.dev}.json'), 'r', encoding='utf-8') as file:
         dev_data = json.load(file)
     os.makedirs(osp.join(proj_dir, f'preprocessed_data/{args.dev}'), exist_ok=True)
     # all db_ids
     db_ids = set([item['db'] for item in dev_data])
 
     # 定义路径
-    db_base_path = "../../Spider2/databases/bigquery/metadata/"
+    db_base_path = "../../spider2/databases/bigquery/metadata/"
     json_glob_path = "**/*.json"
 
     # 定义用于存储统计结果的列表
@@ -234,7 +234,7 @@ def process_dev_json(args):
             item['question_toks'] = [token.text for token in doc]
 
             # step2. 获取gold_sql
-            gold_sql_file = osp.join(proj_dir, f"../../Spider2/evaluation_suite/gold/sql/{item['instance_id']}.sql")
+            gold_sql_file = osp.join(proj_dir, f"../../spider2/evaluation_suite/gold/sql/{item['instance_id']}.sql")
             # gold_sql_file = osp.normpath(gold_sql_file)
             if not os.path.exists(gold_sql_file):
                 print(f"找不到文件：{gold_sql_file}")
@@ -250,7 +250,7 @@ def process_dev_json(args):
         return data
     
     def get_potential_functions_summary(data):
-        with open(osp.join(proj_dir, '../../Spider2/external_information/bigquery_functions/bigquery_functions.json'), 'r', encoding='utf-8') as file:
+        with open(osp.join(proj_dir, '../../spider2/external_information/bigquery_functions/bigquery_functions.json'), 'r', encoding='utf-8') as file:
             bigquery_functions = json.load(file)
 
         # 创建一个字典，方便快速查找summary
@@ -281,7 +281,7 @@ def process_dev_json(args):
 
         return data
 
-    with open(osp.join(proj_dir, f'../../Spider2/{args.dev}.json'), 'r', encoding='utf-8') as file:
+    with open(osp.join(proj_dir, f'../../spider2/{args.dev}.json'), 'r', encoding='utf-8') as file:
         data = json.load(file)
 
     data = get_questionTok_and_gold_query_for_dev_json(data)

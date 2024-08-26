@@ -128,7 +128,7 @@ def preprocess_table_json():
     db_stats_list = []
 
     # 定义路径
-    db_base_path = "../../Spider2/databases/bigquery/metadata/"
+    db_base_path = "../../spider2/databases/bigquery/metadata/"
     json_glob_path = "**/*.json"
 
     # 遍历所有项目
@@ -303,7 +303,7 @@ def preprocess_table_json():
 
 def preprocess_dev_json(args):
 
-    with open(osp.join(proj_dir, f'../../Spider2/{args.dev}.json'), 'r', encoding='utf-8') as file:
+    with open(osp.join(proj_dir, f'../../spider2/{args.dev}.json'), 'r', encoding='utf-8') as file:
         data = json.load(file)
 
     os.makedirs(osp.join(proj_dir, f'preprocessed_data/{args.dev}'), exist_ok=True)
@@ -311,7 +311,7 @@ def preprocess_dev_json(args):
     for item in data:
         # step. 获取gold_sql
 
-        gold_sql_file = osp.join(proj_dir, f"../../Spider2/evaluation_suite/gold/sql/{item['instance_id']}.sql")
+        gold_sql_file = osp.join(proj_dir, f"../../spider2/evaluation_suite/gold/sql/{item['instance_id']}.sql")
         if not os.path.exists(gold_sql_file):
             print(f"找不到文件：{gold_sql_file}")
             item['sql'] = ''
