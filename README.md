@@ -1,4 +1,4 @@
-# Spider2: Can Language Models Resolve Real-World SQL Generation Tasks?
+# Spider2: Can Language Models Resolve Real-World Enterprise Text-to-SQL Workflows?
 
 ![Local Image](./assets/Spider2.png)
 
