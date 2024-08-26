@@ -149,3 +149,7 @@ The Sandbox function of BigQuery restricts the consumption/quota of free users w
 To enable successful execution and evaluation on these 30% SQLs which querying `spider2-public-data`, please fill in this [form](https://docs.google.com/forms/d/e/1FAIpQLSdrsJX-oDZDL0McIaF-0uypLeO2pYW4SX-qDeNSd88iYR_3Gg/viewform), and we will grant you permanent access within 12 hours.
 
 > You only need to fill in the Bigquery account email.
+
+<p align="center">
+  <img src="bigquery-spider2-access.png" alt="Access to spider2" style="width: 60%; display: block; margin: 0 auto;" />
+</p>
