@@ -36,31 +36,31 @@
             "station_id": 2,
             "bikes_available": 0,
             "docks_available": 27,
-            "time": "2015-10-13 10:25:02+00:00"
-        },
-        {
-            "station_id": 2,
-            "bikes_available": 0,
-            "docks_available": 26,
-            "time": "2015-09-14 10:53:02+00:00"
+            "time": "2015-05-05 11:22:02+00:00"
         },
         {
             "station_id": 2,
             "bikes_available": 0,
             "docks_available": 27,
-            "time": "2016-05-27 12:31:01+00:00"
+            "time": "2014-07-31 10:26:02+00:00"
         },
         {
             "station_id": 2,
             "bikes_available": 0,
             "docks_available": 27,
-            "time": "2015-11-23 10:39:02+00:00"
+            "time": "2016-05-03 15:28:01+00:00"
         },
         {
             "station_id": 2,
             "bikes_available": 0,
-            "docks_available": 26,
-            "time": "2015-09-14 12:28:02+00:00"
+            "docks_available": 27,
+            "time": "2015-09-24 04:45:02+00:00"
+        },
+        {
+            "station_id": 2,
+            "bikes_available": 0,
+            "docks_available": 27,
+            "time": "2015-09-24 05:20:02+00:00"
         }
     ]
 }

@@ -73,7 +73,7 @@ if __name__ == '__main__':
     parser.add_argument("--use_column_desc", action="store_false", default=True)
     parser.add_argument("--use_sample_rows", action="store_false", default=True)
     parser.add_argument("--use_external_knowledge", action="store_false", default=True)
-    parser.add_argument("--use_potential_functions", action="store_true", default=False)
+    parser.add_argument("--use_special_function", action="store_true", default=False)
     parser.add_argument("--use_plan", action="store_true", default=False)
 
 

@@ -369,6 +369,28 @@
         ]
     },
     {
+        "instance_id": "bq247",
+        "db": "patents-public-data.patents\npatents-public-data.google_patents_research",
+        "question": "Which valid family has the most publications? Just provide their publication abstracts.",
+        "external_knowledge": null,
+        "plan": "1. Aggregate the data to count the number of publications per unique family identifier.\n2. Select the family identifier that has the highest publication count, ensuring that only valid identifiers are considered.\n3. Filter the dataset to include only those records that have a non-empty abstract. \n4. Join the filtered list of publications with the most published family identifier obtained earlier to get a dataset containing only the abstracts from publications that belong to the family with the highest publication count.\n5. Retrieve and display the abstracts from publications associated with the family having the most publications. \n",
+        "special_function": null
+    },
+    {
+        "instance_id": "bq246",
+        "db": "patents-public-data.patentsview",
+        "question": "Can you figure out the number of forward citations within 3 years from the application date for the patent that has the most backward citations within 3 years from application among all U.S. patents?",
+        "external_knowledge": null,
+        "plan": "1. Correlate patent applications with patent citations based on patent identifiers. Ensure that only patents registered in the US are considered.\n2. Compute citations where the citation date is between the application date and three years after.\n3. Compute citations where the citation date is between three years prior to the application date and the application date itself.\n4. Join the information about current patent classifications with the aggregated citation data.\n5. Merge the detailed citation data with the patent applications data.\n6. Sort the resulting data set by the count of backward citations in descending order and restrict the output to the top record to find the patent with the highest count of backward citations within the specified period.\n7. From the final sorted and limited dataset, extract the count of forward citations for the patent with the highest number of backward citations. \n",
+        "special_function": [
+            "conversion-functions/SAFE_CAST",
+            "date-functions/DATE",
+            "date-functions/DATE_ADD",
+            "date-functions/DATE_SUB",
+            "conditional-functions/IFNULL"
+        ]
+    },
+    {
         "instance_id": "bq052",
         "db": "patents-public-data.patentsview",
         "question": "I wonder which patents within CPC subsection 'C05' or group 'A01G' in the USA have at least one forward or backward citations within one month of their application dates. Give me the ids, titles, application date, forward/backward citation counts and summary texts.",
@@ -555,6 +577,17 @@
         ]
     },
     {
+        "instance_id": "bq248",
+        "db": "bigquery-public-data.github_repos",
+        "question": "Among all 'requirements.txt' files in repositories containing Python code, how much percentage of them include the 'requests' package?",
+        "external_knowledge": null,
+        "plan": "1. Get all ids and contents from table sample_contents.\n2. Extract ids, names and paths of github repositories which have requirements.txt.\n3. Extract names of github repositories whose language_name contains python.\n4. Identify the repositories whose requirements.txt contains \u2018requests\u2019.\n5. Count the number of python repositories whose requirements.txt contains \u2018requests\u2019.\n6. Count the number of python repositories which contain requirements.txt.\n7. Divide the above statistics to get the corresponding proportion.\n",
+        "special_function": [
+            "string-functions/LOWER",
+            "other-functions/UNNEST"
+        ]
+    },
+    {
         "instance_id": "bq193",
         "db": "bigquery-public-data.github_repos",
         "question": "Help me find the third most frequently occurring non-empty line of text in `requirements.txt` files from GitHub repositories that primarily use Python for development.",
@@ -578,6 +611,33 @@
         ]
     },
     {
+        "instance_id": "bq249",
+        "db": "bigquery-public-data.github_repos",
+        "question": "Can you provide a report showing the counts of different types of lines in SQL files from the GitHub repository in descending order, specifically categorizing them into 'trailing' if there is at least one blank character at the end of the line, 'Space' if the line starts with at least one space, and 'Other' for any other types? ",
+        "external_knowledge": null,
+        "plan": "1. Filter records from a dataset where the file path ends with `.sql`.\n2. Use the `SPLIT` function to divide the content of each file into individual lines. This transformation creates an array of lines for each file.\n3. Each element (line) of the array is processed individually using the `CROSS JOIN UNNEST` technique. This flattens the array into a table format where each line is treated as a separate record.\n4. For each line, determine its type according to the definition of three types.\n5. Count how many lines fall into each indentation category ('trailing', 'Space', 'Other') across all files.\n6. Order the results by the count of occurrences in descending order.\n",
+        "special_function": [
+            "string-functions/CHAR_LENGTH",
+            "string-functions/REGEXP_EXTRACT",
+            "string-functions/SPLIT",
+            "conditional-functions/CASE_EXPR",
+            "conditional-functions/CASE",
+            "other-functions/UNNEST"
+        ]
+    },
+    {
+        "instance_id": "bq255",
+        "db": "bigquery-public-data.github_repos",
+        "question": "How many commit messages are there in repositories that use the 'Shell' programming language and 'apache-2.0' license, where the length of the commit message is more than 5 characters but less than 10,000 characters, and the messages do not start with the word 'merge', 'update' or 'test'?",
+        "external_knowledge": null,
+        "plan": "1. Retrieve repositories which have an 'apache-2.0' license.\n2. Retrieve repositories which have 'Shell' as one of its languages.\n3. Only keep messages whose length is greater than 5 and less than 10000.\n4. Remove messages containing \u2018update\u2019, \u2018test\u2019 or \u2018merge%\u2019.\n5. Count the selected messages and return.\n",
+        "special_function": [
+            "string-functions/LENGTH",
+            "string-functions/LOWER",
+            "other-functions/UNNEST"
+        ]
+    },
+    {
         "instance_id": "bq194",
         "db": "bigquery-public-data.github_repos",
         "question": "What is the second most frequently used module (imported library) across Python, R, and IPython script (.ipynb) files in the GitHub sample dataset?",
@@ -592,6 +652,27 @@
             "conditional-functions/IF",
             "other-functions/UNNEST"
         ]
+    },
+    {
+        "instance_id": "bq251",
+        "db": "bigquery-public-data.github_repos\nspider2-public-data.pypi",
+        "question": "Could you find the GitHub URL of the Python package that has the highest number of downloads on PyPi and was updated most recently? Please ensure that only the main repository URL is provided, excluding specific subsections like issues, blobs, pull requests, or tree views.",
+        "external_knowledge": null,
+        "plan": "1. Extract metadata including pypi_name, project_urls for PyPi packages.\n2. Filter the project_urls from PyPiData to extract clean GitHub repository URLs.\n3. Get the most recent version of each PyPi package based on the upload_time.\n4. Compute total downloads, yearly downloads for the past three years, and capture the earliest and latest download timestamps.\n5. Retrieve the number of watchers for each GitHub repository.\n6. Calculate the total bytes of code written in Python and the total bytes of code across all languages to get language data.\n7. Sort all data collected according to pypi_downloads and return the most downloaded package URL.\n",
+        "special_function": [
+            "numbering-functions/ROW_NUMBER",
+            "string-functions/REGEXP_EXTRACT",
+            "string-functions/REGEXP_REPLACE",
+            "other-functions/UNNEST"
+        ]
+    },
+    {
+        "instance_id": "bq252",
+        "db": "bigquery-public-data.github_repos",
+        "question": "Could you please find the name of the repository that contains the most copied non-binary Swift file in the dataset, ensuring each file is uniquely identified by its ID?",
+        "external_knowledge": null,
+        "plan": "1. Get file details and remove potential duplicates by file id.\n2. Filter the results to include only non-binary files with a `.swift` extension.\n3. Sort and return the name of the file which has the highest number of copies.",
+        "special_function": null
     },
     {
         "instance_id": "bq019",
@@ -920,6 +1001,21 @@
         ]
     },
     {
+        "instance_id": "bq250",
+        "db": "bigquery-public-data.geo_openstreetmap\nbigquery-public-data.worldpop",
+        "question": "What is the total population living on the geography grid which is the farthest from any hospital in Singapore, based on the most recent population data before 2023? Note that geographic grids and distances are calculated based on geospatial data and GIS related functions.",
+        "external_knowledge": "https://github.com/xlang-ai/Spider2-C/blob/main/Spider2-SQL/external_documents/OpenStreetMap_data_in_layered_GIS_format.md",
+        "plan": "1. Simply define a single value 'Singapore' as the country of interest.\n2. Find the most recent date when the population data was last updated for Singapore.\n3. Calculate the total population of Singapore and create a bounding box that encompasses the entire country.\n4. Select the geometries of hospitals and doctors that are within the bounding box of Singapore.\n5. Calculate the minimum distance between each populated grid cell and the nearest hospital or doctor.\n6. Aggregate the total population of all grid cells and return the total population that lives farthest away from hospitals and doctors in Singapore. \n",
+        "special_function": [
+            "geography-functions/ST_CENTROID_AGG",
+            "geography-functions/ST_CONVEXHULL",
+            "geography-functions/ST_DISTANCE",
+            "geography-functions/ST_GEOGPOINT",
+            "geography-functions/ST_INTERSECTS",
+            "geography-functions/ST_UNION_AGG"
+        ]
+    },
+    {
         "instance_id": "bq056",
         "db": "bigquery-public-data.geo_openstreetmap\nbigquery-public-data.geo_us_boundaries",
         "question": "How many different motorway road pairs are there in Minnesota that overlap each other but do not share nodes and do not have a bridge?",
@@ -959,6 +1055,17 @@
         "special_function": [
             "conversion-functions/CAST",
             "mathematical-functions/FLOOR",
+            "mathematical-functions/POWER"
+        ]
+    },
+    {
+        "instance_id": "bq256",
+        "db": "spider2-public-data.crypto_ethereum",
+        "question": "What is the balance of the Ethereum address that initiated the highest number of transactions before September 1, 2021?",
+        "external_knowledge": null,
+        "plan": "1. Gather transaction details like addresses, values, and gas information for Ethereum transactions up to September 1, 2021.\n2. Calculate the net balance for each address by aggregating incoming and outgoing transaction values.\n3. Count the number of transactions received by each address.\n4. Count the number of transactions sent by each address.\n5. Calculate the balance for senders with the most transactions and return.\n",
+        "special_function": [
+            "conversion-functions/CAST",
             "mathematical-functions/POWER"
         ]
     },
@@ -1068,6 +1175,36 @@
         ]
     },
     {
+        "instance_id": "bq258",
+        "db": "bigquery-public-data.thelook_ecommerce",
+        "question": "Can you provide a report that shows, for each product category by month and year prior to 2023, the percentage growth in revenue compared to the previous month, the percentage growth in orders compared to the previous month, the total cost of products sold, the total profit earned, and the profit to cost ratio? ",
+        "external_knowledge": null,
+        "plan": "1. Figure out metrics like Total Purchase Value (TPV) and Total Number of Orders (TPO) per month and product category.\n2. Get lagged values of TPV and TPO for each product category and compare with the current month's values.\n3. Calculates targeted metrics through the lagged values and latest values of TPV and TPO.\n",
+        "special_function": [
+            "date-functions/FORMAT_DATE",
+            "mathematical-functions/ROUND",
+            "navigation-functions/LAG",
+            "conditional-functions/NULLIF"
+        ]
+    },
+    {
+        "instance_id": "bq259",
+        "db": "bigquery-public-data.thelook_ecommerce",
+        "question": "Can you provide the percentage of users who made a purchase in the first, second, and third months after their initial purchase, organized by the month of their first purchase, using data up until the end of 2023?",
+        "external_knowledge": null,
+        "plan": "1. Determine the cohort date and index based on the time difference between the creation date and the user's first purchase date.\n2. Aggregate the total number of unique users for each cohort date and purchase index.\n3. Summarize the total number of users at each purchase index (0, 1, 2, 3) for every cohort date.\n4. Calculate the percentage distribution of users at each purchase index level relative to the initial cohort size for each cohort date.\n",
+        "special_function": [
+            "date-functions/EXTRACT",
+            "date-functions/FORMAT_DATE",
+            "datetime-functions/EXTRACT",
+            "interval-functions/EXTRACT",
+            "time-functions/EXTRACT",
+            "timestamp-functions/EXTRACT",
+            "timestamp-functions/TIMESTAMP",
+            "conditional-functions/CASE"
+        ]
+    },
+    {
         "instance_id": "bq189",
         "db": "bigquery-public-data.thelook_ecommerce",
         "question": "What is the average monthly revenue growth rate for the product category with the highest average monthly order growth rate based on completed orders?",
@@ -1079,6 +1216,26 @@
             "mathematical-functions/ROUND",
             "navigation-functions/LAG",
             "conditional-functions/NULLIF"
+        ]
+    },
+    {
+        "instance_id": "bq260",
+        "db": "bigquery-public-data.thelook_ecommerce",
+        "question": "Find the total number of youngest and oldest users separately for each gender in the e-commerce platform created from January 1, 2019, to April 30, 2022.",
+        "external_knowledge": null,
+        "plan": "1. Filter user data within the specified date range.\n2. Determine the youngest and oldest ages for each gender group.\n3. Identify users who are the youngest and oldest within their respective gender groups based on the age comparison.\n4. Count the number of users classified as the youngest and oldest within their gender groups.\n",
+        "special_function": null
+    },
+    {
+        "instance_id": "bq261",
+        "db": "bigquery-public-data.thelook_ecommerce",
+        "question": "What is the total cost and profit of products whose profit rank first per month sorted chronologically? Only consider data before 2024.",
+        "external_knowledge": null,
+        "plan": "1. Calculate sales information for products, including the cost and profit.\n2. Assign a ranking to products within each month based on profit.\n3. Select and return the cost and profit figures for the top-ranking product for each month, sorting the results chronologically by month-year.\n",
+        "special_function": [
+            "numbering-functions/RANK",
+            "timestamp-functions/FORMAT_TIMESTAMP",
+            "timestamp-functions/TIMESTAMP"
         ]
     },
     {
@@ -1105,6 +1262,28 @@
         ]
     },
     {
+        "instance_id": "bq263",
+        "db": "bigquery-public-data.thelook_ecommerce",
+        "question": "Can you provide a report showing the total purchase value, total cost, total number of orders, total profit, and profit-to-cost ratio for product category \u2018Sleep & Lounge\u2019 each month in 2023? Make sure to only include completed orders.",
+        "external_knowledge": null,
+        "plan": "1. Consolidate data from the order items, orders, and products tables\n2. Computes key sales metrics including Total Purchase Value (TPV), total cost, Total Number of Orders (TPO), total profit, and Profit-to-Cost Ratio per month.\n3. Sort by month and return the result.\n",
+        "special_function": [
+            "date-functions/FORMAT_DATE",
+            "timestamp-functions/TIMESTAMP"
+        ]
+    },
+    {
+        "instance_id": "bq264",
+        "db": "bigquery-public-data.thelook_ecommerce",
+        "question": "Identify the difference in the number of the oldest and youngest users registered between January 1, 2019, and April 30, 2022, from our e-commerce platform data.",
+        "external_knowledge": null,
+        "plan": "1. Select the youngest users in terms of age for each gender within the specified date range.\n2. Identify the oldest users for each gender.\n3. Calculate the difference in the count of the oldest and youngest users.",
+        "special_function": [
+            "conditional-functions/CASE_EXPR",
+            "conditional-functions/CASE"
+        ]
+    },
+    {
         "instance_id": "bq197",
         "db": "bigquery-public-data.thelook_ecommerce",
         "question": "What are the top-selling products by sales volume and revenue for June 2024 and each month before, considering only completed orders?",
@@ -1116,6 +1295,66 @@
             "numbering-functions/ROW_NUMBER",
             "timestamp-functions/FORMAT_TIMESTAMP",
             "timestamp-functions/TIMESTAMP"
+        ]
+    },
+    {
+        "instance_id": "bq265",
+        "db": "bigquery-public-data.thelook_ecommerce",
+        "question": "Can you provide me with the emails of the top 10 users who have the highest average order value, considering only those users who registered in 2019 and made purchases within the same year?",
+        "external_knowledge": null,
+        "plan": "1. Get the date level information.\n2. Get all the order level data including the sales value and number of orders.\n3. Combine date level data with the previously captured orders and sales level data.\n4. Calculate the Lifetime value (LTV) of the customer and number of orders placed by them.\n5. Figure out the average order value per user by dividing the LTV by the number of orders placed by that user.\n6. Sort to find the top 10 average order value users.\n",
+        "special_function": [
+            "date-functions/DATE",
+            "date-functions/DATE_DIFF",
+            "date-functions/EXTRACT",
+            "datetime-functions/EXTRACT",
+            "interval-functions/EXTRACT",
+            "mathematical-functions/ROUND",
+            "time-functions/EXTRACT",
+            "timestamp-functions/EXTRACT"
+        ]
+    },
+    {
+        "instance_id": "bq266",
+        "db": "bigquery-public-data.thelook_ecommerce",
+        "question": "Can you provide me with the names of the products that had the lowest profit margin each month throughout the year 2020, excluding any months where this data isn't available? Please list them in chronological order based on the month.",
+        "external_knowledge": null,
+        "plan": "1. Calculate profit as the difference between retail price and cost.\n2. Assign a rank to each product within a month based on profit margin and partition the ranking by year and month and order products by profit in ascending order within each month.\n3. Retrieve the names of products that have the rank of 1 and return.\n",
+        "special_function": [
+            "conversion-functions/CAST",
+            "date-functions/EXTRACT",
+            "datetime-functions/EXTRACT",
+            "interval-functions/EXTRACT",
+            "json-functions/STRING",
+            "numbering-functions/DENSE_RANK",
+            "numbering-functions/RANK",
+            "string-functions/CONCAT",
+            "string-functions/LPAD",
+            "time-functions/EXTRACT",
+            "timestamp-functions/EXTRACT",
+            "timestamp-functions/STRING"
+        ]
+    },
+    {
+        "instance_id": "bq271",
+        "db": "bigquery-public-data.thelook_ecommerce",
+        "question": "Could you provide me with the country that had the highest profit from orders in 2021 and its profit, considering the difference between the total retail prices and the costs of products sold during the year?",
+        "external_knowledge": null,
+        "plan": "Extract the inventory item ID and sale price for each order.\n1. Augment the data with the country associated with each user who made a purchase.\n2. Calculate the total product retail price, and total cost.\n3. Figure out the profit through subtracting the total product retail price from the total cost.\n4. Sort the results by the profit.\n5. Return the country name which has the highest monthly profit.\n",
+        "special_function": [
+            "date-functions/DATE",
+            "date-functions/DATE_TRUNC"
+        ]
+    },
+    {
+        "instance_id": "bq273",
+        "db": "bigquery-public-data.thelook_ecommerce",
+        "question": "Could you provide me with the top 5 months where there was the highest increase in profit compared to the previous month for completed orders made by users who came from Facebook, between January 1, 2022, and June 30, 2023?",
+        "external_knowledge": null,
+        "plan": "1. Convert delivery dates to the month granularity.\n2. Retrieve order-related details, product cost information, user information.\n3. Apply filters to keep only records where the order status is 'Complete', the user traffic source is \u2018Facebook\u2019 and the order created time in the specific period.\n4. Compute total revenue, total profit, and count unique products, orders, and users for each month.\n5. For both revenue and profit, compute a 3-month moving average.\n6. Calculate the difference between the current month's revenue and profit against their respective moving averages.\n7. Calculate month-over-month changes in revenue and profit by comparing with the previous month's figures.\n8. Select the delivery month with the highest increase in profit compared to the prior month.\n",
+        "special_function": [
+            "date-functions/DATE_TRUNC",
+            "navigation-functions/LAG"
         ]
     },
     {
@@ -1221,6 +1460,72 @@
         "external_knowledge": null,
         "plan": "1. **Identify Maximum Wins per Season:**\n   - Select each season within the specified range (1900 to 2000).\n   - For each season, determine the maximum number of wins achieved by any team.\n\n2. **Identify Teams with Maximum Wins:**\n   - For each season, find the teams that achieved the maximum number of wins identified in the previous step.\n   - Ensure the team names are not null.\n\n3. **Create a Distinct List:**\n   - Create a distinct list of seasons and corresponding teams who had the maximum wins in those seasons.\n\n4. **Count Top Performances:**\n   - Group the distinct list by team names.\n   - Count the number of times each team appears in the list, representing how often they had the maximum wins in a season.\n\n5. **Order and Limit Results:**\n   - Sort the teams by the count of top performances in descending order.\n   - If there is a tie in the count, sort the tied teams alphabetically by their names.\n   - Limit the results to the top 5 teams.\n\nBy following these steps, the query identifies and ranks the top 5 most successful college basketball teams based on the number of seasons they had the maximum wins.",
         "special_function": null
+    },
+    {
+        "instance_id": "bq268",
+        "db": "bigquery-public-data.google_analytics_sample",
+        "question": "Identify the longest number of days between the first visit and the last recorded event (either the last visit or the first transaction) for a user where the last recorded event was associated with a mobile device.",
+        "external_knowledge": null,
+        "plan": "1. Find the first and last visit dates for each unique visitor.\n2. Determine the first transaction date for visitors with transaction information.\n3. Combine visit, transaction, and device information.\n4. Calculate the time duration in days between the event date (either transactions or last visit) and the first visit date for visitors on mobile devices.\n5. Sorted by duration and return the longest time duration.\n",
+        "special_function": [
+            "date-functions/DATE",
+            "date-functions/DATE_DIFF",
+            "date-functions/PARSE_DATE",
+            "time-functions/TIME",
+            "conditional-functions/CASE",
+            "conditional-functions/IFNULL",
+            "other-functions/UNNEST"
+        ]
+    },
+    {
+        "instance_id": "bq269",
+        "db": "bigquery-public-data.google_analytics_sample",
+        "question": "Compute the average pageviews per visitor for non-purchase events and purchase events each month between June 1st and July 31st in 2017.",
+        "external_knowledge": null,
+        "plan": "1. Calculate the average pageviews per visitor for sessions without transactions and non-earning product revenue through dividing pageviews by the number of visitors.\n2. Compute the average pageviews per visitor for sessions with at least one transaction and product revenue between June 1 and July 31, 2017.\n3, Join the results and order the final output by month.\n",
+        "special_function": [
+            "date-functions/DATE",
+            "date-functions/EXTRACT",
+            "date-functions/PARSE_DATE",
+            "datetime-functions/EXTRACT",
+            "interval-functions/EXTRACT",
+            "string-functions/CONCAT",
+            "time-functions/EXTRACT",
+            "timestamp-functions/EXTRACT",
+            "other-functions/UNNEST"
+        ]
+    },
+    {
+        "instance_id": "bq270",
+        "db": "bigquery-public-data.google_analytics_sample",
+        "question": "What were the monthly add-to-cart and purchase conversion rates, calculated as a percentage of pageviews, from January to March 2017?",
+        "external_knowledge": "https://github.com/xlang-ai/Spider2-C/blob/main/Spider2-SQL/external_documents/ga360_hits.eCommerceAction.action_type.md",
+        "plan": "1. Filter and count the number of product views with eCommerce action type '2' between January 1, 2017, and March 31, 2017.\n2. Filter and count the number of add-to-cart actions in the specified date range.\n3. Filter and count the number of successful purchase actions and non-null product revenue in the designated period.\n4. Calculate the add-to-cart rate through dividing the number of add-to-cart actions by the number of product views. \n5. Analogously, compute the purchase rate.\n6. Sort the final output by month and return.\n",
+        "special_function": [
+            "date-functions/DATE",
+            "date-functions/EXTRACT",
+            "date-functions/PARSE_DATE",
+            "datetime-functions/EXTRACT",
+            "interval-functions/EXTRACT",
+            "mathematical-functions/ROUND",
+            "string-functions/CONCAT",
+            "time-functions/EXTRACT",
+            "timestamp-functions/EXTRACT",
+            "other-functions/UNNEST"
+        ]
+    },
+    {
+        "instance_id": "bq275",
+        "db": "bigquery-public-data.google_analytics_sample",
+        "question": "Can you provide a list of visitor IDs for those who made their first transaction on a mobile device on a different day than their first visit?",
+        "external_knowledge": null,
+        "plan": "Calculate the first and last visit dates for each visitor by grouping on visitor ID and taking the minimum and maximum of visit dates respectively.\n1. Identify distinct combinations of visitor ID, visit date, and device category used during each visit.\n2. For each visitor, identify the earliest date on which a transaction occurred and flag these records as having a transaction.\n3. For each transaction, capture the distinct visitor ID, date of transaction, and device category used during the transaction.\n4. Merge the datasets obtained above.\n5. From the combined data, prepare a table where for each visitor, the event date is determined (use the transaction date if it exists; otherwise, use the last visit date) and the device used is specified (use the transaction device if it exists; otherwise, use the device from the last visit).\n6. Select visitors with at least one transaction whose event happened after the first visit and the device used was mobile.\n",
+        "special_function": [
+            "date-functions/DATE",
+            "date-functions/DATE_DIFF",
+            "date-functions/PARSE_DATE",
+            "other-functions/UNNEST"
+        ]
     },
     {
         "instance_id": "bq016",
@@ -1349,6 +1654,32 @@
         ]
     },
     {
+        "instance_id": "bq276",
+        "db": "bigquery-public-data.persistent_udfs\nbigquery-public-data.noaa_hurricanes\nbigquery-public-data.geo_international_ports\nbigquery-public-data.geo_us_boundaries",
+        "question": "Can you provide me with the details of the port that has been affected by the highest average wind speed of tropical storms in region number 6585 including the port name, storm name and the average storm category? Only consider named storms in the North Atlantic basin with wind speeds of at least 35 knots and at least a minimal tropical storm strength on the SSHS scale. Also, ensure that this port is located within a U.S. state boundary.",
+        "external_knowledge": null,
+        "plan": "1. Filter records from a hurricane dataset based on specific criteria (e.g., basin, wind speed, storm name, and storm category).\n2. For each selected record, convert certain radius measurements from kilometers to nautical miles.\n3. Compute geographical points in four compass directions from the storm's center using the converted nautical mile radii.\n4. Construct a polygon representing the boundary of a tropical storm based on these points.\n5. Ensure the port is within both the state's geographical boundary and the tropical storm's polygon.\n6. Filters the ports based on specific attributes (e.g., region number = 6585).\n7. Aggregate data by grouping on unique identifiers and geographical attributes of the ports, summarizing attributes like storm seasons, storm count, storm names, and average storm characteristics.\n8. Sort the results by average wind speed in descending order.\n9. Output detailed information about the port that has experienced the most severe average wind speeds during storms, including the port's geographical data, details of the storms affecting it, and the storm polygon data.\n",
+        "special_function": [
+            "aggregate-functions/STRING_AGG",
+            "geography-functions/ST_ASTEXT",
+            "geography-functions/ST_MAKELINE",
+            "geography-functions/ST_MAKEPOLYGON",
+            "geography-functions/ST_WITHIN",
+            "other-functions/DECLARE"
+        ]
+    },
+    {
+        "instance_id": "bq278",
+        "db": "bigquery-public-data.sunroof_solar",
+        "question": "Please provide me with details about the state that has the highest number of buildings suitable for solar installations according to Google Maps data, including the state name, percent of buildings in Google Maps covered by Project Sunroof, total solar energy generation potential and potential carbon dioxide abatement.",
+        "external_knowledge": null,
+        "plan": "1. Compute the average percentage of buildings from the mapping database that are covered by a specific solar project.\n2. Compute the total potential yearly energy generation from solar installations, measured in kilowatt-hours.\n3. Estimate the potential reduction in carbon dioxide emissions due to solar installations.\n4. Calculate the total number of buildings suitable for solar installations as recorded in a mapping database by summing up the counts of qualified buildings across each state.\n5. Sort the query results by the number of buildings in Google Map suitable for solar in descending order.\n6. Return the related information for the state which has the largest number of qualified buildings.\n",
+        "special_function": [
+            "conversion-functions/CAST",
+            "mathematical-functions/ROUND"
+        ]
+    },
+    {
         "instance_id": "bq352",
         "db": "bigquery-public-data.sdoh_cdc_wonder_natality\nbigquery-public-data.census_bureau_acs",
         "question": "Please list the average number of prenatal weeks in 2018 for counties in Wisconsin where more than 5% of the employed population had commutes of 45-59 minutes in 2017.",
@@ -1395,11 +1726,30 @@
         ]
     },
     {
+        "instance_id": "bq280",
+        "db": "bigquery-public-data.stackoverflow",
+        "question": "Please provide the display name of the user who has answered the most questions on Stack Overflow, considering only users with a reputation greater than 10.",
+        "external_knowledge": null,
+        "plan": "1. Calculate the total number of answers each user has posted and filter out entries where the user ID is not available. \n2. Group the results by user ID to ensure each user is represented once with their total answer count.\n3. Select users who have both a visible display name and a reputation greater than 10.\n4. Combine the user-specific data (display names and reputation) with their corresponding answer counts into a single dataset.\n5. Implement a ranking system within the combined dataset based on the number of answers each user has posted. \n6. Order the users in descending order of answer count.\n7. Extract and return the display name of the top-ranked user.\n",
+        "special_function": [
+            "numbering-functions/RANK",
+            "numbering-functions/ROW_NUMBER"
+        ]
+    },
+    {
         "instance_id": "bq126",
         "db": "bigquery-public-data.the_met",
         "question": "What are the titles, artist names, mediums, and original image URLs of objects with 'Photograph' in their names from the 'Photographs' department, created by known artists, with an object end date of 1839 or earlier?",
         "external_knowledge": null,
         "plan": "What are the earliest photographs in the collection?\nThe Met\u2019s Department of Photographs has some of the earliest photographic works. This query retrieves artwork from the \u201cPhotograph\u201d department and joins the object and image tables to return the results, presented with the oldest items first. In this case, we see the British photography pioneer William Henry Fox Talbot\u2019s botanical images.",
+        "special_function": null
+    },
+    {
+        "instance_id": "bq286",
+        "db": "bigquery-public-data.usa_names",
+        "question": "Can you tell me the name of the most popular female baby in Wyoming for the year 2021, based on the proportion of female babies given that name compared to the total number of female babies given the same name across all states?",
+        "external_knowledge": null,
+        "plan": "1. Calculate the total count of each name grouped by name, gender, and year.\n2. Join the above result with the main dataset containing records of names based on matching names, genders, and years.\n3. Filter the joined data to focus on records where the gender is female ('F') and the state is specific ('WY'), and the year is a particular year (2021).\n4. For the filtered results, calculate the ratio of the count of each name to its total count across all states.\n5. Sort the results in descending order based on the calculated ratio.\n6. Return the name with the highest proportion.\n",
         "special_function": null
     },
     {
@@ -1453,14 +1803,129 @@
         ]
     },
     {
+        "instance_id": "bq279",
+        "db": "bigquery-public-data.austin_bikeshare",
+        "question": "Can you provide the number of distinct active and closed bike share stations for each year 2013 and 2014 in a chronological view?",
+        "external_knowledge": null,
+        "plan": "1. Extract the year and start station ID from the trips data for the years 2013 and 2014.\n2. Join the extracted trip data with the station data on the station ID to consolidate trip and station information.\n3. Limit the joined data to only include records from the years 2013 and 2014.\n4. For each year, count the distinct station IDs where the station status is 'active'. This involves filtering the joined data for 'active' stations and then counting distinct station IDs for each year.\n5. Similarly, for each year, count the distinct station IDs where the station status is 'closed'. This involves filtering the joined data for 'closed' stations and then counting distinct station IDs.\n6. Group the results by year to ensure that the counts of active and closed stations are organized by year.\n7. Order the final results by year to provide a chronological view of the data.\n",
+        "special_function": [
+            "date-functions/EXTRACT",
+            "datetime-functions/EXTRACT",
+            "interval-functions/EXTRACT",
+            "time-functions/EXTRACT",
+            "timestamp-functions/EXTRACT",
+            "conditional-functions/CASE_EXPR",
+            "conditional-functions/CASE"
+        ]
+    },
+    {
+        "instance_id": "bq281",
+        "db": "bigquery-public-data.austin_bikeshare",
+        "question": "What is the highest number of electric bike rides lasting more than 10 minutes taken by subscribers with 'Student Membership' in a single day, excluding rides starting or ending at 'Mobile Station' or 'Repair Shop'?",
+        "external_knowledge": null,
+        "plan": "1. Filter the dataset to exclude records where the starting or ending locations are listed as either 'Mobile Station' or 'Repair Shop'.\n2. Narrow down the dataset to include only those records where users have students subscription type and the equipment used is electric.\n3. Consider only records where the duration of usage is greater than ten minutes.\n4. Organize the filtered data by grouping it based on the year, month, and day of the start time.\n5. For each grouped set of data (each day), count the total number of records that match the earlier set conditions.\n6. Order the results by the count of records in descending order to identify the date with the highest number of trips meeting all the specified conditions.\n7. Limit the output to only the top result from the sorted list and show the maximum usage in a single day under the defined conditions.\n",
+        "special_function": [
+            "date-functions/EXTRACT",
+            "datetime-functions/EXTRACT",
+            "interval-functions/EXTRACT",
+            "time-functions/EXTRACT",
+            "timestamp-functions/EXTRACT"
+        ]
+    },
+    {
+        "instance_id": "bq282",
+        "db": "bigquery-public-data.austin_bikeshare",
+        "question": "Can you tell me the numeric value of the active council district in Austin which has the highest number of bike trips that start and end within the same district, but not at the same station?",
+        "external_knowledge": null,
+        "plan": "1. Filter the stations table to keep records whose status is 'active'.\n2. Perform an inner join between the trips table and the filtered active stations.\n3. Select the district from the stations table for end stations that are active and match the end station ID from the trips table.\n4. Include only those trips where the starting district is present in the list of active end station districts.\n5. Exclude trips where the start station ID is the same as the end station ID.\n6. Group the results by the district and count the number of trips originating from each district.\n7. Order the districts by the descending count of trips to find the district with the highest number of trips.\n8. Limit the output to the district with the maximum number of trips.",
+        "special_function": [
+            "conversion-functions/SAFE_CAST"
+        ]
+    },
+    {
+        "instance_id": "bq283",
+        "db": "bigquery-public-data.austin_bikeshare",
+        "question": "What is the combined percentage of all bike trips that start from the top 15 most used active stations in Austin?",
+        "external_knowledge": null,
+        "plan": "1. Calculate the total number of trips originating from each station.\n2. Assign a rank to each station based on the descending order of total trips, where the station with the highest number of trips has the highest rank.\n3. Calculate the percentage of total trips that each station represents by dividing the number of trips from that station by the total number of trips from all stations.\n4. Select only those stations that rank within the top 15.\n5. Join the data of the top 15 stations with another dataset that contains additional details about each station.\n6. From the joined data, filter out stations to keep only those that are currently active.\n7. From the filtered active top 15 stations, select the station with the highest rank.\n8. Retrieve the percentage of total trips for this station and display the result.\n",
+        "special_function": [
+            "mathematical-functions/ROUND",
+            "numbering-functions/RANK"
+        ]
+    },
+    {
         "instance_id": "bq329",
         "db": "bigquery-public-data.austin_bikeshare",
         "question": "Which bike station in the Austin bikeshare system has the lowest average trip duration? I want the station ID.",
         "external_knowledge": null,
         "plan": "1. **Define Data Sources**:\n   - Establish temporary datasets for bike stations and trip data by selecting all relevant columns from each respective source.\n\n2. **Prepare Trip Data**:\n   - Within the trip data, ensure proper data types by safely converting necessary fields to integers and extracting the required columns for analysis.\n\n3. **Calculate Average Trip Duration**:\n   - Group the trip data by the starting station and calculate the average trip duration for each group.\n\n4. **Join Data**:\n   - Merge the average trip duration data with the station data based on the station identifier.\n\n5. **Determine Station with Lowest Average Duration**:\n   - Sort the merged dataset by the average trip duration in ascending order.\n   - Select the station identifier of the station with the lowest average trip duration.\n   - Limit the result to only one record to get the station with the absolute lowest average trip duration.",
         "special_function": [
-            "conversion-functions/SAFE_CAST",
-            "json-functions/INT64"
+            "conversion-functions/SAFE_CAST"
+        ]
+    },
+    {
+        "instance_id": "bq284",
+        "db": "bigquery-public-data.bbc_news",
+        "question": "Can you provide a breakdown of the total number of articles into different categories and the percentage of those articles that mention \"Education\" within each category (tech, sport, business, politics, and entertainment) from the BBC News dataset?",
+        "external_knowledge": null,
+        "plan": "1. Group all records by their category.\n2. For each category group, count the total number of records.\n3. For each category, count the number of records where the body of the text contains the word 'Education'.\n4. For each category, count the total number of records that belong to the current category.\n5. For each category, calculate the percentage of records that mention 'Education' by dividing the count of 'Education' Mentions by the count of total records and then multiply by 100 to get a percentage.\n6. Combine the total count and the calculated percentage for each category into a single output table.\n",
+        "special_function": [
+            "conditional-functions/CASE_EXPR",
+            "conditional-functions/CASE"
+        ]
+    },
+    {
+        "instance_id": "bq285",
+        "db": "bigquery-public-data.fdic_banks",
+        "question": "Could you provide me with the zip code of the location that has the highest number of bank institutions in Florida?",
+        "external_knowledge": null,
+        "plan": "1. Retrieve the FIPS code for Florida from a dataset that contains FIPS codes for all states.\n2. Limit the data to zip codes that are only in the Florida state by using FIPS codes to filter the dataset.\n3. From a dataset containing institution locations, perform an aggregation to count the number of locations in each zip code.\n4. Combine the filtered list of zip codes with the aggregated location counts.\n5. Group the data from the join by zip code and sum the counts of locations. \n6. Order the results in descending order based on the sum of location counts.\n7. Limit the result to the top entry, which represents the zip code with the highest number of locations.\n",
+        "special_function": null
+    },
+    {
+        "instance_id": "bq287",
+        "db": "bigquery-public-data.fdic_banks\nbigquery-public-data.census_bureau_acs",
+        "question": "What is the employment rate (only consider population over 16) in the Utah zip code that has the fewest number of bank locations based on American Community Survey data in 2017?",
+        "external_knowledge": null,
+        "plan": "1. Retrieve the FIPS code for the state of Utah.\n2. Use the Utah FIPS code to filter and obtain a list of ZIP codes associated with Utah from a dataset containing ZIP codes and their corresponding state FIPS codes.\n3. For each ZIP code in Utah, count the number of banking institution locations and ensure that only ZIP codes with valid state and state name information are considered.\n4. Join the banking locations dataset with the banking institutions dataset.\n5. For each ZIP code in Utah, calculate the employment rate using the population over 16 and the employed population.\n6. Combine the datasets containing the Utah ZIP codes, the number of bank locations per ZIP code, and the employment rates.\n7. From the combined dataset, select the employment rate for the ZIP code that has the fewest number of banking institution locations.\n8. Order the results by the number of locations in ascending order.\n9. Limit the result to just one record to find the ZIP code with the lowest number of bank locations and its corresponding employment rate.\n",
+        "special_function": [
+            "conversion-functions/CAST",
+            "json-functions/STRING",
+            "mathematical-functions/ROUND",
+            "mathematical-functions/SAFE_DIVIDE",
+            "timestamp-functions/STRING"
+        ]
+    },
+    {
+        "instance_id": "bq288",
+        "db": "bigquery-public-data.fdic_banks",
+        "question": "Could you tell me the number of banking institutions in the state with the highest total assets for banks established between 1900 and 2000 (both included) and its name starting with \"Bank\"?",
+        "external_knowledge": null,
+        "plan": "1. Calculate the number of institutions per state.\n2. Gather detailed information about the total assets for each state.\n3. Join the results above based on the matching state names.\n4. Sort the results by the total assets in descending order to bring the state with the highest sum of assets to the top.\n5. Limit the output to only the top record, which corresponds to the state with the highest total assets among the filtered institutions.\n6. Display the count of institutions for the state with the highest total assets.\n",
+        "special_function": null
+    },
+    {
+        "instance_id": "bq289",
+        "db": "bigquery-public-data.geo_us_census_places",
+        "question": "Can you find the shortest distance between any two amenities (either a library, place of worship, or community center) located within Philadelphia?",
+        "external_knowledge": null,
+        "plan": "1. Extract all records where the place name matches 'Philadelphia'.\n2. For each point feature from a global geographic dataset, check if the point lies within the Philadelphia area.\n3. From the point's tags, filter those records where the tag key indicates an 'amenity' and the value is one of the specified types (library, place of worship, community center).\n4. Extract the value of the 'amenity' tag for each qualifying point.\n5. Perform a self-join on the amenities dataset to compare each amenity with every other amenity.\n6. For each pair of amenities (ensuring pairs are unique and non-repeating by comparing IDs), calculate the geographical distance between them.\n7. Assign a row number to each paired record, partitioned by the ID of the first amenity and ordered by the calculated distance.\n8. From the results of the self-join, filter to retain those records where the row number is 1.\n9. Order these records by distance in ascending order to find the pair with the shortest distance among all.\n",
+        "special_function": [
+            "geography-functions/ST_CONTAINS",
+            "geography-functions/ST_DISTANCE",
+            "numbering-functions/ROW_NUMBER",
+            "other-functions/UNNEST"
+        ]
+    },
+    {
+        "instance_id": "bq226",
+        "db": "bigquery-public-data.goog_blockchain_cronos_mainnet_us",
+        "question": "Can you find me the complete url of the most frequently used sender's address on the Cronos blockchain since January 1, 2023, where transactions were made to non-null addresses and in blocks larger than 4096 bytes?",
+        "external_knowledge": null,
+        "plan": "1. Start by joining two datasets based on a common identifier which associates transaction records with corresponding block records.\n2. Include only records where the transaction destination address is specified.\n3. Consider only blocks that are larger than 4096 bytes.\n4. Restrict the data to records timestamped after \u20182023-01-01 00:00:00\u2019 for both transactions and blocks.\n5. For each transaction record, construct a URL using a predefined format concatenated with the source address from the transaction.\n6. Group the data by the source address of the transactions.\n7. Count the number of transactions for each unique source address and sort these counts in descending order to find the most frequent source address.\n8. Return the link to the source address with the highest count of transactions.\n",
+        "special_function": [
+            "string-functions/CONCAT",
+            "timestamp-functions/TIMESTAMP"
         ]
     },
     {
@@ -1479,7 +1944,49 @@
         "question": "How many unique StudyInstanceUIDs are there from the DWI, T2 Weighted Axial, Apparent Diffusion Coefficient series, and T2 Weighted Axial Segmentations in the 'qin_prostate_repeatability' collection?",
         "external_knowledge": null,
         "plan": "1. **Identify Relevant Records**:\n   - Create a temporary dataset that includes unique identifiers from records that match specific criteria within a given collection.\n   - Filter these records based on a list of specified descriptions.\n\n2. **Additional Filtering with Nested Data**:\n   - Create another temporary dataset that includes unique identifiers from records that match a different specific description within the same collection.\n   - Additionally, this step involves expanding nested data fields to match the criteria.\n\n3. **Combine Results**:\n   - Combine the unique identifiers from both temporary datasets into a single dataset.\n   - Use a union operation to ensure all relevant records are included.\n\n4. **Count Unique Identifiers**:\n   - Count the number of unique identifiers in the combined dataset to determine the total number of unique instances that meet the criteria.",
+        "special_function": [
+            "other-functions/UNNEST"
+        ]
+    },
+    {
+        "instance_id": "bq322",
+        "db": "bigquery-public-data.idc_v15",
+        "question": "What is the most common modality in the 'Community' and 'nsclc_radiomics' collections?",
+        "external_knowledge": null,
+        "plan": "1. **Define a Common Subquery**: Create a subquery to count the occurrences of each type of modality within the specified collections.\n\n2. **Identify Relevant Studies**: Within the subquery, filter the dataset to include only the studies that belong to the specified collections.\n\n3. **Group and Count Modalities**: Group the filtered data by modality type and count the number of occurrences for each modality.\n\n4. **Sort and Select the Most Common Modality**: In the main query, order the results by the frequency of occurrences in descending order and select the top result to find the most common modality.\n\nBy following these steps, the query efficiently identifies the most common modality within the specified collections.",
         "special_function": null
+    },
+    {
+        "instance_id": "bq227_1",
+        "db": "bigquery-public-data.london_crime\nbigquery-public-data.london_fire_brigade\nbigquery-public-data.london_fire_brigade",
+        "question": "Could you provide the annual percentage share of the total crime committed by the top 5 minor crime categories in London year by year?",
+        "external_knowledge": null,
+        "plan": "1. Aggregate the total values for each category, year, and month combination.\n2. Identify the top categories based on aggregated values. \n3. Rank categories by their total and classify the top five categories.\n4. Summarize the values for the categorized data (top five versus others) for each year, without distinguishing by month or specific category anymore.\n5. Aggregate these sums over each year to compute the total annual value for both the top categories and others.\n6. For each year, calculate the percentage share of the total value that the top categories represent by dividing the total value of top categories by the total annual value and multiplying by 100 to convert this fraction into a percentage.\n7. From the results, filter out the data to only show the percentage values for the top categories across each year.\n8. Finally, order the resulting data by year.\n",
+        "special_function": [
+            "conditional-functions/CASE_EXPR",
+            "conditional-functions/CASE"
+        ]
+    },
+    {
+        "instance_id": "bq227_2",
+        "db": "bigquery-public-data.london_crime\nbigquery-public-data.london_fire_brigade\nbigquery-public-data.london_fire_brigade",
+        "question": "Could you provide the total number of 'Other Theft' incidents within the 'Theft and Handling' category for each year in the Westminster borough?",
+        "external_knowledge": null,
+        "plan": "1. Group data by year, month, borough, and crime categories.\n2. Sum the values in each group to get a total count of incidents per group.\n3. Categorize the crime data into two divisions for the major crime category. If the major category is specified as 'Theft and Handling', label it as such; otherwise, label it as 'Other'.\n4. Similarly, categorize the minor crime category. If the minor category matches 'Other Theft', keep the category name; otherwise, label it as 'Other'.\n5. Filter the results to focus only on the borough 'Westminster' and exclude the 'Other' categories for both major and minor divisions.\n6. Calculate the total incidents per year by summing up the totals from the filtered results. \n7. Group these results by year, major division, and minor division.\n8. Finally, order the summarized data by year.",
+        "special_function": [
+            "conditional-functions/CASE_EXPR",
+            "conditional-functions/CASE"
+        ]
+    },
+    {
+        "instance_id": "bq228",
+        "db": "bigquery-public-data.london_crime\nbigquery-public-data.london_fire_brigade\nbigquery-public-data.london_fire_brigade",
+        "question": "Please provide a list of the top three major crime categories in the borough of Barking and Dagenham, along with the number of incidents in each category.",
+        "external_knowledge": null,
+        "plan": "1. Calculate and rank the sum of crime incidents by major category within each borough.\n2. Group the data by both borough and major category to aggregate the total number of crime incidents for each category within each borough.\n3. Apply a ranking function to order the crime categories within each borough based on the aggregated sum of incidents, in descending order. \n4. Retrieve the borough, major category, ranking, and total number of incidents.\n5. Include only those records where the rank is within the top 3 for each borough.\n6. Further filter to include only records pertaining to Barking and Dagenham.\n7. Sort the final output first by borough and then by the ranking within that borough to show the top crime categories orderly.\n8. Display the major crime categories with the most incidents in the specified borough.\n",
+        "special_function": [
+            "numbering-functions/RANK"
+        ]
     },
     {
         "instance_id": "bq325",
@@ -1492,6 +1999,26 @@
         ]
     },
     {
+        "instance_id": "bq230",
+        "db": "bigquery-public-data.usda_nass_agriculture",
+        "question": "Can you provide the maximum amount of corn produced (measured in bushels) by each state in the year 2018, listing the results by state name?",
+        "external_knowledge": null,
+        "plan": "1. Select and group data by state name, commodity description, and year.\n2. Filter the data to include only records for crop group 'FIELD CROPS', data type like 'PRODUCTION', at the state level, where the measured value is not null and the units are specified as bushels.\n3. Calculate the total amount of the commodity produced per state, per commodity, per year.\n4. Filter the entries for 2018 and 'CORN'.\n5. For each state, find the maximum total produce amount recorded for that commodity.\n6. Display the state name and the maximum total produce amount for the specified commodity and year.\n7. Order the results by state name to present the data in a sorted manner by geographical location.\n",
+        "special_function": [
+            "timestamp-functions/TIMESTAMP_TRUNC"
+        ]
+    },
+    {
+        "instance_id": "bq231",
+        "db": "bigquery-public-data.usda_nass_agriculture",
+        "question": "Which state produced the most mushrooms in the year 2022 according to the horticulture production statistics?",
+        "external_knowledge": null,
+        "plan": "1. Apply a filter to only include records that belong to group horticulture, type production, at the state level aggregation, and for commodity mushrooms. Additionally, records with null values in the value field are excluded.\n2. Sum up the values grouped by state, commodity, and year to get the total production for mushrooms per state per year.\n3. Filter to include only the data from 2022.\n4. For each state, find the maximum total production value of mushrooms.\n5. Select the state name with the highest production value of mushrooms and return.\n",
+        "special_function": [
+            "timestamp-functions/TIMESTAMP_TRUNC"
+        ]
+    },
+    {
         "instance_id": "bq326",
         "db": "bigquery-public-data.world_bank_health_population",
         "question": "How many countries experienced both a change in population and a change in Current health expenditure per capita, PPP (current international $) of greater than 1 in the year 2018?",
@@ -1500,11 +2027,24 @@
         "special_function": [
             "conversion-functions/CAST",
             "debugging-functions/ERROR",
-            "json-functions/FLOAT64",
-            "json-functions/INT64",
             "mathematical-functions/ROUND",
             "navigation-functions/LAG",
-            "string-functions/RIGHT"
+            "string-functions/RIGHT",
+            "conditional-functions/CASE",
+            "conditional-functions/COALESCE",
+            "conditional-functions/NULLIF",
+            "other-functions/UNNEST",
+            "other-functions/UNPIVOT"
+        ]
+    },
+    {
+        "instance_id": "bq327",
+        "db": "bigquery-public-data.world_bank_intl_debt",
+        "question": "How many debt indicators for Russia have a value of 0, excluding NULL values?",
+        "external_knowledge": null,
+        "plan": "1. **Create a Subquery to Filter Countries with Regions:**\n   - Construct a subquery to select the country codes and regions from a summary table.\n   - Filter out rows where the region is empty to exclude aggregated countries that do not have a specific region.\n\n2. **Create a Subquery for Russia's Debt Indicators:**\n   - Construct another subquery to select the country code, country name, debt value, and indicator name from an international debt table.\n   - Filter this subquery to include only rows where the country code matches the code for Russia.\n\n3. **Join the Two Subqueries:**\n   - Perform an inner join between the two subqueries on the country code to combine the data, ensuring that only records with matching country codes from both subqueries are included.\n\n4. **Filter Out NULL Values:**\n   - Further refine the joined dataset by excluding rows where the debt value is NULL.\n\n5. **Define a Common Table Expression (CTE):**\n   - Use the results of the above steps to create a CTE that holds the filtered and joined data for Russia's debt indicators, ensuring that each combination of country name, value, and indicator name is distinct.\n\n6. **Count Debt Indicators with a Value of Zero:**\n   - Query the CTE to count the number of debt indicators where the value is exactly zero.\n   - Return this count as the final result.",
+        "special_function": [
+            "string-functions/FORMAT"
         ]
     },
     {
@@ -1514,8 +2054,7 @@
         "external_knowledge": null,
         "plan": "1. Focus on the item named \"Google Navy Speckled Tee.\"\n2. Select all purchase-type events from December 2020.\n3. Extract the IDs of individuals who purchased the \"Google Navy Speckled Tee\" during these events.\n4. Calculate all items purchased by these IDs and retain the top 10 items by purchase volume.",
         "special_function": [
-            "aggregate-functions/SUM",
-            "differentially-private-aggregate-functions/SUM"
+            "other-functions/UNNEST"
         ]
     },
     {
@@ -1525,9 +2064,8 @@
         "external_knowledge": null,
         "plan": "1. **Define Parameters:**\n   - Establish a parameter for the selected product, which in this case is 'Google Red Speckled Tee'.\n\n2. **Set Date Ranges:**\n   - Define the date ranges for the three consecutive months starting from November 2020.\n\n3. **Identify Purchase Events:**\n   - Extract purchase events from the dataset for the defined date ranges.\n   - Ensure to include the event period, user identifier, and items purchased.\n\n4. **Identify Buyers of Selected Product:**\n   - Identify distinct users who purchased the selected product within each period.\n   - This step filters out only those users who bought the 'Google Red Speckled Tee'.\n\n5. **Calculate Top Products Purchased by These Buyers:**\n   - For each period, calculate the total quantity of other products bought by the users identified in the previous step.\n   - Exclude the selected product from this count.\n\n6. **Rank Products by Quantity:**\n   - Rank the products for each period based on the total quantity purchased.\n   - Use a ranking function to order products in descending order of quantity.\n\n7. **Select Top Product Per Period:**\n   - Select the top-ranked product for each period.\n   - This ensures only the most purchased product (excluding the selected product) is chosen for each period.\n\n8. **Output Results:**\n   - Retrieve and display the period, product name, and quantity of the top purchased product for each period.\n   - Order the results by period to maintain chronological order.\n\nThis plan effectively breaks down the SQL query into logical steps to achieve the user\u2019s goal of identifying the most purchased other products by customers who bought a specific product within a given timeframe.",
         "special_function": [
-            "aggregate-functions/SUM",
-            "differentially-private-aggregate-functions/SUM",
-            "numbering-functions/RANK"
+            "numbering-functions/RANK",
+            "other-functions/UNNEST"
         ]
     },
     {
@@ -1538,9 +2076,8 @@
         "plan": "1. Extract all data for the \"level_complete_quickplay\" mode.\n2. Focus on the board type, grouping by user ID and event timestamp to summarize board type and corresponding scores.\n3. Calculate the average score for each board type.",
         "special_function": [
             "aggregate-functions/ANY_VALUE",
-            "aggregate-functions/AVG",
-            "aggregate-functions/MAX",
-            "differentially-private-aggregate-functions/AVG"
+            "conditional-functions/IF",
+            "other-functions/UNNEST"
         ]
     },
     {
@@ -1550,12 +2087,8 @@
         "external_knowledge": null,
         "plan": "1. Segment user activities into page views and purchase events for December 2020.\n2. Classify users based on whether they made any purchases.\n3. Calculate average page views for purchasers and non-purchasers.\n4. Determine the difference in average page views between these two groups.",
         "special_function": [
-            "aggregate-functions/COUNT",
             "aggregate-functions/COUNTIF",
-            "aggregate-functions/MAX",
-            "aggregate-functions/SUM",
-            "differentially-private-aggregate-functions/COUNT",
-            "differentially-private-aggregate-functions/SUM"
+            "conditional-functions/CASE"
         ]
     },
     {
@@ -1565,12 +2098,8 @@
         "external_knowledge": null,
         "plan": "1. **Define a Temporary Data Set:**\n   - Create a temporary data set to collect user activity information.\n   - Parse the date format to a standard date type.\n   - Count the occurrences of 'page_view' events for each user per day.\n   - Count the occurrences of 'purchase' related events for each user per day.\n   - Filter the data for the specified date range (November 2020).\n\n2. **Aggregate User Activity:**\n   - From the temporary data set, select the date, the sum of 'page_view' counts, and the average 'page_view' counts per user who made a purchase.\n   - Ensure to include only users who have made at least one purchase-related event.\n\n3. **Compute Metrics:**\n   - For each day in November 2020:\n     - Calculate the average number of 'page_view' events per purchasing user.\n     - Calculate the total number of 'page_view' events.\n\n4. **Group and Order Results:**\n   - Group the results by date to get daily metrics.\n   - Order the results by date to maintain chronological order.",
         "special_function": [
-            "aggregate-functions/COUNT",
             "aggregate-functions/COUNTIF",
-            "aggregate-functions/SUM",
-            "date-functions/PARSE_DATE",
-            "differentially-private-aggregate-functions/COUNT",
-            "differentially-private-aggregate-functions/SUM"
+            "date-functions/PARSE_DATE"
         ]
     },
     {
@@ -1580,9 +2109,8 @@
         "external_knowledge": null,
         "plan": "1. Extract `page_view` events for January 2021 and unnest their parameters to access individual event details.\n2. Aggregate these details to identify the title of each page viewed, grouping by user and event timestamp.\n3. Count occurrences and distinct users per page, then order by the frequency of visits to each page.\n4. Select the number of distinct users for the top visited page.",
         "special_function": [
-            "aggregate-functions/COUNT",
-            "aggregate-functions/MAX",
-            "differentially-private-aggregate-functions/COUNT"
+            "conditional-functions/CASE",
+            "other-functions/UNNEST"
         ]
     },
     {
@@ -1592,15 +2120,15 @@
         "external_knowledge": "ga4_page_category.md",
         "plan": "1. query the event data to retrieve all unique event names\n2. Selects events data from the Google Analytics 4 (GA4) sample e-commerce dataset for the specific date (20210102)\n3. Filter to include only events named 'page_view', which represent page views.\n4. flatten the nested event_params array and extract values for ga_session_id, ga_session_number, page_title, and page_location. This allows the analysis of individual page views within each user's session.\n5. Further processes the unnested event data to classify pages based on URL depth and specific keywords into either Product Detail Pages (PDP) or Product Listing Pages (PLP).\n6. Calculate the total proportion of PDP",
         "special_function": [
-            "aggregate-functions/COUNT",
-            "aggregate-functions/MAX",
             "array-functions/ARRAY_LENGTH",
             "array-functions/ARRAY_REVERSE",
             "date-functions/DATE",
-            "differentially-private-aggregate-functions/COUNT",
             "string-functions/CONTAINS_SUBSTR",
             "string-functions/LOWER",
-            "string-functions/SPLIT"
+            "string-functions/SPLIT",
+            "conditional-functions/CASE",
+            "other-functions/UNNEST",
+            "other-functions/ARRAY_SUBSCRIPT"
         ]
     },
     {
@@ -1610,13 +2138,15 @@
         "external_knowledge": "ga4_page_category.md",
         "plan": "1. **Create a Base Table**:\n   - Select necessary columns from the dataset.\n   - Filter the data to include only records for the specified date.\n   - Further filter to include only records for the specified user ID.\n   - Ensure that only records with the specified event type are selected.\n\n2. **Unnest Event Parameters**:\n   - Unnest the event parameters to access key-value pairs.\n   - Extract relevant values using conditional logic based on the key names.\n   - Group the data by date, timestamp, and user ID to ensure each event is uniquely identified.\n\n3. **Classify Page Names**:\n   - For each event, analyze the page location URL.\n   - Split the URL into its components for further analysis.\n   - Determine the type of page (PDP or PLP) based on predefined conditions:\n     - If the URL structure and specific keywords match certain patterns, classify the page as 'PDP'.\n     - If different patterns are matched, classify the page as 'PLP'.\n   - If none of the patterns are matched, retain the original page title.\n\n4. **Final Output**:\n   - Select all relevant fields from the unnested events.\n   - Include an additional field that contains the adjusted page title based on the classification logic.",
         "special_function": [
-            "aggregate-functions/MAX",
             "array-functions/ARRAY_LENGTH",
             "array-functions/ARRAY_REVERSE",
             "date-functions/DATE",
             "string-functions/CONTAINS_SUBSTR",
             "string-functions/LOWER",
-            "string-functions/SPLIT"
+            "string-functions/SPLIT",
+            "conditional-functions/CASE",
+            "other-functions/UNNEST",
+            "other-functions/ARRAY_SUBSCRIPT"
         ]
     },
     {
@@ -1626,17 +2156,17 @@
         "external_knowledge": "ga4_page_category.md",
         "plan": "1. query the event data to retrieve all unique event names\n2. Selects events data from the Google Analytics 4 (GA4) sample e-commerce dataset for the specific date (20210102)\n3. Filter to include only events named 'page_view', which represent page views.\n4. flatten the nested event_params array and extract values for ga_session_id, ga_session_number, page_title, and page_location. This allows the analysis of individual page views within each user's session.\n5. Further processes the unnested event data to classify pages based on URL depth and specific keywords into either Product Detail Pages (PDP) or Product Listing Pages (PLP).\n6. Applies window functions to the categorized data to calculate the previous and next pages for each session per user, facilitating analysis of navigation paths between pages.\n7. Filters sessions where the current page is a PLP and the next page is a PDP.\n8. Counts the number of sessions transitioning from PLP to PDP and divides this by the total views of PLP pages to calculate the conversion rate.",
         "special_function": [
-            "aggregate-functions/COUNT",
-            "aggregate-functions/MAX",
             "array-functions/ARRAY_LENGTH",
             "array-functions/ARRAY_REVERSE",
             "date-functions/DATE",
-            "differentially-private-aggregate-functions/COUNT",
             "navigation-functions/LAG",
             "navigation-functions/LEAD",
             "string-functions/CONTAINS_SUBSTR",
             "string-functions/LOWER",
-            "string-functions/SPLIT"
+            "string-functions/SPLIT",
+            "conditional-functions/CASE",
+            "other-functions/UNNEST",
+            "other-functions/ARRAY_SUBSCRIPT"
         ]
     },
     {
@@ -1646,10 +2176,9 @@
         "external_knowledge": null,
         "plan": "1. Extract and prepare event data from the Google Analytics 4 (GA4) dataset, specifically for page views on January 2, 2021.\n2. Unnest the event parameters to retrieve values for session identifiers and page identifiers, such as page title and location.\n3. Identify and count the initial visits to the Home page and the successful visits to the Checkout Confirmation page.\n4. Join the data to match sessions that start on the Home page and end at the Checkout Confirmation page.\n5. Calculate the user conversion rate for January by comparing the number of successful checkout visits to the total home page visits.",
         "special_function": [
-            "aggregate-functions/COUNT",
-            "aggregate-functions/MAX",
             "date-functions/DATE",
-            "differentially-private-aggregate-functions/COUNT"
+            "conditional-functions/CASE",
+            "other-functions/UNNEST"
         ]
     },
     {
@@ -1660,7 +2189,6 @@
         "plan": "1. Select and filter page_view events on January 28th, 2021, specifically for user 1362228 from the GA4 dataset.\n2. Unpack the event_params array to extract details such as session ID, session number, page title, and page location.\n3. Determine page categories based on URL structure and keywords to classify pages as either Product Detail Pages (PDPs), Product Listing Pages (PLPs), or other types.\n4. Rank pages based on the event timestamp and use window functions to establish the sequence of page visits within each session.\n5. concatenate the page titles visited in sequence, separated by '>>', representing the user's navigation flow through the site.",
         "special_function": [
             "aggregate-functions/ARRAY_AGG",
-            "aggregate-functions/MAX",
             "array-functions/ARRAY",
             "array-functions/ARRAY_LENGTH",
             "array-functions/ARRAY_REVERSE",
@@ -1672,7 +2200,10 @@
             "numbering-functions/DENSE_RANK",
             "string-functions/CONTAINS_SUBSTR",
             "string-functions/LOWER",
-            "string-functions/SPLIT"
+            "string-functions/SPLIT",
+            "conditional-functions/CASE",
+            "other-functions/UNNEST",
+            "other-functions/ARRAY_SUBSCRIPT"
         ]
     },
     {
@@ -1682,13 +2213,11 @@
         "external_knowledge": null,
         "plan": "1. **Define Events Data**:\n   - Create a temporary table to store event data.\n   - Extract session ID and spending value from event parameters.\n   - Include all columns from the original event data.\n   - Filter the event data to include only records from November 2020.\n\n2. **Calculate Session Info**:\n   - Create another temporary table to calculate session-related metrics for each user.\n   - Count the distinct session IDs for each user to determine the number of purchase sessions.\n   - Calculate the average spending per session by dividing the total spending by the number of distinct sessions for each user.\n   - Only include events that represent a purchase and have a valid session ID.\n\n3. **Filter and Select**:\n   - Select the user IDs and their corresponding average spending per session from the session info table.\n   - Include only users who have engaged in more than one purchase session.\n\nBy following these steps, the query effectively identifies users with multiple purchase sessions in the specified timeframe and calculates their average spending per session.",
         "special_function": [
-            "aggregate-functions/COUNT",
-            "aggregate-functions/SUM",
             "date-functions/DATE",
-            "differentially-private-aggregate-functions/COUNT",
-            "differentially-private-aggregate-functions/SUM",
             "range-functions/RANGE",
-            "string-functions/REPLACE"
+            "string-functions/REPLACE",
+            "conditional-functions/COALESCE",
+            "other-functions/UNNEST"
         ]
     },
     {
@@ -1698,12 +2227,13 @@
         "external_knowledge": null,
         "plan": "1. **Identify the Time Frame:**\n   - The query focuses on data from December 2020.\n   - Filter the dataset to include only records within this time period.\n\n2. **Engaged Sessions Calculation:**\n   - Determine the number of unique engaged sessions.\n   - An engaged session is identified by a specific event parameter indicating engagement.\n   - For each engaged session, concatenate a unique user identifier with a session identifier to ensure distinct session counts.\n\n3. **User Count Calculation:**\n   - Count the number of unique users within the specified time frame.\n   - Use a distinct user identifier to ensure each user is only counted once.\n\n4. **Calculate Averages:**\n   - Calculate the average number of engaged sessions per user.\n   - Divide the total number of engaged sessions by the total number of unique users.\n\n5. **Result Presentation:**\n   - Present the result as the average number of engaged sessions per user.",
         "special_function": [
-            "aggregate-functions/COUNT",
             "conversion-functions/CAST",
-            "differentially-private-aggregate-functions/COUNT",
             "json-functions/STRING",
             "string-functions/CONCAT",
-            "timestamp-functions/STRING"
+            "timestamp-functions/STRING",
+            "conditional-functions/CASE_EXPR",
+            "conditional-functions/CASE",
+            "other-functions/UNNEST"
         ]
     },
     {
@@ -1714,11 +2244,14 @@
         "plan": "1.First, read the document to understand how traffic is divided into 18 channel groups, primarily based on the metrics of source, medium, and campaign.\n2.Extract all visits from the database for December, each visit having a unique user ID and session ID. Retrieve the source, medium, and campaign for each visit.\n3.Based on the classification standards for channel groups in the document, write conditional statements to determine which channel each set of data belongs to, mainly using regular expressions. If the data source (source) contains any of the 4.following: 'badoo', 'facebook', 'fb', 'instagram', 'linkedin', 'pinterest', 'tiktok', 'twitter', or 'whatsapp', and the medium (medium) includes 'cp', 'ppc', or starts with 'paid', then categorize it as 'Paid Social'.\n5.Calculate the number of sessions for each channel based on the channel grouping.\n6.Select the name of the channel ranked fourth as the answer.",
         "special_function": [
             "aggregate-functions/ARRAY_AGG",
-            "aggregate-functions/COUNT",
             "aggregate-functions/GROUPING",
-            "differentially-private-aggregate-functions/COUNT",
             "string-functions/CONCAT",
-            "string-functions/REGEXP_CONTAINS"
+            "string-functions/REGEXP_CONTAINS",
+            "conditional-functions/CASE_EXPR",
+            "conditional-functions/CASE",
+            "other-functions/SET",
+            "other-functions/UNNEST",
+            "other-functions/ARRAY_SUBSCRIPT"
         ]
     },
     {
@@ -1729,11 +2262,14 @@
         "plan": "1. **Create a Preparation Step**: \n   - Define a subquery to prepare the necessary data.\n   - Select unique user identifiers.\n   - Extract session identifiers from event parameters.\n   - Aggregate source, medium, and campaign information for each session, ordering them by event timestamp to ensure correct sequence.\n\n2. **Filter for Specific Time Period**:\n   - Limit data to events occurring in December 2020 by specifying the date range.\n\n3. **Group Data by User and Session**:\n   - Group the prepared data by unique user and session identifiers to consolidate session information.\n\n4. **Classify Sessions into Channels**:\n   - Use a `CASE` statement to categorize each session into a traffic channel based on the source, medium, and campaign information.\n   - Define various conditions for channel grouping, such as direct traffic, cross-network campaigns, paid and organic shopping, search, social, video, email, affiliate, referral, audio, SMS, and mobile push notifications.\n   - Assign any sessions that do not match the predefined conditions to an \"Unassigned\" category.\n\n5. **Count Sessions per Channel**:\n   - Count the number of distinct sessions for each traffic channel by combining user and session identifiers.\n   - Group the results by the traffic channel to get the session count for each channel.\n\n6. **Return the Results**:\n   - Output the channel grouping and the corresponding session count for each channel.",
         "special_function": [
             "aggregate-functions/ARRAY_AGG",
-            "aggregate-functions/COUNT",
             "aggregate-functions/GROUPING",
-            "differentially-private-aggregate-functions/COUNT",
             "string-functions/CONCAT",
-            "string-functions/REGEXP_CONTAINS"
+            "string-functions/REGEXP_CONTAINS",
+            "conditional-functions/CASE_EXPR",
+            "conditional-functions/CASE",
+            "other-functions/SET",
+            "other-functions/UNNEST",
+            "other-functions/ARRAY_SUBSCRIPT"
         ]
     },
     {
@@ -1745,7 +2281,11 @@
         "special_function": [
             "aggregate-functions/COUNTIF",
             "string-functions/CONCAT",
-            "string-functions/SPLIT"
+            "string-functions/SPLIT",
+            "conditional-functions/CASE_EXPR",
+            "conditional-functions/CASE",
+            "other-functions/UNNEST",
+            "other-functions/ARRAY_SUBSCRIPT"
         ]
     },
     {
@@ -1755,8 +2295,7 @@
         "external_knowledge": null,
         "plan": "1. **Identify the Top Tax Rate Category:**\n    - Create a common table expression (CTE) to calculate the tax rate for each item category.\n    - Calculate the tax rate as the ratio of the sum of tax values to the sum of purchase revenues for each category.\n    - Select the item category with the highest tax rate by ordering the results in descending order of tax rate and limiting the result to one.\n\n2. **Select Required Transaction Details:**\n    - Using the main table and the CTE, retrieve transaction details for the item category with the highest tax rate.\n    - Filter the dataset to include only purchase events.\n    - Join the main table with the CTE on the item category to ensure only transactions from the top tax rate category are considered.\n    - Group the results by transaction ID.\n\n3. **Calculate Aggregates:**\n    - For each transaction, calculate the total item quantity by summing the quantities of items.\n    - Calculate the total purchase revenue in the specified currency by summing the purchase revenue fields.\n    - Ensure the results include transaction IDs, total item quantities, and purchase revenues.\n\n4. **Output the Results:**\n    - Return the transaction ID, the aggregated total item quantity, and the aggregated purchase revenue for transactions within the top tax rate category on the specified date.",
         "special_function": [
-            "aggregate-functions/SUM",
-            "differentially-private-aggregate-functions/SUM"
+            "other-functions/UNNEST"
         ]
     },
     {
@@ -1766,12 +2305,11 @@
         "external_knowledge": null,
         "plan": "1. Extract distinct user IDs and their first open dates from events labeled as 'first_open' for the months of August and September 2020.\n2. Gather distinct user IDs and their app removal dates from events labeled 'app_remove' during the same timeframe.\n3. Join the installation data with the uninstallation data on user ID to calculate the number of days between app installation and removal.\n4. Determine the percentage of users who uninstalled the app within seven days of installation by comparing the number of users who uninstalled within this period to the total number of users who installed the app.",
         "special_function": [
-            "aggregate-functions/COUNT",
             "date-functions/DATE",
             "date-functions/DATE_DIFF",
             "date-functions/FORMAT_DATE",
             "date-functions/PARSE_DATE",
-            "differentially-private-aggregate-functions/COUNT"
+            "conditional-functions/CASE"
         ]
     },
     {
@@ -1781,15 +2319,16 @@
         "external_knowledge": "retention_rate.md",
         "plan": "1. **Define Date Range and Calculate Minimum Date**:\n    - Establish a specific start date and end date.\n    - Determine the minimum date by subtracting four weeks from the end date truncated to the start of the week.\n\n2. **Prepare Event Data**:\n    - Convert event dates to a standard date format.\n    - Identify whether a user is using the app for the first time on that date.\n\n3. **Extract New Users**:\n    - Create a list of users who are new, along with their first event date.\n\n4. **Calculate Days Since Start for Each User**:\n    - Determine the number of days since a user\u2019s first app use.\n    - Associate each event date with the respective user and their first event date.\n\n5. **Calculate Weeks Since Start**:\n    - Group users by the week they started using the app.\n    - Calculate the number of weeks since each user's initial use.\n\n6. **Count Retained Users by Week**:\n    - For each starting week, count the number of distinct users who are still active, grouped by the number of weeks since they started.\n\n7. **Find the Week with Most Retained Users After Four Weeks**:\n    - Identify the initial user cohorts for each week.\n    - Determine the number of users still active after four weeks for each cohort.\n    - Calculate the retention rate (users active after four weeks / initial users).\n    - Sort the results by retention rate in descending order.\n    - Select the week with the highest retention rate.\n\nThis step-by-step plan ensures that users are grouped by their initial week of usage, and the retention rates are calculated to find the week with the highest user retention after four weeks.",
         "special_function": [
-            "aggregate-functions/COUNT",
             "date-functions/DATE",
             "date-functions/DATE_ADD",
             "date-functions/DATE_DIFF",
             "date-functions/DATE_TRUNC",
             "date-functions/PARSE_DATE",
-            "differentially-private-aggregate-functions/COUNT",
             "mathematical-functions/CEIL",
-            "timestamp-functions/TIMESTAMP_MICROS"
+            "timestamp-functions/TIMESTAMP_MICROS",
+            "conditional-functions/CASE_EXPR",
+            "conditional-functions/CASE",
+            "conditional-functions/IFNULL"
         ]
     },
     {
@@ -1799,15 +2338,16 @@
         "external_knowledge": "retention_rate.md",
         "plan": "1. **Define Date Range and Minimum Date**:\n   - Create a CTE (Common Table Expression) to define the start date, end date, and the minimum date (which is two weeks before the end date).\n\n2. **Create Date Table**:\n   - Extract the event date and user ID from the events table.\n   - Determine if the event date is the first time the user used the app by comparing it with the user's first touch timestamp.\n   - Filter events that occurred on or after July 9, 2018, and where the event name is 'session_start'.\n\n3. **Identify New Users**:\n   - Create a list of users who are new (i.e., their first use of the app) by selecting distinct user IDs and their first event dates.\n\n4. **Calculate Days Since Start for Each User**:\n   - Calculate the number of days since each new user started using the app.\n   - This involves joining the date table with the new user list to get the event date differences for each user's subsequent events.\n\n5. **Calculate Weeks Since Start for Each User**:\n   - Group the users into weekly cohorts based on their first event date.\n   - Calculate the number of weeks since the user first used the app, where the week starts on Monday.\n\n6. **Count Retained Users**:\n   - Count the number of distinct users retained in each weekly cohort for each week since they first used the app.\n   - Ensure the counts are within the defined date range.\n\n7. **Calculate Retention Rate**:\n   - Join the retention counts for the initial week cohort with the counts for the second week (two weeks since the start).\n   - Calculate the retention rate by dividing the number of users retained in the second week by the number of users in the initial cohort.\n   - Ensure to handle cases where no users are retained by using an IFNULL function.\n\n8. **Output and Order Results**:\n   - Select the initial week cohort and the calculated retention rate.\n   - Filter to include only the initial cohorts and order the results by the week cohort for clear presentation.",
         "special_function": [
-            "aggregate-functions/COUNT",
             "date-functions/DATE",
             "date-functions/DATE_ADD",
             "date-functions/DATE_DIFF",
             "date-functions/DATE_TRUNC",
             "date-functions/PARSE_DATE",
-            "differentially-private-aggregate-functions/COUNT",
             "mathematical-functions/CEIL",
-            "timestamp-functions/TIMESTAMP_MICROS"
+            "timestamp-functions/TIMESTAMP_MICROS",
+            "conditional-functions/CASE_EXPR",
+            "conditional-functions/CASE",
+            "conditional-functions/IFNULL"
         ]
     },
     {
@@ -1817,15 +2357,15 @@
         "external_knowledge": "retention_rate.md",
         "plan": "1. **Define the Date Range**:\n   - Establish the start date and end date for the analysis period.\n   - Calculate the minimum date needed for the 4-week retention analysis.\n\n2. **Create Event Date Table**:\n   - Parse the event dates.\n   - Determine if a user is a new user by comparing the event date with the user's first touch timestamp.\n\n3. **Identify New Users**:\n   - Extract a list of new users who first used the app on their respective event dates.\n\n4. **Calculate Days Since First Use**:\n   - For each user, calculate the number of days since their first use.\n   - Associate each user with their event dates and the calculated days since their first use.\n\n5. **Group by Week and Calculate Retention**:\n   - Group the users by the week of their first use.\n   - Calculate the number of weeks since the user's first use.\n   - Use the ceiling function to group days into weeks, starting from 0.\n\n6. **Aggregate Retention Data**:\n   - Count the number of distinct retained users for each week since their first use.\n   - Group the data by the week cohort and the weeks since the start.\n   - Ensure that the data is limited to the defined date range and only includes up to 4 weeks.\n\n7. **Filter and Sort the Retention Data**:\n   - Filter the retention data to show only the week starting on the specified start date.\n   - Sort the data by the week cohort and the number of weeks since the start.\n\n8. **Select Final Output**:\n   - Select and display the number of retained users for each week from 0 to 4 weeks since the user's first use.",
         "special_function": [
-            "aggregate-functions/COUNT",
             "date-functions/DATE",
             "date-functions/DATE_ADD",
             "date-functions/DATE_DIFF",
             "date-functions/DATE_TRUNC",
             "date-functions/PARSE_DATE",
-            "differentially-private-aggregate-functions/COUNT",
             "mathematical-functions/CEIL",
-            "timestamp-functions/TIMESTAMP_MICROS"
+            "timestamp-functions/TIMESTAMP_MICROS",
+            "conditional-functions/CASE_EXPR",
+            "conditional-functions/CASE"
         ]
     },
     {
@@ -1835,18 +2375,13 @@
         "external_knowledge": "retention_rate.md",
         "plan": "1. Extract unique users who installed the app in September 2018, recording the date of first use.\n2. Collect data on users who uninstalled the app within a little over a month from installation, noting the uninstallation dates.\n3. Retrieve crash data for the same users during the specified timeframe to determine app stability issues.\n4. Combine the installation, uninstallation, and crash data into a single dataset using user ID as the key.\n5. Calculate the proportion of users who experienced a crash within a week of installation out of those who uninstalled the app within a week, providing insight into potential issues affecting user retention.",
         "special_function": [
-            "aggregate-functions/COUNT",
-            "aggregate-functions/MAX",
-            "aggregate-functions/MIN",
-            "aggregate-functions/SUM",
             "conversion-functions/CAST",
             "date-functions/DATE",
             "date-functions/DATE_DIFF",
             "date-functions/PARSE_DATE",
-            "differentially-private-aggregate-functions/COUNT",
-            "differentially-private-aggregate-functions/SUM",
             "mathematical-functions/CEIL",
-            "range-functions/RANGE"
+            "range-functions/RANGE",
+            "conditional-functions/CASE"
         ]
     },
     {
@@ -1856,18 +2391,13 @@
         "external_knowledge": "retention_rate.md",
         "plan": "1. **Define Date Range:**\n   - Establish the start and end dates for the period of interest.\n\n2. **Identify Active Dates:**\n   - Select user identifiers and their active dates (based on session start events) within the defined date range.\n\n3. **Identify Initial Quickplay Events:**\n   - For each user, determine the earliest date of specific quickplay events within the defined date range.\n\n4. **Calculate Days Since Initial Event:**\n   - For each user and each initial quickplay event type, calculate the number of days since the initial quickplay event until each subsequent active date.\n\n5. **Determine Weeks Since Initial Event:**\n   - Convert the days since the initial quickplay event into weeks and count the number of active days in each week for each user and each quickplay event type.\n\n6. **Aggregate Weekly Retention Data:**\n   - Summarize the weekly retention data by counting the active days and the number of retained users for each quickplay event type and each week.\n\n7. **Calculate Retention Rate:**\n   - Calculate the retention rate by dividing the number of retained users in each week by the maximum number of retained users in the first week for each quickplay event type.\n\n8. **Filter for Two Weeks:**\n   - Select and return the retention rates for users two weeks after their initial quickplay event for each quickplay event type.",
         "special_function": [
-            "aggregate-functions/COUNT",
-            "aggregate-functions/MAX",
-            "aggregate-functions/MIN",
-            "aggregate-functions/SUM",
             "conversion-functions/CAST",
             "date-functions/DATE",
             "date-functions/DATE_DIFF",
             "date-functions/PARSE_DATE",
-            "differentially-private-aggregate-functions/COUNT",
-            "differentially-private-aggregate-functions/SUM",
             "mathematical-functions/CEIL",
-            "range-functions/RANGE"
+            "range-functions/RANGE",
+            "conditional-functions/CASE"
         ]
     },
     {
@@ -1877,12 +2407,12 @@
         "external_knowledge": null,
         "plan": "1. Extract users who installed the app in September 2018.\n2. Extract users who uninstalled the app between September 1 and October 7, 2018.\n3. Extract users who experienced app crashes between September 1 and October 7, 2018.\n4. Combine these datasets to analyze the relationship between crashes and uninstallations.\n5. Calculate the percentage of users who uninstalled within a week and experienced crashes to determine the impact of app crashes on user retention.",
         "special_function": [
-            "aggregate-functions/COUNT",
             "date-functions/DATE",
             "date-functions/DATE_DIFF",
             "date-functions/FORMAT_DATE",
             "date-functions/PARSE_DATE",
-            "differentially-private-aggregate-functions/COUNT"
+            "conditional-functions/CASE",
+            "other-functions/UNNEST"
         ]
     }
 ]

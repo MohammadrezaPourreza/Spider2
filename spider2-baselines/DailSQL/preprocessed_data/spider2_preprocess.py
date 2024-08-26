@@ -249,7 +249,7 @@ def process_dev_json(args):
             del item['db']
         return data
     
-    def get_potential_functions_summary(data):
+    def get_special_function_summary(data):
         with open(osp.join(proj_dir, '../../spider2/external_information/bigquery_functions/bigquery_functions.json'), 'r', encoding='utf-8') as file:
             bigquery_functions = json.load(file)
 
@@ -263,36 +263,51 @@ def process_dev_json(args):
 
         # 填充summary
         for item in data:
-            if item.get("potential_functions") is None:
+            if item.get("special_function") is None:
                 continue
-            updated_potential_functions = []
-            for function_name in item.get("potential_functions", []):
+            updated_special_function = []
+            for function_name in item.get("special_function", []):
                 # 查找对应的summary
                 summary = function_summaries.get(function_name, "No summary found")
                 # 将function_name和summary组合
-                updated_potential_functions.append(
+                updated_special_function.append(
                     {
                         'name':function_name,
                         'summary':summary
                     }
                 )
-            # 将修改后的列表赋值回potential_functions字段
-            item["potential_functions"] = updated_potential_functions
+            # 将修改后的列表赋值回special_function字段
+            item["special_function"] = updated_special_function
 
         return data
 
     with open(osp.join(proj_dir, f'../../spider2/{args.dev}.json'), 'r', encoding='utf-8') as file:
         data = json.load(file)
 
-    data = get_questionTok_and_gold_query_for_dev_json(data)
-    data = get_potential_functions_summary(data)
+    with open(osp.join(proj_dir, f"preprocessed_data/{args.dev}/tables_preprocessed.json"), "r", encoding="utf-8") as json_file:
+        table_json = json.load(json_file)
 
-    # option: 仅支持gt db数量为1的题目
-    data = [item for item in data if '\n' not in item.get('db_id', '')]
+    data = get_questionTok_and_gold_query_for_dev_json(data)
+    data = get_special_function_summary(data)
+
+    # option: 仅支持gt db数量为1, 且在tables.json中的题目
+    avaiable_dbs = [table['db_id'] for table in table_json]
+    new_data = []
+    for entry in data:
+        FLAG1 = '\n' not in entry['db_id']
+        FLAG2 = entry['db_id'] in avaiable_dbs
+        
+        if FLAG1 and FLAG2:
+            new_data.append(entry)
+        elif not FLAG1:
+            # print(f"warning: {entry['instance_id']}的db_id由多个db组成: {entry['db_id']}")
+            pass
+        elif not FLAG2:
+            print(f"warning: {entry['instance_id']}的db_id不在metadata中. 请求的db_id: {entry['db_id']}")
 
     # 将修改后的数据写回到新的 JSON 文件中
     with open(osp.join(proj_dir, f'preprocessed_data/{args.dev}/{args.dev}_preprocessed.json'), 'w', encoding='utf-8') as file:
-        json.dump(data, file, ensure_ascii=False, indent=4)
+        json.dump(new_data, file, ensure_ascii=False, indent=4)
 
     print(f"【预处理】完成，结果已保存到{args.dev}/{args.dev}_preprocessed.json")
 

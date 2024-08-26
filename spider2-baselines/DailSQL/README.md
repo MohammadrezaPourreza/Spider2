@@ -48,9 +48,9 @@ Given the large number of tables and columns in the Spider2 dataset, we leverage
 
 | Method                     | EX   |
 | -------------------------- | ---- |
-| vanilla DailSQL (GPT-4o)   | 3.54% |
-| DailSQL+Func+Plan (GPT-4o) | 8.84% |
-| DailSQL+Func+Plan (GPT-4o) | 9.73$ |
+| vanilla DailSQL (GPT-4o)   | 6.04% (9/149) |
+| DailSQL+Func+Plan (GPT-4o) | 12.75% (19/149) |
+<!-- | DailSQL+Func+Plan+Debug (GPT-4o) | 9.73$ | -->
 
 ## Prompts
 

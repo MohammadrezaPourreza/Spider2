@@ -63,3 +63,4 @@ spider2-baselines/yyx_tmp/
 **/0825*.json
 **/subset*.json
 **/yyx*.sh
+**/(0824的135题版本)spider2-sql.json

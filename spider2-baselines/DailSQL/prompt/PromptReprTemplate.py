@@ -30,7 +30,7 @@ class SQLPrompt(BasicPrompt):
                       "{}"
     external_knowledge_info = "/* External knowledge: */\n" \
                       "{}"
-    potential_functions_info = "/* Potential functions with their usage: */\n" \
+    special_function_info = "/* Potentially useful special functions with their usage: */\n" \
                       "{}"
     plan_info = "/* A plan that is useful for guiding the generation of components of a complete SQL query: */\n" \
                       "{}"
@@ -71,14 +71,14 @@ class SQLPrompt(BasicPrompt):
             else:
                 print("External knowledge too long, skip. length: ", len(new))
             
-        if args.use_potential_functions and example['potential_functions'] is not None:
-            strs = [f"{item['name']}: {item['summary']}" for item in example['potential_functions']]
-            potential_functions = "\n".join(strs)
-            new = self.potential_functions_info.format(potential_functions)
+        if args.use_special_function and example['special_function'] is not None:
+            strs = [f"{item['name']}: {item['summary']}" for item in example['special_function']]
+            special_function = "\n".join(strs)
+            new = self.special_function_info.format(special_function)
             if check_length(prompt_components, new):
                 prompt_components.append(new)
             else:
-                print("Potential functions info too long, skip. length: ", len(new))
+                print("Special functions info too long, skip. length: ", len(new))
         if args.use_plan and example['plan'] is not None:
             new = self.plan_info.format(example['plan'])
             if check_length(prompt_components, new):
