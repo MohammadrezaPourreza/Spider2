@@ -39,6 +39,8 @@ if __name__ == '__main__':
     parser.add_argument("--n", type=int, default=5, help="Size of self-consistent set")  # 得到5个sql
     parser.add_argument("--db_dir", type=str, default=None)
 
+    parser.add_argument('--max_tokens', type=int, default=200)
+
     parser.add_argument("--is_sql_debug", action="store_true", default=False)
     args = parser.parse_args()
 
@@ -85,7 +87,7 @@ if __name__ == '__main__':
         if i >= args.end_index:
             break
         try:
-            res = ask_llm(args.model, batch["prompt"], args.temperature, args.n)
+            res = ask_llm(args.model, batch["prompt"], args.temperature, args.n, args.max_tokens)
         except openai.error.InvalidRequestError:
             print(f"The {i}-th question has too much tokens! Return \"SELECT\" instead")
             res = {"response": ["SELECT"] * len(batch)}

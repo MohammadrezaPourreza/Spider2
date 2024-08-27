@@ -47,3 +47,44 @@ bash run.sh
 this script automatically conducts all procedures: 1) converting spider2-SQL data into a format compatible with CodeS, 2) executing CodeS, 3) evaluation. You can find the output SQL in `Spider2-SQL/CodeS/postprocessed_data`.
 
 
+
+# Evaluation
+
+## Experimental Setting
+
+We use the CodeS-7b pretrained on the merged dataset provided by original CodeS, and use schema item classifier pretrained on BIRD. Similar to the evaluation of [DailSQL](https://github.com/xlang-ai/spider2/tree/main/spider2-baselines/DailSQL), we select two approaches, with their performance as:
+
+| Method                     | EX   |
+| -------------------------- | ---- |
+| CodeS-7b   | 1.34% (2/149) |
+| CodeS-7b (w/ Func & w/ Plan) | 2.01% (3/149) |
+
+## Prompts
+
+Take `bq076` as example, prompt of vanilla CodeS is as:
+```
+database schema :
+table crime , columns = [ crime.date ( TIMESTAMP | values : 2023-12-02 20:00:00+00:00 ) , crime.iucr ( STRING | values : 0281 ) , crime.primary_type ( STRING | values : CRIMINAL SEXUAL ASSAULT ) , crime.year ( INT64 | values : 2023 ) , crime.case_number ( STRING | values : JH130429 ) , crime.unique_key ( INT64 | values : 13350090 ) , crime.block ( STRING | values : 0000X E WACKER PL ) , crime.description ( STRING | values : NON-AGGRAVATED ) , crime.domestic ( BOOL | values : False ) , crime.ward ( INT64 | values : 42 ) ]
+foreign keys : None
+matched contents : None
+Which month generally has the greatest number of motor vehicle thefts in 2016?
+```
+
+The additional prompt of `CodeS+Func+Plan` is as:
+```
+database schema :
+table crime , columns = [ crime.date ( TIMESTAMP | values : 2023-12-02 20:00:00+00:00 ) , crime.iucr ( STRING | values : 0281 ) , crime.primary_type ( STRING | values : CRIMINAL SEXUAL ASSAULT ) , crime.year ( INT64 | values : 2023 ) , crime.case_number ( STRING | values : JH130429 ) , crime.unique_key ( INT64 | values : 13350090 ) , crime.block ( STRING | values : 0000X E WACKER PL ) , crime.description ( STRING | values : NON-AGGRAVATED ) , crime.domestic ( BOOL | values : False ) , crime.ward ( INT64 | values : 42 ) ]
+foreign keys : None
+matched contents : None
+
+potentially useful special functions with their usage:date-functions/DATE: Constructs a ` DATE ` value.
+date-functions/EXTRACT: Extracts part of a date from a ` DATE ` value.
+datetime-functions/EXTRACT: Extracts part of a date and time from a ` DATETIME ` value.
+interval-functions/EXTRACT: Extracts part of an ` INTERVAL ` value.
+numbering-functions/RANK: Gets the rank (1-based) of each row within a window.
+time-functions/EXTRACT: Extracts part of a ` TIME ` value.
+timestamp-functions/EXTRACT: Extracts part of a ` TIMESTAMP ` value.
+a plan that is useful for guiding the generation of components of a complete SQL query:Which month generally has the greatest number of motor vehicle thefts?
+The following query summarizes the number of MOTOR VEHICLE THEFT incidents for each year and month, and ranks the month’s total from 1 to 12. Then, the outer SELECT clause limits the final result set to the first overall ranking for each year. According to the data, in 3 of the past 10 years, December had the highest number of car thefts
+Which month generally has the greatest number of motor vehicle thefts in 2016?
+```

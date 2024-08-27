@@ -16,12 +16,12 @@ def init_chatgpt(OPENAI_API_KEY, OPENAI_GROUP_ID, model):
     openai.organization = OPENAI_GROUP_ID
 
 
-def ask_completion(model, batch, temperature):
+def ask_completion(model, batch, temperature, max_tokens):
     response = openai.Completion.create(
         model=model,
         prompt=batch,
         temperature=temperature,
-        max_tokens=200,
+        max_tokens=max_tokens,
         top_p=1,
         frequency_penalty=0,
         presence_penalty=0,
@@ -34,12 +34,13 @@ def ask_completion(model, batch, temperature):
     )
 
 
-def ask_chat(model, messages: list, temperature, n):
+def ask_chat(model, messages: list, temperature, n, max_tokens):
+    print('>>>max_tokens:', max_tokens)
     response = openai.ChatCompletion.create(
         model=model,
         messages=messages,
         temperature=temperature,
-        max_tokens=200,
+        max_tokens=max_tokens,
         n=n
     )
     response_clean = [choice["message"]["content"] for choice in response["choices"]]
@@ -51,7 +52,7 @@ def ask_chat(model, messages: list, temperature, n):
     )
 
 
-def ask_llm(model: str, batch: list, temperature: float, n:int):
+def ask_llm(model: str, batch: list, temperature: float, n:int, max_tokens):
     n_repeat = 0
     while True:
 
@@ -64,12 +65,12 @@ def ask_llm(model: str, batch: list, temperature: float, n:int):
             if model in LLM.TASK_COMPLETIONS:
                 # TODO: self-consistency in this mode
                 assert n == 1
-                response = ask_completion(model, batch, temperature)
+                response = ask_completion(model, batch, temperature, max_tokens)
             elif model in LLM.TASK_CHAT:
                 # batch size must be 1
                 assert len(batch) == 1, "batch must be 1 in this mode"
                 messages = [{"role": "user", "content": batch[0]}]
-                response = ask_chat(model, messages, temperature, n)
+                response = ask_chat(model, messages, temperature, n, max_tokens)
                 response['response'] = [response['response']]
             break
         except openai.error.RateLimitError as e:

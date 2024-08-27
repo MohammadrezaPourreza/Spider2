@@ -37,7 +37,14 @@ For a detailed guideline of running Dail-SQL and evaluation results, please refe
 
 ### CodeS
 
-For a detailed guideline of running CodeS, please refer to [CodeS](https://github.com/xlang-ai/spider2/tree/main/spider2-baselines/CodeS).
+We evaluate two approaches with CodeS-7b:
+
+| Method                     | EX   |
+| -------------------------- | ---- |
+| CodeS-7b   | 1.34% (2/149) |
+| CodeS-7b (w/ Func & w/ Plan) | 2.01% (3/149) |
+
+For a detailed guideline of running CodeS and evaluation results, please refer to [CodeS](https://github.com/xlang-ai/spider2/tree/main/spider2-baselines/CodeS).
 
 
 ## Spider2-World Baselines

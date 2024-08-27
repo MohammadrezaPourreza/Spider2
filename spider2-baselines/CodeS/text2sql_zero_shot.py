@@ -1,4 +1,4 @@
-import debugpy; debugpy.connect(('127.0.0.1', 5696))
+# import debugpy; debugpy.connect(('127.0.0.1', 5696))
 import argparse
 import os
 import torch
@@ -56,6 +56,10 @@ if __name__ == "__main__":
 
     parser.add_argument('--dev', default='spider2_dev', type=str, help='the name of dev file')
 
+    parser.add_argument("--use_external_knowledge", action="store_false", default=True)
+    parser.add_argument("--use_special_function", action="store_true", default=False)
+    parser.add_argument("--use_plan", action="store_true", default=False)
+
     args = parser.parse_args()
 
     print(args)
@@ -71,7 +75,8 @@ if __name__ == "__main__":
         "eval",
         args.table_num,
         args.column_num,
-        args.sic_path
+        args.sic_path,
+        args
     )  # 这里，完成input text的token化
 
     # TODO: current, we only support batch size = 1
