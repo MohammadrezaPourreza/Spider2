@@ -118,7 +118,16 @@ class BasicDataset(object):
         db_id_to_table_json = dict()
         for table_json in self.get_table_json():
             db_id_to_table_json[table_json["db_id"]] = table_json
-        schemas = [db_id_to_table_json[d["db_id"]] for d in tests]
+
+        # 针对multi-db的修改 TODO NEXT 需要check
+        schemas = []
+        for d in tests:
+            if isinstance(d["db_id"], str):
+                schemas.append(db_id_to_table_json[d["db_id"]])
+            elif isinstance(d["db_id"], list):
+                schemas.extend([db_id_to_table_json[db_id] for db_id in d["db_id"]])
+            else:
+                raise ValueError(f"db_id type error: {d['db_id']}")
         if self.pre_test_result:
             with open(self.pre_test_result, 'r') as f:
                 lines = f.readlines()
@@ -203,7 +212,12 @@ class BasicDataset(object):
                 datas[id]["question_for_copying"] = linking_infos[id]["question_for_copying"]
                 datas[id]["column_to_table"] = linking_infos[id]["column_to_table"]
                 db_id = datas[id]["db_id"]
-                datas[id]["table_names_original"] = db_id_to_table_json[db_id]["table_names_original"]
+                if isinstance(db_id, str):
+                    datas[id]["table_names_original"] = db_id_to_table_json[db_id]["table_names_original"]
+                elif isinstance(db_id, list):
+                    datas[id]["table_names_original"] = []
+                    for db_id_ in db_id:
+                        datas[id]["table_names_original"].extend(db_id_to_table_json[db_id_]["table_names_original"])
             question_patterns = get_question_pattern_with_schema_linking(datas)
             for id in range(len(datas)):
                 datas[id]["question_pattern"] = question_patterns[id]
@@ -238,12 +252,17 @@ class Spider2CForDailSQL_Dataset(BasicDataset):
         return os.path.join(self.path_db, f"{db_id}.db")
 
     def get_tables(self, db_id):
-        if db_id in self.databases:
-            return self.databases[db_id]
-        else:
-            # print('第1)处，执行了我修改后的逻辑，根据tables.json得到databases')
-            tables_json = json.load(open(osp.join(proj_dir, self.table_json), 'r', encoding='utf-8'))
-            tables = get_tables_from_tables_json(db_id, tables_json)  
-            self.databases[db_id] = tables
-            return tables
+        tables_json = json.load(open(osp.join(proj_dir, self.table_json), 'r', encoding='utf-8'))
+        ret = []
+        if isinstance(db_id, str):
+            dbs = [db_id]
+        elif isinstance(db_id, list):
+            dbs = db_id
+        for db in dbs:
+            if db not in self.databases:
+                # print('第1)处，执行了我修改后的逻辑，根据tables.json得到databases')
+                tables = get_tables_from_tables_json(db, tables_json)  
+                self.databases[db] = tables
+            ret.extend(self.databases[db])
+        return ret
 

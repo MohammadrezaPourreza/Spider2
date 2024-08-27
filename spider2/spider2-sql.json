@@ -1004,7 +1004,7 @@
         "instance_id": "bq250",
         "db": "bigquery-public-data.geo_openstreetmap\nbigquery-public-data.worldpop",
         "question": "What is the total population living on the geography grid which is the farthest from any hospital in Singapore, based on the most recent population data before 2023? Note that geographic grids and distances are calculated based on geospatial data and GIS related functions.",
-        "external_knowledge": "https://github.com/xlang-ai/Spider2-C/blob/main/Spider2-SQL/external_documents/OpenStreetMap_data_in_layered_GIS_format.md",
+        "external_knowledge": "OpenStreetMap_data_in_layered_GIS_format.md",
         "plan": "1. Simply define a single value 'Singapore' as the country of interest.\n2. Find the most recent date when the population data was last updated for Singapore.\n3. Calculate the total population of Singapore and create a bounding box that encompasses the entire country.\n4. Select the geometries of hospitals and doctors that are within the bounding box of Singapore.\n5. Calculate the minimum distance between each populated grid cell and the nearest hospital or doctor.\n6. Aggregate the total population of all grid cells and return the total population that lives farthest away from hospitals and doctors in Singapore. \n",
         "special_function": [
             "geography-functions/ST_CENTROID_AGG",
@@ -1499,7 +1499,7 @@
         "instance_id": "bq270",
         "db": "bigquery-public-data.google_analytics_sample",
         "question": "What were the monthly add-to-cart and purchase conversion rates, calculated as a percentage of pageviews, from January to March 2017?",
-        "external_knowledge": "https://github.com/xlang-ai/Spider2-C/blob/main/Spider2-SQL/external_documents/ga360_hits.eCommerceAction.action_type.md",
+        "external_knowledge": "ga360_hits.eCommerceAction.action_type.md",
         "plan": "1. Filter and count the number of product views with eCommerce action type '2' between January 1, 2017, and March 31, 2017.\n2. Filter and count the number of add-to-cart actions in the specified date range.\n3. Filter and count the number of successful purchase actions and non-null product revenue in the designated period.\n4. Calculate the add-to-cart rate through dividing the number of add-to-cart actions by the number of product views. \n5. Analogously, compute the purchase rate.\n6. Sort the final output by month and return.\n",
         "special_function": [
             "date-functions/DATE",

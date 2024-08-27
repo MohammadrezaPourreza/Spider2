@@ -1,7 +1,5 @@
 #!/bin/bash
 
-export OPENAI_API_KEY=sk-None-jssDNZiOLkRVL6xIWjxdT3BlbkFJp1rYPxbQJDhFh2coxQ6e
-
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 DEV=spider2-sql

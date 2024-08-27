@@ -58,7 +58,7 @@ spider2-baselines/CodeS/postprocessed_data/*
 # yuxiao's tmp code
 spider2-baselines/yyx_tmp/
 
-**/toy.json
+**/toy*.json
 **/yyx_run.sh
 **/0825*.json
 **/subset*.json

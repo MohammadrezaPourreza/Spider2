@@ -74,7 +74,7 @@ def column_description_length_histogram():
     plt.xlabel('Description Length')
     plt.ylabel('Frequency')
     plt.title('Distribution of Column Description Lengths')
-    plt.savefig(osp.join(proj_dir, 'description_length_histogram.png'))
+    # plt.savefig(osp.join(proj_dir, 'description_length_histogram.png'))
     # plt.show()
 
 
@@ -131,7 +131,7 @@ def db_stats_bar_chart(db_stats_list):
 
     plt.tight_layout()
     # plt.show()
-    plt.savefig(osp.join(proj_dir, 'db_statistic.png'))
+    # plt.savefig(osp.join(proj_dir, 'db_statistic.png'))
 
 
 
@@ -139,8 +139,14 @@ def walk_metadata(dev):
 
     with open(osp.join(proj_dir, f'../../spider2/{dev}.json'), 'r', encoding='utf-8') as file:
         dev_data = json.load(file)
-    db_ids = set([item['db'] for item in dev_data])  # all db_ids in dev.json
-
+        
+    db_ids = set()
+    for item in dev_data:
+        if '\n' in item['db']:  # multi GT db的情况
+            db_ids.update(item['db'].split('\n'))
+        else:  # single GT db的情况
+            db_ids.add(item['db'])
+  
     # 定义路径
     db_base_path = "../../spider2/databases/bigquery/metadata/"
     json_glob_path = "**/*.json"
@@ -153,7 +159,7 @@ def walk_metadata(dev):
         # 遍历项目中的所有数据库
         for db_path in glob.glob(os.path.join(project_path, "*"), recursive=False):
             db_name = os.path.basename(os.path.normpath(db_path)) 
-            if f"{project_name}.{db_name}" not in db_ids:  # TODO 测试正确性
+            if f"{project_name}.{db_name}" not in db_ids:
                 continue  # 仅保存在dev.json中的数据库
 
             table_count = 0
