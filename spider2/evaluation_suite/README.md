@@ -1,4 +1,4 @@
-# Spider2-SQL Evaluation Suite
+# Spider2 Evaluation Suite
 
 
 ## Folder Structure
