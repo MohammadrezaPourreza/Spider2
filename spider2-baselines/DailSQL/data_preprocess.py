@@ -18,9 +18,6 @@ proj_dir = osp.dirname(osp.abspath(__file__))
 
 
 def schema_linking_producer(test, train, table, db, dataset_dir, compute_cv_link=False, args=None):
-    '''
-    compute_cv_link=False, 对于cloud db无法拿到table的cell value，不执行
-    '''
 
     # load data
     test_data = json.load(open(os.path.join(dataset_dir, test)))
@@ -30,7 +27,7 @@ def schema_linking_producer(test, train, table, db, dataset_dir, compute_cv_link
     schemas, _ = load_tables([os.path.join(dataset_dir, table)])
 
     # Backup in-memory copies of all the DBs and create the live connections
-    '''  # 注释掉需要访问db文件的逻辑
+    ''' 
     for db_id, schema in tqdm(schemas.items(), desc="DB connections"):
         # sqlite_path = Path(dataset_dir) / db / db_id / f"{db_id}.sqlite"  
         sqlite_path = Path(db) / f"{db_id}.db"
@@ -63,7 +60,7 @@ def schema_linking_producer(test, train, table, db, dataset_dir, compute_cv_link
             if isinstance(db_id, str):
                 schema = schemas[db_id]  
             elif isinstance(db_id, list):
-                schema = schemas[db_id[0]]  # TODO 一个hack，因为在zero-shot情况下，schema linking实际上没有effect
+                schema = schemas[db_id[0]]  # hack, schema linking has not effect in zero-shot setting
                 print('warning: zero-shot schema linking')
             to_add, validation_info = linking_processor.validate_item(item, schema, section)
             if to_add:

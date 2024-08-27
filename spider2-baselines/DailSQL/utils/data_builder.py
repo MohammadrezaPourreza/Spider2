@@ -119,7 +119,6 @@ class BasicDataset(object):
         for table_json in self.get_table_json():
             db_id_to_table_json[table_json["db_id"]] = table_json
 
-        # 针对multi-db的修改 TODO NEXT 需要check
         schemas = []
         for d in tests:
             if isinstance(d["db_id"], str):
@@ -260,7 +259,6 @@ class Spider2CForDailSQL_Dataset(BasicDataset):
             dbs = db_id
         for db in dbs:
             if db not in self.databases:
-                # print('第1)处，执行了我修改后的逻辑，根据tables.json得到databases')
                 tables = get_tables_from_tables_json(db, tables_json)  
                 self.databases[db] = tables
             ret.extend(self.databases[db])

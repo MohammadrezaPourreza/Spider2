@@ -52,7 +52,7 @@ class GloVe(Embedder):
         if lemmatize:
             self.corenlp_annotators.append('lemma')
 
-        self.nlp = spacy.load("en_core_web_sm")  # 使用spaCy加载模型
+        self.nlp = spacy.load("en_core_web_sm")  
 
     @functools.lru_cache(maxsize=1024)
     def tokenize_by_coreNLP(self, text):
@@ -65,7 +65,7 @@ class GloVe(Embedder):
     @functools.lru_cache(maxsize=1024)
     def tokenize_for_copying_by_coreNLP(self, text):
         ann = corenlp.annotate(text, self.corenlp_annotators)
-        text_for_copying = [tok.originalText.lower() for sent in ann.sentence for tok in sent.token]  # TDOO originalText和word的区别？
+        text_for_copying = [tok.originalText.lower() for sent in ann.sentence for tok in sent.token]  
         if self.lemmatize:
             text = [tok.lemma.lower() for sent in ann.sentence for tok in sent.token]
         else:

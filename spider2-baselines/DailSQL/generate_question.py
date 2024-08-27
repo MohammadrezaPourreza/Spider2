@@ -83,9 +83,9 @@ if __name__ == '__main__':
     data = Spider2CForDailSQL_Dataset(proj_dir, args)
 
     # Read all tables into a dict
-    databases = data.get_databases()  # 为了得到data类的self.databases
+    databases = data.get_databases()  # get self.databases of the instance "data"
 
-    # select the prompt  # 从这里进去会处理8659条数据
+    # select the prompt 
     prompt = prompt_factory(args.prompt_repr, args.k_shot, args.example_type, args.selector_type)(data=data, tokenizer=args.tokenizer)
 
     # format all questions
@@ -105,7 +105,7 @@ if __name__ == '__main__':
                                         cross_domain=cross_domain, 
                                         args=args)
         
-        question_format['instance_id'] = question_json['instance_id']  # yyx添加，用于评测
+        question_format['instance_id'] = question_json['instance_id']  
         questions.append(question_format)
         token_cnt += question_format["prompt_tokens"]
 

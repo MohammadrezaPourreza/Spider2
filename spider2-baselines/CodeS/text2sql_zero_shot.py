@@ -77,7 +77,7 @@ if __name__ == "__main__":
         args.column_num,
         args.sic_path,
         args
-    )  # 这里，完成input text的token化
+    ) 
 
     # TODO: current, we only support batch size = 1
     dataloader = DataLoader(eval_set, batch_size = 1)
@@ -89,7 +89,6 @@ if __name__ == "__main__":
     for raw_data, batch_data in tqdm(zip(raw_dataset, dataloader)):
         for key in batch_data:
             batch_data[key] = batch_data[key].to(model.device)
-        # len(generated_sqls)是4，应该是个超参数
         generated_sqls = text2sql_func(model, batch_data, tokenizer, max_new_tokens)
         generated_sqls = [post_process(generated_sql, raw_data["schema"]["schema_items"]) for generated_sql in generated_sqls]
 
@@ -108,7 +107,6 @@ if __name__ == "__main__":
                 final_generated_sql = "SQL placeholder"
         '''
 
-        # for spider2SQL: 不再检查 SQL 的可执行性，直接选取生成的第一个 SQL 作为最终 SQL
         final_generated_sql = generated_sqls[0] if generated_sqls[0].strip() != "" else "SQL placeholder"
     
 
@@ -123,14 +121,12 @@ if __name__ == "__main__":
         )
     )
 
-    # 保存pred sql到外存并执行evaluation的逻辑
     submit_folder = os.path.join("postprocessed_data", f"{args.dev}/{args.dev}-pred-sqls")
     os.makedirs(submit_folder, exist_ok=True)
 
     for idx, (data, predicted_sql) in enumerate(zip(raw_dataset, predicted_sqls)):
         instance_id = data.get("instance_id", f"instance_{idx}")
         sql_file_path = os.path.join(submit_folder, f"{instance_id}.sql")
-        # 保存生成的SQL到独立的文件中
         with open(sql_file_path, "w", encoding='utf-8') as submit_file:
             submit_file.write(predicted_sql)
 

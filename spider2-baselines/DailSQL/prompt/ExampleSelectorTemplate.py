@@ -6,7 +6,7 @@ from utils.linking_utils.application import mask_question_with_schema_linking
 
 
 class BasicExampleSelector(object):
-    def __init__(self, data, *args, **kwargs):  # TODO 0804在这里卡住
+    def __init__(self, data, *args, **kwargs): 
         self.data = data
         self.train_json = self.data.get_train_json()
         self.db_ids = [d["db_id"] for d in self.train_json]
@@ -203,7 +203,7 @@ class EuclideanDistanceSkeletonSimilarThresholdSelector(BasicExampleSelector):
 
 class EuclideanDistanceQuestionMaskSelector(BasicExampleSelector):
     def __init__(self, data, *args, **kwargs):
-        super().__init__(data)  # TODO 0804在这个函数里面卡住
+        super().__init__(data)  
 
         self.SELECT_MODEL = "all-mpnet-base-v2"
         self.mask_token = "<mask>"  # the "<mask>" is the mask token of all-mpnet-base-v2
@@ -215,7 +215,7 @@ class EuclideanDistanceQuestionMaskSelector(BasicExampleSelector):
         self.train_embeddings = self.bert_model.encode(train_mask_questions)
 
     def get_examples(self, target, num_example, cross_domain=False):
-        target_mask_question = mask_question_with_schema_linking([target], mask_tag=self.mask_token, value_tag=self.value_token)  # TODO 这里读取data_preprocess.py中schema linking的结果
+        target_mask_question = mask_question_with_schema_linking([target], mask_tag=self.mask_token, value_tag=self.value_token) 
         target_embedding = self.bert_model.encode(target_mask_question)
 
         # find the most similar question in train dataset

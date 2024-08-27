@@ -207,7 +207,6 @@ class SpiderEncoderV2Preproc(abstract_preproc.AbstractPreproc):
 
 
         for section, texts in self.texts.items():
-            # texts[0] 就是preprocess_item()返回的结果
             with open(os.path.join(self.data_dir, section + '_schema-linking.jsonl'), 'w') as f:
                 for text in texts:
                     f.write(json.dumps(text) + '\n')

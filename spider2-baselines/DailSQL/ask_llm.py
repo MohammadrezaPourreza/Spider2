@@ -20,23 +20,21 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--question", type=str)
     parser.add_argument("--openai_api_key", type=str)
-    # parser.add_argument("--openai_group_id", type=str, default="org-ktBefi7n9aK7sZjwc2R9G1Wo")
     parser.add_argument("--openai_group_id", type=str, default=None)
     parser.add_argument("--model", type=str, choices=[LLM.TEXT_DAVINCI_003, 
                                                       LLM.GPT_35_TURBO,
                                                       LLM.GPT_35_TURBO_0613,
-                                                      # LLM.TONG_YI_QIAN_WEN,
                                                       LLM.GPT_35_TURBO_16K,
                                                       LLM.GPT_4, 
                                                       LLM.GPT_4o,
                                                       ],
                         default=LLM.GPT_35_TURBO)
     parser.add_argument("--start_index", type=int, default=0)
-    parser.add_argument("--end_index", type=int, default=1000000)  # 设置这个，以仅对前n个问题进行处理，节省token消耗
+    parser.add_argument("--end_index", type=int, default=1000000) 
     parser.add_argument("--temperature", type=float, default=0)
     parser.add_argument("--mini_index_path", type=str, default="")
     parser.add_argument("--batch_size", type=int, default=1)
-    parser.add_argument("--n", type=int, default=5, help="Size of self-consistent set")  # 得到5个sql
+    parser.add_argument("--n", type=int, default=5, help="Size of self-consistent set")  
     parser.add_argument("--db_dir", type=str, default=None)
 
     parser.add_argument('--max_tokens', type=int, default=200)
@@ -45,7 +43,6 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.is_sql_debug:
-        print('>>> 进入sql debug mode')
         QUESTION_FILE = "debug_questions.json"
     else:
         QUESTION_FILE = "questions.json"
@@ -94,7 +91,7 @@ if __name__ == '__main__':
 
         # parse result
         token_cnt += res["total_tokens"]
-        if args.n == 1:  # 不根据exec结果执行投票
+        if args.n == 1: 
             for j, sql in enumerate(res["response"]):
                 instance_id = batch["instance_id"][j]
                 sql = " ".join(sql.replace("\n", " ").split())

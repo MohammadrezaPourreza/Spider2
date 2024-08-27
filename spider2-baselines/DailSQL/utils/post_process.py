@@ -228,7 +228,7 @@ def get_sqls(results, select_number, db_dir):
         cluster_sql_list = []
         map_sql2denotation = {}
         for sql in p_sqls:
-            flag, denotation = get_exec_output(  # 这一步其实没必要做，只生成sql，exec交给后面evaluate来做
+            flag, denotation = get_exec_output(  
                 db_path,
                 sql,
             )
@@ -261,8 +261,7 @@ def get_sqls_without_exec(results, select_number, db_dir):
     db_ids = []
     all_p_sqls = []
     
-    # 收集数据库ID和每个item的SQL语句
-    for item in results:  # 实际上这个for循环仅执行一次
+    for item in results: 
         p_sqls = []
         db_ids.append(item['db_id'])
         for i, x in enumerate(item['p_sqls']):
@@ -275,9 +274,7 @@ def get_sqls_without_exec(results, select_number, db_dir):
     
     for i, db_id in enumerate(tqdm.tqdm(db_ids)):
         p_sqls = all_p_sqls[i]
-        # 这里将之前的执行和比较SQL删除
-        chosen_p_sqls.append(p_sqls[0])  # 只选择第一个SQL
-        
+        chosen_p_sqls.append(p_sqls[0]) 
     print("save chosen sqls and results...")
     
     return chosen_p_sqls

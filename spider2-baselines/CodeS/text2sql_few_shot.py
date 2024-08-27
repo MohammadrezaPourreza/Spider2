@@ -177,13 +177,13 @@ if __name__ == "__main__":
         demonstration_sample["schema_sequence"] = get_db_schema_sequence(demonstration_sample["schema"])
         demonstration_sample["content_sequence"] = get_matched_content_sequence(demonstration_sample["matched_contents"])
     for eval_sample in eval_set:
-        eval_sample["schema_sequence"] = get_db_schema_sequence(eval_sample["schema"])  # 这里就是得到主体prompt
+        eval_sample["schema_sequence"] = get_db_schema_sequence(eval_sample["schema"])  
         eval_sample["content_sequence"] = get_matched_content_sequence(eval_sample["matched_contents"])
 
     # compute similarities between questions in the evaluation set and the demonstration pool
     simsce_model = SimCSE("/data1/yyx/llms/sup-simcse-roberta-base")
-    question_similarities = simsce_model.similarity(eval_set_questions, demonstration_set_questions)  # 这步会执行长度为136的进度条
-    question_skeleton_similarities = simsce_model.similarity(eval_set_question_skeletons, demonstration_set_question_skeletons)  # 这步会执行长度为136的进度条
+    question_similarities = simsce_model.similarity(eval_set_questions, demonstration_set_questions) 
+    question_skeleton_similarities = simsce_model.similarity(eval_set_question_skeletons, demonstration_set_question_skeletons) 
     similarities = np.maximum(question_similarities, question_skeleton_similarities)
     
     del simsce_model
