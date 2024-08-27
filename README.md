@@ -45,10 +45,14 @@ For `Spider2-World`, we proposed an agent framework [`Spider-Agent`](https://git
 
 ## Spider2-World Leaderboard
 
-> We will test more LLMs and Agent Frameworks! 
-> We also warmly welcome you to evaluate your methods on Spider2.
+
+[Spider-Agent](https://github.com/xlang-ai/Spider2/tree/main/spider-agent) based on the Docker environment, which draws inspiration from the design of [Intercode](https://github.com/princeton-nlp/intercode) and is based on the `React` framework with specialized designs for database-related tasks.
 
 
 | Method                     | Score |
 | -------------------------- | ---- |
 | Spider-Agent + GPT-4o   | 9.25% |
+
+
+> We will test more LLMs and Agent Frameworks! 
+> We also warmly welcome you to evaluate your methods on Spider2.
