@@ -8,7 +8,11 @@ get_bigquery_schema.py
 
 spider-agent/logs/*
 spider-agent/output/*
+!spider-agent/logs/README.md
+
 spider2/evaluation_suite/*
+
+
 
 !spider2/evaluation_suite/README.md
 !spider2/evaluation_suite/gold/
