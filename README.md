@@ -26,6 +26,8 @@ For `Spider2`, we proposed baselines based on the widely used method:
 ## Spider2 Leaderboard
 
 
+
+
 | Method                  | Score   |    Score  (w/ Func & w/ Plan)     |
 | -------------------------- | ---- | -------------------------
 | DailSQL + GPT-4o | 6.04% (9/149) |   12.75% (19/149)        |
@@ -44,4 +46,5 @@ For `Spider2-World`, we proposed an agent framework [`Spider-Agent`](https://git
 
 | Method                     | Score |
 | -------------------------- | ---- |
-| Spider-Agent + GPT-4o   | 10.00% |
+| Spider-Agent + GPT-4o   | 9.25% |
+| Spider-Agent + GEMINI   | 5.37% |
