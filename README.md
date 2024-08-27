@@ -23,28 +23,16 @@ For `Spider2`, we proposed baselines based on the widely used method:
 - [`CodeS`](https://github.com/xlang-ai/spider2/tree/main/spider2-baselines/CodeS/README.md), the evaluation results will be avaiable soon.
 
 
-### Dail-SQL
-
-We evaluate two approaches, **Vanilla DailSQL** and **DailSQL+Func+Plan** with GPT-4o:
+#### Evaluation Results
   
 | Method                     | EX   |
 | -------------------------- | ---- |
-| vanilla DailSQL (GPT-4o)   | 6.04% (9/149) |
 | DailSQL+Func+Plan (GPT-4o) | 12.75% (19/149) |
-
-
-For a detailed guideline of running Dail-SQL and evaluation results, please refer to [Dail-SQL](https://github.com/xlang-ai/spider2/tree/main/spider2-baselines/DailSQL).
-
-### CodeS
-
-We evaluate two approaches with CodeS-7b:
-
-| Method                     | EX   |
-| -------------------------- | ---- |
-| CodeS-7b   | 1.34% (2/149) |
+| DailSQL (GPT-4o)   | 6.04% (9/149) |
 | CodeS-7b (w/ Func & w/ Plan) | 2.01% (3/149) |
+| CodeS-7b   | 1.34% (2/149) |
 
-For a detailed guideline of running CodeS and evaluation results, please refer to [CodeS](https://github.com/xlang-ai/spider2/tree/main/spider2-baselines/CodeS).
+
 
 
 ## Spider2-World Baselines
