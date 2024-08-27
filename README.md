@@ -25,8 +25,8 @@ For `Spider2`, we proposed baselines based on the widely used method:
 
 ## Spider2 Leaderboard
 
-- Spider2 leaderboard is ranked by the **Score**. 
-- The **Score (w/ Func & w/ Plan)** represents an oracle setting, utilizing reference plans and gold SQL functions for a set of analytical experiments.
+> - Spider2 leaderboard is ranked by the **Score**. 
+> - The **Score (w/ Func & w/ Plan)** represents an oracle setting, utilizing reference plans and gold SQL functions for a set of analytical experiments.
 
 
 
