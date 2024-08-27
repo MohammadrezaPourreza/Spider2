@@ -41,7 +41,7 @@ export GEMINI_API_KEY=your_genmini_api_key
 
 ```python
 python run.py --suffix <The name of this experiment>
-python run.py --model gpt-4o --suffix try1
+python run.py --model gpt-4o --suffix test1
 ```
 
 
@@ -54,7 +54,7 @@ Reorganize run results into a standard submission format, here we store the answ
 
 ```python
 python get_spider2c_submission_data.py --experiment_suffix <The name of this experiment> --results_folder_name <Standard Submission Folders>
-python get_spider2c_submission_data.py --experiment_suffix gpt-4o-v3 --results_folder_name ../spider2-world/evaluation_suite/gpt-4o-v3
+python get_spider2c_submission_data.py --experiment_suffix gpt-4o-test1 --results_folder_name ../spider2-world/evaluation_suite/gpt-4o-test1
 ```
 
 #### Run Evaluation Scripts

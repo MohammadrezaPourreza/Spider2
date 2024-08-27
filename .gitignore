@@ -11,6 +11,10 @@ spider-agent/output/*
 !spider-agent/logs/README.md
 !spider-agent/output/README.md
 
+spider-agent/bigquery_credential.json
+spider2/bigquery_credential.json
+spider2-world/bigquery_credential.json
+
 spider2/evaluation_suite/*
 
 
