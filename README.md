@@ -27,10 +27,10 @@ For `Spider2`, we proposed baselines based on the widely used method:
   
 | Method                     | EX   |
 | -------------------------- | ---- |
-| DailSQL+Func+Plan (GPT-4o) | 12.75% (19/149) |
-| DailSQL (GPT-4o)   | 6.04% (9/149) |
-| CodeS-7b (w/ Func & w/ Plan) | 2.01% (3/149) |
-| CodeS-7b   | 1.34% (2/149) |
+| DailSQL + GPT-4o (w/ oracle) | 12.75% (19/149) |
+| DailSQL + GPT-4o                     | 6.04% (9/149)  |
+| CodeS-7b  (w/ oracle)        | 2.01% (3/149) |
+| CodeS-7b                             | 1.34% (2/149) |
 
 
 
