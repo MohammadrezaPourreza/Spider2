@@ -30,14 +30,12 @@ def query_data(sql_query, is_save, save_path="result.csv"):
 
 if __name__ == "__main__":
 
-    # Complete the SQL query in the sql_query variable to interact with the database, SQL example related to this task is provided below
+    # Write your SQL query in the sql_query variable to interact with the database, example SQL query related to this task is provided below
     sql_query = """
-      SELECT
-        *
-    FROM
-        `bigquery-public-data.google_analytics_sample.ga_sessions_2017*`,
-    WHERE
-        _table_suffix BETWEEN '0601' AND '0731'
-    LIMIT 1
+SELECT 
+              table_name, ddl
+          FROM 
+              `bigquery-public-data.google_analytics_sample.INFORMATION_SCHEMA.TABLES`
+
     """
     query_data(sql_query, is_save=True, save_path="result.csv")

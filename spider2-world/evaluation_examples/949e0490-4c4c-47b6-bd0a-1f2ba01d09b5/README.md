@@ -1,1 +1,1 @@
-1. Please query `patents-public-data.patents.publications` database to solve this problem.
+1. Please query `patents-public-data.patents.publications` table to solve this problem.

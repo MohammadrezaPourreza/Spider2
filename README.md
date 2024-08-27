@@ -1,4 +1,4 @@
-# Spider2: Can Language Models Resolve Real-World SQL Generation Tasks?
+# Spider2: Can Language Models Resolve Real-World Enterprise Text-to-SQL Workflows?
 
 ![Local Image](./assets/Spider2.png)
 
@@ -59,4 +59,5 @@ For `Spider2-World`, we proposed an agent framework [`Spider-Agent`](https://git
 | -------------------------- | ---- |
 | Spider-Agent (GPT-4o)   | 10.00% |
 | CodeAct-Agent (GPT-4o) | 8.00% |  
-| Spider-Agent (Gemini) | 8.00% |
+| Spider-Agent (Gemini) | 4.00% |
+| reflexion (Gemini) | 2.00% |
