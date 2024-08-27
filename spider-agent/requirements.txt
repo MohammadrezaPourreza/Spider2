@@ -4,7 +4,7 @@ transformers
 openai
 gymnasium
 rich
-openai
+openai==1.31.0
 langchain
 chromadb
 tiktoken
