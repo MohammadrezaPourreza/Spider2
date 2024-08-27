@@ -72,11 +72,6 @@ Which month generally has the greatest number of motor vehicle thefts in 2016?
 
 The additional prompt of `CodeS+Func+Plan` is as:
 ```
-database schema :
-table crime , columns = [ crime.date ( TIMESTAMP | values : 2023-12-02 20:00:00+00:00 ) , crime.iucr ( STRING | values : 0281 ) , crime.primary_type ( STRING | values : CRIMINAL SEXUAL ASSAULT ) , crime.year ( INT64 | values : 2023 ) , crime.case_number ( STRING | values : JH130429 ) , crime.unique_key ( INT64 | values : 13350090 ) , crime.block ( STRING | values : 0000X E WACKER PL ) , crime.description ( STRING | values : NON-AGGRAVATED ) , crime.domestic ( BOOL | values : False ) , crime.ward ( INT64 | values : 42 ) ]
-foreign keys : None
-matched contents : None
-
 potentially useful special functions with their usage:date-functions/DATE: Constructs a ` DATE ` value.
 date-functions/EXTRACT: Extracts part of a date from a ` DATE ` value.
 datetime-functions/EXTRACT: Extracts part of a date and time from a ` DATETIME ` value.
