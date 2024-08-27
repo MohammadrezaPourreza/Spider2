@@ -45,7 +45,8 @@ For `Spider2-World`, we proposed an agent framework [`Spider-Agent`](https://git
 
 ## Spider2-World Leaderboard
 
-> We will test LLMs and Agent Frameworks.
+> We will test more LLMs and Agent Frameworks! 
+> We also warmly welcome you to evaluate your methods on Spider2.
 
 
 | Method                     | Score |
