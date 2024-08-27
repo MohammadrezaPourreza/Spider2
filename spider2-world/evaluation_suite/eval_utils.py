@@ -84,7 +84,8 @@ def number_match(pred, gold, percentage=False, precision=4, conj="or"):
 
     pred_numbers = extract_numbers(pred)
 
-    if (isinstance(gold,(str,float)) or len(gold)==1) and len(pred_numbers)!=1:
+
+    if (isinstance(gold,(str,float)) or (isinstance(gold, list)  and len(gold)==1 )) and len(pred_numbers)!=1:
         return 0
     converted_pred_numbers = [convert_to_float(num) for num in pred_numbers]
     gold = [convert_to_float(g) for g in (gold if isinstance(gold, list) else [gold])]

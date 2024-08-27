@@ -56,13 +56,16 @@ def run_evaluation(result_dir, gold_dir):
         
         score = 0
         if data['answer_type'] == 'answer':
+            
             for eval_metadata in eval_metadatas:
                 if 'temporal' in eval_metadata and eval_metadata['temporal']: 
                     eval_metadata['parameters'] = execute_process(eval_metadata['func'], eval_metadata['parameters'], os.path.join(gold_dir, data['instance_id']))
+
                 if eval_metadata['func'] == 'string_match':
                     score = string_match(data['answer_or_path'], **eval_metadata['parameters'])
                 elif eval_metadata['func'] == 'number_match':
                     score = number_match(data['answer_or_path'], **eval_metadata['parameters'])
+                        
         elif data['answer_type'] == 'file':
             # postprocess for answers of SQL files
             if data['answer_or_path'].endswith('.sql'):
@@ -73,6 +76,7 @@ def run_evaluation(result_dir, gold_dir):
             for eval_metadata in eval_metadatas:
                 if 'temporal' in eval_metadata and eval_metadata['temporal']: 
                     eval_metadata['parameters'] = execute_process(eval_metadata['func'], eval_metadata['parameters'], os.path.join(gold_dir, data['instance_id']))
+
                 if eval_metadata['func'] == 'table_match':
                     if isinstance(eval_metadata['parameters']['gold'], str):
                         eval_metadata['parameters']['gold'] = os.path.join(gold_dir, data['instance_id'], eval_metadata['parameters']['gold'])
@@ -81,7 +85,9 @@ def run_evaluation(result_dir, gold_dir):
                     score = table_match(os.path.join(result_dir,data['instance_id'], data['answer_or_path']), **eval_metadata['parameters'])
                 elif eval_metadata['func'] == 'duckdb_match':
                     eval_metadata['parameters']['gold'] = os.path.join(gold_dir, data['instance_id'], eval_metadata['parameters']['gold'])
-                    score = duckdb_match(os.path.join(result_dir,data['instance_id'], data['answer_or_path']), **eval_metadata['parameters'])          
+                    score = duckdb_match(os.path.join(result_dir,data['instance_id'], data['answer_or_path']), **eval_metadata['parameters'])    
+                    
+                              
                         
         output_dict['score'] = score
         output_list.append(output_dict)
