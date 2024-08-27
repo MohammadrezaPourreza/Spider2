@@ -25,12 +25,14 @@ For `Spider2`, we proposed baselines based on the widely used method:
 
 ## Spider2 Leaderboard
 
+- Spider2 leaderboard is ranked by the **Score**. 
+- The **Score (w/ Func & w/ Plan)** represents an oracle setting, utilizing reference plans and gold SQL functions for a set of analytical experiments.
 
 
 
 | Method                  | Score   |    Score  (w/ Func & w/ Plan)     |
 | -------------------------- | ---- | -------------------------
-| DailSQL + GPT-4o | 6.04% (9/149) |   12.75% (19/149)        |
+| DailSQL + GPT-4o |  **6.04% (9/149)** |   12.75% (19/149)        |
 | CodeS-7b  (w/ Func & w/ Plan)        | 1.34% (2/149) |   2.01% (3/149)            |
 
 
@@ -42,6 +44,8 @@ For `Spider2-World`, we proposed an agent framework [`Spider-Agent`](https://git
 
 
 ## Spider2-World Leaderboard
+
+> We will test LLMs and Agent Frameworks.
 
 
 | Method                     | Score |
