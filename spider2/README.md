@@ -63,7 +63,7 @@ Each file in `spider2-sql.json` contains the following fields:
 - `plan`: detailed instruction / reference plan for solving this problem
 - `special_functions`: Special functions that may be needed to answer this question.
 
-**Note that** `plan` and `special_functions` are **not** standard inputs of Spider2 challenge; they are used for ablation experiments and analysis.
+<span style="color:red;">**Note that** `plan` and `special_functions` are **not** standard inputs of the Spider2 challenge; they are used for ablation experiments and analysis.</span>
 
 The [`databases`](https://github.com/xlang-ai/spider2/tree/main/spider2/databases) and the content in [`external_information`](https://github.com/xlang-ai/spider2/tree/main/spider2/externel_information) are resources you can use when benchmarking methods.
 
