@@ -217,19 +217,35 @@ def get_sample_rows_for_database_from_tables_json(db_id, tables_json):
             markdown_string += f"table {key}:\n{markdown_table}\n\n"
         return markdown_string
 
+    if isinstance(db_id, str):
+        dbs = [db_id]
+    elif isinstance(db_id, list):
+        dbs = db_id
+    else:
+        raise ValueError(f"db_id should be str or list, not {type(db_id)}")
+
+    md_rows = ''
     for db in tables_json:
-        if db["db_id"] != db_id: continue
-        
+        if db["db_id"] not in db_id: continue
         sample_rows = db["sample_rows"]
-        md_rows = to_markdown(sample_rows)
+        md_rows += to_markdown(sample_rows)
 
-        return md_rows
-    raise ValueError(f"Database '{db_id}' not found")
+    if md_rows == '':
+        raise ValueError(f"Database '{db_id}' not found")
 
+    return md_rows
+    
 def get_sql_for_database_from_tables_json(db_id, tables_json, use_column_desc=False):
+    
+    if isinstance(tables_json, str):
+        GT_dbs = [db_id]
+    elif isinstance(tables_json, list):
+        GT_dbs = db_id
+    else:
+        raise ValueError(f"tables_json should be str or list, not {type(tables_json)}")
 
     for db in tables_json:
-        if db["db_id"] != db_id: continue
+        if db["db_id"] not in GT_dbs: continue
        
         table_names = db["table_names_original"]
         columns = db["column_names_original"]

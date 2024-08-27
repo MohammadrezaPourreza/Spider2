@@ -142,6 +142,8 @@ def preprocess_dev_json(args):
         item['matched_contents'] = {}
         item['source'] = 'spider2'
 
+    # TODO NEXT codes需要增加逻辑：仅支持gt db数量为1, 且在tables.json中的题目
+
 
     data = get_special_function_summary(data)
 

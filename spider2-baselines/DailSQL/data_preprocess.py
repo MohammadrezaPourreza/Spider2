@@ -60,7 +60,11 @@ def schema_linking_producer(test, train, table, db, dataset_dir, compute_cv_link
     for data, section in zip([test_data, train_data],['test', 'train']):
         for item in tqdm(data, desc=f"{section} section linking"):
             db_id = item["db_id"]
-            schema = schemas[db_id]
+            if isinstance(db_id, str):
+                schema = schemas[db_id]  
+            elif isinstance(db_id, list):
+                schema = schemas[db_id[0]]  # TODO 一个hack，因为在zero-shot情况下，schema linking实际上没有effect
+                print('warning: zero-shot schema linking')
             to_add, validation_info = linking_processor.validate_item(item, schema, section)
             if to_add:
                 linking_processor.add_item(item, schema, section, validation_info)

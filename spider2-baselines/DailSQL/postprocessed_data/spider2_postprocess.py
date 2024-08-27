@@ -67,11 +67,12 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--dev', default='spider2_dev', type=str, help='the name of dev file')
     parser.add_argument('--model', default='gpt-3.5-turbo', type=str)
+    parser.add_argument('--max_tokens', type=int, default=200)
     parser.add_argument("--is_sql_debug", action="store_true", default=False)
     args = parser.parse_args()
 
     DEBUG_PREFIX = "SQL_DEBUG_" if args.is_sql_debug else ""
-    root_path = osp.join(proj_dir, f'postprocessed_data/{args.dev}_CTX-200/{DEBUG_PREFIX}RESULTS_MODEL-{args.model}-SQL')
+    root_path = osp.join(proj_dir, f'postprocessed_data/{args.dev}_CTX-{args.max_tokens}/{DEBUG_PREFIX}RESULTS_MODEL-{args.model}-SQL')
     dev_json = osp.join(proj_dir, f'preprocessed_data/{args.dev}/{args.dev}_preprocessed.json')
     table_json = osp.join(proj_dir, f'preprocessed_data/{args.dev}/tables_preprocessed.json')
 
