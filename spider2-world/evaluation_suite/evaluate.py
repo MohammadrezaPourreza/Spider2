@@ -57,7 +57,8 @@ def run_evaluation(result_dir, gold_dir):
         score = 0
         if data['answer_type'] == 'answer':
             for eval_metadata in eval_metadatas:
-                if 'temporal' in eval_metadata: eval_metadata['parameters'] = execute_process(eval_metadata['func'], eval_metadata['parameters'], os.path.join(gold_dir, data['instance_id']))
+                if 'temporal' in eval_metadata and eval_metadata['temporal']: 
+                    eval_metadata['parameters'] = execute_process(eval_metadata['func'], eval_metadata['parameters'], os.path.join(gold_dir, data['instance_id']))
                 if eval_metadata['func'] == 'string_match':
                     score = string_match(data['answer_or_path'], **eval_metadata['parameters'])
                 elif eval_metadata['func'] == 'number_match':
@@ -70,7 +71,8 @@ def run_evaluation(result_dir, gold_dir):
                 data['answer_or_path'] = 'pred_result.csv'
 
             for eval_metadata in eval_metadatas:
-                if 'temporal' in eval_metadata: eval_metadata['parameters'] = execute_process(eval_metadata['func'], eval_metadata['parameters'], os.path.join(gold_dir, data['instance_id']))
+                if 'temporal' in eval_metadata and eval_metadata['temporal']: 
+                    eval_metadata['parameters'] = execute_process(eval_metadata['func'], eval_metadata['parameters'], os.path.join(gold_dir, data['instance_id']))
                 if eval_metadata['func'] == 'table_match':
                     if isinstance(eval_metadata['parameters']['gold'], str):
                         eval_metadata['parameters']['gold'] = os.path.join(gold_dir, data['instance_id'], eval_metadata['parameters']['gold'])
