@@ -44,13 +44,13 @@ Since we have only released the tiny version so far, a large amount of high-qual
 ## 🚀 Quickstart
 You don't need to download any data. The current version of the database is entirely in the cloud.
 
-If your method doesn't require dynamic interaction with the databases, you can make full use of the data in the [`databases`](https://github.com/xlang-ai/spider2/tree/main/spider2/databases) and the content in the [`externel_information`](https://github.com/xlang-ai/spider2/tree/main/spider2/externel_information).
+If your method doesn't require dynamic interaction with the databases, you can make full use of the data in the [`databases`](https://github.com/xlang-ai/Spider2/tree/main/spider2/databases) and the content in the [`externel_information`](https://github.com/xlang-ai/Spider2/tree/main/spider2/externel_information).
 
-If your method requires dynamic interaction with the database, in addition to these, you can use the scripts in the [`interface`](https://github.com/xlang-ai/spider2/tree/main/spider2/interface) to interact with the cloud database.
+If your method requires dynamic interaction with the database, in addition to these, you can use the scripts in the [`interface`](https://github.com/xlang-ai/Spider2/tree/main/spider2/interface) to interact with the cloud database.
 
-In addition, if you want to view the data in more detail, you need to register for a BigQuery account. Here is a [Bigquery Guideline](https://github.com/xlang-ai/spider2/assets/Bigquery_Guideline.md).
+In addition, if you want to view the data in more detail, you need to register for a BigQuery account. Here is a [Bigquery Guideline](https://github.com/xlang-ai/Spider2/assets/Bigquery_Guideline.md).
 
-If you want to quickly view the database schema in this repository rather than use Bigquery WebUI, you can check [databases/bigquery/metadata_markdown](https://github.com/xlang-ai/spider2/spider2/databases/bigquery/metadata_markdown).
+If you want to quickly view the database schema in this repository rather than use Bigquery WebUI, you can check [databases/bigquery/metadata_markdown](https://github.com/xlang-ai/Spider2/spider2/databases/bigquery/metadata_markdown).
 
 
 ## Data Content and Format
@@ -65,7 +65,7 @@ Each file in `spider2-sql.json` contains the following fields:
 
 > **Note that** `plan` and `special_functions` are **not** standard inputs of Spider2 challenge; they are used for ablation experiments and analysis.
 
-The [`databases`](https://github.com/xlang-ai/spider2/tree/main/spider2/databases) and the content in [`external_information`](https://github.com/xlang-ai/spider2/tree/main/spider2/externel_information) are resources you can use when benchmarking methods.
+The [`databases`](https://github.com/xlang-ai/spider2/tree/main/spider2/databases) and the content in [`external_information`](https://github.com/xlang-ai/Spider2/tree/main/spider2/externel_information) are resources you can use when benchmarking methods.
 
 
 
