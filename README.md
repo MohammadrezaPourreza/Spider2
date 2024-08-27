@@ -39,20 +39,17 @@ For `Spider2`, we proposed baselines based on the widely used method:
 
 
 ## Spider2-World Baselines
-For `Spider2-World`, we proposed an agent framework [`Spider-Agent`](https://github.com/xlang-ai/spider2/tree/main/spider-agent) baseline with interactive environment. 
+For `Spider2-World`, we proposed an agent framework [`Spider-Agent`](https://github.com/xlang-ai/spider2/tree/main/spider-agent) baseline with interactive environment, which draws inspiration from the design of [Intercode](https://github.com/princeton-nlp/intercode) and is based on the `React` framework with specialized designs for database-related tasks.
 
 
 
 ## Spider2-World Leaderboard
 
-
-[Spider-Agent](https://github.com/xlang-ai/Spider2/tree/main/spider-agent) based on the Docker environment, which draws inspiration from the design of [Intercode](https://github.com/princeton-nlp/intercode) and is based on the `React` framework with specialized designs for database-related tasks.
-
+> We will test more LLMs and Agent Frameworks! 
+>
+> We also warmly welcome you to evaluate your methods on Spider2.
 
 | Method                     | Score |
 | -------------------------- | ---- |
 | Spider-Agent + GPT-4o   | 9.25% |
 
-
-> We will test more LLMs and Agent Frameworks! 
-> We also warmly welcome you to evaluate your methods on Spider2.
