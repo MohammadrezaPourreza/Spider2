@@ -18,7 +18,7 @@ To meet the diverse research needs, we set up Spider2 with two settings, focusin
 
 ## Spider2 Baselines
 
-For `Spider2`, we proposed baselines based on widely used text2sql methods: [`Dail-SQL`](https://github.com/xlang-ai/spider2/blob/main/spider2-baselines/DailSQL/README.md) and [`CodeS`](https://github.com/xlang-ai/spider2/tree/main/spider2-baselines/CodeS/README.md), with evaluation results reported :test_tube:.
+For `Spider2`, we proposed baselines based on widely used text2sql methods: [`Dail-SQL`](https://github.com/xlang-ai/Spider2/blob/main/spider2-baselines/DailSQL/README.md) and [`CodeS`](https://github.com/xlang-ai/Spider2/tree/main/spider2-baselines/CodeS/README.md), with evaluation results reported :test_tube:.
 
 ## Spider2 Leaderboard
 
@@ -36,7 +36,7 @@ For `Spider2`, we proposed baselines based on widely used text2sql methods: [`Da
 
 
 ## Spider2-World Baselines
-For `Spider2-World`, we proposed an agent framework [`Spider-Agent`](https://github.com/xlang-ai/spider2/tree/main/spider-agent) baseline with interactive environment, which draws inspiration from the design of [Intercode](https://github.com/princeton-nlp/intercode) and is based on the `React` framework with specialized designs for database-related tasks.
+For `Spider2-World`, we proposed an agent framework [`Spider-Agent`](https://github.com/xlang-ai/Spider2/tree/main/spider-agent) baseline with interactive environment, which draws inspiration from the design of [Intercode](https://github.com/princeton-nlp/intercode) and is based on the `React` framework with specialized designs for database-related tasks.
 
 
 
