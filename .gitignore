@@ -33,11 +33,9 @@ spider2/evaluation_suite/*
 # Byte-compiled / optimized / DLL files
 **/__pycache__/
 **/launch.json
-logs/*
 
 *.DS_Store
 *.pyc
-**/logs/*
 
 
 
