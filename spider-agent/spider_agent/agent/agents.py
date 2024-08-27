@@ -63,7 +63,8 @@ class PromptAgent:
         self.codes = []
         self.history_messages = []
         self.instruction = self.env.task_config['instruction']
-        self.reference_plan = self.env.task_config['plan']
+        if 'plan' in self.env.task_config:
+            self.reference_plan = self.env.task_config['plan']
         action_space = "".join([action_cls.get_action_description() for action_cls in self._AVAILABLE_ACTION_CLASSES])
         if self.use_plan:
             self.system_message = SYS_PROMPT_WITH_PLAN_IN_OUR_CODE.format(work_dir=self.work_dir, action_space=action_space, task=self.instruction, max_steps=self.max_steps, plan=self.reference_plan)
