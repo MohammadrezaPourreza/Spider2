@@ -23,8 +23,8 @@ For `Spider2`, we proposed baselines based on the widely used method:
 - [`CodeS`](https://github.com/xlang-ai/spider2/tree/main/spider2-baselines/CodeS/README.md), the evaluation results will be avaiable soon.
 
 
-#### Evaluation Results
-  
+## Spider2 Leaderboard
+
 | Method                     | EX   |
 | -------------------------- | ---- |
 | DailSQL + GPT-4o (w/ Func & w/ Plan) | 12.75% (19/149) |
