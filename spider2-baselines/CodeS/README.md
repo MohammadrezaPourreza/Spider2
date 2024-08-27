@@ -1,7 +1,7 @@
 
 # Installation
 
-The following installation guidance is derived from [CodeS](https://github.com/RUCKBReasoning/codes).
+The following installation guidance is derived from [the original repository of CodeS](https://github.com/RUCKBReasoning/codes).
 
 #### Step1: Install Java
 ```
@@ -44,7 +44,7 @@ Then, simply run :laughing::
 ```
 bash run.sh
 ```
-this script automatically conducts all procedures: 1) converting spider2-SQL data into a format compatible with CodeS, 2) executing CodeS, 3) evaluation. You can find the output SQL in `Spider2-SQL/CodeS/postprocessed_data`.
+this script automatically conducts all procedures: 1) data preprocess, 2) executing CodeS, 3) evaluation. You can find the output SQL in `spider2-baselines/CodeS/postprocessed_data`.
 
 
 
@@ -52,16 +52,15 @@ this script automatically conducts all procedures: 1) converting spider2-SQL dat
 
 ## Experimental Setting
 
-We use the CodeS-7b pretrained on the merged dataset provided by original CodeS, and use schema item classifier pretrained on BIRD. Similar to the evaluation of [DailSQL](https://github.com/xlang-ai/spider2/tree/main/spider2-baselines/DailSQL), we select two approaches, with their performance as:
+We use the CodeS-7b pretrained on the merged dataset provided by the CodeS paper, and use schema item classifier pretrained on BIRD. Similar to the evaluation setting of [DailSQL](https://github.com/xlang-ai/spider2/tree/main/spider2-baselines/DailSQL), the performance is shown as:
 
-| Method                     | EX   |
-| -------------------------- | ---- |
-| CodeS-7b   | 1.34% (2/149) |
-| CodeS-7b (w/ Func & w/ Plan) | 2.01% (3/149) |
+| Method                  | Score   |    Score  [w/ Func & w/ Plan]     |
+| -------------------------- | ---- | -------------------------
+| CodeS-7B      | 1.34% (2/149) |   2.01% (3/149)            |
 
 ## Prompts
 
-Take `bq076` as example, prompt of vanilla CodeS is as:
+Take `bq076` as example, prompt of CodeS is as:
 ```
 database schema :
 table crime , columns = [ crime.date ( TIMESTAMP | values : 2023-12-02 20:00:00+00:00 ) , crime.iucr ( STRING | values : 0281 ) , crime.primary_type ( STRING | values : CRIMINAL SEXUAL ASSAULT ) , crime.year ( INT64 | values : 2023 ) , crime.case_number ( STRING | values : JH130429 ) , crime.unique_key ( INT64 | values : 13350090 ) , crime.block ( STRING | values : 0000X E WACKER PL ) , crime.description ( STRING | values : NON-AGGRAVATED ) , crime.domestic ( BOOL | values : False ) , crime.ward ( INT64 | values : 42 ) ]
@@ -69,8 +68,7 @@ foreign keys : None
 matched contents : None
 Which month generally has the greatest number of motor vehicle thefts in 2016?
 ```
-
-The additional prompt of `CodeS+Func+Plan` is as:
+The additional prompt of setting [w/ Func & w/ Plan] is as:
 ```
 potentially useful special functions with their usage:date-functions/DATE: Constructs a ` DATE ` value.
 date-functions/EXTRACT: Extracts part of a date from a ` DATE ` value.

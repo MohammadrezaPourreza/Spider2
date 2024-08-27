@@ -1,6 +1,6 @@
 # Installation 
 
-The following installation guidance is derived from [Dail-SQL](https://github.com/BeachWang/DAIL-SQL).
+The following installation guidance is derived from [the original repository of Dail-SQL](https://github.com/BeachWang/DAIL-SQL).
 
 Set up the Python environment:
 ```
@@ -11,7 +11,7 @@ pip install -r requirements.txt
 python nltk_downloader.py
 ```
 
-In addition, download the model for spacy:
+Download the model for spacy:
 ```
 pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.5.0/en_core_web_sm-3.5.0-py3-none-any.whl
 ```
@@ -32,24 +32,25 @@ Finally, simply run :laughing::
 ```
 bash run.sh
 ```
-this script automatically conducts all procedures: 1) data preprocess, 2) executing Dail-SQL, 3) evaluation. You can find the predicted SQL in `Spider2-baselines/DailSQL/postprocessed_data`.
+this script automatically conducts all procedures: 1) data preprocess, 2) executing Dail-SQL, 3) evaluation. You can find the predicted SQL in `spider2-baselines/DailSQL/postprocessed_data`.
 
 
 # Evaluation
 
 ## Experimental Setting
 
-We evaluate the following approaches:
-- `Vanilla DailSQL`: This method utilizes the Code Representation (CR) prompt from the original DailSQL paper. To accommodate the complexity of the Spider2 dataset, we enhance the prompt by **incorporating column descriptions, sampled rows, and external knowledge**.
-- `DailSQL+Func+Plan`: Building on Vanilla DailSQL, this approach augments the prompt with descriptions of 1) **potentially relevant SQL functions** and 2) **reference plan** that assists in generating the components of a complete SQL query.
+- `DailSQL` utilizes the Code Representation (CR) prompt from the original DailSQL paper. To accommodate the complexity of the Spider2 dataset, we enhance the prompt by **incorporating column descriptions, sampled rows, and external knowledge**.
+- The Score [w/ Func & w/ Plan] represents an oracle setting, utilizing reference plans and gold SQL functions for a set of analytical experiments.
+- Given the large number of tables and columns in the Spider2 dataset, we leverage **GPT-4o** with a 128k context window to prevent prompt size limitations.
+
+The performance is shown as:
+
 <!-- - `DailSQL+Func+Plan+Debug`: Further add a SQL Debug module, which refines erroneous SQL queries according to error feedback information. -->
   
-Given the large number of tables and columns in the Spider2 dataset, we leverage **GPT-4o** with a 128k context window to prevent prompt size limitations. The performance of the two methods is shown as:
 
-| Method                     | EX   |
-| -------------------------- | ---- |
-| vanilla DailSQL (GPT-4o)   | 6.04% (9/149) |
-| DailSQL+Func+Plan (GPT-4o) | 12.75% (19/149) |
+| Method                     | Score   | Score [w/ Func & w/ Plan] |
+| -------------------------- | ---- | --- |
+| DailSQL + GPT-4o   | 6.04% (9/149) | 12.75% (19/149) |
 <!-- | DailSQL+Func+Plan+Debug (GPT-4o) | 9.73$ | -->
 
 ## Prompts
@@ -92,7 +93,7 @@ table crime:
 /* Answer the following without any explanation and don't use ```sql```: Which month generally has the greatest number of motor vehicle thefts in 2016? */
 SELECT 
 ```
-The additional prompt of `DailSQL+Func+Plan` is as:
+The additional prompt of setting [w/ Func & w/ Plan] is as:
 ```
 ...
 
@@ -112,19 +113,19 @@ The following query summarizes the number of MOTOR VEHICLE THEFT incidents for e
 ...
 ```
 
-The additional prompt of SQL debug module is as:
+<!-- The additional prompt of `+debug` is as:
 ```
 /* Wrong Query */
 SELECT COUNT(DISTINCT last_7_days.user_pseudo_id) FROM ( SELECT user_pseudo_id FROM `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210101` UNION ALL SELECT user_pseudo_id FROM `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210102` UNION ALL SELECT user_pseudo_id FROM `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210103` UNION ALL SELECT user_pseudo_id FROM `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210104` UNION ALL SELECT user_pseudo_id FROM `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210105` UNION ALL SELECT user_pseudo_id FROM `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210106` UNION ALL SELECT user_pseudo_id FROM `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210107` ) last_7_days LEFT JOIN ( SELECT user_pseudo_id FROM `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210106` UNION ALL SELECT user_pseudo_id FROM `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210107` ) last_2
 
 /* Error Info */
 400 LEFT JOIN must have an immediately following ON or USING clause at [1:818]; reason: invalidQuery, location: query, message: LEFT JOIN must have an immediately following ON or USING clause at [1:818]
-```
+``` -->
 
 
 # Error Analysis
 
-For `DailSQL+Func+Plan`, all incorrect instances can be categorized as follows:
+For `DailSQL` in setting [w/ Func & w/ Plan], all incorrect instances can be categorized as follows:
 
 | Error Category                             | Description                               | Count  |
 | ------------------------------------ | ----------------------------------------- | ------ |

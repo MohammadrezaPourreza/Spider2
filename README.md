@@ -9,7 +9,7 @@
 
 ## ⚙️ Settings
 
-To meet the diverse research needs, we set up Spider2 with two settings, focusing on Advanced Text2SQL and general coding agent tasks, respectively. Most examples in these two **settings** overlap, differing mainly in the settings themselves.
+To meet the diverse research needs, we set up Spider2 with two settings, focusing on advanced Text2SQL and general coding agent tasks, respectively. Most examples in these two **settings** overlap, differing mainly in the settings themselves.
 
 [Spider2](https://github.com/xlang-ai/spider2/tree/main/spider2): **Traditional Text2SQL Setting**. Focusing on Text2SQL, with detailed database metadata.
 
@@ -18,10 +18,7 @@ To meet the diverse research needs, we set up Spider2 with two settings, focusin
 
 ## Spider2 Baselines
 
-For `Spider2`, we proposed baselines based on the widely used method: 
-- [`Dail-SQL`](https://github.com/xlang-ai/spider2/blob/main/spider2-baselines/DailSQL/README.md), with evaluation results reported :test_tube:.
-- [`CodeS`](https://github.com/xlang-ai/spider2/tree/main/spider2-baselines/CodeS/README.md), the evaluation results will be avaiable soon.
-
+For `Spider2`, we proposed baselines based on widely used text2sql methods: [`Dail-SQL`](https://github.com/xlang-ai/spider2/blob/main/spider2-baselines/DailSQL/README.md) and [`CodeS`](https://github.com/xlang-ai/spider2/tree/main/spider2-baselines/CodeS/README.md), with evaluation results reported :test_tube:.
 
 ## Spider2 Leaderboard
 
