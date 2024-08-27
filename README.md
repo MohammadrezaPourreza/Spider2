@@ -45,7 +45,7 @@ For `Spider2-World`, we proposed an agent framework [`Spider-Agent`](https://git
 
 | Method                     | Score |
 | -------------------------- | ---- |
-| Spider-Agent (GPT-4o)   | 10.00% |
-| CodeAct-Agent (GPT-4o) | 8.00% |  
-| Spider-Agent (Gemini) | 4.00% |
-| reflexion (Gemini) | 2.00% |
+| Spider-Agent + GPT-4o   | 10.00% |
+| CodeAct-Agent + GPT-4o | 8.00% |  
+| Spider-Agent + Gemini | 4.00% |
+| reflexion + Gemini | 2.00% |
