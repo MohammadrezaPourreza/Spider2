@@ -173,7 +173,6 @@ def merge_pred_results(sample, pred_results):
     return merged_results
 
 def filter_schema(dataset, dataset_type, sic, num_top_k_tables = 5, num_top_k_columns = 5):
-    '''这里对应论文中6.1 schema filter, 对全量的schema进行筛选，仅保留有限的table和column'''
 
     for data in tqdm(dataset, desc = "filtering schema items for the dataset"):
         filtered_schema = dict()
@@ -199,7 +198,7 @@ def filter_schema(dataset, dataset_type, sic, num_top_k_tables = 5, num_top_k_co
             table_indices = [table_idx for table_idx, table_label in enumerate(data["table_labels"]) if table_label == 1]
             if len(table_indices) < num_top_k_tables:
                 unused_table_indices = [table_idx for table_idx, table_label in enumerate(data["table_labels"]) if table_label == 0]
-                table_indices += random.sample(unused_table_indices, min(len(unused_table_indices), num_top_k_tables - len(table_indices)))  # 这就是论文中说的padding
+                table_indices += random.sample(unused_table_indices, min(len(unused_table_indices), num_top_k_tables - len(table_indices))) 
             random.shuffle(table_indices)
 
         for table_idx in table_indices:
@@ -225,7 +224,6 @@ def filter_schema(dataset, dataset_type, sic, num_top_k_tables = 5, num_top_k_co
                 }
             )
         
-            # extract matched contents of remained columns (删除掉table.column都被schema filter过滤掉的那些matched contents)
             for column_name in [column_names[table_idx][column_idx] for column_idx in column_indices]:
                 tc_name = "{}.{}".format(table_names[table_idx], column_name)  # tc_name = 'singer.singer_id'
                 if tc_name in data["matched_contents"]:

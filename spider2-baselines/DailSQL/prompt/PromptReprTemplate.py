@@ -41,7 +41,6 @@ class SQLPrompt(BasicPrompt):
     }
      
     def format_question(self, example: dict, args):
-        # print('第2)处，执行了我修改后的逻辑，根据tables.json得到【数据库创建语言】')
         tables_json = json.load(open(osp.join(proj_dir, f'preprocessed_data/{args.dev}/tables_preprocessed.json'), 'r', encoding='utf-8'))
         sqls = get_sql_for_database_from_tables_json(example["db_id"], tables_json, use_column_desc=args.use_column_desc)
 
@@ -52,7 +51,6 @@ class SQLPrompt(BasicPrompt):
         def check_length(prompt_components, new):
             return len("\n\n".join(prompt_components)) + len(prompt_question) + len(new) < 1048576
 
-        # 组装变长prompt，越早组装的component优先级越高
         prompt_components = [prompt_info]
         if args.use_sample_rows:
             sample_rows = get_sample_rows_for_database_from_tables_json(example["db_id"], tables_json)  
@@ -62,7 +60,6 @@ class SQLPrompt(BasicPrompt):
             else:
                 print("Sample rows info too long, skip. length: ", len(new))
         if args.use_external_knowledge and example['external_knowledge'] is not None:
-            # TODO hard-code路径
             with open(osp.join(proj_dir, '../../spider2/external_information', example['external_knowledge']), "r", encoding="utf-8") as file:
                 content = file.read()
             new = self.external_knowledge_info.format(content)
@@ -329,7 +326,6 @@ class SQLWithRulePrompt(BasicPrompt):
     template_question =  "/* Answer the following with no explanation: {} */"
 
     def format_question(self, example: dict, args):
-        # print('第2)处，执行了我修改后的逻辑，根据tables.json得到【数据库创建语言】')
         tables_json = json.load(open(osp.join(proj_dir, f'preprocessed_data/{args.dev}/tables_preprocessed.json', 'r', encoding='utf-8')))
         sqls = get_sql_for_database_from_tables_json(example["db_id"], tables_json)
 
@@ -422,7 +418,6 @@ class SQLCOTPrompt(BasicPrompt):
     template_question =  "/* Let's think step by step. Answer the following: {} */"
 
     def format_question(self, example: dict, args):
-        # print('第2)处，执行了我修改后的逻辑，根据tables.json得到【数据库创建语言】')
         tables_json = json.load(open(osp.join(proj_dir, f'preprocessed_data/{args.dev}/tables_preprocessed.json', 'r', encoding='utf-8')))
         sqls = get_sql_for_database_from_tables_json(example["db_id"], tables_json)
 

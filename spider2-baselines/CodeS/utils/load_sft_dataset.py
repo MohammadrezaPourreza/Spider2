@@ -16,7 +16,6 @@ def prepare_text2sql_prefix_sequence(data, args):
         return len(current_prompt) + len(data["text"]) + len(new) < 1048570
 
     if args.use_external_knowledge and data['external_knowledge'] is not None:
-        # TODO hard-code路径
         with open(osp.join(proj_dir, '../../spider2/external_information', data['external_knowledge']), "r", encoding="utf-8") as file:
             content = file.read()
         knowledge = 'external knowledge:' + content + "\n"
@@ -54,7 +53,7 @@ def prepare_text2sql_prefix_sequence(data, args):
         print("Plan too long, skip. length: ", len(plan))
     prefix_seq += data["text"] + "\n"
     
-    return prefix_seq  # TODO 正在测试变长
+    return prefix_seq  
 
 def prepare_inputs_and_labels(prefix_seq, target_seq, tokenizer, max_tokens):
     prefix_ids = [tokenizer.bos_token_id] + tokenizer(prefix_seq , truncation = False)["input_ids"]
@@ -109,14 +108,13 @@ class SFTSQLGenerationDataset(Dataset):
             dataset = filter_schema(dataset, "train", None, table_num, column_num)
         elif mode == "eval":
             sic = SchemaItemClassifierInference(sic_path)
-            # filtering schema items for the dataset, 在dataset中添加schema键
+            # filtering schema items for the dataset
             dataset = filter_schema(dataset, "eval", sic, table_num, column_num)  
             del sic
             torch.cuda.empty_cache()
 
         # prepare schema sequence and content sequence
         for data in dataset:
-            # TODO column_desc要添加在这个函数内部
             data["schema_sequence"] = get_db_schema_sequence(data["schema"])
             data["content_sequence"] = get_matched_content_sequence(data["matched_contents"])  # matched contents
 
@@ -129,7 +127,7 @@ class SFTSQLGenerationDataset(Dataset):
 
     def __getitem__(self, index):
         data = self.dataset[index]
-        prefix_seq = prepare_text2sql_prefix_sequence(data, self.args)  # prefix_sql就是最终的自然语言prompt
+        prefix_seq = prepare_text2sql_prefix_sequence(data, self.args)  
         if index < 2:
             print(prefix_seq)
 

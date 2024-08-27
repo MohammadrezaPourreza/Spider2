@@ -15,42 +15,34 @@ def get_special_function_summary(data):
     with open(osp.join(proj_dir, '../../spider2/external_information/bigquery_functions/bigquery_functions.json'), 'r', encoding='utf-8') as file:
         bigquery_functions = json.load(file)
 
-    # 创建一个字典，方便快速查找summary
     function_summaries = {}
     for category_entry in bigquery_functions:
         category = category_entry.get("category", "")
         for function_name, function_details in category_entry.get("functions", {}).items():
             function_summaries[f"{category}/{function_name}"] = function_details.get("summary", "")
-            function_summaries[function_name] = function_details.get("summary", "")  # 处理单独函数情况
+            function_summaries[function_name] = function_details.get("summary", "")  
 
-    # 填充summary
     for item in data:
         if item.get("special_function") is None:
             continue
         updated_special_function = []
         for function_name in item.get("special_function", []):
-            # 查找对应的summary
             summary = function_summaries.get(function_name, "No summary found")
-            # 将function_name和summary组合
             updated_special_function.append(
                 {
                     'name':function_name,
                     'summary':summary
                 }
             )
-        # 将修改后的列表赋值回special_function字段
         item["special_function"] = updated_special_function
 
     return data
 
 def column_description_length_histogram():
-    # 定义路径
     json_path = "../../../spider2/databases/bigquery/metadata/bigquery-public-data/**/*.json"
 
-    # 用于存储描述字符串长度的列表
     description_lengths = []
 
-    # 遍历所有的json文件
     all_count, valid_count = 0, 0
     for json_file in glob.glob(json_path, recursive=True):
         with open(json_file, 'r', encoding='utf-8') as file:
@@ -69,7 +61,6 @@ def column_description_length_histogram():
     print(f"Number of valid column descriptions: {valid_count}")
     print(f"Ratio of valid column descriptions: {valid_count / all_count}")            
 
-    # 绘制直方图
     plt.hist(description_lengths, bins=20, edgecolor='black')
     plt.xlabel('Description Length')
     plt.ylabel('Frequency')
@@ -79,7 +70,6 @@ def column_description_length_histogram():
 
 
 def db_stats(db_stats_list):
-    # 计算所有数据库的平均统计量
     total_table_count = sum(item['db_stats']["No. of tables"] for item in db_stats_list)
     total_column_count = sum(item['db_stats']["No. of columns"] for item in db_stats_list)
     total_avg_column_per_table = sum(item['db_stats']["Avg. No. of columns per table"] for item in db_stats_list)
@@ -90,14 +80,13 @@ def db_stats(db_stats_list):
     avg_total_column_count_per_db = total_column_count / num_dbs if num_dbs > 0 else 0
     avg_avg_column_per_table_per_db = total_avg_column_per_table / num_dbs if num_dbs > 0 else 0
 
-    # 打印结果
     print(f"Average No. of tables across all database: {avg_table_count_per_db:.2f}")
     print(f"Average No. of columns across all Database: {avg_total_column_count_per_db:.2f}")
     print(f"Average Avg. No. of columns per table across all Databases: {avg_avg_column_per_table_per_db:.2f}")
 
 
 def db_stats_bar_chart(db_stats_list):
-    # 绘制柱状图
+
     db_names = [item['db_id'] for item in db_stats_list]
     table_counts = [item['db_stats']["No. of tables"] for item in db_stats_list]
     total_columns = [item['db_stats']["No. of columns"] for item in db_stats_list]
@@ -142,25 +131,22 @@ def walk_metadata(dev):
         
     db_ids = set()
     for item in dev_data:
-        if '\n' in item['db']:  # multi GT db的情况
+        if '\n' in item['db']: 
             db_ids.update(item['db'].split('\n'))
-        else:  # single GT db的情况
+        else:  
             db_ids.add(item['db'])
   
-    # 定义路径
     db_base_path = "../../spider2/databases/bigquery/metadata/"
     json_glob_path = "**/*.json"
 
     db_stats_list = []
-    # 遍历所有项目
     for project_path in glob.glob(os.path.join(db_base_path, "*"), recursive=False):
         project_name = os.path.basename(os.path.normpath(project_path))
 
-        # 遍历项目中的所有数据库
         for db_path in glob.glob(os.path.join(project_path, "*"), recursive=False):
             db_name = os.path.basename(os.path.normpath(db_path)) 
             if f"{project_name}.{db_name}" not in db_ids:
-                continue  # 仅保存在dev.json中的数据库
+                continue 
 
             table_count = 0
             total_column_count = 0
@@ -171,48 +157,39 @@ def walk_metadata(dev):
             descriptions = []
             sample_rows = {}
 
-            # 查找该数据库中的所有JSON文件
             for json_file in glob.glob(os.path.join(db_path, json_glob_path), recursive=True):
                 with open(json_file, 'r', encoding='utf-8') as file:
                     try:
                         data = json.load(file)
 
-                        # 获取table和column信息
                         table_count += 1
                         table_name = data.get("table_name", "")
                         table_names_original.append(table_name)
 
-                        # 获取列名和列类型
                         columns = data.get("column_names", [])
                         column_types_in_table = data.get("column_types", [])
                         descriptions_in_table = data.get("description", [])
 
                         total_column_count += len(columns)
 
-                        # 将列名存储为 [table_index, column_name]
                         for col_index, col_name in enumerate(columns):
                             column_names_original.append([table_count - 1, col_name])
 
-                        # 将列类型存储
                         column_types.extend(column_types_in_table)
 
-                        # 将description存储为 [table_index, description]
                         for desc in descriptions_in_table:
                             descriptions.append([table_count - 1, desc])
 
-                        # 将sample_rows存储
                         if "sample_rows" in data:
                             sample_rows[table_name] = data["sample_rows"]
 
                     except json.JSONDecodeError:
                         print(f"Error reading {json_file}")
 
-            # 计算平均列数量
             avg_column_per_table = total_column_count / table_count if table_count > 0 else 0
 
-            # 将数据库的统计信息添加到db_stats_list中
             db_stats_list.append({
-                "db_id": f"{project_name}.{db_name}",  # project.db格式
+                "db_id": f"{project_name}.{db_name}",
                 "db_stats": {
                     "No. of tables": table_count,
                     "No. of columns": total_column_count,
@@ -223,8 +200,8 @@ def walk_metadata(dev):
                 "column_types": column_types,
                 "column_descriptions": descriptions,
                 "sample_rows": sample_rows,
-                "primary_keys": [],  # 这里你可以根据需要填写primary keys的生成逻辑
-                "foreign_keys": []  # 这里你可以根据需要填写foreign keys的生成逻辑
+                "primary_keys": [], 
+                "foreign_keys": []  
             })
 
 

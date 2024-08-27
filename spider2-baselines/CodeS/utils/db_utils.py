@@ -7,7 +7,6 @@ from func_timeout import func_set_timeout, FunctionTimedOut
 def get_cursor_from_path(sqlite_path):
     try:
         if not os.path.exists(sqlite_path):
-            print('在db_utils.py中打开db')
             print("Openning a new connection %s" % sqlite_path)
         connection = sqlite3.connect(sqlite_path, check_same_thread = False)
     except Exception as e:
