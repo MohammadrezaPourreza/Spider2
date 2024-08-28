@@ -19,7 +19,7 @@ However, real-world enterprise-level Text-to-SQL workflows often involve complex
 
 To this end, we introduce Spider 2.0, an evaluation framework comprising 600 real-world text-to-SQL workflow problems derived from enterprise-level database use cases. 
 
-We evaluated Spider 1.0, BIRD, and Spider 2.0 using the popular framework, [Dail-SQL](https://github.com/BeachWang/DAIL-SQL).
+We evaluated Spider 1.0, BIRD, and Spider 2.0 using the popular frameworks [Dail-SQL](https://github.com/BeachWang/DAIL-SQL) and [CodeS](https://github.com/RUCKBReasoning/codes).
 
 |                 | Spider 1.0 dev | Spider 1.0 test | BIRD test | Spider 2.0 |
 | --------------- | -------------- | --------------- | --------- | ---------- |
