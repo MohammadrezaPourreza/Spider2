@@ -57,7 +57,7 @@ Each file in `spider2-lite.json` contains the following fields:
 
 > **Note that** `plan` and `special_functions` are **not** standard inputs of Spider2 challenge; they are used for ablation experiments and analysis.
 
-The [`databases`](https://github.com/xlang-ai/Spider2/tree/main/spider2-lite/resource/databases) and the content in [`documents`](https://github.com/xlang-ai/Spider2/tree/main/spider2-lite/resource/documents) are resources you can use when benchmarking methods.
+The [`databases`](https://github.com/xlang-ai/Spider2/tree/main/spider2-lite/resource/databases) and the content in [`documentation`](https://github.com/xlang-ai/Spider2/tree/main/spider2-lite/resource/documents) are resources you can use when benchmarking methods.
 
 
 
