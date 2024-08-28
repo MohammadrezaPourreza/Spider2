@@ -15,7 +15,7 @@
 
 In 2018, our group proposed [Spider 1.0](https://yale-lily.github.io/spider), which has been widely used in Text-to-SQL research. 
 
-Real-world enterprise-level Text-to-SQL workflows often involve complex data and require advanced SQL queries across various operations. **We lack a comprehensive testbed to fully evaluate and develop Text-to-SQL capabilities.**
+However, real-world enterprise-level Text-to-SQL workflows often involve complex data and require advanced SQL queries across various operations. **We lack a comprehensive testbed to fully evaluate and develop Text-to-SQL capabilities.**
 
 To this end, we introduce Spider 2.0, an evaluation framework of real-world SQL generation tasks across enterprise-grade databases and diverse realistic scenarios.
 
@@ -30,13 +30,31 @@ We evaluated Spider 1.0, BIRD, and Spider 2.0 using the popular framework, [Dail
 
 ## 🚀 Quickstart
 
+
+#### Spider 2.0
 For [`Spider 2.0`](https://github.com/xlang-ai/Spider2/tree/main/spider2) , we proposed an agent framework [`Spider-Agent`](https://github.com/xlang-ai/Spider2/tree/main/spider-agent) baseline based on Docker ENV. Follow the instructions in the [Docker setup guide](https://docs.docker.com/engine/install/) to install Docker on your machine.
 
 
+#### Spider 2.0-Lite
+
 Additionally, to meet the needs of the research community, we have also organized the Spider 2.0 data in a format similar to Spider 1.0. [`Spider 2.0-Lite`](https://github.com/xlang-ai/Spider2/tree/main/spider2-lite) covers 90% of examples from Spider 2.0 that are sampled to be more lightweight and standalone, with a focus on evaluating LLMs on classic Text-to-SQL.
 
+We proposed baselines based on widely used text2sql methods: [`Dail-SQL`](https://github.com/xlang-ai/Spider2/blob/main/spider2-baselines/DailSQL/README.md) and [`CodeS`](https://github.com/xlang-ai/Spider2/tree/main/spider2-baselines/CodeS/README.md), with evaluation results reported :test_tube:.
 
-## Spider 2.0 Baselines
+
+
+# 💫 Contributions
+
+
+# ✍️ Citation
+If you find our work helpful, please use the following citations.
+```
+
+```
+
+<!-- 
+
+## Spider 2.0 Performance
 
 
 
@@ -68,4 +86,4 @@ For [`Spider 2.0-Lite`](https://github.com/xlang-ai/Spider2/blob/main/spider2-li
 | DailSQL + GPT-4o |  **6.04% (9/149)** |   12.75% (19/149)        |
 | CodeS-7B      | 1.34% (2/149) |   2.01% (3/149)            |
 
-
+ -->
