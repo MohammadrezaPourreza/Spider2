@@ -84,7 +84,8 @@ python run.py --model gpt-4o --suffix test1
 
 ### Spider 2.0-Lite
 
-To meet with research interests in traditional Text2SQL settings, we also release a subset of Spider 2.0 called [`Spider 2.0-Lite`](https://github.com/xlang-ai/Spider2/tree/main/spider2-lite#spider-20-lite) which is more self-contained, to support faster development and evaluation.
+To align with research interests in traditional Text2SQL settings, we also release [`Spider 2.0-Lite`](https://github.com/xlang-ai/Spider2/tree/main/spider2-lite#spider-20-lite). This set is more self-contained, with well-prepared database metadata and documentation, making it a text-in, text-out task that supports faster development and evaluation.
+
 
 Each file in `spider2-lite.json` contains the following fields:
 - `instance_id`: the unique example id
