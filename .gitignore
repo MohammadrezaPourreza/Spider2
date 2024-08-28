@@ -6,10 +6,10 @@ get_doc.py
 get_bigquery_schema.py
 .vscode/*
 
-spider-agent/logs/*
-spider-agent/output/*
-!spider-agent/logs/README.md
-!spider-agent/output/README.md
+methods/spider-agent/logs/*
+methods/spider-agent/output/*
+!methods/spider-agent/logs/README.md
+!methods/spider-agent/output/README.md
 
 spider-agent/bigquery_credential.json
 spider2-lite/bigquery_credential.json
