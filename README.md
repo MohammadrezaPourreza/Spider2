@@ -56,7 +56,7 @@ For [`Spider 2.0`](https://github.com/xlang-ai/Spider2/tree/main/spider2) , we p
 
 ## Spider 2.0-Lite Baselines
 
-For `Spider 2.0-Lite`, we proposed baselines based on widely used text2sql methods: [`Dail-SQL`](https://github.com/xlang-ai/Spider2/blob/main/spider2-baselines/DailSQL/README.md) and [`CodeS`](https://github.com/xlang-ai/Spider2/tree/main/spider2-baselines/CodeS/README.md), with evaluation results reported :test_tube:.
+For [`Spider 2.0-Lite`](https://github.com/xlang-ai/Spider2/blob/main/spider2-lite/README.md#spider-20-lite), we proposed baselines based on widely used text2sql methods: [`Dail-SQL`](https://github.com/xlang-ai/Spider2/blob/main/spider2-baselines/DailSQL/README.md) and [`CodeS`](https://github.com/xlang-ai/Spider2/tree/main/spider2-baselines/CodeS/README.md), with evaluation results reported :test_tube:.
 
 ### Performance Comparison
 
