@@ -1,38 +1,38 @@
 
-spider2-world/evaluation_suite/*
-spider2-world/release_data/spider2c.jsonl
-spider2-world/evaluation_suite/gold/spider2c_eval.jsonl
+spider2/evaluation_suite/*
+spider2/release_spider2/spider2c.jsonl
+spider2/evaluation_suite/gold/spider2c_eval.jsonl
 get_doc.py
 get_bigquery_schema.py
 .vscode/*
 
-spider-agent/logs/*
-spider-agent/output/*
-!spider-agent/logs/README.md
-!spider-agent/output/README.md
+methods/spider-agent/logs/*
+methods/spider-agent/output/*
+!methods/spider-agent/logs/README.md
+!methods/spider-agent/output/README.md
 
 spider-agent/bigquery_credential.json
+spider2-lite/bigquery_credential.json
 spider2/bigquery_credential.json
-spider2-world/bigquery_credential.json
 
-spider2/evaluation_suite/*
-
+spider2-lite/evaluation_suite/*
 
 
-!spider2/evaluation_suite/README.md
-!spider2/evaluation_suite/gold/
-!spider2/evaluation_suite/bigquery_credential.json
-!spider2/evaluation_suite/evaluate.py
-!spider2/evaluation_suite/spider2sql_eval_config_file.py
+
+!spider2-lite/evaluation_suite/README.md
+!spider2-lite/evaluation_suite/gold/
+!spider2-lite/evaluation_suite/bigquery_credential.json
+!spider2-lite/evaluation_suite/evaluate.py
+!spider2-lite/evaluation_suite/spider2sql_eval_config_file.py
 
 
 # Do not ignore specific files and directories
-!spider2-world/evaluation_suite/README.md
-!spider2-world/evaluation_suite/bigquery_credential.json
-!spider2-world/evaluation_suite/evaluate.py
-!spider2-world/evaluation_suite/gold/
-!spider2-world/evaluation_suite/eval_utils.py
-!spider2-world/evaluation_suite/example_submission_folder/
+!spider2/evaluation_suite/README.md
+!spider2/evaluation_suite/bigquery_credential.json
+!spider2/evaluation_suite/evaluate.py
+!spider2/evaluation_suite/gold/
+!spider2/evaluation_suite/eval_utils.py
+!spider2/evaluation_suite/example_submission_folder/
 
 
 # Byte-compiled / optimized / DLL files
@@ -45,25 +45,25 @@ spider2/evaluation_suite/*
 
 
 # Dail-SQL
-spider2-baselines/DailSQL/third_party/
-spider2-baselines/DailSQL/vector_cache/
+spider2-lite/baselines/DailSQL/third_party/
+spider2-lite/baselines/DailSQL/vector_cache/
 
-spider2-baselines/DailSQL/preprocessed_data/*
-!spider2-baselines/DailSQL/preprocessed_data/spider2_preprocess.py
-spider2-baselines/DailSQL/postprocessed_data/*
-!spider2-baselines/DailSQL/postprocessed_data/spider2_postprocess.py
+spider2-lite/baselines/DailSQL/preprocessed_spider2/*
+!spider2-lite/baselines/DailSQL/preprocessed_spider2/spider2_preprocess.py
+spider2-lite/baselines/DailSQL/postprocessed_spider2/*
+!spider2-lite/baselines/DailSQL/postprocessed_spider2/spider2_postprocess.py
 
 
 # CodeS
-spider2-baselines/CodeS/sic_ckpts/
-spider2-baselines/CodeS/SimCSE/
-spider2-baselines/CodeS/preprocessed_data/*
-!spider2-baselines/CodeS/preprocessed_data/spider2_preprocess.py
-spider2-baselines/CodeS/postprocessed_data/*
-!spider2-baselines/CodeS/postprocessed_data/spider2_postprocess.py
+spider2-lite/baselines/CodeS/sic_ckpts/
+spider2-lite/baselines/CodeS/SimCSE/
+spider2-lite/baselines/CodeS/preprocessed_spider2/*
+!spider2-lite/baselines/CodeS/preprocessed_spider2/spider2_preprocess.py
+spider2-lite/baselines/CodeS/postprocessed_spider2/*
+!spider2-lite/baselines/CodeS/postprocessed_spider2/spider2_postprocess.py
 
 # yuxiao's tmp code
-spider2-baselines/yyx_tmp/
+spider2-lite/baselines/yyx_tmp/
 
 **/toy*.json
 **/yyx_run.sh
