@@ -35,6 +35,21 @@ For each instance, we also provide a separate folder [`./evaluation_examples/{in
 We proposed an agent framework [`Spider-Agent`](../methods/spider-agent) baseline with interactive environment.
 
 
+## Bigquery Credential
+
+Due to the quota limit of BigQuery’s free tier, you might encounter [quota limit issues](https://cloud.google.com/bigquery/quotas) when running Spider-Agent. 
+
+In Spider 2.0, we use the free tier bigquery_credential.json by default.
+
+This could affect the results by approximately **4%**. We recommend that you [register for a BigQuery account](../assets/Bigquery_Guideline.md) and replace the bigquery_credential.json in Spider 2.0 with your own file:
+
+**Note that this will typically incur a small expense.**
+
+```python
+# move your bigquery_credential.json in this folder
+python use_your_own_credential.py
+```
+
 
 ## Evaluation
 
