@@ -329,7 +329,7 @@ def get_bigquery_metadata(project_name, dataset_name):
 if __name__ == "__main__":
 
     
-    with open("spider2-sql.json", 'r', encoding='utf-8') as file:
+    with open("spider2-lite.json", 'r', encoding='utf-8') as file:
         spider2_data = json.load(file)
         
     local_db_name, bq_db_name = set(), set()
@@ -345,20 +345,16 @@ if __name__ == "__main__":
                 
 
     db_ids = []
-    root_dir = './databases/bigquery/metadata'
+    root_dir = './databases/bigquery/'
     for folder_name_a in os.listdir(root_dir):
         folder_path_a = os.path.join(root_dir, folder_name_a)
         if os.path.isdir(folder_path_a):  # Check if it's a directory
-            for folder_name_b in os.listdir(folder_path_a):
-                folder_path_b = os.path.join(folder_path_a, folder_name_b)
-                if os.path.isdir(folder_path_b):  # Check if it's a directory
-                    # Check if there's at least one .json file in folder b
-                    has_json = any(file.endswith('.json') for file in os.listdir(folder_path_b))
-                    if has_json:
-                        db_ids.append(f"{folder_name_a}.{folder_name_b}")
-    
-    # local_db_name = list(local_db_name - set(db_ids))
+            has_json = any(file.endswith('.json') for file in os.listdir(folder_path_a))
+            if has_json:
+                db_ids.append(f"{folder_name_a}")
+    import pdb; pdb.set_trace()
     bq_db_name = list(bq_db_name - set(db_ids))
+
     
     for db_name in tqdm(bq_db_name):
         try:
@@ -369,7 +365,7 @@ if __name__ == "__main__":
         dataset_metadata, tables_metadata = get_bigquery_metadata(project_name, dataset_name)
 
 
-        directory = os.path.join(root_dir, project_name, dataset_name)
+        directory = os.path.join(root_dir, f"{project_name}.{dataset_name}")
         if not os.path.exists(directory):
             os.makedirs(directory)
         df = pd.DataFrame(dataset_metadata)
@@ -383,17 +379,3 @@ if __name__ == "__main__":
             with open(file_path, 'w') as json_file: 
                 json_file.write(json_data)
         
-    
-    # output_path = "tables.json"
-    
-    # # local_output_list = get_local_metadata(local_db_path, output_path)
-    # bq_output_list = get_bq_metadata(bq_db_name)
-    
-    # new_output_list = local_output_list + bq_output_list
-    
-    # new_output_table_list = exist_tables + new_output_list
-
-    # with open('tables.json', 'w') as file:
-    #     json.dump(new_output_table_list, file, indent=4)
-    
-    

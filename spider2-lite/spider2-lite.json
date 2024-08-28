@@ -296,7 +296,7 @@
     {
         "instance_id": "bq214_1",
         "db": "patents-public-data.patents",
-        "question": "Identify the top five patents filed in the same year as `US-9023721-B2` that are most similar to it based on technological similarities. Please provide the publication numbers.",
+        "question": "d30b2fcf-037c-4e90-9471-9d4a0a9f5e7b",
         "external_knowledge": "patents_info.md",
         "plan": "1. **Extract the Target Patent**: Create a subset containing only the target patent's unique identifiers.\n\n2. **Calculate Filing Year for Target Patent**: Determine the filing year of the target patent by extracting the year from its filing date.\n\n3. **Identify Same-Year Patents**: Retrieve all patents filed in the same year as the target patent, excluding the target patent itself.\n\n4. **Calculate Technological Similarity**: For each patent from the same year, compute the technological similarity with the target patent using a predefined similarity metric based on their respective embeddings.\n\n5. **Rank Similar Patents**: Order the patents by their similarity scores in descending order.\n\n6. **Select Top Similar Patents**: From the ordered list, select the top five patents with the highest similarity scores for each target patent.\n\n7. **Output Similar Patents**: Return the publication numbers and similarity scores of the top five most similar patents.",
         "special_function": [
@@ -588,19 +588,6 @@
         ]
     },
     {
-        "instance_id": "bq193",
-        "db": "bigquery-public-data.github_repos",
-        "question": "Help me find the third most frequently occurring non-empty line of text in `requirements.txt` files from GitHub repositories that primarily use Python for development.",
-        "external_knowledge": null,
-        "plan": "1. **Extract Content and Metadata**:\n   - Start by retrieving the repository content and metadata from the repository data source.\n   - Filter to include only files whose paths indicate they are `requirements.txt`.\n\n2. **Filter for Python Repositories**:\n   - Retrieve the list of repositories that primarily use Python for development.\n   - Join this list with the filtered files to ensure only files from Python repositories are considered.\n\n3. **Split File Content into Lines**:\n   - For each `requirements.txt` file, split its content into individual lines.\n\n4. **Filter Out Empty Lines**:\n   - Remove any lines that are empty or consist only of whitespace.\n\n5. **Calculate Line Frequencies**:\n   - Count the occurrences of each non-empty line across all the files.\n   - Sort these lines by their frequency of occurrence in descending order.\n\n6. **Retrieve the Third Most Frequent Line**:\n   - Select the line that is the third most frequently occurring from the sorted list.",
-        "special_function": [
-            "string-functions/LOWER",
-            "string-functions/SPLIT",
-            "string-functions/TRIM",
-            "other-functions/UNNEST"
-        ]
-    },
-    {
         "instance_id": "bq295",
         "db": "bigquery-public-data.github_repos",
         "question": "Among the repositories from the GitHub Archive which include a Python file with less than 15,000 bytes in size and a keyword 'def' in the content, find the top 3 that have the highest number of watch events in 2017?",
@@ -727,22 +714,6 @@
         ]
     },
     {
-        "instance_id": "bq129",
-        "db": "bigquery-public-data.cms_medicare\nbigquery-public-data.census_bureau_usa",
-        "question": "What are the top 10 ZIP Code regions with populations over 1000 that have the highest number of Medicare-certified MD providers per capita?",
-        "external_knowledge": null,
-        "plan": "What are the ten zip codes with highest number of physicians per population (based on Medicare reimbursement data)?\nThe Centers for Medicare and Medicaid Services public dataset provides information on services and procedures provided to Medicare beneficiaries by physicians and other healthcare professionals in 2012. This query analyzes the number of physicians in each zip code (as listed in the Medicare data) compared to underlying population in each zip code according to the 2010 census data. ZCTAs are used in the census data to approximate zip codes.",
-        "special_function": [
-            "mathematical-functions/ROUND",
-            "string-functions/LENGTH",
-            "string-functions/REGEXP_CONTAINS",
-            "string-functions/SUBSTR",
-            "conditional-functions/CASE_EXPR",
-            "conditional-functions/CASE",
-            "conditional-functions/NULLIF"
-        ]
-    },
-    {
         "instance_id": "bq032",
         "db": "bigquery-public-data.noaa_hurricanes",
         "question": "Can you provide the latitude of the final coordinates for the hurricane that traveled the second longest distance in the North Atlantic during 2020?",
@@ -808,7 +779,7 @@
     },
     {
         "instance_id": "bq117_1",
-        "db": "bigquery-public-data.noaa_historic_severe_storms\nbigquery-public-data.geo_us_boundaries.zip_codes",
+        "db": "bigquery-public-data.noaa_historic_severe_storms\nbigquery-public-data.geo_us_boundaries",
         "question": "What are the top 5 zip codes of the areas in the United States that have experienced the most hail storm events in the past 10 years?",
         "temporal": "Yes",
         "external_knowledge": null,
@@ -1071,7 +1042,7 @@
     },
     {
         "instance_id": "bq186",
-        "db": "bigquery-public-data.san_francisco.bikeshare_trips",
+        "db": "bigquery-public-data.san_francisco",
         "question": "Please help me calculate the first, last, highest, and lowest bike trip durations in minutes for each month.",
         "external_knowledge": null,
         "plan": "1. **Create a Temporary Dataset**:\n    - Generate a temporary dataset where each record is associated with a date string representing the year and month of the start date of the trip.\n    - This dataset includes all original columns plus the newly created date string.\n\n2. **Calculate Trip Durations**:\n    - From the temporary dataset, for each unique month, calculate:\n        - The first trip duration.\n        - The last trip duration.\n        - The highest trip duration.\n        - The lowest trip duration.\n    - Convert these durations from seconds to minutes.\n\n3. **Retrieve and Format Results**:\n    - Select the date string (representing the month) and the calculated trip durations (first, last, highest, and lowest) from the results of the previous step.\n    - Ensure the results are ordered by the date string to maintain chronological order.\n\n4. **Final Output**:\n    - Output the date string and the calculated trip durations (in minutes) for each month, ensuring that the data is grouped and ordered by the date string.",
@@ -1093,7 +1064,7 @@
     },
     {
         "instance_id": "bq339",
-        "db": "bigquery-public-data.san_francisco_bikeshare",
+        "db": "bigquery-public-data.san_francisco_bikeshare\nbigquery-public-data.san_francisco_neighborhoods\nbigquery-public-data.san_francisco_311\nbigquery-public-data.san_francisco_film_locations\nbigquery-public-data.san_francisco_sffd_service_calls\nbigquery-public-data.san_francisco_sfpd_incidents\nbigquery-public-data.san_francisco_transit_muni\nbigquery-public-data.san_francisco_trees",
         "question": "Which month in 2017 had the largest absolute difference between cumulative bike usage minutes for customers and subscribers?",
         "external_knowledge": null,
         "plan": "1. **Create a Subquery for Monthly Totals**:\n   - Calculate the total usage minutes for each user type (e.g., type A and type B) for each month in the specified year.\n   - Group the results by month to get monthly totals for each user type.\n\n2. **Calculate Cumulative Totals**:\n   - Using the monthly totals, compute the cumulative sum of usage minutes for each user type up to each month.\n   - This involves summing the monthly totals in an ordered manner, from the beginning of the year to the end of each month.\n\n3. **Calculate Absolute Differences**:\n   - Determine the absolute difference between the cumulative totals of the two user types for each month.\n   - This provides a measure of how the cumulative usage minutes differ between the two user types at the end of each month.\n\n4. **Identify the Month with the Largest Difference**:\n   - Sort the months based on the absolute difference calculated in the previous step, in descending order.\n   - Select the month with the highest absolute difference.\n\nBy following these steps, the query identifies the month in the specified year that had the largest absolute difference in cumulative bike usage minutes between the two user types.",
@@ -1109,7 +1080,7 @@
     },
     {
         "instance_id": "bq059",
-        "db": "bigquery-public-data.san_francisco_bikeshare",
+        "db": "bigquery-public-data.san_francisco_bikeshare\nbigquery-public-data.san_francisco_neighborhoods\nbigquery-public-data.san_francisco_311\nbigquery-public-data.san_francisco_film_locations\nbigquery-public-data.san_francisco_sffd_service_calls\nbigquery-public-data.san_francisco_sfpd_incidents\nbigquery-public-data.san_francisco_transit_muni\nbigquery-public-data.san_francisco_trees",
         "question": "What is the highest average speed (rounded to 1 decimal, in metric m/s) for bike trips in Berkeley with trip distance greater than 1000 meters?",
         "external_knowledge": null,
         "plan": "1. Identify Relevant Locations: Select station identifiers for bike stations located in a specific region (Berkeley) by filtering based on the region's name.\n\n2. Calculate Distances and Speeds: For trips starting and ending at the identified stations, calculate the trip distance and the average speed. Ensure the coordinates for start and end stations are available.\n\n3. Filter Trips: Only include trips that meet the distance requirement (greater than 1000 meters) and start/end station restriction (within the region Berkeley).\n\n4. Find Maximum Speed: From the filtered trips, determine the highest average speed, rounded to one decimal place, and return this value.",
@@ -1123,7 +1094,7 @@
     },
     {
         "instance_id": "bq006",
-        "db": "bigquery-public-data.austin_incidents",
+        "db": "bigquery-public-data.austin_bikeshare\nbigquery-public-data.austin_311\nbigquery-public-data.austin_crime\nbigquery-public-data.austin_incidents\nbigquery-public-data.austin_waste",
         "question": "What is the date with the second highest Z-score for daily counts of 'PUBLIC INTOXICATION' incidents in Austin for the year 2016? List the date in the format of '2016-xx-xx'.",
         "external_knowledge": null,
         "plan": "Analyze daily occurrences of public intoxication incidents in Austin for the year 2016. \nCalculate the total number of incidents per day and compute the Z-score for each day's incidents to identify days with significantly higher or lower incident counts. \nThe output should include the date, total number of incidents, and the Z-score.",
@@ -1804,7 +1775,7 @@
     },
     {
         "instance_id": "bq279",
-        "db": "bigquery-public-data.austin_bikeshare",
+        "db": "bigquery-public-data.austin_bikeshare\nbigquery-public-data.austin_311\nbigquery-public-data.austin_crime\nbigquery-public-data.austin_incidents\nbigquery-public-data.austin_waste",
         "question": "Can you provide the number of distinct active and closed bike share stations for each year 2013 and 2014 in a chronological view?",
         "external_knowledge": null,
         "plan": "1. Extract the year and start station ID from the trips data for the years 2013 and 2014.\n2. Join the extracted trip data with the station data on the station ID to consolidate trip and station information.\n3. Limit the joined data to only include records from the years 2013 and 2014.\n4. For each year, count the distinct station IDs where the station status is 'active'. This involves filtering the joined data for 'active' stations and then counting distinct station IDs for each year.\n5. Similarly, for each year, count the distinct station IDs where the station status is 'closed'. This involves filtering the joined data for 'closed' stations and then counting distinct station IDs.\n6. Group the results by year to ensure that the counts of active and closed stations are organized by year.\n7. Order the final results by year to provide a chronological view of the data.\n",
@@ -1820,7 +1791,7 @@
     },
     {
         "instance_id": "bq281",
-        "db": "bigquery-public-data.austin_bikeshare",
+        "db": "bigquery-public-data.austin_bikeshare\nbigquery-public-data.austin_311\nbigquery-public-data.austin_crime\nbigquery-public-data.austin_incidents\nbigquery-public-data.austin_waste",
         "question": "What is the highest number of electric bike rides lasting more than 10 minutes taken by subscribers with 'Student Membership' in a single day, excluding rides starting or ending at 'Mobile Station' or 'Repair Shop'?",
         "external_knowledge": null,
         "plan": "1. Filter the dataset to exclude records where the starting or ending locations are listed as either 'Mobile Station' or 'Repair Shop'.\n2. Narrow down the dataset to include only those records where users have students subscription type and the equipment used is electric.\n3. Consider only records where the duration of usage is greater than ten minutes.\n4. Organize the filtered data by grouping it based on the year, month, and day of the start time.\n5. For each grouped set of data (each day), count the total number of records that match the earlier set conditions.\n6. Order the results by the count of records in descending order to identify the date with the highest number of trips meeting all the specified conditions.\n7. Limit the output to only the top result from the sorted list and show the maximum usage in a single day under the defined conditions.\n",
@@ -1834,7 +1805,7 @@
     },
     {
         "instance_id": "bq282",
-        "db": "bigquery-public-data.austin_bikeshare",
+        "db": "bigquery-public-data.austin_bikeshare\nbigquery-public-data.austin_311\nbigquery-public-data.austin_crime\nbigquery-public-data.austin_incidents\nbigquery-public-data.austin_waste",
         "question": "Can you tell me the numeric value of the active council district in Austin which has the highest number of bike trips that start and end within the same district, but not at the same station?",
         "external_knowledge": null,
         "plan": "1. Filter the stations table to keep records whose status is 'active'.\n2. Perform an inner join between the trips table and the filtered active stations.\n3. Select the district from the stations table for end stations that are active and match the end station ID from the trips table.\n4. Include only those trips where the starting district is present in the list of active end station districts.\n5. Exclude trips where the start station ID is the same as the end station ID.\n6. Group the results by the district and count the number of trips originating from each district.\n7. Order the districts by the descending count of trips to find the district with the highest number of trips.\n8. Limit the output to the district with the maximum number of trips.",
@@ -1844,7 +1815,7 @@
     },
     {
         "instance_id": "bq283",
-        "db": "bigquery-public-data.austin_bikeshare",
+        "db": "bigquery-public-data.austin_bikeshare\nbigquery-public-data.austin_311\nbigquery-public-data.austin_crime\nbigquery-public-data.austin_incidents\nbigquery-public-data.austin_waste",
         "question": "What is the combined percentage of all bike trips that start from the top 15 most used active stations in Austin?",
         "external_knowledge": null,
         "plan": "1. Calculate the total number of trips originating from each station.\n2. Assign a rank to each station based on the descending order of total trips, where the station with the highest number of trips has the highest rank.\n3. Calculate the percentage of total trips that each station represents by dividing the number of trips from that station by the total number of trips from all stations.\n4. Select only those stations that rank within the top 15.\n5. Join the data of the top 15 stations with another dataset that contains additional details about each station.\n6. From the joined data, filter out stations to keep only those that are currently active.\n7. From the filtered active top 15 stations, select the station with the highest rank.\n8. Retrieve the percentage of total trips for this station and display the result.\n",
@@ -1855,7 +1826,7 @@
     },
     {
         "instance_id": "bq329",
-        "db": "bigquery-public-data.austin_bikeshare",
+        "db": "bigquery-public-data.austin_bikeshare\nbigquery-public-data.austin_311\nbigquery-public-data.austin_crime\nbigquery-public-data.austin_incidents\nbigquery-public-data.austin_waste",
         "question": "Which bike station in the Austin bikeshare system has the lowest average trip duration? I want the station ID.",
         "external_knowledge": null,
         "plan": "1. **Define Data Sources**:\n   - Establish temporary datasets for bike stations and trip data by selecting all relevant columns from each respective source.\n\n2. **Prepare Trip Data**:\n   - Within the trip data, ensure proper data types by safely converting necessary fields to integers and extracting the required columns for analysis.\n\n3. **Calculate Average Trip Duration**:\n   - Group the trip data by the starting station and calculate the average trip duration for each group.\n\n4. **Join Data**:\n   - Merge the average trip duration data with the station data based on the station identifier.\n\n5. **Determine Station with Lowest Average Duration**:\n   - Sort the merged dataset by the average trip duration in ascending order.\n   - Select the station identifier of the station with the lowest average trip duration.\n   - Limit the result to only one record to get the station with the absolute lowest average trip duration.",
@@ -1989,16 +1960,6 @@
         ]
     },
     {
-        "instance_id": "bq325",
-        "db": "bigquery-public-data.open_targets_genetics",
-        "question": "What are the top 10 genes with the lowest p-values across studies?",
-        "external_knowledge": null,
-        "plan": "1. **Create a Common Table Expression (CTE)**: Define a temporary result set to hold intermediate results for easier querying and readability.\n\n2. **Select Required Columns**: Within the CTE, select the necessary columns including study identifiers, gene names, and p-values.\n\n3. **Join Tables**: Perform the necessary joins between the tables to combine information about gene associations, study metadata, gene details, and variant details. Ensure the joins are based on appropriate matching columns.\n\n4. **Rank Genes**: Use the window function to assign a unique row number to each gene within each study, ordered by p-value in ascending order. This ranking helps identify the gene with the lowest p-value within each study.\n\n5. **Filter Top Genes per Study**: In the main query, filter the results to include only the top-ranked gene (i.e., the gene with the lowest p-value) for each study.\n\n6. **Order and Limit Results**: Sort the filtered genes by their p-values in ascending order to identify the genes with the lowest p-values across all studies.\n\n7. **Return Top Results**: Limit the final output to the top 10 genes with the lowest p-values, fulfilling the requirement to find the top 10 genes with the lowest p-values across studies.",
-        "special_function": [
-            "numbering-functions/ROW_NUMBER"
-        ]
-    },
-    {
         "instance_id": "bq230",
         "db": "bigquery-public-data.usda_nass_agriculture",
         "question": "Can you provide the maximum amount of corn produced (measured in bushels) by each state in the year 2018, listing the results by state name?",
@@ -2050,7 +2011,7 @@
     {
         "instance_id": "ga001",
         "db": "bigquery-public-data.ga4_obfuscated_sample_ecommerce",
-        "question": "I want to know the preferences of customers who purchased the Google Navy Speckled Tee in December 2020. What other product was purchased with the highest total quantity alongside this item?",
+        "question": "I want to know the preferences of customers who purchased the Google Navy Speckled Tee in December 2020. What other product was purchased with the highest total quantity alongside this item?\nCan you tell me what other product are most frequently bought together with the Google Navy Speckled Tee by customers in December 2020?",
         "external_knowledge": null,
         "plan": "1. Focus on the item named \"Google Navy Speckled Tee.\"\n2. Select all purchase-type events from December 2020.\n3. Extract the IDs of individuals who purchased the \"Google Navy Speckled Tee\" during these events.\n4. Calculate all items purchased by these IDs and retain the top 10 items by purchase volume.",
         "special_function": [

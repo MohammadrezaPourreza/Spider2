@@ -35,32 +35,32 @@
         {
             "station_id": 2,
             "bikes_available": 0,
-            "docks_available": 27,
-            "time": "2015-05-05 11:22:02+00:00"
+            "docks_available": 26,
+            "time": "2014-09-10 09:25:02+00:00"
+        },
+        {
+            "station_id": 2,
+            "bikes_available": 0,
+            "docks_available": 26,
+            "time": "2015-09-12 02:07:02+00:00"
+        },
+        {
+            "station_id": 2,
+            "bikes_available": 0,
+            "docks_available": 26,
+            "time": "2015-09-11 11:05:02+00:00"
         },
         {
             "station_id": 2,
             "bikes_available": 0,
             "docks_available": 27,
-            "time": "2014-07-31 10:26:02+00:00"
+            "time": "2016-08-30 15:13:47+00:00"
         },
         {
             "station_id": 2,
             "bikes_available": 0,
             "docks_available": 27,
-            "time": "2016-05-03 15:28:01+00:00"
-        },
-        {
-            "station_id": 2,
-            "bikes_available": 0,
-            "docks_available": 27,
-            "time": "2015-09-24 04:45:02+00:00"
-        },
-        {
-            "station_id": 2,
-            "bikes_available": 0,
-            "docks_available": 27,
-            "time": "2015-09-24 05:20:02+00:00"
+            "time": "2015-09-24 13:31:02+00:00"
         }
     ]
 }
