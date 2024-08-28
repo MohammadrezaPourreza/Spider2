@@ -16,9 +16,7 @@ Spider 2.0 is a benchmark of real world SQL generation tasks across enterprise-g
 
 In 2018, our group proposed [Spider 1.0](https://yale-lily.github.io/spider), which has been widely used in Text-to-SQL research. 
 
-However, real-world enterprise-level Text-to-SQL workflows often involve complex data across cloud or local databases, require writing advanced SQL queries in various dialects for different operations from data transformation to analytics, and demand handling natural analytic questions. 
-
-**We lack a comprehensive and challenging testbed to fully evaluate and develop these technologies' capabilities in code generation, specifically in Text-to-SQL.**
+Real-world enterprise-level Text-to-SQL workflows often involve complex data and require advanced SQL queries across various operations. **We lack a comprehensive testbed to fully evaluate and develop Text-to-SQL capabilities.**
 
 
 
