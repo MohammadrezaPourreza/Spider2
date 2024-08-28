@@ -144,7 +144,7 @@ def evaluate_spider2sql(args):
     pred_result_dir = args.result_dir
     
     eval_standard_dict = load_jsonl_to_dict("./gold/spider2sql_eval.jsonl")
-    spider2sql_metadata = load_json_list_to_dict("../spider2-sql.json")
+    spider2sql_metadata = load_json_list_to_dict("../spider2-lite.json")
 
         
     gold_ids = []

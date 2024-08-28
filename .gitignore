@@ -45,22 +45,22 @@ spider2-lite/evaluation_suite/*
 
 
 # Dail-SQL
-spider2-lite/baselines/DailSQL/third_party/
-spider2-lite/baselines/DailSQL/vector_cache/
+spider2-lite/baselines/dailsql/third_party/
+spider2-lite/baselines/dailsql/vector_cache/
 
-spider2-lite/baselines/DailSQL/preprocessed_spider2/*
-!spider2-lite/baselines/DailSQL/preprocessed_spider2/spider2_preprocess.py
-spider2-lite/baselines/DailSQL/postprocessed_spider2/*
-!spider2-lite/baselines/DailSQL/postprocessed_spider2/spider2_postprocess.py
+spider2-lite/baselines/dailsql/preprocessed_data/*
+!spider2-lite/baselines/dailsql/preprocessed_data/spider2_preprocess.py
+spider2-lite/baselines/dailsql/postprocessed_data/*
+!spider2-lite/baselines/dailsql/postprocessed_data/spider2_postprocess.py
 
 
 # CodeS
-spider2-lite/baselines/CodeS/sic_ckpts/
-spider2-lite/baselines/CodeS/SimCSE/
-spider2-lite/baselines/CodeS/preprocessed_spider2/*
-!spider2-lite/baselines/CodeS/preprocessed_spider2/spider2_preprocess.py
-spider2-lite/baselines/CodeS/postprocessed_spider2/*
-!spider2-lite/baselines/CodeS/postprocessed_spider2/spider2_postprocess.py
+spider2-lite/baselines/codes/sic_ckpts/
+spider2-lite/baselines/codes/SimCSE/
+spider2-lite/baselines/codes/preprocessed_data/*
+!spider2-lite/baselines/codes/preprocessed_data/spider2_preprocess.py
+spider2-lite/baselines/codes/postprocessed_data/*
+!spider2-lite/baselines/codes/postprocessed_data/spider2_postprocess.py
 
 # yuxiao's tmp code
 spider2-lite/baselines/yyx_tmp/
@@ -70,6 +70,6 @@ spider2-lite/baselines/yyx_tmp/
 **/0825*.json
 **/subset*.json
 **/yyx*.sh
-**/(0824的135题版本)spider2-sql.json
+
 **/subset*.json
 **/run_check.sh

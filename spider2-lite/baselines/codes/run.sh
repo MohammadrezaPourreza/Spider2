@@ -1,7 +1,7 @@
 #!/bin/bash
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-DEV=spider2-sql
+DEV=spider2-lite
 LLM=/data1/llms/codes-7b-merged
 
 # step1. preprocess
@@ -18,7 +18,7 @@ python -u text2sql_zero_shot.py \
 python postprocessed_data/spider2_postprocess.py --dev $DEV
 
 # step4. evaluate
-eval_suite_dir=$(readlink -f "${script_dir}/../../spider2/evaluation_suite")
+eval_suite_dir=$(readlink -f "${script_dir}/../../evaluation_suite")
 cd ${eval_suite_dir}
 python evaluate.py --mode sql --result_dir ${script_dir}/postprocessed_data/${DEV}/${DEV}-pred-sqls-postprocessed
 

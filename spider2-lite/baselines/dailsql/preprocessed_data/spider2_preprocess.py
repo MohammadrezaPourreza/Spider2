@@ -49,7 +49,7 @@ def process_dev_json(args):
             item['question_toks'] = [token.text for token in doc]
 
             # step2. 
-            gold_sql_file = osp.join(proj_dir, f"../../spider2/evaluation_suite/gold/sql/{item['instance_id']}.sql")
+            gold_sql_file = osp.join(proj_dir, f"../../evaluation_suite/gold/sql/{item['instance_id']}.sql")
             if not os.path.exists(gold_sql_file):
                 item['query'] = ''
             else:
@@ -61,7 +61,7 @@ def process_dev_json(args):
             del item['db']
         return data
     
-    with open(osp.join(proj_dir, f'../../spider2/{args.dev}.json'), 'r', encoding='utf-8') as file:
+    with open(osp.join(proj_dir, f'../..//{args.dev}.json'), 'r', encoding='utf-8') as file:
         data = json.load(file)
 
     with open(osp.join(proj_dir, f"preprocessed_data/{args.dev}/tables_preprocessed.json"), "r", encoding="utf-8") as json_file:

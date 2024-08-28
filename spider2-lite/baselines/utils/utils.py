@@ -11,8 +11,9 @@ import matplotlib.pyplot as plt
 proj_dir = osp.dirname(osp.abspath(__file__))
 
 
+
 def get_special_function_summary(data):
-    with open(osp.join(proj_dir, '../../spider2/external_information/bigquery_functions/bigquery_functions.json'), 'r', encoding='utf-8') as file:
+    with open(osp.join(proj_dir, '../../resource/documents/bigquery_functions/bigquery_functions.json'), 'r', encoding='utf-8') as file:
         bigquery_functions = json.load(file)
 
     function_summaries = {}
@@ -39,7 +40,7 @@ def get_special_function_summary(data):
     return data
 
 def column_description_length_histogram():
-    json_path = "../../../spider2/databases/bigquery/metadata/bigquery-public-data/**/*.json"
+    json_path = "../..//databases/bigquery/metadata/bigquery-public-data/**/*.json"
 
     description_lengths = []
 
@@ -126,7 +127,7 @@ def db_stats_bar_chart(db_stats_list):
 
 def walk_metadata(dev):
 
-    with open(osp.join(proj_dir, f'../../spider2/{dev}.json'), 'r', encoding='utf-8') as file:
+    with open(osp.join(proj_dir, f'../..//{dev}.json'), 'r', encoding='utf-8') as file:
         dev_data = json.load(file)
         
     db_ids = set()
@@ -136,73 +137,73 @@ def walk_metadata(dev):
         else:  
             db_ids.add(item['db'])
   
-    db_base_path = "../../spider2/databases/bigquery/metadata/"
+    db_base_path = "../../resource/databases/bigquery/"
     json_glob_path = "**/*.json"
 
     db_stats_list = []
-    for project_path in glob.glob(os.path.join(db_base_path, "*"), recursive=False):
-        project_name = os.path.basename(os.path.normpath(project_path))
+    for db_path in glob.glob(os.path.join(db_base_path, "*"), recursive=False):
 
-        for db_path in glob.glob(os.path.join(project_path, "*"), recursive=False):
-            db_name = os.path.basename(os.path.normpath(db_path)) 
-            if f"{project_name}.{db_name}" not in db_ids:
-                continue 
+        proj_db_name = os.path.basename(os.path.normpath(db_path)) 
+        assert '.' in proj_db_name
+        project_name, db_name = proj_db_name.split('.')
+        if f"{project_name}.{db_name}" not in db_ids:
+            continue 
 
-            table_count = 0
-            total_column_count = 0
+        table_count = 0
+        total_column_count = 0
 
-            table_names_original = []
-            column_names_original = []
-            column_types = []
-            descriptions = []
-            sample_rows = {}
+        table_names_original = []
+        column_names_original = []
+        column_types = []
+        descriptions = []
+        sample_rows = {}
 
-            for json_file in glob.glob(os.path.join(db_path, json_glob_path), recursive=True):
-                with open(json_file, 'r', encoding='utf-8') as file:
-                    try:
-                        data = json.load(file)
+        for json_file in glob.glob(os.path.join(db_path, json_glob_path), recursive=True):
+            with open(json_file, 'r', encoding='utf-8') as file:
+                try:
+                    data = json.load(file)
 
-                        table_count += 1
-                        table_name = data.get("table_name", "")
-                        table_names_original.append(table_name)
+                    table_count += 1
+                    table_name = data.get("table_name", "")
+                    table_names_original.append(table_name)
 
-                        columns = data.get("column_names", [])
-                        column_types_in_table = data.get("column_types", [])
-                        descriptions_in_table = data.get("description", [])
+                    columns = data.get("column_names", [])
+                    column_types_in_table = data.get("column_types", [])
+                    descriptions_in_table = data.get("description", [])
 
-                        total_column_count += len(columns)
+                    total_column_count += len(columns)
 
-                        for col_index, col_name in enumerate(columns):
-                            column_names_original.append([table_count - 1, col_name])
+                    for col_index, col_name in enumerate(columns):
+                        column_names_original.append([table_count - 1, col_name])
 
-                        column_types.extend(column_types_in_table)
+                    column_types.extend(column_types_in_table)
 
-                        for desc in descriptions_in_table:
-                            descriptions.append([table_count - 1, desc])
+                    for desc in descriptions_in_table:
+                        descriptions.append([table_count - 1, desc])
 
-                        if "sample_rows" in data:
-                            sample_rows[table_name] = data["sample_rows"]
+                    if "sample_rows" in data:
+                        sample_rows[table_name] = data["sample_rows"]
 
-                    except json.JSONDecodeError:
-                        print(f"Error reading {json_file}")
+                except json.JSONDecodeError:
+                    print(f"Error reading {json_file}")
 
-            avg_column_per_table = total_column_count / table_count if table_count > 0 else 0
+        avg_column_per_table = total_column_count / table_count if table_count > 0 else 0
 
-            db_stats_list.append({
-                "db_id": f"{project_name}.{db_name}",
-                "db_stats": {
-                    "No. of tables": table_count,
-                    "No. of columns": total_column_count,
-                    "Avg. No. of columns per table": avg_column_per_table
-                },
-                "table_names_original": table_names_original,
-                "column_names_original": column_names_original,
-                "column_types": column_types,
-                "column_descriptions": descriptions,
-                "sample_rows": sample_rows,
-                "primary_keys": [], 
-                "foreign_keys": []  
-            })
+        db_stats_list.append({
+            "db_id": f"{project_name}.{db_name}",
+            "db_stats": {
+                "No. of tables": table_count,
+                "No. of columns": total_column_count,
+                "Avg. No. of columns per table": avg_column_per_table
+            },
+            "table_names_original": table_names_original,
+            "column_names_original": column_names_original,
+            "column_types": column_types,
+            "column_descriptions": descriptions,
+            "sample_rows": sample_rows,
+            "primary_keys": [], 
+            "foreign_keys": []  
+        })
 
 
     db_stats(db_stats_list)

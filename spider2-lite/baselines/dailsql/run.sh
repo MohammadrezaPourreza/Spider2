@@ -2,7 +2,7 @@
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-DEV=spider2-sql
+DEV=spider2-lite
 LLM=gpt-4o
 
 # step1. preprocess
@@ -18,7 +18,7 @@ python ask_llm.py --openai_api_key $OPENAI_API_KEY --model $LLM --n 1 --question
 python postprocessed_data/spider2_postprocess.py --dev $DEV --model $LLM
 
 # step4. evaluate
-eval_suite_dir=$(readlink -f "${script_dir}/../../spider2/evaluation_suite")
+eval_suite_dir=$(readlink -f "${script_dir}/../../evaluation_suite")
 cd ${eval_suite_dir}
 python evaluate.py --mode sql --result_dir ${script_dir}/postprocessed_data/${DEV}_CTX-200/RESULTS_MODEL-${LLM}-SQL-postprocessed | tee ${script_dir}/postprocessed_data/${DEV}_CTX-200/evaluate.log
 

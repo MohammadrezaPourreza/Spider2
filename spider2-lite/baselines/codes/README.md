@@ -44,7 +44,7 @@ Then, simply run :laughing::
 ```
 bash run.sh
 ```
-this script automatically conducts all procedures: 1) data preprocess, 2) executing CodeS, 3) evaluation. You can find the output SQL in `spider2-baselines/CodeS/postprocessed_data`.
+this script automatically conducts all procedures: 1) data preprocess, 2) executing CodeS, 3) evaluation. You can find the output SQL in `spider2-lite/baselines/codes/postprocessed_data`.
 
 
 

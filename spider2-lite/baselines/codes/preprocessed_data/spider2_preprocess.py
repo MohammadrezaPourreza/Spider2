@@ -108,12 +108,12 @@ def preprocess_table_json(args):
 
 def preprocess_dev_json(args):
 
-    with open(osp.join(proj_dir, f'../../spider2/{args.dev}.json'), 'r', encoding='utf-8') as file:
+    with open(osp.join(proj_dir, f'../../{args.dev}.json'), 'r', encoding='utf-8') as file:
         data = json.load(file)
     
     for item in data:
 
-        gold_sql_file = osp.join(proj_dir, f"../../spider2/evaluation_suite/gold/sql/{item['instance_id']}.sql")
+        gold_sql_file = osp.join(proj_dir, f"../../evaluation_suite/gold/sql/{item['instance_id']}.sql")
         if not os.path.exists(gold_sql_file):
             item['sql'] = ''
         else:
