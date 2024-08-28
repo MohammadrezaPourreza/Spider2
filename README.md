@@ -7,7 +7,6 @@
 
 ## 👋 Overview
 
-Spider 2.0 is a benchmark of real world SQL generation tasks across enterprise-grade databases and diverse realistic scenarios.
 
 ![Local Image](./assets/Spider2.png)
 
@@ -17,6 +16,8 @@ Spider 2.0 is a benchmark of real world SQL generation tasks across enterprise-g
 In 2018, our group proposed [Spider 1.0](https://yale-lily.github.io/spider), which has been widely used in Text-to-SQL research. 
 
 Real-world enterprise-level Text-to-SQL workflows often involve complex data and require advanced SQL queries across various operations. **We lack a comprehensive testbed to fully evaluate and develop Text-to-SQL capabilities.**
+
+To this end, we introduce Spider 2.0, an evaluation framework of real-world SQL generation tasks across enterprise-grade databases and diverse realistic scenarios.
 
 
 
