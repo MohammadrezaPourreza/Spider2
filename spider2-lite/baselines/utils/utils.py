@@ -81,6 +81,7 @@ def db_stats(db_stats_list):
     avg_total_column_count_per_db = total_column_count / num_dbs if num_dbs > 0 else 0
     avg_avg_column_per_table_per_db = total_avg_column_per_table / num_dbs if num_dbs > 0 else 0
 
+    print(f"No. of db: {num_dbs}")
     print(f"Average No. of tables across all database: {avg_table_count_per_db:.2f}")
     print(f"Average No. of columns across all Database: {avg_total_column_count_per_db:.2f}")
     print(f"Average Avg. No. of columns per table across all Databases: {avg_avg_column_per_table_per_db:.2f}")
@@ -146,8 +147,8 @@ def walk_metadata(dev):
         proj_db_name = os.path.basename(os.path.normpath(db_path)) 
         assert '.' in proj_db_name
         project_name, db_name = proj_db_name.split('.')
-        if f"{project_name}.{db_name}" not in db_ids:
-            continue 
+        # if f"{project_name}.{db_name}" not in db_ids:  # TODO DASAP
+            # continue 
 
         table_count = 0
         total_column_count = 0
