@@ -57,7 +57,7 @@ We create [evaluation suite](https://github.com/xlang-ai/Spider2/tree/main/spide
 
 | Method                | Score  |
 | --------------------- | ------ |
-| Spider-Agent + GPT-4o | 10.00% |
+| Spider-Agent + GPT-4o | 9.25% |
 
 
 
