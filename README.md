@@ -1,15 +1,16 @@
 # Spider 2.0: Can Language Models Resolve Real-World Enterprise Text-to-SQL Workflows?
 
-![Local Image](./assets/Spider2.png)
 
 ## 📰 News
 
-- 2024-08-28: We released a smaller version of Spider 2.0 (approximately 25% of the full dataset) containing 190 examples to give users early access. The full dataset and the paper will be available in two weeks. Stay tuned! 
+- 2024-08-28: We released a smaller version of Spider 2.0 (~ 25% of the full dataset) containing 190 examples to give users early access. The full dataset and the paper will be available in two weeks. Stay tuned! 
 
 
 ## 👋 Overview
 
+Spider 2.0 is a benchmark of real world SQL generation tasks across enterprise-grade databases and diverse realistic scenarios.
 
+![Local Image](./assets/Spider2.png)
 
 
 ## 🚀 Quickstart
@@ -41,13 +42,13 @@ For `Spider 2.0`, we proposed an agent framework [`Spider-Agent`](https://github
 > We also warmly welcome you to evaluate your methods on Spider 2.0.
 
 
-## Spider2-Lite Baselines
+## Spider 2.0-Lite Baselines
 
-For `Spider2-Lite`, we proposed baselines based on widely used text2sql methods: [`Dail-SQL`](https://github.com/xlang-ai/Spider2/blob/main/spider2-baselines/DailSQL/README.md) and [`CodeS`](https://github.com/xlang-ai/Spider2/tree/main/spider2-baselines/CodeS/README.md), with evaluation results reported :test_tube:.
+For `Spider 2.0-Lite`, we proposed baselines based on widely used text2sql methods: [`Dail-SQL`](https://github.com/xlang-ai/Spider2/blob/main/spider2-baselines/DailSQL/README.md) and [`CodeS`](https://github.com/xlang-ai/Spider2/tree/main/spider2-baselines/CodeS/README.md), with evaluation results reported :test_tube:.
 
 ### Performance Comparison
 
-> - The **Score [w/ Func & w/ Plan]** represents an oracle setting, utilizing reference plans and gold SQL functions for a set of analytical experiments.
+> **Score [w/ Func & w/ Plan]** represents an oracle setting, utilizing reference plans and gold SQL functions for a set of analytical experiments.
 
 
 | Method                  | Score   |    Score  [w/ Func & w/ Plan]     |
