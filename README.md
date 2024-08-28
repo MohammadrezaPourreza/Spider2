@@ -15,7 +15,17 @@
 
 In 2018, our group proposed [Spider 1.0](https://yale-lily.github.io/spider), which has been widely used in Text-to-SQL research. 
 
-However, real-world enterprise-level Text-to-SQL workflows often involve complex data and require advanced SQL queries across various operations. **We lack a comprehensive testbed to fully evaluate and develop Text-to-SQL capabilities.**
+However, real-world enterprise-level Text-to-SQL workflows often involve complex databases and require advanced SQL queries across diverse operations. 
+
+**We lack a comprehensive and challenging testbed that encapsulates these phenomena, essential for advancing the capabilities of these models and evaluating their true potential in code generation, specifically in text-to-SQL tasks.**
+
+<!-- However, real-world enterprise-level Text-to-SQL workflows often involve: 
+1. Complex cloud or local data across various database systems with significantly larger schema.
+2. The need to employ diverse operations from data transformation to analytics tasks.
+3. The need to use multiple nested sub-queries in various dialects to complete sophisticated tasks.
+
+These workflows typically process natural language analytic questions, yet we lack a comprehensive and challenging testbed that encapsulates these phenomena, essential for advancing the capabilities of these models and evaluating their true potential in code generation, specifically in text-to-SQL tasks. -->
+
 
 To this end, we introduce Spider 2.0, an evaluation framework comprising 600 real-world text-to-SQL workflow problems derived from enterprise-level database use cases. 
 
@@ -46,11 +56,11 @@ For each instance, we also provide a separate folder [`./spider2/evaluation_exam
 - `README.md`: detailed requirements of the `instruction` field for the current example with `instance_id`;
 - `*_credential.json`: credential file connecting to realistic enterprise-level databases, e.g., BigQuery. Can be replaced with your OWN;
 - `result.csv`: CSV file to store the execution results;
-- `query.py`: python program demonstrating how to connect to the database;
 - other instance-specific materials which assist in finishing the current task:
     - 🏗️ partial project, e.g., [`dbt_project/`](./spider2/evaluation_examples/43d5ad49-0f99-4b90-a6df-d3afc5c216ff/).
-    - 🎞️ query history or samples, e.g., [FIREBASE_QUERY_HISTORY/](./spider2/evaluation_examples/1d009ac3-1c75-447b-a7e0-49ccc2b5fbf9/FIREBASE_QUERY_HISTORY/), [BASIC_SQLS/](./spider2/evaluation_examples/e4a35097-4ff3-4ca7-8304-f593e039735b/BASIC_SQLS), etc.
+    - 🎞️ query history or samples, e.g., [QUERY_HISTORY/](./spider2/evaluation_examples/1d009ac3-1c75-447b-a7e0-49ccc2b5fbf9/FIREBASE_QUERY_HISTORY/), [BASIC_SQLS/](./spider2/evaluation_examples/e4a35097-4ff3-4ca7-8304-f593e039735b/BASIC_SQLS), etc.
     - 📝 reference documentation: [`ga4_dimensions_and_metrics.md`](./spider2/evaluation_examples/3a348be1-aed2-44fb-8185-c66c9d14a6ef/ga4_dimensions_and_metrics.md), [`retention_rate.md`](./spider2/evaluation_examples/22faca18-f766-46f5-a22b-c79de56fb6ec/retention_rate.md), etc.
+    - 🔍 query interface: We have predefined how to access the diverse database systems.
 
 <!-- - `instance_id`: (str) - A formatted instance identifier, UUID
 - `instruction`: (str) - The instruction
