@@ -1,4 +1,4 @@
-# Spider 2.0: Can Language Models Resolve Real-World Enterprise Text-to-SQL Workflows?
+# Spider 2.0: Evaluating Language Models on Real-World Enterprise Text-to-SQL Workflows
 
 
 ## 📰 News
