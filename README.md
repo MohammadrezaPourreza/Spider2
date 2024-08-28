@@ -21,9 +21,10 @@ To this end, we introduce Spider 2.0, an evaluation framework of real-world SQL 
 
 We evaluated Spider 1.0, BIRD, and Spider 2.0 using the popular framework, [Dail-SQL](https://github.com/BeachWang/DAIL-SQL).
 
-|                 | Spider 1.0 | BIRD | Spider 2.0 |
-| --------------- | ---------- | ---- | ---------- |
-| DailSQL + GPT-4 | 86.6       | 57.4 | 6.0        |
+|                 | Spider 1.0 dev | Spider 1.0 test | BIRD test | Spider 2.0 |
+| --------------- | -------------- | --------------- | --------- | ---------- |
+| DailSQL + GPT-4 | 82.4           | 86.6            | 57.4      | 6.0        |
+| CodeS-7B        | 85.4           | -               | 59.3      | 1.3        |
 
 
 
@@ -36,9 +37,9 @@ For [`Spider 2.0`](https://github.com/xlang-ai/Spider2/tree/main/spider2#spider-
 , all evaluation examples are in [`evaluation_examples`](https://github.com/xlang-ai/Spider2/tree/main/spider2/evaluation_examples) 
 
 - `instance_id`: (str) - A formatted instance identifier, UUID.
-- `instruction`: (str) - The question body.
-- `type`: (str) - [Local, Bigquery, DBT].
-- `derived_from`: (str) - [ga001 / bq003 / local027 ...]
+- `instruction`: (str) - The instruction.
+- `type`: (str) - [Local, Bigquery, DBT, Snowflake].
+- `./evaluation_examples/instanceid/*`: evaluation context
 
 
 #### Run Spider-Agent
