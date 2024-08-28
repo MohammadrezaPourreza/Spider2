@@ -31,7 +31,7 @@ For each instance, we also provide a separate folder [`./evaluation_examples/{in
 
 ## Baseline
 
-We proposed an agent framework [`Spider-Agent`](..//methods/spider-agent) baseline with interactive environment.
+We proposed an agent framework [`Spider-Agent`](../methods/spider-agent) baseline with interactive environment.
 
 
 
