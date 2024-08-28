@@ -352,9 +352,10 @@ if __name__ == "__main__":
             has_json = any(file.endswith('.json') for file in os.listdir(folder_path_a))
             if has_json:
                 db_ids.append(f"{folder_name_a}")
-    import pdb; pdb.set_trace()
+
     bq_db_name = list(bq_db_name - set(db_ids))
 
+    # bq_db_name = ['spider2-public-data.AdventureWorks', 'spider2-public-data.Brazilian_E_Commerce', 'spider2-public-data.EU_soccer', 'spider2-public-data.E_commerce', 'spider2-public-data.WWE', 'spider2-public-data.airlines', 'spider2-public-data.aliens', 'spider2-public-data.aliens', 'spider2-public-data.atliq', 'spider2-public-data.baseball', 'spider2-public-data.complex_oracle', 'spider2-public-data.death', 'spider2-public-data.delivery_center', 'spider2-public-data.electronic_sales.customers', 'spider2-public-data.f1', 'spider2-public-data.job', 'spider2-public-data.legislation', 'spider2-public-data.meta_kaggle', 'spider2-public-data.tree_and_income', 'spider2-public-data.wide_world_importers']
     
     for db_name in tqdm(bq_db_name):
         try:
