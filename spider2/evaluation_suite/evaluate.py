@@ -21,7 +21,7 @@ def read_jsonl(file_path):
 
 def run_evaluation(result_dir, gold_dir):
     gold_jsonl_files = [f for f in os.listdir(gold_dir) if f.endswith('.jsonl')]
-    assert len(gold_jsonl_files) == 1 and gold_jsonl_files[0] == "spider2_world_eval.jsonl"
+    assert len(gold_jsonl_files) == 1 and gold_jsonl_files[0] == "spider2_eval.jsonl"
     gold_jsonl_file = os.path.join(gold_dir,gold_jsonl_files[0])
     
     result_jsonl_files = [f for f in os.listdir(result_dir) if f.endswith('.jsonl')]

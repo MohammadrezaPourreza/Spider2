@@ -1,5 +1,3 @@
-# import debugpy; debugpy.connect(('127.0.0.1', 5690))
-
 
 import argparse
 from utils.db_utils import check_sql_executability, get_db_schema_sequence, get_matched_content_sequence, detect_special_char

@@ -118,7 +118,7 @@ def get_bigquery_sql_result(sql_query, is_save, save_dir=None, file_name="result
             value = results.iat[0, 0]
             return value, None
     except Exception as e:
-        print("Error occurred while fetching data: ", e)  # 这个e就是dbms的报错
+        print("Error occurred while fetching data: ", e)  
         return False, str(e)
     return True, None
       
@@ -143,7 +143,7 @@ def evaluate_spider2sql(args):
 
     pred_result_dir = args.result_dir
     
-    eval_standard_dict = load_jsonl_to_dict("./gold/spider2sql_eval.jsonl")
+    eval_standard_dict = load_jsonl_to_dict("./gold/spider2lite_eval.jsonl")
     spider2sql_metadata = load_json_list_to_dict("../spider2-lite.json")
 
         
@@ -164,16 +164,13 @@ def evaluate_spider2sql(args):
     
     
     for id in tqdm(eval_ids):
-        # # TODO dasap 测试子集
-        # if id not in ['bq321', 'bq123', 'bq020_2', 'bq329', 'bq016', 'bq062', 'bq076', 'bq006', 'bq339', 'bq020_1']:
-        #     continue
 
         error_info = None
         if mode == "sql":
             pred_sql_query = open(os.path.join(pred_result_dir, f"{id}.sql")).read()
             if "bq" in id or "ga" in id:
-                exe_flag, dbms_error_info = get_bigquery_sql_result(pred_sql_query, True, "temp", f"{id}_pred.csv")  # 从云端数据库拿到sql的exec结果，如果system error，则没必要比较retrieved result
-                if exe_flag == False:  # 发生dbms级别的报错
+                exe_flag, dbms_error_info = get_bigquery_sql_result(pred_sql_query, True, "temp", f"{id}_pred.csv")  
+                if exe_flag == False: 
                     score = 0
                     error_info = dbms_error_info
                 else:
@@ -185,7 +182,6 @@ def evaluate_spider2sql(args):
                     all_files = os.listdir(gold_result_dir)
                     csv_files = [file for file in all_files if pattern.match(file)]
                     if len(csv_files) == 1:
-                        print(f"对于id={id}, gold csv的长度为1，执行compare_pandas_table")
                         gold_pd = pd.read_csv(os.path.join(gold_result_dir, f"{id}.csv"))
                         try:
                             score = compare_pandas_table(pred_pd, gold_pd, eval_standard_dict.get(id)['condition_cols'], eval_standard_dict.get(id)['ignore_order'])
@@ -196,7 +192,6 @@ def evaluate_spider2sql(args):
                         if score == 0 and error_info is None:
                             error_info = 'Result Error'     
                     elif len(csv_files) > 1:
-                        print(f'对于id={id}, gold csv的长度大于1，执行compare_multi_pandas_table')
                         gold_pds = [pd.read_csv(os.path.join(gold_result_dir, file)) for file in csv_files]
                         score = compare_multi_pandas_table(pred_pd, gold_pds, eval_standard_dict.get(id)['condition_cols'], eval_standard_dict.get(id)['ignore_order'])
                         if score == 0 and error_info is None:
@@ -241,7 +236,7 @@ def evaluate_spider2sql(args):
     score = sum([item['score'] for item in output_results]) / len(output_results)
     print(f"Final score: {score}")
 
-    # 将带有error_infos的output_results写入json文件
+
     DEBUG_PREFIX = "SQL_DEBUG_" if args.is_sql_debug else ""
     with open(
         osp.join(args.result_dir, f"../{DEBUG_PREFIX}eval_result_with_error_infos.json"), 'w'

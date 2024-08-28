@@ -1,6 +1,6 @@
 # Spider-Agent
 
-An Agent Method Baseline for Spider2-World based on Docker ENV.
+An Agent Method Baseline for Spider 2.0 based on Docker environment.
 
 
 ## 🚀 Quickstart
@@ -9,11 +9,11 @@ An Agent Method Baseline for Spider2-World based on Docker ENV.
 
 #### 1. Conda Env
 ```
-# Clone the Spider2 repository
+# Clone the Spider 2.0 repository
 git clone https://github.com/xlang-ai/Spider2.git
 cd methods/spider-agent
 
-# Optional: Create a Conda environment for Spider2
+# Optional: Create a Conda environment for Spider 2.0
 # conda create -n spider2 python=3.11
 # conda activate spider2
 
@@ -53,8 +53,8 @@ python run.py --model gpt-4o --suffix test1
 Reorganize run results into a standard submission format, here we store the answer directly into the evaluation suite
 
 ```python
-python get_spider2c_submission_data.py --experiment_suffix <The name of this experiment> --results_folder_name <Standard Submission Folders>
-python get_spider2c_submission_data.py --experiment_suffix gpt-4o-test1 --results_folder_name ../../spider2/evaluation_suite/gpt-4o-test1
+python get_spider2_submission_data.py --experiment_suffix <The name of this experiment> --results_folder_name <Standard Submission Folders>
+python get_spider2_submission_data.py --experiment_suffix gpt-4o-test1 --results_folder_name ../../spider2/evaluation_suite/gpt-4o-test1
 ```
 
 #### Run Evaluation Scripts

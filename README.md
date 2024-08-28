@@ -1,4 +1,4 @@
-# Spider 2.0: Can Language Models Resolve Real-World Enterprise Text-to-SQL Workflows?
+# Spider 2.0: Evaluating Language Models on Real-World Enterprise Text-to-SQL Workflows
 
 
 ## 📰 News
@@ -15,11 +15,21 @@
 
 In 2018, our group proposed [Spider 1.0](https://yale-lily.github.io/spider), which has been widely used in Text-to-SQL research. 
 
-However, real-world enterprise-level Text-to-SQL workflows often involve complex data and require advanced SQL queries across various operations. **We lack a comprehensive testbed to fully evaluate and develop Text-to-SQL capabilities.**
+However, real-world enterprise-level Text-to-SQL workflows often involve complex databases and require advanced SQL queries across diverse operations. 
 
-To this end, we introduce Spider 2.0, an evaluation framework of real-world SQL generation tasks across enterprise-grade databases and diverse realistic scenarios.
+<!-- **We lack a comprehensive and challenging testbed that encapsulates these phenomena, essential for advancing the capabilities of these models and evaluating their true potential in code generation, specifically in text-to-SQL tasks.** -->
 
-We evaluated Spider 1.0, BIRD, and Spider 2.0 using the popular framework, [Dail-SQL](https://github.com/BeachWang/DAIL-SQL).
+<!-- However, real-world enterprise-level Text-to-SQL workflows often involve: 
+1. Complex cloud or local data across various database systems with significantly larger schema.
+2. The need to employ diverse operations from data transformation to analytics tasks.
+3. The need to use multiple nested sub-queries in various dialects to complete sophisticated tasks.
+
+These workflows typically process natural language analytic questions, yet we lack a comprehensive and challenging testbed that encapsulates these phenomena, essential for advancing the capabilities of these models and evaluating their true potential in code generation, specifically in text-to-SQL tasks. -->
+
+
+To this end, we introduce Spider 2.0, an evaluation framework comprising 600 real-world text-to-SQL workflow problems derived from enterprise-level database use cases. 
+
+We evaluated Spider 1.0, BIRD, and Spider 2.0 using the popular frameworks [Dail-SQL](https://github.com/BeachWang/DAIL-SQL) and [CodeS](https://github.com/RUCKBReasoning/codes).
 
 |                 | Spider 1.0 dev | Spider 1.0 test | BIRD test | Spider 2.0 |
 | --------------- | -------------- | --------------- | --------- | ---------- |
@@ -33,13 +43,32 @@ We evaluated Spider 1.0, BIRD, and Spider 2.0 using the popular framework, [Dail
 
 
 ### Spider 2.0
-For [`Spider 2.0`](https://github.com/xlang-ai/Spider2/tree/main/spider2#spider-20)
-, all evaluation examples are in [`evaluation_examples`](https://github.com/xlang-ai/Spider2/tree/main/spider2/evaluation_examples).
+For [`Spider 2.0`](./spider2/README.md), all evaluation examples are aggregated in file [`spider2.jsonl`](./spider2/evaluation_examples/spider2.jsonl), where each data point contains the following field:
+```json
+{
+    "instance_id": "3a348be1-aed2-44fb-8185-c66c9d14a6ef",
+    "instruction": "Please tell me the number of sessions for each website traffic channel in December 2020.",
+    "type": "Bigquery"
+}
+```
+For each instance, we also provide a separate folder [`./spider2/evaluation_examples/{instruction_id}`](./spider2/evaluation_examples/) as its **Execution Contetxt** to simulate the agentic setting. Each folder may have the following files:
 
-- `instance_id`: (str) - A formatted instance identifier, UUID
+- `README.md`: detailed requirements of the `instruction` field for the current example with `instance_id`;
+- `*_credential.json`: credential file connecting to realistic enterprise-level databases, e.g., BigQuery. Can be replaced with your OWN;
+- `result.csv`: CSV file to store the execution results;
+- other instance-specific materials which assist in finishing the current task:
+    - 🏗️ partial project, e.g., [`dbt_project/`](./spider2/evaluation_examples/43d5ad49-0f99-4b90-a6df-d3afc5c216ff/).
+    - 🎞️ query history or samples, e.g., [QUERY_HISTORY/](./spider2/evaluation_examples/1d009ac3-1c75-447b-a7e0-49ccc2b5fbf9/FIREBASE_QUERY_HISTORY/), [BASIC_SQLS/](./spider2/evaluation_examples/e4a35097-4ff3-4ca7-8304-f593e039735b/BASIC_SQLS), etc.
+    - 📝 reference documentation: [`ga4_dimensions_and_metrics.md`](./spider2/evaluation_examples/3a348be1-aed2-44fb-8185-c66c9d14a6ef/ga4_dimensions_and_metrics.md), [`retention_rate.md`](./spider2/evaluation_examples/22faca18-f766-46f5-a22b-c79de56fb6ec/retention_rate.md), etc.
+    - 🔍 query interface: We have predefined how to access the diverse database systems.
+
+<!-- - `instance_id`: (str) - A formatted instance identifier, UUID
 - `instruction`: (str) - The instruction
 - `type`: (str) - [Local, Bigquery, DBT, Snowflake]
 - `./evaluation_examples/instanceid/*`: evaluation context
+[`evaluation_examples`](https://github.com/xlang-ai/Spider2/tree/main/spider2/evaluation_examples). -->
+
+🤗 Feel free to devise your intelligent agent and resolve the task defined in `instruction` field and `README.md`.
 
 
 #### Run Spider-Agent
@@ -48,9 +77,12 @@ For [`Spider 2.0`](https://github.com/xlang-ai/Spider2/tree/main/spider2#spider-
 git clone https://github.com/xlang-ai/Spider2.git
 cd methods/spider-agent
 
-# Optional: Create a Conda environment for Spider2
+# Optional: Create a Conda environment for Spider 2.0
 # conda create -n spider2 python=3.11
 # conda activate spider2
+
+# Install required dependencies
+pip install -r requirements.txt
 
 export OPENAI_API_KEY=your_openai_api_key
 python run.py --model gpt-4o --suffix test1
@@ -94,7 +126,7 @@ Simply run :laughing::
 bash run.sh
 ```
 
-For a detailed guideline of running Dail-SQL, please refer to [README of Dail-SQL](https://github.com/xlang-ai/Spider2/blob/main/spider2-baselines/DailSQL/README.md).
+For a detailed guideline of running Dail-SQL, please refer to [Installation](https://github.com/xlang-ai/Spider2/tree/main/spider2-lite/baselines/dailsql#installation).
 
 # 💫 Contributions
 
@@ -104,39 +136,3 @@ If you find our work helpful, please use the following citations.
 ```
 
 ```
-
-<!-- 
-
-## Spider 2.0 Performance
-
-
-
-
-
-#### Performance
-
-
-| Method                | Score |
-| --------------------- | ----- |
-| Spider-Agent + GPT-4o | 9.25% |
-
-> We will test more LLMs and Agent Frameworks! 
->
-> We also warmly welcome you to evaluate your methods on Spider 2.0.
-
-
-## Spider 2.0-Lite Baselines
-
-For [`Spider 2.0-Lite`](https://github.com/xlang-ai/Spider2/blob/main/spider2-lite/README.md#spider-20-lite), we proposed baselines based on widely used text2sql methods: [`Dail-SQL`](https://github.com/xlang-ai/Spider2/blob/main/spider2-baselines/DailSQL/README.md) and [`CodeS`](https://github.com/xlang-ai/Spider2/tree/main/spider2-baselines/CodeS/README.md), with evaluation results reported :test_tube:.
-
-### Performance Comparison
-
-> **Score [w/ Func & w/ Plan]** represents an oracle setting, utilizing reference plans and gold SQL functions for a set of analytical experiments.
-
-
-| Method           | Score             | Score  [w/ Func & w/ Plan] |
-| ---------------- | ----------------- | -------------------------- |
-| DailSQL + GPT-4o | **6.04% (9/149)** | 12.75% (19/149)            |
-| CodeS-7B         | 1.34% (2/149)     | 2.01% (3/149)              |
-
- -->

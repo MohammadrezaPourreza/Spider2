@@ -81,6 +81,7 @@ def db_stats(db_stats_list):
     avg_total_column_count_per_db = total_column_count / num_dbs if num_dbs > 0 else 0
     avg_avg_column_per_table_per_db = total_avg_column_per_table / num_dbs if num_dbs > 0 else 0
 
+    print(f"No. of db: {num_dbs}")
     print(f"Average No. of tables across all database: {avg_table_count_per_db:.2f}")
     print(f"Average No. of columns across all Database: {avg_total_column_count_per_db:.2f}")
     print(f"Average Avg. No. of columns per table across all Databases: {avg_avg_column_per_table_per_db:.2f}")
