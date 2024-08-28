@@ -1,12 +1,6 @@
-# Spider2
+# Spider 2.0-Lite
 
-Spider2 is a realistic and challenging Text-to-SQL dataset, significantly more difficult and closer to real-world scenarios than any previous Text2SQL benchmarks.
-- Enterprise and industrial grade databases covering various fields with super complex schema. Each database has many tables, each table has many columns.
-- Various types of databases, ranging from local DBs (SQLite, DuckDB, Postgres) to large cloud DBs(Bigquery,Snowflake).
-- Extremely realistic and complex SQL generation tasks, collected and rewrited from real websites, forums, and tutorials.
-- Writing advanced and real-world industrial SQL. Beyond extensive use of SELECT, WHERE, and JOIN operations, it also requires incorporating various external knowledge, SQL dialects, special functions, and more.
-
-Since we have only released the tiny version so far, a large amount of high-quality data will be announced in two weeks!
+To meet with research interests in traditional Text2SQL settings, we have released a subset of Spider 2.0 called Spider 2.0-Lite. Spider 2.0-Lite covers 90% of examples from Spider 2.0 that are sampled to be more lightweight and standalone, with a focus on evaluating Large Language Models on SQL generation.
 
 
 ## Folder
@@ -17,8 +11,6 @@ Since we have only released the tiny version so far, a large amount of high-qual
 ├── bigquery_credential.json
 ├── databases                   # DB/DB metadata for Spider2 dataset
 │   ├── bigquery                # The information of DB on Bigquery
-│   │   ├── metadata                 # The details data of each DB, including DB DDL, table, column information, and sample data.
-│   │   └── metadata_markdown        # Some human-readable markdown documentation schema 
 │   ├── local                   # The DB of the local databases
 │   └── snowflake               # The information of DB on Snowflake
 ├── interface                   # Scripts for interacting with the database.
