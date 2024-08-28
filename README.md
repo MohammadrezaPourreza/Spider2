@@ -33,13 +33,32 @@ We evaluated Spider 1.0, BIRD, and Spider 2.0 using the popular frameworks [Dail
 
 
 ### Spider 2.0
-For [`Spider 2.0`](https://github.com/xlang-ai/Spider2/tree/main/spider2#spider-20)
-, all evaluation examples are in [`evaluation_examples`](https://github.com/xlang-ai/Spider2/tree/main/spider2/evaluation_examples).
+For [`Spider 2.0`](./spider2/README.md), all evaluation examples are aggregated in file [`spider2_world.jsonl`](./spider2/evaluation_examples/spider2_world.jsonl), where each data point contains the following field:
+```json
+{
+    "instance_id": "3a348be1-aed2-44fb-8185-c66c9d14a6ef",
+    "instruction": "Please tell me the number of sessions for each website traffic channel in December 2020.",
+    "type": "Bigquery"
+}
+```
+For each instance, we also provide a separate folder [`./spider2/evaluation_examples/{instruction_id}`](./spider2/evaluation_examples/) as its **Execution Contetxt** to simulate the agentic setting. Each folder may have the following files:
 
-- `instance_id`: (str) - A formatted instance identifier, UUID
+- `README.md`: detailed requirements of the `instruction` field for the current example with `instance_id`;
+- `*_credential.json`: credential file connecting to realistic enterprise-level databases, e.g., BigQuery. Can be replaced with your OWN;
+- `result.csv`: CSV file to store the execution results;
+- `query.py`: python program demonstrating how to connect to the database;
+- other instance-specific materials which assist in finishing the current task:
+    - <u>partial project</u>, e.g., [`dbt_project/`](./spider2/evaluation_examples/43d5ad49-0f99-4b90-a6df-d3afc5c216ff/).
+    - <u>query history or samples</u>, e.g., [FIREBASE_QUERY_HISTORY/](./spider2/evaluation_examples/1d009ac3-1c75-447b-a7e0-49ccc2b5fbf9/FIREBASE_QUERY_HISTORY/), [BASIC_SQLS/](./spider2/evaluation_examples/e4a35097-4ff3-4ca7-8304-f593e039735b/BASIC_SQLS), etc.
+    - <u>reference documentation</u>: [`ga4_dimensions_and_metrics.md`](./spider2/evaluation_examples/3a348be1-aed2-44fb-8185-c66c9d14a6ef/ga4_dimensions_and_metrics.md), [`retention_rate.md`](./spider2/evaluation_examples/22faca18-f766-46f5-a22b-c79de56fb6ec/retention_rate.md), etc.
+
+<!-- - `instance_id`: (str) - A formatted instance identifier, UUID
 - `instruction`: (str) - The instruction
 - `type`: (str) - [Local, Bigquery, DBT, Snowflake]
 - `./evaluation_examples/instanceid/*`: evaluation context
+[`evaluation_examples`](https://github.com/xlang-ai/Spider2/tree/main/spider2/evaluation_examples). -->
+
+🤗 Feel free to devise your intelligent agent and resolve the task defined in the `instruction` field and `README.md` file.
 
 
 #### Run Spider-Agent

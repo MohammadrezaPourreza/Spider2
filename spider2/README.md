@@ -12,8 +12,7 @@ Solving these tasks requires models to understand database metadata, dialects, a
 For any given example, everything needed to solve this task is provided within the folder. Please ensure your agent makes full use of these resources.
 
 
-All evaluation examples are in [`evaluation_examples`](https://github.com/xlang-ai/Spider2/tree/main/spider2/evaluation_examples) 
-
+All evaluation examples are in [`evaluation_examples`](./evaluation_examples/)
 
 - `instance_id`: (str) - A formatted instance identifier, UUID.
 - `instruction`: (str) - The question body.
@@ -37,13 +36,13 @@ All evaluation examples are in [`evaluation_examples`](https://github.com/xlang-
 
 ## Baseline
 
-We proposed an agent framework [`Spider-Agent`](https://github.com/xlang-ai/Spider2/tree/main/methods/spider-agent#spider-agent) baseline with interactive environment. 
+We proposed an agent framework [`Spider-Agent`](..//methods/spider-agent) baseline with interactive environment.
 
 
 
 ## Evaluation
 
-We create [evaluation suite](https://github.com/xlang-ai/Spider2/tree/main/spider2/evaluation_suite#evaluation-suite) for Spider 2.0.
+We create [evaluation suite](./evaluation_suite) for Spider 2.0.
 
 
 #### Evaluation Results
@@ -51,8 +50,4 @@ We create [evaluation suite](https://github.com/xlang-ai/Spider2/tree/main/spide
 
 | Method                | Score  |
 | --------------------- | ------ |
-| Spider-Agent + GPT-4o | 9.25% |
-
-
-
-
+| Spider-Agent + GPT-4o | 9.25%  |
