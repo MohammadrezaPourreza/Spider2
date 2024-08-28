@@ -118,7 +118,7 @@
     },
     {
         "instance_id": "bq029",
-        "db": "patents-public-data.patents",
+        "db": "patents-public-data.patents\npatents-public-data.cpc",
         "question": "Get the number of patent publications and the average number of inventors per patent in the US every five years from 1945 to 2020?",
         "external_knowledge": null,
         "plan": "1.Extract information on patent applications in the United States since 1945.\n2.Divide the data into five-year intervals.\n3.Within each interval, count the number of applicants for each patent, ensuring each patent has more than zero applicants.\n4.Calculate both the total number of patents and the average number of applicants per patent for each interval.",
@@ -131,7 +131,7 @@
     },
     {
         "instance_id": "bq026",
-        "db": "patents-public-data.patents",
+        "db": "patents-public-data.patents\npatents-public-data.cpc",
         "question": "For the assignee who has been the most active in the patent category 'A61K39', I'd like to know the five patent jurisdictions code where they filed the most patents during their busiest year, separated by commas.",
         "external_knowledge": null,
         "plan": "1. First, access the patents database to retrieve all patent application data where the CPC code matches \"A61K39\".\n2. For each assignee, categorize the data by year and country of application.\n3. Identify the top five countries with the most applications for each assignee per year.\n4. Sort to find out which assignee has the highest total number of applications.\n5. Select the year with the most applications for this assignee.",
@@ -150,7 +150,7 @@
     },
     {
         "instance_id": "bq026_1",
-        "db": "patents-public-data.patents",
+        "db": "patents-public-data.patents\npatents-public-data.cpc",
         "question": "In which year did the assignee with the most applications in the patent category 'A61K39' file the most?",
         "external_knowledge": null,
         "plan": "1. First, access the patents database to retrieve all patent application data where the CPC code matches \"A61K39\".\n2. For each assignee, categorize the data by year and country of application.\n3. Identify the assignee with the most total applications for the \u201cA61K39\u201d patent.\n4. Select the year with the most applications for this assignee",
@@ -168,7 +168,7 @@
     },
     {
         "instance_id": "bq026_2",
-        "db": "patents-public-data.patents",
+        "db": "patents-public-data.patents\npatents-public-data.cpc",
         "question": "For patent class A01B3, I want to analyze the information of the top 20 assignees based on the total number of applications. Please provide the following five pieces of information: the names of these assignees, their total number of applications, the year with the most applications, the number of applications in that year, and the country code with the most applications during that year.",
         "external_knowledge": null,
         "plan": "1. **Filter Patent Data**: \n   - Identify and collect patent applications related to a specific patent class.\n   - Ensure each application is uniquely identified and includes relevant assignee, filing date, and country information.\n\n2. **Count Applications by Assignee, Year, and Country**:\n   - For each application, determine the number of filings per assignee, broken down by year and country.\n   - Group the data by assignee name, year, and country to prepare for aggregation.\n\n3. **Aggregate Yearly Application Data**:\n   - Summarize the total number of applications for each assignee by year.\n   - Identify the country with the highest number of applications for each assignee and year.\n\n4. **Determine Peak Application Year for Each Assignee**:\n   - Calculate the overall number of applications for each assignee.\n   - Identify the year with the highest application count and the corresponding country with the most applications for each assignee.\n\n5. **Select and Rank Top Assignees**:\n   - Order the assignees by their total number of applications in descending order.\n   - Limit the results to the top 20 assignees, including their total application count, the year with the highest applications, the number of applications in that year, and the most frequent country code during that year.",
@@ -186,7 +186,7 @@
     },
     {
         "instance_id": "bq033",
-        "db": "patents-public-data.patents",
+        "db": "patents-public-data.patents\npatents-public-data.cpc",
         "question": "How many US patent applications about IoT applications were filed each month from 2008 to 2022?",
         "external_knowledge": null,
         "plan": "1. Extract patents with abstracts containing \"Internet of Things\" that were applied for in the United States.\n2. Generate a record set starting from January 2008 to December 2022.\n3. Count and record the number of \"Internet of Things\" patents applied for each month.\n4. Sort and return the monthly totals with the highest number of patent applications.",
@@ -205,7 +205,7 @@
     },
     {
         "instance_id": "bq209",
-        "db": "patents-public-data.patents",
+        "db": "patents-public-data.patents\npatents-public-data.cpc",
         "question": "Could you find out which US utility patent granted in January 2010, with a published application, has the most forward citations over the ten years following its application date?",
         "external_knowledge": null,
         "plan": "1. Retrieve all patents granted in January 2010, considering only those with the kind code B2, which are utility patents issued with a published application.\n2. Query other patents to extract forward citation information from patent publications, ensuring that the citation date of the citing patent falls within ten years of the filing date of the cited patent.\n3. Calculate the number of distinct citation applications for each patent to identify the patent with the most citations.",
@@ -220,7 +220,7 @@
     },
     {
         "instance_id": "bq027",
-        "db": "patents-public-data.patents",
+        "db": "patents-public-data.patents\npatents-public-data.cpc",
         "question": "For US B2 patents granted in the first seven days of January 2018, tell me the publication number of each patent and the number of backward citations it has received in the SEA category.",
         "external_knowledge": null,
         "plan": "1. **Define the Initial Dataset**: Create a temporary dataset that includes the publication number and application number of patents.\n    - Filter for patents from a specific country.\n    - Ensure the patents have a grant date within the first week of January 2018.\n    - Exclude any entries without a grant date.\n    - Include only patents with a specific kind code.\n\n2. **Create the Main Query**: Use the temporary dataset to find the required information.\n    - Select the publication number from the temporary dataset.\n\n3. **Join with Citation Data**: Perform a left join with another table that contains citation details.\n    - Extract the citing publication number, cited publication number, and category from the citation details.\n    - Ensure that the citation category contains a specific keyword.\n\n4. **Join with Publication Data Again**: Perform another left join to link the cited publication number with the application number from the publication data.\n\n5. **Aggregate the Results**: Group the results by the publication number from the initial dataset.\n    - Count the distinct application numbers that are cited by the patents in the specified category.\n\n6. **Order the Results**: Sort the final results by the publication number.",
@@ -232,7 +232,7 @@
     },
     {
         "instance_id": "bq210",
-        "db": "patents-public-data.patents",
+        "db": "patents-public-data.patents\npatents-public-data.cpc",
         "question": "How many US B2 patents granted between 2015 and 2018 contain claims that do not include the word 'claim'?",
         "external_knowledge": null,
         "plan": "1. **Extract Relevant Patent Data**: Create a temporary dataset by selecting publication numbers and their associated claims from the main data source. Ensure that only patents granted in the US between the years 2015 and 2018 are included. Also, filter to include only those patents whose publication numbers end with 'B2'.\n\n2. **Unnest Claims**: Expand the nested claims data so that each claim associated with a patent is treated as a separate row in the temporary dataset.\n\n3. **Filter Claims Text**: Check each claim text to see if it does not contain the word 'claim'. Count the number of such claims for each publication number.\n\n4. **Group by Publication Number**: Aggregate the results by publication number, counting how many claims per patent do not contain the word 'claim'.\n\n5. **Filter Non-zero Counts**: From the aggregated data, select only those patents that have at least one claim not containing the word 'claim'.\n\n6. **Final Count**: Count the number of patents that meet the criteria established in the previous steps. This final result represents the number of US B2 patents granted between 2015 and 2018 that have at least one claim not containing the word 'claim'.",
@@ -243,7 +243,7 @@
     },
     {
         "instance_id": "bq211",
-        "db": "patents-public-data.patents",
+        "db": "patents-public-data.patents\npatents-public-data.cpc",
         "question": "Among the US utility B2 patents granted in January 2008, how many of them belong to families that have a total of over 300 distinct applications?",
         "external_knowledge": null,
         "plan": "1.Extract information on patents that were applied for and granted in the United States in January 2008.\n2.Obtain the family IDs associated with these patents.\n3.Retrieve the total number of patents within these families.\n4.Keep the application IDs of patents where the family size exceeds 300 and count their total number.",
@@ -251,7 +251,7 @@
     },
     {
         "instance_id": "bq213",
-        "db": "patents-public-data.patents",
+        "db": "patents-public-data.patents\npatents-public-data.cpc",
         "question": "What is the most common 4-digit IPC code among US B2 utility patents granted in the first seven days of June 2018?",
         "external_knowledge": "patents_info.md",
         "plan": "1.Data Retrieval: Access patents-public-data.patents.publications, unnest IPC codes, and filter for US patents granted in April 2015 with a 'B2' kind code.\n2.IPC Analysis: Extract the first four characters of each IPC code, count their occurrences within each patent, and group by publication number and IPC subcategory.\n3.Determine Dominance: For each patent, identify the most frequent IPC subcategory using a combination of concatenation and maximum count comparison within the grouped data.\n4.Result Extraction: Order the results by the count of IPC occurrences and limit the output to the top entry to find the single most prevalent IPC subcategory.",
@@ -262,7 +262,7 @@
     },
     {
         "instance_id": "bq213_1",
-        "db": "patents-public-data.patents",
+        "db": "patents-public-data.patents\npatents-public-data.cpc",
         "question": "For US B2 utility patents granted in April 2015, identify the most frequent 4-digit IPC code for each patent. Then, list the publication numbers and IPC4 codes of patents where this code appears 20 or more times.",
         "external_knowledge": "patents_info.md",
         "plan": "1. **Create an Interim Table:**\n   - Select the publication number and extract the first 4 characters of the IPC code.\n   - Count the occurrences of each 4-character IPC code for each publication.\n   - Filter records to include only those from the specified country and date range, ensuring the grant date is valid and the publication format matches the specified pattern.\n   - Group the results by publication number and the 4-character IPC code.\n\n2. **Identify Most Frequent IPC Code:**\n   - In the interim table, determine the most frequent 4-character IPC code for each publication.\n   - Concatenate the publication number with the count of the most frequent IPC code.\n   - Use this concatenated value to filter the interim table, ensuring you select rows where the IPC code count matches the maximum count for each publication.\n\n3. **Filter by Frequency:**\n   - Further filter the results to include only those rows where the most frequent IPC code appears 20 or more times.\n\n4. **Final Selection:**\n   - From the filtered results, select and list the publication numbers and their corresponding 4-character IPC codes.",
@@ -274,7 +274,7 @@
     },
     {
         "instance_id": "bq214",
-        "db": "patents-public-data.patents",
+        "db": "patents-public-data.patents\npatents-public-data.cpc",
         "question": "For the 'B2' publication granted in January 2017 in the US that received the most forward citations within a month of its filing date, determine the publication number of the most similar patent from the same filing year.",
         "external_knowledge": "patents_info.md",
         "plan": "1.Extract Relevant Patent Data: Access the patents database to retrieve information for patents granted in the US on June 2nd, 2015, with the kind code B2, indicating they are granted utility patents.\n2.Determine the IPC Codes: For each patent, extract and count occurrences of four-digit IPC codes from the abstracts, identifying how frequently each IPC code appears within a given patent.\n3.Identify Backward Citations: For each selected patent, retrieve backward citations (i.e., earlier patents cited by the patent in question) and join these with the IPC data to analyze the diversity of IPC codes from these citations.\n4.Calculate Originality Score: Compute an originality score for each patent based on the diversity of IPC codes cited. This involves calculating a formula where the diversity is inversely related to the sum of the squares of IPC code occurrences.\n5.Select the Patent with the Highest Originality: From the calculated originality scores, identify the patent with the highest score, which indicates it has the broadest range of influences from prior art, suggesting a high level of innovation.\n6.Output the Result: Return the publication number of the patent with the highest originality score, highlighting it as the most original patent granted on that specific day.",
@@ -295,7 +295,7 @@
     },
     {
         "instance_id": "bq214_1",
-        "db": "patents-public-data.patents",
+        "db": "patents-public-data.patents\npatents-public-data.cpc",
         "question": "d30b2fcf-037c-4e90-9471-9d4a0a9f5e7b",
         "external_knowledge": "patents_info.md",
         "plan": "1. **Extract the Target Patent**: Create a subset containing only the target patent's unique identifiers.\n\n2. **Calculate Filing Year for Target Patent**: Determine the filing year of the target patent by extracting the year from its filing date.\n\n3. **Identify Same-Year Patents**: Retrieve all patents filed in the same year as the target patent, excluding the target patent itself.\n\n4. **Calculate Technological Similarity**: For each patent from the same year, compute the technological similarity with the target patent using a predefined similarity metric based on their respective embeddings.\n\n5. **Rank Similar Patents**: Order the patents by their similarity scores in descending order.\n\n6. **Select Top Similar Patents**: From the ordered list, select the top five patents with the highest similarity scores for each target patent.\n\n7. **Output Similar Patents**: Return the publication numbers and similarity scores of the top five most similar patents.",
@@ -314,7 +314,7 @@
     },
     {
         "instance_id": "bq215",
-        "db": "patents-public-data.patents",
+        "db": "patents-public-data.patents\npatents-public-data.cpc",
         "question": "What is the publication number of US patent granted at January 2018, with the highest originality score based on the diversity of 4-digits IPC codes from its backward citations?",
         "external_knowledge": "patents_info.md",
         "plan": "1. **Filter US Patents:**\n   - Select publication numbers and application numbers from the dataset.\n   - Only include records where the country code is 'US'.\n   - Ensure the grant date is within January 2018.\n   - Exclude records with a grant date of 0.\n   - Only consider patents with a specific kind code pattern.\n\n2. **Extract IPC Codes:**\n   - For each selected patent, extract and count the unique 4-digit IPC codes from the associated IPC codes.\n\n3. **Identify Maximum IPC Code Count:**\n   - Create a subset of records that have the maximum count of a specific 4-digit IPC code for each patent.\n\n4. **Calculate IPC Occurrences in Backward Citations:**\n   - Join the filtered patents with their backward citations.\n   - For each backward citation, join with the subset of records to get the 4-digit IPC codes.\n   - Count the occurrences of each 4-digit IPC code in the backward citations for each patent.\n\n5. **Compute Originality Score:**\n   - For each patent, calculate an originality score based on the diversity of the 4-digit IPC codes from the backward citations.\n   - Use a formula that considers the sum of squared occurrences of each IPC code, normalized by the total number of occurrences.\n\n6. **Select Highest Originality Score:**\n   - From the computed originality scores, select the patent with the highest score.\n\n7. **Return Result:**\n   - Output the publication number of the patent with the highest originality score.",
@@ -406,7 +406,7 @@
     },
     {
         "instance_id": "bq207",
-        "db": "patents-public-data.patents\npatents-public-data.uspto_peds",
+        "db": "patents-public-data.patents\nbigquery-public-data.uspto_oce_assignment\nbigquery-public-data.uspto_oce_cancer\nbigquery-public-data.uspto_oce_claims\nbigquery-public-data.uspto_oce_litigation\nbigquery-public-data.uspto_ptab",
         "question": "Can you provide the initial publication numbers for our top 100 independent patent claims with the highest word count?",
         "external_knowledge": null,
         "plan": "1.Select Independent Claims: Extract patent number, claim number, and word count for independent claims.\n2.Match Publication Numbers: Join with the match table to get the corresponding publication numbers.\n3.Match Application Numbers and Publication Information: Join with the publications table to get application details and select the earliest publication for each application.\n4.Select and Order Results: Retrieve all fields, order by word count in descending order, and limit to the top 100 records.",
@@ -663,7 +663,7 @@
     },
     {
         "instance_id": "bq019",
-        "db": "bigquery-public-data.cms_medicare",
+        "db": "bigquery-public-data.cms_medicare\nbigquery-public-data.cms_codes\nbigquery-public-data.cms_synthetic_patient_data_omop",
         "question": "For the most common inpatient diagnosis in the US in 2014, what was the citywise average payment respectively in the three cities that had the most cases?",
         "external_knowledge": null,
         "plan": "1. Decide which table to work on:  `bigquery-public-data.cms_medicare.inpatient_charges_2014`\n2. Rank all the diagnostic conditions by national number of cases to find the most common diagnostic condition.\n3. Group the data by diagnostic condition name, city and state, and calculate the citywise number of cases, citywise average payment for each entry.\n4. Accordingly, rank the cities by citywise number of cases for the most common diagnostic condition, and calculate the national avg. payments.\n5. Limit to the top 3 cities.",
@@ -675,7 +675,7 @@
     },
     {
         "instance_id": "bq019_1",
-        "db": "bigquery-public-data.cms_medicare",
+        "db": "bigquery-public-data.cms_medicare\nbigquery-public-data.cms_codes\nbigquery-public-data.cms_synthetic_patient_data_omop",
         "question": "What is the most prescribed medication in each state in 2014?",
         "external_knowledge": null,
         "plan": "1. Decide which table to work on:  `bigquery-public-data.cms_medicare.part_d_prescriber_2014`\n2. Group the data by drug name and state, and calculate the total claim count for each drug in each state.\n3. For each state, find out the max claim count number among different drugs. (most prescribed)\n4. List out corresponding most prescribed drug name for each state. (don\u2018t need to be in order",
@@ -685,7 +685,7 @@
     },
     {
         "instance_id": "bq019_2",
-        "db": "bigquery-public-data.cms_medicare",
+        "db": "bigquery-public-data.cms_medicare\nbigquery-public-data.cms_codes\nbigquery-public-data.cms_synthetic_patient_data_omop",
         "question": "Can you tell me which healthcare provider incurs the highest combined average costs for both outpatient and inpatient services in 2014?",
         "external_knowledge": null,
         "plan": "1. find out the corresponding table as described in the instruction `bigquery-public-data.cms_medicare.outpatient_charges_2014` and `bigquery-public-data.cms_medicare.inpatient_charges_2014`\r\n2. Group the outpatient charges data by different medical provider, and calculate the average outpatient cost per service.\r\n3. Do the same to inpatient charges data.\r\n4. Combine them to calculate the sum of two average costs for each medical provider.\r\n5. Rank them to find the peak. (the highest one)",
@@ -695,7 +695,7 @@
     },
     {
         "instance_id": "bq172",
-        "db": "bigquery-public-data.cms_medicare",
+        "db": "bigquery-public-data.cms_medicare\nbigquery-public-data.cms_codes\nbigquery-public-data.cms_synthetic_patient_data_omop",
         "question": "For the drug with the highest total number of prescriptions in New York State during 2014, could you list the top five states with the highest total claim counts for this drug? Please also include their total claim counts and total drug costs. ",
         "external_knowledge": null,
         "plan": "1. **Identify the Top Drug in NY:**\r\n   - Create a Common Table Expression (CTE) named `ny_top_drug`.\r\n   - Select the `generic_name` of drugs as `drug_name` and calculate the total number of claims (`total_claim_count`) for each drug.\r\n   - Filter the data to include only records where the provider state (`nppes_provider_state`) is 'NY'.\r\n   - Group the results by `drug_name`.\r\n   - Order the results by `total_claim_count` in descending order.\r\n   - Limit the results to the top drug (highest `total_claim_count`).\r\n\r\n2. **Identify the Top 5 States for the Top Drug:**\r\n   - Create a second CTE named `top_5_states`.\r\n   - Select the provider state (`nppes_provider_state`) as `state`, and calculate the total number of claims (`total_claim_count`) and total drug cost (`total_drug_cost`) for each state.\r\n   - Filter the data to include only records where the `generic_name` matches the top drug identified in `ny_top_drug`.\r\n   - Group the results by `state`.\r\n   - Order the results by `total_claim_count` in descending order.\r\n   - Limit the results to the top 5 states with the highest `total_claim_count`.\r\n\r\n3. **Return the Final Results:**\r\n   - Select the `state`, `total_claim_count`, and `total_drug_cost` from the `top_5_states` CTE to produce the final output.\r\n\r\nThis sequence ensures that we first determine the most prescribed drug in New York, then find the top 5 states where this drug is most frequently prescribed, and finally, present the relevant statistics for these states.",
@@ -705,7 +705,7 @@
     },
     {
         "instance_id": "bq172_1",
-        "db": "bigquery-public-data.cms_medicare",
+        "db": "bigquery-public-data.cms_medicare\nbigquery-public-data.cms_codes\nbigquery-public-data.cms_synthetic_patient_data_omop",
         "question": "For the provider with the highest total inpatient service cost from 2011-2015, tell me its annual inpatient and outpatient costs for each year during that period.",
         "external_knowledge": null,
         "plan": "1. **Identify Provider with Highest Inpatient Service Cost (2011-2015)**\r\n   - **Combine Inpatient Data:** Use `UNION ALL` to merge inpatient charge data from 2011 through 2015.\r\n   - **Calculate Total Inpatient Cost:** For each provider, compute the total inpatient cost as the sum of `average_medicare_payments` multiplied by `total_discharges`.\r\n   - **Find Top Provider:** Group the results by `provider_id`, order them by `total_ip_cost` in descending order, and limit the output to the top provider.\r\n\r\n2. **Extract Provider ID with Highest Inpatient Cost**\r\n   - **Select Provider ID:** From the previous step, extract the `provider_id` of the provider with the highest total inpatient service cost.\r\n\r\n3. **Retrieve Annual Inpatient Costs for Identified Provider (2011-2015)**\r\n   - **Query Inpatient Data:** For the identified provider, fetch the inpatient data from `cms_medicare.inpatient_charges_*`.\r\n   - **Calculate Annual Average Inpatient Cost:** Compute the average inpatient cost per year by averaging `average_medicare_payments` multiplied by `total_discharges`. Group the data by `provider_id`, `provider_state`, `provider_city`, `provider_name`, and year.\r\n\r\n4. **Retrieve Annual Outpatient Costs for Identified Provider (2011-2015)**\r\n   - **Query Outpatient Data:** For the identified provider, fetch the outpatient data from `cms_medicare.outpatient_charges_*`.\r\n   - **Calculate Annual Average Outpatient Cost:** Compute the average outpatient cost per year by averaging `average_total_payments` multiplied by `outpatient_services`. Group the data by `provider_id`, `provider_state`, `provider_city`, `provider_name`, and year.\r\n\r\n5. **Join Inpatient and Outpatient Data**\r\n   - **Merge Inpatient and Outpatient Data:** Perform a LEFT JOIN on the inpatient and outpatient datasets based on `provider_id`, `provider_state`, `provider_city`, `provider_name`, and year.\r\n\r\n6. **Format and Order Final Results**\r\n   - **Select and Format Fields:** Select relevant fields including `State`, `City`, `Provider_ID`, `Provider_Name`, year, and round the average inpatient and outpatient costs.\r\n   - **Order by Year:** Sort the final results by year for chronological presentation.\r\n\r\nThis plan ensures the correct identification of the top provider based on inpatient costs and retrieves comprehensive annual cost data for both inpatient and outpatient services for detailed analysis.",
@@ -814,7 +814,7 @@
     {
         "instance_id": "bq357",
         "db": "bigquery-public-data.noaa_icoads",
-        "question": "What are the top 5 latitude and longitude coordinates and dates between 2005 and 2015 with the highest daily average wind speed, excluding records with missing wind speed values?",
+        "question": "What are the latitude and longitude coordinates and dates between 2005 and 2015 with the top 5 highest daily average wind speeds, excluding records with missing wind speed values?",
         "external_knowledge": null,
         "plan": "1. **Data Aggregation Preparation**:\n   - Create a temporary table to store aggregated daily average values.\n   - Select the necessary date and location columns.\n   - Calculate the average value of the target variable for each unique combination of date and location.\n\n2. **Filtering by Date Range**:\n   - Ensure that only the records within the specified date range are considered for aggregation.\n\n3. **Grouping Data**:\n   - Group the data by date and location to facilitate the calculation of daily averages.\n\n4. **Calculate Daily Averages**:\n   - Compute the average value of the target variable for each group (combination of date and location).\n\n5. **Exclude Missing Values**:\n   - Filter out any records where the computed average is missing.\n\n6. **Sort and Limit Results**:\n   - Sort the resulting dataset by the calculated average in descending order.\n   - Limit the results to the top 5 records with the highest daily averages.\n\n7. **Final Selection**:\n   - Select the required columns from the temporary table to present the final output, including date, location, and the calculated averages.",
         "special_function": null
@@ -1652,7 +1652,7 @@
     },
     {
         "instance_id": "bq352",
-        "db": "bigquery-public-data.sdoh_cdc_wonder_natality\nbigquery-public-data.census_bureau_acs",
+        "db": "bigquery-public-data.sdoh_bea_cainc30\nbigquery-public-data.sdoh_cdc_wonder_natality\nbigquery-public-data.sdoh_cms_dual_eligible_enrollment\nbigquery-public-data.sdoh_hrsa_shortage_areas\nbigquery-public-data.sdoh_hud_housing\nbigquery-public-data.sdoh_hud_pit_homelessness\nbigquery-public-data.sdoh_snap_enrollment\nbigquery-public-data.census_bureau_acs",
         "question": "Please list the average number of prenatal weeks in 2018 for counties in Wisconsin where more than 5% of the employed population had commutes of 45-59 minutes in 2017.",
         "external_knowledge": null,
         "plan": "Is there an association between high commute times [from ACS] and average number of prenatal visits in Wisconsin by County?\nThis query examines the potential correlation between the average number of prenatal visits and length of commutes",
@@ -1929,7 +1929,7 @@
     },
     {
         "instance_id": "bq227_1",
-        "db": "bigquery-public-data.london_crime\nbigquery-public-data.london_fire_brigade\nbigquery-public-data.london_fire_brigade",
+        "db": "bigquery-public-data.london_crime\nbigquery-public-data.london_fire_brigade",
         "question": "Could you provide the annual percentage share of the total crime committed by the top 5 minor crime categories in London year by year?",
         "external_knowledge": null,
         "plan": "1. Aggregate the total values for each category, year, and month combination.\n2. Identify the top categories based on aggregated values. \n3. Rank categories by their total and classify the top five categories.\n4. Summarize the values for the categorized data (top five versus others) for each year, without distinguishing by month or specific category anymore.\n5. Aggregate these sums over each year to compute the total annual value for both the top categories and others.\n6. For each year, calculate the percentage share of the total value that the top categories represent by dividing the total value of top categories by the total annual value and multiplying by 100 to convert this fraction into a percentage.\n7. From the results, filter out the data to only show the percentage values for the top categories across each year.\n8. Finally, order the resulting data by year.\n",
@@ -1940,7 +1940,7 @@
     },
     {
         "instance_id": "bq227_2",
-        "db": "bigquery-public-data.london_crime\nbigquery-public-data.london_fire_brigade\nbigquery-public-data.london_fire_brigade",
+        "db": "bigquery-public-data.london_crime\nbigquery-public-data.london_fire_brigade",
         "question": "Could you provide the total number of 'Other Theft' incidents within the 'Theft and Handling' category for each year in the Westminster borough?",
         "external_knowledge": null,
         "plan": "1. Group data by year, month, borough, and crime categories.\n2. Sum the values in each group to get a total count of incidents per group.\n3. Categorize the crime data into two divisions for the major crime category. If the major category is specified as 'Theft and Handling', label it as such; otherwise, label it as 'Other'.\n4. Similarly, categorize the minor crime category. If the minor category matches 'Other Theft', keep the category name; otherwise, label it as 'Other'.\n5. Filter the results to focus only on the borough 'Westminster' and exclude the 'Other' categories for both major and minor divisions.\n6. Calculate the total incidents per year by summing up the totals from the filtered results. \n7. Group these results by year, major division, and minor division.\n8. Finally, order the summarized data by year.",
@@ -1951,7 +1951,7 @@
     },
     {
         "instance_id": "bq228",
-        "db": "bigquery-public-data.london_crime\nbigquery-public-data.london_fire_brigade\nbigquery-public-data.london_fire_brigade",
+        "db": "bigquery-public-data.london_crime\nbigquery-public-data.london_fire_brigade",
         "question": "Please provide a list of the top three major crime categories in the borough of Barking and Dagenham, along with the number of incidents in each category.",
         "external_knowledge": null,
         "plan": "1. Calculate and rank the sum of crime incidents by major category within each borough.\n2. Group the data by both borough and major category to aggregate the total number of crime incidents for each category within each borough.\n3. Apply a ranking function to order the crime categories within each borough based on the aggregated sum of incidents, in descending order. \n4. Retrieve the borough, major category, ranking, and total number of incidents.\n5. Include only those records where the rank is within the top 3 for each borough.\n6. Further filter to include only records pertaining to Barking and Dagenham.\n7. Sort the final output first by borough and then by the ranking within that borough to show the top crime categories orderly.\n8. Display the major crime categories with the most incidents in the specified borough.\n",
@@ -2113,7 +2113,7 @@
     {
         "instance_id": "ga018",
         "db": "bigquery-public-data.ga4_obfuscated_sample_ecommerce",
-        "question": "I'd like to analyze the appeal of our products to users. Can you calculate the percentage of times users go from browsing the product list pages to clicking into the product detail pages at January 2nd, 2021?",
+        "question": "Calculate the conversion rate from product list pages to product detail pages for all sessions at January 2nd, 2021.",
         "external_knowledge": "ga4_page_category.md",
         "plan": "1. query the event data to retrieve all unique event names\n2. Selects events data from the Google Analytics 4 (GA4) sample e-commerce dataset for the specific date (20210102)\n3. Filter to include only events named 'page_view', which represent page views.\n4. flatten the nested event_params array and extract values for ga_session_id, ga_session_number, page_title, and page_location. This allows the analysis of individual page views within each user's session.\n5. Further processes the unnested event data to classify pages based on URL depth and specific keywords into either Product Detail Pages (PDP) or Product Listing Pages (PLP).\n6. Applies window functions to the categorized data to calculate the previous and next pages for each session per user, facilitating analysis of navigation paths between pages.\n7. Filters sessions where the current page is a PLP and the next page is a PDP.\n8. Counts the number of sessions transitioning from PLP to PDP and divides this by the total views of PLP pages to calculate the conversion rate.",
         "special_function": [
