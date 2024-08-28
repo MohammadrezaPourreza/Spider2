@@ -21,7 +21,7 @@ To this end, we introduce Spider 2.0, an evaluation framework of real-world SQL 
 
 We evaluated Spider 1.0, BIRD, and Spider 2.0 using the popular framework, [Dail-SQL](https://github.com/BeachWang/DAIL-SQL).
 
-|                    | Spider 1.0 dev | Spider 1.0 test | BIRD  | Spider 2.0 |
+|                    | Spider 1.0 dev | Spider 1.0 test | BIRD test  | Spider 2.0 |
 |--------------------|------------|-------|------------|---------|
 | DailSQL + GPT-4    |  82.4      |  86.6 | 57.4  | 6.0        |
 | CodeS-7B           | 85.4       |   -    | 59.3  | 1.3        |
