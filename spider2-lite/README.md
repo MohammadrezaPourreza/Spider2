@@ -47,7 +47,7 @@ If you want to quickly view the database schema in this repository rather than u
 
 ## Data Content and Format
 
-Each file in `spider2-sql.json` contains the following fields:
+Each file in `spider2-lite.json` contains the following fields:
 - `instance_id`: the unique example id
 - `db`: the database id to which this question is addressed.
 - `question`: the natural language question

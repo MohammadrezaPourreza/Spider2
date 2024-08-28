@@ -61,6 +61,19 @@ python run.py --model gpt-4o --suffix test1
 
 Additionally, to meet the needs of the research community, we have also organized the Spider 2.0 data in a format similar to Spider 1.0. [`Spider 2.0-Lite`](https://github.com/xlang-ai/Spider2/tree/main/spider2-lite) covers 90% of examples from Spider 2.0 that are sampled to be more lightweight and standalone, with a focus on evaluating LLMs on classic Text-to-SQL.
 
+Each file in `spider2-lite.json` contains the following fields:
+- `instance_id`: the unique example id
+- `db`: the database id to which this question is addressed.
+- `question`: the natural language question
+- `external_knowledge`: The filenames of external knowledge, documentation, and information required to answer this question are stored in documents.
+- `plan`: detailed instruction / reference plan for solving this problem
+- `special_functions`: Special functions that may be needed to answer this question.
+
+> **Note that** `plan` and `special_functions` are **not** standard inputs of Spider2 challenge; they are used for ablation experiments and analysis.
+
+
+
+
 We proposed baselines based on widely used text2sql methods: [`Dail-SQL`](https://github.com/xlang-ai/Spider2/blob/main/spider2-baselines/DailSQL/README.md) and [`CodeS`](https://github.com/xlang-ai/Spider2/tree/main/spider2-baselines/CodeS/README.md), with evaluation results reported :test_tube:.
 
 
