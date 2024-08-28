@@ -1,6 +1,6 @@
 # Spider 2.0-Lite
 
-To meet with research interests in traditional Text2SQL settings, we also release a subset of Spider 2.0 called [`Spider 2.0-Lite`](https://github.com/xlang-ai/Spider2/tree/main/spider2-lite#spider-20-lite) which is more self-contained, to support faster development and evaluation.
+To meet with research interests in traditional Text2SQL settings, we also release a subset of Spider 2.0 called **Spider 2.0-Lite** which is more self-contained, to support faster development and evaluation.
 
 
 ## Folder
