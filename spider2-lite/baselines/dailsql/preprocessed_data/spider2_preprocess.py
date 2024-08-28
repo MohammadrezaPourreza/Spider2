@@ -1,5 +1,3 @@
-# import debugpy; debugpy.connect(('127.0.0.1', 5696))
-
 import numpy as np
 import json
 import os
