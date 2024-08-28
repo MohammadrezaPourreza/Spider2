@@ -23,16 +23,15 @@ To this end, we introduce Spider 2.0, **an evaluation framework of real-world SQ
 
 ## 🚀 Quickstart
 
+For [`Spider 2.0`](https://github.com/xlang-ai/Spider2/tree/main/spider2) , we proposed an agent framework [`Spider-Agent`](https://github.com/xlang-ai/Spider2/tree/main/spider-agent) baseline based on Docker ENV. 
 
 
-[`Spider 2.0`](https://github.com/xlang-ai/Spider2/tree/main/spider2) provides a benchmark dataset tailored for real-world SQL generation, featuring diverse SQL dialects and complex queries that mirror enterprise challenges. It facilitates rigorous testing of text-to-SQL technologies against practical, industry-level scenarios.
-
-[`Spider 2.0-Lite`](https://github.com/xlang-ai/Spider2/tree/main/spider2-lite) covers 90% of examples from Spider 2.0 that are sampled to be more lightweight and standalone, with a focus on evaluating Large Language Models on classic Text-to-SQL.
+[`Spider 2.0-Lite`](https://github.com/xlang-ai/Spider2/tree/main/spider2-lite) covers 90% of examples from Spider 2.0 that are sampled to be more lightweight and standalone, with a focus on evaluating LLMs on classic Text-to-SQL.
 
 
 ## Spider 2.0 Baselines
 
-For `Spider 2.0`, we proposed an agent framework [`Spider-Agent`](https://github.com/xlang-ai/Spider2/tree/main/spider-agent) baseline based on Docker ENV. Follow the instructions in [the Docker setup guide](https://docs.docker.com/engine/install/) to install Docker on your machine. If you're setting up on Linux, we recommend seeing the [post-installation steps](https://docs.docker.com/engine/install/linux-postinstall/) as well.
+
 
 
 
