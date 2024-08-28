@@ -73,6 +73,8 @@ For each instance, we also provide a separate folder [`./spider2/evaluation_exam
 
 #### Run Spider-Agent
 
+For Spider 2.0, we proposed an agent framework [Spider-Agent](https://github.com/xlang-ai/Spider2/tree/0b1656dd2e82272ca194e6098d4b58a08497f966/spider-agent) based on Docker environment.
+
 ```
 git clone https://github.com/xlang-ai/Spider2.git
 cd methods/spider-agent
