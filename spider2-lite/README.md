@@ -11,8 +11,6 @@ To meet with research interests in traditional Text2SQL settings, we have releas
 ├── bigquery_credential.json
 ├── databases                   # DB/DB metadata for Spider2 dataset
 │   ├── bigquery                # The information of DB on Bigquery
-│   │   ├── metadata                 # The details data of each DB, including DB DDL, table, column information, and sample data.
-│   │   └── metadata_markdown        # Some human-readable markdown documentation schema 
 │   ├── local                   # The DB of the local databases
 │   └── snowflake               # The information of DB on Snowflake
 ├── interface                   # Scripts for interacting with the database.
