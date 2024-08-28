@@ -36,9 +36,8 @@ For [`Spider 2.0`](https://github.com/xlang-ai/Spider2/tree/main/spider2)
 , all evaluation examples are in [`evaluation_examples`](https://github.com/xlang-ai/Spider2/tree/main/spider2/evaluation_examples) 
 
 - `instance_id`: (str) - A formatted instance identifier, UUID.
-- `instruction`: (str) - The question body.
-- `type`: (str) - [Local, Bigquery, DBT].
-- `derived_from`: (str) - [ga001 / bq003 / local027 ...]
+- `instruction`: (str) - The instruction.
+- `type`: (str) - [Local, Bigquery, DBT, Snowflake].
 
 
 #### Run Spider-Agent
