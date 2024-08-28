@@ -27,13 +27,27 @@ To meet the diverse research needs, we set up Spider 2.0 with two settings, focu
 
 ## Spider 2.0 Baselines
 
-For `Spider2`, we proposed baselines based on widely used text2sql methods: [`Dail-SQL`](https://github.com/xlang-ai/Spider2/blob/main/spider2-baselines/DailSQL/README.md) and [`CodeS`](https://github.com/xlang-ai/Spider2/tree/main/spider2-baselines/CodeS/README.md), with evaluation results reported :test_tube:.
+For `Spider 2.0`, we proposed an agent framework [`Spider-Agent`](https://github.com/xlang-ai/Spider2/tree/main/spider-agent) baseline with interactive environment, which draws inspiration from the design of [Intercode](https://github.com/princeton-nlp/intercode) and is based on the `React` framework with specialized designs for database-related tasks.
 
-## Spider 2.0 Leaderboard
+### Performance
 
-> - Spider2 leaderboard is ranked by the **Score**. 
+
+| Method                     | Score |
+| -------------------------- | ---- |
+| Spider-Agent + GPT-4o   | 9.25% |
+
+> We will test more LLMs and Agent Frameworks! 
+>
+> We also warmly welcome you to evaluate your methods on Spider 2.0.
+
+
+## Spider2-Lite Baselines
+
+For `Spider2-Lite`, we proposed baselines based on widely used text2sql methods: [`Dail-SQL`](https://github.com/xlang-ai/Spider2/blob/main/spider2-baselines/DailSQL/README.md) and [`CodeS`](https://github.com/xlang-ai/Spider2/tree/main/spider2-baselines/CodeS/README.md), with evaluation results reported :test_tube:.
+
+### Performance Comparison
+
 > - The **Score [w/ Func & w/ Plan]** represents an oracle setting, utilizing reference plans and gold SQL functions for a set of analytical experiments.
-
 
 
 | Method                  | Score   |    Score  [w/ Func & w/ Plan]     |
@@ -41,21 +55,4 @@ For `Spider2`, we proposed baselines based on widely used text2sql methods: [`Da
 | DailSQL + GPT-4o |  **6.04% (9/149)** |   12.75% (19/149)        |
 | CodeS-7B      | 1.34% (2/149) |   2.01% (3/149)            |
 
-
-
-
-## Spider2-World Baselines
-For `Spider2-World`, we proposed an agent framework [`Spider-Agent`](https://github.com/xlang-ai/Spider2/tree/main/spider-agent) baseline with interactive environment, which draws inspiration from the design of [Intercode](https://github.com/princeton-nlp/intercode) and is based on the `React` framework with specialized designs for database-related tasks.
-
-
-
-## Spider2-World Leaderboard
-
-> We will test more LLMs and Agent Frameworks! 
->
-> We also warmly welcome you to evaluate your methods on Spider2.
-
-| Method                     | Score |
-| -------------------------- | ---- |
-| Spider-Agent + GPT-4o   | 9.25% |
 
