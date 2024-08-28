@@ -12,7 +12,6 @@ An Agent Method Baseline for Spider2-World based on Docker ENV.
 # Clone the Spider2 repository
 git clone https://github.com/xlang-ai/Spider2.git
 cd methods/spider-agent
-pip install -r requirements.txt
 
 # Optional: Create a Conda environment for Spider2
 # conda create -n spider2 python=3.11
