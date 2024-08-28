@@ -13,7 +13,7 @@ Please organize your submissions in the following structure:
 ├── gold                             # gold information of Spider2-SQL (DON'T CHANGE)
 │   ├── exec_result                      # Gold execution results
 │   ├── sql                              # Gold SQL
-│   └── spider2sql_eval.jsonl            # Config file
+│   └── spider2lite_eval.jsonl            # Config file
 ├── spider2sql_example_submit        # Predicted SQLs
 │   ├── bq001.sql
 │   ├── bq009.sql
