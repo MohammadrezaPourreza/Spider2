@@ -94,7 +94,7 @@ Simply run :laughing::
 bash run.sh
 ```
 
-For a detailed guideline of running Dail-SQL, please refer to [README of Dail-SQL](https://github.com/xlang-ai/Spider2/blob/main/spider2-baselines/DailSQL/README.md).
+For a detailed guideline of running Dail-SQL, please refer to [Installation](https://github.com/xlang-ai/Spider2/tree/main/spider2-lite/baselines/dailsql#installation).
 
 # 💫 Contributions
 
