@@ -1,6 +1,6 @@
 # Spider 2.0-Lite
 
-To meet with research interests in traditional Text2SQL settings, we have released a subset of Spider 2.0 called Spider 2.0-Lite. Spider 2.0-Lite covers 90% of examples from Spider 2.0 that are sampled to be more lightweight and standalone, with a focus on evaluating Large Language Models on SQL generation.
+To meet with research interests in traditional Text2SQL settings, we also release a subset of Spider 2.0 called [`Spider 2.0-Lite`](https://github.com/xlang-ai/Spider2/tree/main/spider2-lite#spider-20-lite) which is more self-contained, to support faster development and evaluation.
 
 
 ## Folder
