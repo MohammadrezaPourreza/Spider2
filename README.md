@@ -11,19 +11,24 @@ Spider 2.0 is a benchmark of real world SQL generation tasks across enterprise-g
 
 ![Local Image](./assets/Spider2.png)
 
-[`Spider 2.0`](https://github.com/xlang-ai/Spider2/tree/main/spider2) provides a benchmark dataset tailored for real-world SQL generation, featuring diverse SQL dialects and complex queries that mirror enterprise challenges. It facilitates rigorous testing of text-to-SQL technologies against practical, industry-level scenarios.
 
-[`Spider 2.0-Lite`](https://github.com/xlang-ai/Spider2/tree/main/spider2-lite) covers 90% of examples from Spider 2.0 that are sampled to be more lightweight and standalone, with a focus on evaluating Large Language Models on classic Text-to-SQL.
+### Why Spider 2.0?
 
+In 2018, our group proposed [Spider 1.0](https://yale-lily.github.io/spider), which has been widely used in Text-to-SQL research. 
 
-In 2018, our group proposed Spider 1.0, which has been widely used in Text-to-SQL research. However, real-world enterprise-level Text-to-SQL workflows often involve complex data across cloud or local databases, require writing advanced SQL queries in various dialects for different operations from data transformation to analytics, and demand handling natural analytic questions. 
+However, real-world enterprise-level Text-to-SQL workflows often involve complex data across cloud or local databases, require writing advanced SQL queries in various dialects for different operations from data transformation to analytics, and demand handling natural analytic questions. 
+
 **We lack a comprehensive and challenging testbed to fully evaluate and develop these technologies' capabilities in code generation, specifically in Text-to-SQL.**
 
 
 
-
-
 ## 🚀 Quickstart
+
+
+
+[`Spider 2.0`](https://github.com/xlang-ai/Spider2/tree/main/spider2) provides a benchmark dataset tailored for real-world SQL generation, featuring diverse SQL dialects and complex queries that mirror enterprise challenges. It facilitates rigorous testing of text-to-SQL technologies against practical, industry-level scenarios.
+
+[`Spider 2.0-Lite`](https://github.com/xlang-ai/Spider2/tree/main/spider2-lite) covers 90% of examples from Spider 2.0 that are sampled to be more lightweight and standalone, with a focus on evaluating Large Language Models on classic Text-to-SQL.
 
 
 ## Spider 2.0 Baselines
