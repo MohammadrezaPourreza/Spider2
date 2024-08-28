@@ -9,34 +9,30 @@ Solving these tasks requires models to understand database metadata, dialects, a
 
 ## Data content and format
 
-For any given example, everything needed to solve this task is provided within the folder. Please ensure your agent makes full use of these resources.
-
-
-All evaluation examples are in [`evaluation_examples`](./evaluation_examples/)
-
-- `instance_id`: (str) - A formatted instance identifier, UUID.
-- `instruction`: (str) - The question body.
-- `type`: (str) - [Local, Bigquery, DBT].
-- `derived_from`: (str) - [ga001 / bq003 / local027 ...]
-
-```
+For [`Spider 2.0`](./README.md), all evaluation examples are aggregated in file [`spider2.jsonl`](./evaluation_examples/spider2.jsonl), where each data point contains the following field:
+```json
 {
-    "instance_id": "1d009ac3-1c75-447b-a7e0-49ccc2b5fbf9", 
-    "instruction": "I'm trying to evaluate which board types were most effective on September 15, 2018. Can you find out the average scores for each board type from the quick play level completions on that day?", 
-    "type": "Bigquery", 
-    "derived_from": "ga003"
-},
-{
-    "instance_id": "053d2650-2188-4e58-a141-2376d5cff0a5", 
-    "instruction": "Complete the project to show the metrics of each traffic source and output the transformed database, I believe every touchpoint in the conversion path is equally important, please choose the most suitable attribution method. ", 
-    "type": "DBT", 
-    "derived_from": "dbt001_1"
+    "instance_id": "3a348be1-aed2-44fb-8185-c66c9d14a6ef",
+    "instruction": "Please tell me the number of sessions for each website traffic channel in December 2020.",
+    "type": "Bigquery"
 }
 ```
 
+For each instance, we also provide a separate folder [`./evaluation_examples/{instruction_id}`](./evaluation_examples/) as its **Execution Contetxt** to simulate the agentic setting. Each folder may have the following files:
+
+- `README.md`: detailed requirements of the `instruction` field for the current example with `instance_id`;
+- `*_credential.json`: credential file connecting to realistic enterprise-level databases, e.g., BigQuery. Can be replaced with your OWN;
+- `result.csv`: CSV file to store the execution results;
+- other instance-specific materials which assist in finishing the current task:
+    - 🏗️ partial project, e.g., [`dbt_project/`](./evaluation_examples/43d5ad49-0f99-4b90-a6df-d3afc5c216ff/).
+    - 🎞️ query history or samples, e.g., [`QUERY_HISTORY/`](./evaluation_examples/1d009ac3-1c75-447b-a7e0-49ccc2b5fbf9/FIREBASE_QUERY_HISTORY/), [`BASIC_SQLS/`](./evaluation_examples/e4a35097-4ff3-4ca7-8304-f593e039735b/BASIC_SQLS), etc.
+    - 📝 reference documentation: [`ga4_dimensions_and_metrics.md`](./evaluation_examples/3a348be1-aed2-44fb-8185-c66c9d14a6ef/ga4_dimensions_and_metrics.md), [`retention_rate.md`](./evaluation_examples/22faca18-f766-46f5-a22b-c79de56fb6ec/retention_rate.md), etc.
+    - 🔍 query interface: We have predefined how to access the diverse database systems.
+
+
 ## Baseline
 
-We proposed an agent framework [`Spider-Agent`](..//methods/spider-agent) baseline with interactive environment.
+We proposed an agent framework [`Spider-Agent`](../methods/spider-agent) baseline with interactive environment.
 
 
 
