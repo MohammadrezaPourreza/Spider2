@@ -68,7 +68,7 @@ For each instance, we also provide a separate folder [`./spider2/evaluation_exam
 - `./evaluation_examples/instanceid/*`: evaluation context
 [`evaluation_examples`](https://github.com/xlang-ai/Spider2/tree/main/spider2/evaluation_examples). -->
 
-🤗 Feel free to devise your intelligent agent and resolve the task defined in `instruction` field and `README.md`.
+🤗 Feel free to devise your intelligent agent and resolve the task defined in `instruction` field.
 
 
 #### Run Spider-Agent
