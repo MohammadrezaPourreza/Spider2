@@ -14,12 +14,12 @@ To meet with research interests in traditional Text2SQL settings, we have releas
 │   │   ├── local
 │   │   └── snowflake
 │   ├── documents
-│   │   ├── bigquery_documents
-│   │   ├── bigquery_function
-│   │   ├── external_knowledge
-│   │   └── snowflake_functions
+│   │   ├── bigquery_documents  # Bigquery official grammar documents
+│   │   ├── bigquery_function   # Bigquery SQL dialect functions
+│   │   ├── external_knowledge  # Important external knowledge for examples
+│   │   └── snowflake_functions # Snowflake SQL dialect functions
 │   └── interface
-├── evaluation_suite            # Evaluation Suite for Spider2
+├── evaluation_suite            # Evaluation Suite for Spider 2.0-Lite
 │   ├── README.md
 │   ├── bigquery_credential.json
 │   ├── evaluate.py
@@ -27,7 +27,7 @@ To meet with research interests in traditional Text2SQL settings, we have releas
 │   │   ├── exec_result
 │   │   ├── sql
 │   └── └── spider2-lite_eval.jsonl
-└── spider2-lite.json            # The standard evaluation examples of Spider2
+└── spider2-lite.json            # The standard evaluation examples of Spider 2.0-Lite
 ```
 
 
