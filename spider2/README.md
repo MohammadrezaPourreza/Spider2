@@ -1,9 +1,9 @@
-# Spider2-World
+# Spider 2.0
 
-Spider2-World is a challenging code generation benchmark that requires writing SQL (primarily), Python, and Command Line commands to solve problems. 😊
+Spider 2.0 is a challenging code generation benchmark that requires writing SQL (primarily), Python, and Command Line commands to solve problems. 😊
 
 #### Query-level Task
-We transform almost all examples Spider2 into Spider2-World. The most distinctive feature is that it doesn't provide predefined schema information; the methods need to explore the database automatically and interactively write SQL. (Somewhat similar to the setting in [`Intercode`](https://github.com/princeton-nlp/intercode))
+The most distinctive feature, compared to classic text-to-SQL, is that it doesn't provide predefined schema information; the methods need to explore the database automatically and interactively write SQL. (Somewhat similar to the setting in [`Intercode`](https://github.com/princeton-nlp/intercode))
 
 #### Project-level Task
 We also propose a new novel SQL generation task based on the **DBT project**, which is a highly realistic SQL generation scenario commonly used in industry development, requires completing a complex data transformation task. (Somewhat similar to the setting in [`SWE-Bench`](https://www.swebench.com/).
@@ -18,7 +18,7 @@ We also propose a new novel SQL generation task based on the **DBT project**, wh
 For any given example, everything needed to solve this task is provided within the folder. Please ensure your agent makes full use of these resources.
 
 
-All evaluation examples are in [`evaluation_examples`](https://github.com/xlang-ai/spider2/tree/main/spider2-world/evaluation_examples) 
+All evaluation examples are in [`evaluation_examples`](https://github.com/xlang-ai/Spider2/tree/main/spider2/evaluation_examples) 
 
 
 - `instance_id`: (str) - A formatted instance identifier, UUID.
@@ -49,7 +49,7 @@ We proposed an agent framework [`Spider-Agent`](https://github.com/xlang-ai/spid
 
 ## Evaluation
 
-We create [evaluation suite](https://github.com/xlang-ai/spider2/tree/main/spider2-world/evaluation_suite) for Spider2-World.
+We create [evaluation suite](https://github.com/xlang-ai/spider2/tree/main/spider2-world/evaluation_suite) for Spider 2.0.
 
 
 #### Evaluation Results
