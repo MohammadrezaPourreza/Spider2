@@ -77,7 +77,24 @@ Each file in `spider2-lite.json` contains the following fields:
 
 We proposed baselines based on the widely used text2sql methods: [`Dail-SQL`](https://github.com/xlang-ai/Spider2/tree/main/spider2-lite/baselines/dailsql#installation) and [`CodeS`](https://github.com/xlang-ai/Spider2/tree/main/spider2-lite/baselines/codes#installation), with evaluation results reported :test_tube:.
 
+#### Run Dail-SQL
 
+Set up the environment and dependencies:
+
+```bash
+conda create -n DAIL-SQL python=3.8
+cd spider2-lite/baselines/dailsql
+pip install -r requirements.txt
+python nltk_downloader.py
+pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.5.0/en_core_web_sm-3.5.0-py3-none-any.whl
+```
+
+Simply run :laughing::
+```
+bash run.sh
+```
+
+For a detailed guideline of running Dail-SQL, please refer to [README of Dail-SQL](https://github.com/xlang-ai/Spider2/blob/main/spider2-baselines/DailSQL/README.md).
 
 # 💫 Contributions
 
