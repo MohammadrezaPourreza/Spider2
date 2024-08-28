@@ -30,10 +30,10 @@ We evaluated Spider 1.0, BIRD, and Spider 2.0 using the popular framework, [Dail
 
 ## 🚀 Quickstart
 
-For [`Spider 2.0`](https://github.com/xlang-ai/Spider2/tree/main/spider2) , we proposed an agent framework [`Spider-Agent`](https://github.com/xlang-ai/Spider2/tree/main/spider-agent) baseline based on Docker ENV. 
+For [`Spider 2.0`](https://github.com/xlang-ai/Spider2/tree/main/spider2) , we proposed an agent framework [`Spider-Agent`](https://github.com/xlang-ai/Spider2/tree/main/spider-agent) baseline based on Docker ENV. Follow the instructions in the [Docker setup guide](https://docs.docker.com/engine/install/) to install Docker on your machine.
 
 
-[`Spider 2.0-Lite`](https://github.com/xlang-ai/Spider2/tree/main/spider2-lite) covers 90% of examples from Spider 2.0 that are sampled to be more lightweight and standalone, with a focus on evaluating LLMs on classic Text-to-SQL.
+Additionally, to meet the needs of the research community, we have also organized the Spider 2.0 data in a format similar to Spider 1.0. [`Spider 2.0-Lite`](https://github.com/xlang-ai/Spider2/tree/main/spider2-lite) covers 90% of examples from Spider 2.0 that are sampled to be more lightweight and standalone, with a focus on evaluating LLMs on classic Text-to-SQL.
 
 
 ## Spider 2.0 Baselines
