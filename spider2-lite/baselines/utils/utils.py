@@ -13,7 +13,7 @@ proj_dir = osp.dirname(osp.abspath(__file__))
 
 
 def get_special_function_summary(data):
-    with open(osp.join(proj_dir, '../../resource/documents/bigquery_functions/bigquery_functions.json'), 'r', encoding='utf-8') as file:
+    with open(osp.join(proj_dir, '../../resource/documentation/bigquery_functions/bigquery_functions.json'), 'r', encoding='utf-8') as file:
         bigquery_functions = json.load(file)
 
     function_summaries = {}
