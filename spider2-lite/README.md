@@ -8,27 +8,26 @@ To meet with research interests in traditional Text2SQL settings, we have releas
 ```
 .
 ├── README.md
-├── bigquery_credential.json
-├── databases                   # DB/DB metadata for Spider2 dataset
-│   ├── bigquery                # The information of DB on Bigquery
-│   ├── local                   # The DB of the local databases
-│   └── snowflake               # The information of DB on Snowflake
-├── interface                   # Scripts for interacting with the database.
-├── externel_information        # All externel information used for Spider2
-│   ├── externel_knowledge      # Knowledge pool of Spider2   
-│   ├── bigquery_documents  
-│   ├── bigquery_functions         
-│   └── bigquery_functions.json 
+├── resource
+│   ├── databases  
+│   │   ├── bigquery
+│   │   ├── local
+│   │   └── snowflake
+│   ├── documents
+│   │   ├── bigquery_documents
+│   │   ├── bigquery_function
+│   │   ├── external_knowledge
+│   │   └── snowflake_functions
+│   └── interface
 ├── evaluation_suite            # Evaluation Suite for Spider2
 │   ├── README.md
 │   ├── bigquery_credential.json
 │   ├── evaluate.py
 │   ├── gold
 │   │   ├── exec_result
-│   │   ├── spider2sql_eval.jsonl
-│   │   └── sql
-│   └── spider2sql_example_submit
-└── spider2-sql.json            # The standard evaluation examples of Spider2
+│   │   ├── sql
+│   └── └── spider2-lite_eval.jsonl
+└── spider2-lite.json            # The standard evaluation examples of Spider2
 ```
 
 
@@ -36,13 +35,11 @@ To meet with research interests in traditional Text2SQL settings, we have releas
 ## 🚀 Quickstart
 You don't need to download any data. The current version of the database is entirely in the cloud.
 
-If your method doesn't require dynamic interaction with the databases, you can make full use of the data in the [`databases`](https://github.com/xlang-ai/Spider2/tree/main/spider2/databases) and the content in the [`externel_information`](https://github.com/xlang-ai/Spider2/tree/main/spider2/external_information).
+If your method doesn't require dynamic interaction with the databases, you can make full use of the data in the [`databases`](https://github.com/xlang-ai/Spider2/tree/main/spider2-lite/resource/databases) and the content in the [`documents`](https://github.com/xlang-ai/Spider2/tree/main/spider2-lite/resource/documents).
 
-If your method requires dynamic interaction with the database, in addition to these, you can use the scripts in the [`interface`](https://github.com/xlang-ai/Spider2/tree/main/spider2/interface) to interact with the cloud database.
+If your method requires dynamic interaction with the database, in addition to these, you can use the scripts in the [`interface`](https://github.com/xlang-ai/Spider2/tree/main/spider2-lite/resource/interface) to interact with the cloud database.
 
 In addition, if you want to view the data in more detail, you need to register for a BigQuery account. Here is a [Bigquery Guideline](https://github.com/xlang-ai/Spider2/blob/main/assets/Bigquery_Guideline.md).
-
-If you want to quickly view the database schema in this repository rather than use Bigquery WebUI, you can check [databases/bigquery/metadata_markdown](https://github.com/xlang-ai/Spider2/tree/main/spider2/databases/bigquery/metadata_markdown/).
 
 
 ## Data Content and Format
@@ -57,7 +54,7 @@ Each file in `spider2-lite.json` contains the following fields:
 
 > **Note that** `plan` and `special_functions` are **not** standard inputs of Spider2 challenge; they are used for ablation experiments and analysis.
 
-The [`databases`](https://github.com/xlang-ai/Spider2/tree/main/spider2/databases) and the content in [`external_information`](https://github.com/xlang-ai/Spider2/tree/main/spider2/externel_information) are resources you can use when benchmarking methods.
+The [`databases`](https://github.com/xlang-ai/Spider2/tree/main/spider2-lite/resource/databases) and the content in [`documents`](https://github.com/xlang-ai/Spider2/tree/main/spider2-lite/resource/documents) are resources you can use when benchmarking methods.
 
 
 
@@ -79,12 +76,12 @@ The [`databases`](https://github.com/xlang-ai/Spider2/tree/main/spider2/database
 }
 ```
 
-The gold SQLs are shown in [evaluation_suite/gold/sql](https://github.com/xlang-ai/Spider2/tree/main/spider2/evaluation_suite/gold/sql)
+The gold SQLs are shown in [evaluation_suite/gold/sql](https://github.com/xlang-ai/Spider2/tree/main/spider2-lite/evaluation_suite/gold/sql)
 
 
 
 ## Evaluation
 
-We create [evaluation suite](https://github.com/xlang-ai/Spider2/tree/main/spider2/evaluation_suite) for Spider2.
+We create [evaluation suite](https://github.com/xlang-ai/Spider2/tree/main/spider2-lite/evaluation_suite) for Spider 2.0-Lite.
 
 

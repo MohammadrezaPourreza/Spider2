@@ -48,7 +48,7 @@ For [`Spider 2.0`](https://github.com/xlang-ai/Spider2/tree/main/spider2#spider-
 git clone https://github.com/xlang-ai/Spider2.git
 cd methods/spider-agent
 
-# Optional: Create a Conda environment for Spider2
+# Optional: Create a Conda environment for Spider 2.0
 # conda create -n spider2 python=3.11
 # conda activate spider2
 
