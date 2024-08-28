@@ -1,7 +1,7 @@
 
-spider2-world/evaluation_suite/*
-spider2-world/release_data/spider2c.jsonl
-spider2-world/evaluation_suite/gold/spider2c_eval.jsonl
+spider2/evaluation_suite/*
+spider2/release_data/spider2c.jsonl
+spider2/evaluation_suite/gold/spider2c_eval.jsonl
 get_doc.py
 get_bigquery_schema.py
 .vscode/*
@@ -12,27 +12,27 @@ spider-agent/output/*
 !spider-agent/output/README.md
 
 spider-agent/bigquery_credential.json
+spider2-lite/bigquery_credential.json
 spider2/bigquery_credential.json
-spider2-world/bigquery_credential.json
 
-spider2/evaluation_suite/*
-
+spider2-lite/evaluation_suite/*
 
 
-!spider2/evaluation_suite/README.md
-!spider2/evaluation_suite/gold/
-!spider2/evaluation_suite/bigquery_credential.json
-!spider2/evaluation_suite/evaluate.py
-!spider2/evaluation_suite/spider2sql_eval_config_file.py
+
+!spider2-lite/evaluation_suite/README.md
+!spider2-lite/evaluation_suite/gold/
+!spider2-lite/evaluation_suite/bigquery_credential.json
+!spider2-lite/evaluation_suite/evaluate.py
+!spider2-lite/evaluation_suite/spider2sql_eval_config_file.py
 
 
 # Do not ignore specific files and directories
-!spider2-world/evaluation_suite/README.md
-!spider2-world/evaluation_suite/bigquery_credential.json
-!spider2-world/evaluation_suite/evaluate.py
-!spider2-world/evaluation_suite/gold/
-!spider2-world/evaluation_suite/eval_utils.py
-!spider2-world/evaluation_suite/example_submission_folder/
+!spider2/evaluation_suite/README.md
+!spider2/evaluation_suite/bigquery_credential.json
+!spider2/evaluation_suite/evaluate.py
+!spider2/evaluation_suite/gold/
+!spider2/evaluation_suite/eval_utils.py
+!spider2/evaluation_suite/example_submission_folder/
 
 
 # Byte-compiled / optimized / DLL files
