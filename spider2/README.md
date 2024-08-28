@@ -43,21 +43,21 @@ All evaluation examples are in [`evaluation_examples`](https://github.com/xlang-
 
 ## Baseline
 
-We proposed an agent framework [`Spider-Agent`](https://github.com/xlang-ai/spider2/tree/main/spider-agent) baseline with interactive environment. 
+We proposed an agent framework [`Spider-Agent`](https://github.com/xlang-ai/Spider2/tree/main/methods/spider-agent#spider-agent) baseline with interactive environment. 
 
 
 
 ## Evaluation
 
-We create [evaluation suite](https://github.com/xlang-ai/spider2/tree/main/spider2-world/evaluation_suite) for Spider 2.0.
+We create [evaluation suite](https://github.com/xlang-ai/Spider2/tree/main/spider2/evaluation_suite#evaluation-suite) for Spider 2.0.
 
 
 #### Evaluation Results
 
 
-| Method                     | Score |
-| -------------------------- | ---- |
-| Spider-Agent + GPT-4o   | 10.00% |
+| Method                | Score  |
+| --------------------- | ------ |
+| Spider-Agent + GPT-4o | 10.00% |
 
 
 
