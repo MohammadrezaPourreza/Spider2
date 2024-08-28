@@ -6,7 +6,7 @@ import shutil
 credential_path = 'bigquery_credential.json'
 
 # Path to the jsonl file to be processed
-jsonl_path = 'evaluation_examples/spider2_world.jsonl'
+jsonl_path = 'evaluation_examples/spider2.jsonl'
 
 # Read the jsonl file and filter records where type is "Bigquery", then save the corresponding instance_ids to a list
 instance_ids = []
