@@ -38,6 +38,7 @@ For [`Spider 2.0`](https://github.com/xlang-ai/Spider2/tree/main/spider2)
 - `instance_id`: (str) - A formatted instance identifier, UUID.
 - `instruction`: (str) - The instruction.
 - `type`: (str) - [Local, Bigquery, DBT, Snowflake].
+- `./evaluation_examples/instanceid/*`: evaluation context
 
 
 #### Run Spider-Agent
