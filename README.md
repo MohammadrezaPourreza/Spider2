@@ -42,6 +42,16 @@ Additionally, to meet the needs of the research community, we have also organize
 We proposed baselines based on widely used text2sql methods: [`Dail-SQL`](https://github.com/xlang-ai/Spider2/blob/main/spider2-baselines/DailSQL/README.md) and [`CodeS`](https://github.com/xlang-ai/Spider2/tree/main/spider2-baselines/CodeS/README.md), with evaluation results reported :test_tube:.
 
 
+
+# 💫 Contributions
+
+
+# ✍️ Citation
+If you find our work helpful, please use the following citations.
+```
+
+```
+
 <!-- 
 
 ## Spider 2.0 Performance
