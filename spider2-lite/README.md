@@ -16,7 +16,7 @@ To meet with research interests in traditional Text2SQL settings, we have releas
 │   │   ├── bigquery
 │   │   ├── local
 │   │   └── snowflake
-│   ├── documents
+│   ├── documentation
 │   │   ├── bigquery_documents  # Bigquery official grammar documents
 │   │   ├── bigquery_function   # Bigquery SQL dialect functions
 │   │   ├── external_knowledge  # Important external knowledge for examples
