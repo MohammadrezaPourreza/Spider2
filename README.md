@@ -3,7 +3,7 @@
 
 ## 📰 News
 
-- 2024-08-28: We released a smaller version of Spider 2.0 (~ 25% of the full dataset) containing 190 examples to give users early access. The full dataset and the paper will be available in two weeks. Stay tuned! 🤗
+- 2024-08-28: We released a smaller version of Spider 2.0 (~ 25% of the full dataset) containing 190 examples to give users early access. The full dataset and the paper will be available in two weeks. Stay tuned! As this is a preliminary release, there may be errors. Your feedback would be invaluable in refining the dataset.
 
 ## 👋 Overview
 
