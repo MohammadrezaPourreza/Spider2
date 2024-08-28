@@ -12,6 +12,9 @@ Spider 2.0 is a benchmark of real world SQL generation tasks across enterprise-g
 
 ![Local Image](./assets/Spider2.png)
 
+### Why Spider 2.0?
+Spider 2.0 addresses the pressing challenges in SQL generation encountered in real industrial settings. Unlike previous benchmarks, Spider 2.0 offers a more realistic and challenging dataset, reflecting the complexity and diversity of real-world database schemas and intricate SQL logic. This benchmark includes 600 examples (expected), encompassing diverse SQL generation scenarios derived from enterprise-grade databases across various fields. Additionally, Spider 2.0 introduces project-level SQL generation tasks that mimic real data transformation projects, offering a practical, industry-relevant challenge for researchers.
+
 
 ## 🚀 Quickstart
 
