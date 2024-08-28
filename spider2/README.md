@@ -1,12 +1,18 @@
 # Spider 2.0
 
-Spider 2.0 is a challenging code generation benchmark that requires writing SQL (primarily), Python, and Command Line commands to solve problems. 😊
+
+Spider 2.0, an evaluation framework with 600 real-world text-to-SQL tasks from enterprise databases. 
+These databases, often with over 1,000 columns, come from cloud or local systems like BigQuery, Snowflake, and PostgreSQL. 
+Solving these tasks requires models to understand database metadata, dialects, and project code, navigating complex SQL environments and handling long contexts. The models must perform advanced reasoning and generate diverse SQL queries, sometimes over 100 lines, surpassing traditional text-to-SQL challenges.
+
+
+<!-- Spider 2.0 is a challenging code generation benchmark that requires writing SQL (primarily), Python, and Command Line commands to solve problems. 😊
 
 #### Query-level Task
 The most distinctive feature, compared to classic text-to-SQL, is that it doesn't provide predefined schema information; the methods need to explore the database automatically and interactively write SQL. (Somewhat similar to the setting in [`Intercode`](https://github.com/princeton-nlp/intercode))
 
 #### Project-level Task
-We also propose a new novel SQL generation task based on the **DBT project**, which is a highly realistic SQL generation scenario commonly used in industry development, requires completing a complex data transformation task. (Somewhat similar to the setting in [`SWE-Bench`](https://www.swebench.com/).
+We also propose a new novel SQL generation task based on the **DBT project**, which is a highly realistic SQL generation scenario commonly used in industry development, requires completing a complex data transformation task. (Somewhat similar to the setting in [`SWE-Bench`](https://www.swebench.com/). -->
 
 
 <!-- ![Local Image](../assets/Spider2-World.png) -->
@@ -43,21 +49,21 @@ All evaluation examples are in [`evaluation_examples`](https://github.com/xlang-
 
 ## Baseline
 
-We proposed an agent framework [`Spider-Agent`](https://github.com/xlang-ai/spider2/tree/main/spider-agent) baseline with interactive environment. 
+We proposed an agent framework [`Spider-Agent`](https://github.com/xlang-ai/Spider2/tree/main/methods/spider-agent#spider-agent) baseline with interactive environment. 
 
 
 
 ## Evaluation
 
-We create [evaluation suite](https://github.com/xlang-ai/spider2/tree/main/spider2-world/evaluation_suite) for Spider 2.0.
+We create [evaluation suite](https://github.com/xlang-ai/Spider2/tree/main/spider2/evaluation_suite#evaluation-suite) for Spider 2.0.
 
 
 #### Evaluation Results
 
 
-| Method                     | Score |
-| -------------------------- | ---- |
-| Spider-Agent + GPT-4o   | 10.00% |
+| Method                | Score  |
+| --------------------- | ------ |
+| Spider-Agent + GPT-4o | 9.25% |
 
 
 

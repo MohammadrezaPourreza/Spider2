@@ -55,7 +55,7 @@ The performance is shown as:
 
 ## Prompts
 
-Take `bq076` as example, the prompt of `vanilla DailSQL` is as:
+Take `bq076` as example, the prompt of `DailSQL` is as:
 ```
 /* Given the following database schema: */
 CREATE TABLE "crime"
