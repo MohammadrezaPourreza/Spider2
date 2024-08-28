@@ -39,7 +39,7 @@ We proposed an agent framework [`Spider-Agent`](../methods/spider-agent) baselin
 
 Due to the quota limit of BigQuery’s free tier, you might encounter [quota limit issues](https://cloud.google.com/bigquery/quotas) when running Spider-Agent. 
 
-In Spider 2.0, we use the free tier bigquery_credential.json by default.
+In Spider 2.0, we use the free tier `bigquery_credential.json` by default.
 
 This could affect the results by approximately **4%**. We recommend that you [register for a BigQuery account](../assets/Bigquery_Guideline.md) and replace the bigquery_credential.json in Spider 2.0 with your own file:
 
