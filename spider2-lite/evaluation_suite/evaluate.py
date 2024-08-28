@@ -118,7 +118,7 @@ def get_bigquery_sql_result(sql_query, is_save, save_dir=None, file_name="result
             value = results.iat[0, 0]
             return value, None
     except Exception as e:
-        print("Error occurred while fetching data: ", e)  # 这个e就是dbms的报错
+        print("Error occurred while fetching data: ", e)  
         return False, str(e)
     return True, None
       
@@ -164,16 +164,13 @@ def evaluate_spider2sql(args):
     
     
     for id in tqdm(eval_ids):
-        # # TODO dasap 测试子集
-        # if id not in ['bq321', 'bq123', 'bq020_2', 'bq329', 'bq016', 'bq062', 'bq076', 'bq006', 'bq339', 'bq020_1']:
-        #     continue
 
         error_info = None
         if mode == "sql":
             pred_sql_query = open(os.path.join(pred_result_dir, f"{id}.sql")).read()
             if "bq" in id or "ga" in id:
-                exe_flag, dbms_error_info = get_bigquery_sql_result(pred_sql_query, True, "temp", f"{id}_pred.csv")  # 从云端数据库拿到sql的exec结果，如果system error，则没必要比较retrieved result
-                if exe_flag == False:  # 发生dbms级别的报错
+                exe_flag, dbms_error_info = get_bigquery_sql_result(pred_sql_query, True, "temp", f"{id}_pred.csv")  
+                if exe_flag == False: 
                     score = 0
                     error_info = dbms_error_info
                 else:
