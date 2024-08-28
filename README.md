@@ -15,7 +15,15 @@
 
 In 2018, our group proposed [Spider 1.0](https://yale-lily.github.io/spider), which has been widely used in Text-to-SQL research. 
 
-However, real-world enterprise-level Text-to-SQL workflows often involve complex data and require advanced SQL queries across various operations. **We lack a comprehensive testbed to fully evaluate and develop Text-to-SQL capabilities.**
+<!-- However, real-world enterprise-level Text-to-SQL workflows often involve complex data and require advanced SQL queries across various operations. **We lack a comprehensive testbed to fully evaluate and develop Text-to-SQL capabilities.** -->
+
+However, real-world enterprise-level Text-to-SQL workflows often involve: 
+1. Complex cloud or local data across various database systems with significantly larger schema.
+2. The need to employ diverse operations from data transformation to analytics tasks.
+3. The need to use multiple nested sub-queries in various dialects to complete sophisticated tasks.
+
+These workflows typically process natural language analytic questions, yet we lack a comprehensive and challenging testbed that encapsulates these phenomena, essential for advancing the capabilities of these models and evaluating their true potential in code generation, specifically in text-to-SQL tasks.
+
 
 To this end, we introduce Spider 2.0, an evaluation framework comprising 600 real-world text-to-SQL workflow problems derived from enterprise-level database use cases. 
 
