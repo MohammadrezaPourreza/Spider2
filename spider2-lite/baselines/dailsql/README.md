@@ -6,7 +6,7 @@ Set up the Python environment:
 ```
 conda create -n DAIL-SQL python=3.8
 conda activate DAIL-SQL
-cd Spider2-baselines/DailSQL
+cd spider2-lite/baselines/dailsql
 pip install -r requirements.txt
 python nltk_downloader.py
 ```
@@ -32,7 +32,7 @@ Finally, simply run :laughing::
 ```
 bash run.sh
 ```
-this script automatically conducts all procedures: 1) data preprocess, 2) executing Dail-SQL, 3) evaluation. You can find the predicted SQL in `spider2-baselines/DailSQL/postprocessed_data`.
+this script automatically conducts all procedures: 1) data preprocess, 2) executing Dail-SQL, 3) evaluation. You can find the predicted SQL in `spider2-lite/baselines/dailsql/postprocessed_data`.
 
 
 # Evaluation
