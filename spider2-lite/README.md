@@ -8,6 +8,9 @@ To meet with research interests in traditional Text2SQL settings, we have releas
 ```
 .
 ├── README.md
+├── baselines
+│   ├── dailsql  # codebase of method DailSQL
+│   ├── codes  # codebase of method CodeS
 ├── resource
 │   ├── databases  
 │   │   ├── bigquery

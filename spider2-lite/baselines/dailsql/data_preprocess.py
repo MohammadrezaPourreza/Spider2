@@ -15,11 +15,11 @@ from utils.datasets.spider import load_tables
 proj_dir = osp.dirname(osp.abspath(__file__))
 
 
-def schema_linking_producer(test, train, table, db, dataset_dir, compute_cv_link=False, args=None):
+def schema_linking_producer(test, table, db, dataset_dir, compute_cv_link=False, args=None):
 
     # load data
     test_data = json.load(open(os.path.join(dataset_dir, test)))
-    train_data = json.load(open(os.path.join(dataset_dir, train)))
+    train_data = []
 
     # load schemas
     schemas, _ = load_tables([os.path.join(dataset_dir, table)])
@@ -81,9 +81,8 @@ if __name__ == '__main__':
     if data_type == "spider":
         # schema-linking between questions and databases for Spider
         spider_dev = osp.join(proj_dir, f'preprocessed_data/{args.dev}/{args.dev}_preprocessed.json')
-        spider_train = osp.join(proj_dir, '../data/dummy.json')
         spider_table = osp.join(proj_dir, f'preprocessed_data/{args.dev}/tables_preprocessed.json') 
         spider_db = osp.join(proj_dir, '../databases')  
-        schema_linking_producer(spider_dev, spider_train, spider_table, spider_db, proj_dir, args=args)
+        schema_linking_producer(spider_dev, spider_table, spider_db, proj_dir, args=args)
     elif data_type == "bird":
         raise NotImplementedError
