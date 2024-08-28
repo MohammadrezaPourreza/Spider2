@@ -16,10 +16,11 @@ Spider 2.0 is a benchmark of real world SQL generation tasks across enterprise-g
 [`Spider 2.0-Lite`](https://github.com/xlang-ai/Spider2/tree/main/spider2-lite) covers 90% of examples from Spider 2.0 that are sampled to be more lightweight and standalone, with a focus on evaluating Large Language Models on classic Text-to-SQL.
 
 
-<!-- ### Why Spider 2.0?
-Spider 2.0 addresses the pressing challenges in SQL generation encountered in real industrial settings. Unlike previous benchmarks, Spider 2.0 offers a more realistic and challenging dataset, reflecting the complexity and diversity of real-world database schemas and intricate SQL logic. 
+In 2018, our group proposed Spider 1.0, which has been widely used in Text-to-SQL research. However, real-world enterprise-level Text-to-SQL workflows often involve complex data across cloud or local databases, require writing advanced SQL queries in various dialects for different operations from data transformation to analytics, and demand handling natural analytic questions. 
+**We lack a comprehensive and challenging testbed to fully evaluate and develop these technologies' capabilities in code generation, specifically in Text-to-SQL.**
 
-Spider 2.0 includes 600 examples (expected), encompassing diverse SQL generation scenarios derived from enterprise-grade databases across various fields. Additionally, Spider 2.0 introduces project-level SQL generation tasks that mimic real data transformation projects, offering a practical, industry-relevant challenge for researchers. -->
+
+
 
 
 ## 🚀 Quickstart
@@ -27,9 +28,11 @@ Spider 2.0 includes 600 examples (expected), encompassing diverse SQL generation
 
 ## Spider 2.0 Baselines
 
-For `Spider 2.0`, we proposed an agent framework [`Spider-Agent`](https://github.com/xlang-ai/Spider2/tree/main/spider-agent) baseline with interactive environment, which draws inspiration from the design of [Intercode](https://github.com/princeton-nlp/intercode) and is based on the `React` framework with specialized designs for database-related tasks.
+For `Spider 2.0`, we proposed an agent framework [`Spider-Agent`](https://github.com/xlang-ai/Spider2/tree/main/spider-agent) baseline based on Docker ENV. Follow the instructions in [the Docker setup guide](https://docs.docker.com/engine/install/) to install Docker on your machine. If you're setting up on Linux, we recommend seeing the [post-installation steps](https://docs.docker.com/engine/install/linux-postinstall/) as well.
 
-### Performance
+
+
+#### Performance
 
 
 | Method                     | Score |
