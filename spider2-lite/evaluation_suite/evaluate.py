@@ -143,7 +143,7 @@ def evaluate_spider2sql(args):
 
     pred_result_dir = args.result_dir
     
-    eval_standard_dict = load_jsonl_to_dict("./gold/spider2sql_eval.jsonl")
+    eval_standard_dict = load_jsonl_to_dict("./gold/spider2lite_eval.jsonl")
     spider2sql_metadata = load_json_list_to_dict("../spider2-lite.json")
 
         
@@ -185,7 +185,6 @@ def evaluate_spider2sql(args):
                     all_files = os.listdir(gold_result_dir)
                     csv_files = [file for file in all_files if pattern.match(file)]
                     if len(csv_files) == 1:
-                        print(f"对于id={id}, gold csv的长度为1，执行compare_pandas_table")
                         gold_pd = pd.read_csv(os.path.join(gold_result_dir, f"{id}.csv"))
                         try:
                             score = compare_pandas_table(pred_pd, gold_pd, eval_standard_dict.get(id)['condition_cols'], eval_standard_dict.get(id)['ignore_order'])
@@ -196,7 +195,6 @@ def evaluate_spider2sql(args):
                         if score == 0 and error_info is None:
                             error_info = 'Result Error'     
                     elif len(csv_files) > 1:
-                        print(f'对于id={id}, gold csv的长度大于1，执行compare_multi_pandas_table')
                         gold_pds = [pd.read_csv(os.path.join(gold_result_dir, file)) for file in csv_files]
                         score = compare_multi_pandas_table(pred_pd, gold_pds, eval_standard_dict.get(id)['condition_cols'], eval_standard_dict.get(id)['ignore_order'])
                         if score == 0 and error_info is None:
@@ -241,7 +239,7 @@ def evaluate_spider2sql(args):
     score = sum([item['score'] for item in output_results]) / len(output_results)
     print(f"Final score: {score}")
 
-    # 将带有error_infos的output_results写入json文件
+
     DEBUG_PREFIX = "SQL_DEBUG_" if args.is_sql_debug else ""
     with open(
         osp.join(args.result_dir, f"../{DEBUG_PREFIX}eval_result_with_error_infos.json"), 'w'
