@@ -13,20 +13,12 @@ Spider 2.0 is a benchmark of real world SQL generation tasks across enterprise-g
 ![Local Image](./assets/Spider2.png)
 
 ### Why Spider 2.0?
-Spider 2.0 addresses the pressing challenges in SQL generation encountered in real industrial settings. Unlike previous benchmarks, Spider 2.0 offers a more realistic and challenging dataset, reflecting the complexity and diversity of real-world database schemas and intricate SQL logic. This benchmark includes 600 examples (expected), encompassing diverse SQL generation scenarios derived from enterprise-grade databases across various fields. Additionally, Spider 2.0 introduces project-level SQL generation tasks that mimic real data transformation projects, offering a practical, industry-relevant challenge for researchers.
+Spider 2.0 addresses the pressing challenges in SQL generation encountered in real industrial settings. Unlike previous benchmarks, Spider 2.0 offers a more realistic and challenging dataset, reflecting the complexity and diversity of real-world database schemas and intricate SQL logic. 
+
+Spider 2.0 includes 600 examples (expected), encompassing diverse SQL generation scenarios derived from enterprise-grade databases across various fields. Additionally, Spider 2.0 introduces project-level SQL generation tasks that mimic real data transformation projects, offering a practical, industry-relevant challenge for researchers.
 
 
 ## 🚀 Quickstart
-
-
-
-## ⚙️ Settings
-
-To meet the diverse research needs, we set up Spider 2.0 with two settings, focusing on advanced Text2SQL and general coding agent tasks, respectively. Most examples in these two **settings** overlap, differing mainly in the settings themselves.
-
-[Spider2](https://github.com/xlang-ai/spider2/tree/main/spider2): **Traditional Text2SQL Setting**. Focusing on Text2SQL, with detailed database metadata.
-
-[Spider2-World](https://github.com/xlang-ai/spider2/tree/main/spider2-world): **Code agent setting**. SQL generation in a real-**world** setting requires automatically exploring complex databases, using Python, SQL, and command-line tools to solve complex SQL generation tasks across different databases and to perform project-level code agent tasks.
 
 
 ## Spider 2.0 Baselines
