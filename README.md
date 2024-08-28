@@ -52,6 +52,9 @@ cd methods/spider-agent
 # conda create -n spider2 python=3.11
 # conda activate spider2
 
+# Install required dependencies
+pip install -r requirements.txt
+
 export OPENAI_API_KEY=your_openai_api_key
 python run.py --model gpt-4o --suffix test1
 ```
