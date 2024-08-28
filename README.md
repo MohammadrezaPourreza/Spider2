@@ -19,7 +19,12 @@ Real-world enterprise-level Text-to-SQL workflows often involve complex data and
 
 To this end, we introduce Spider 2.0, an evaluation framework of real-world SQL generation tasks across enterprise-grade databases and diverse realistic scenarios.
 
-We evaluate Spider 1.0, BIRD, Spider2.0 using the same state-of-the-art framework Dail-SQL
+We evaluate Spider 1.0, BIRD, Spider2.0 using the same popular framework [Dail-SQL](https://github.com/BeachWang/DAIL-SQL).
+
+|                    | Spider 1.0 | BIRD  | Spider 2.0 |
+|--------------------|------------|-------|------------|
+| DailSQL + GPT-4    | 86.6       | 57.4  | 6.0        |
+
 
 
 
