@@ -1,7 +1,7 @@
 
-data/evaluation_suite/*
-data/release_data/spider2c.jsonl
-data/evaluation_suite/gold/spider2c_eval.jsonl
+spider2/evaluation_suite/*
+spider2/release_spider2/spider2c.jsonl
+spider2/evaluation_suite/gold/spider2c_eval.jsonl
 get_doc.py
 get_bigquery_schema.py
 .vscode/*
@@ -13,7 +13,7 @@ methods/spider-agent/output/*
 
 spider-agent/bigquery_credential.json
 spider2-lite/bigquery_credential.json
-data/bigquery_credential.json
+spider2/bigquery_credential.json
 
 spider2-lite/evaluation_suite/*
 
@@ -27,12 +27,12 @@ spider2-lite/evaluation_suite/*
 
 
 # Do not ignore specific files and directories
-!data/evaluation_suite/README.md
-!data/evaluation_suite/bigquery_credential.json
-!data/evaluation_suite/evaluate.py
-!data/evaluation_suite/gold/
-!data/evaluation_suite/eval_utils.py
-!data/evaluation_suite/example_submission_folder/
+!spider2/evaluation_suite/README.md
+!spider2/evaluation_suite/bigquery_credential.json
+!spider2/evaluation_suite/evaluate.py
+!spider2/evaluation_suite/gold/
+!spider2/evaluation_suite/eval_utils.py
+!spider2/evaluation_suite/example_submission_folder/
 
 
 # Byte-compiled / optimized / DLL files
@@ -48,19 +48,19 @@ spider2-lite/evaluation_suite/*
 spider2-lite/baselines/DailSQL/third_party/
 spider2-lite/baselines/DailSQL/vector_cache/
 
-spider2-lite/baselines/DailSQL/preprocessed_data/*
-!spider2-lite/baselines/DailSQL/preprocessed_data/spider2_preprocess.py
-spider2-lite/baselines/DailSQL/postprocessed_data/*
-!spider2-lite/baselines/DailSQL/postprocessed_data/spider2_postprocess.py
+spider2-lite/baselines/DailSQL/preprocessed_spider2/*
+!spider2-lite/baselines/DailSQL/preprocessed_spider2/spider2_preprocess.py
+spider2-lite/baselines/DailSQL/postprocessed_spider2/*
+!spider2-lite/baselines/DailSQL/postprocessed_spider2/spider2_postprocess.py
 
 
 # CodeS
 spider2-lite/baselines/CodeS/sic_ckpts/
 spider2-lite/baselines/CodeS/SimCSE/
-spider2-lite/baselines/CodeS/preprocessed_data/*
-!spider2-lite/baselines/CodeS/preprocessed_data/spider2_preprocess.py
-spider2-lite/baselines/CodeS/postprocessed_data/*
-!spider2-lite/baselines/CodeS/postprocessed_data/spider2_postprocess.py
+spider2-lite/baselines/CodeS/preprocessed_spider2/*
+!spider2-lite/baselines/CodeS/preprocessed_spider2/spider2_preprocess.py
+spider2-lite/baselines/CodeS/postprocessed_spider2/*
+!spider2-lite/baselines/CodeS/postprocessed_spider2/spider2_postprocess.py
 
 # yuxiao's tmp code
 spider2-lite/baselines/yyx_tmp/
