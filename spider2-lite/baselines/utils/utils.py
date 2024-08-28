@@ -147,8 +147,8 @@ def walk_metadata(dev):
         proj_db_name = os.path.basename(os.path.normpath(db_path)) 
         assert '.' in proj_db_name
         project_name, db_name = proj_db_name.split('.')
-        # if f"{project_name}.{db_name}" not in db_ids:  # TODO DASAP
-            # continue 
+        if f"{project_name}.{db_name}" not in db_ids:
+            continue 
 
         table_count = 0
         total_column_count = 0
