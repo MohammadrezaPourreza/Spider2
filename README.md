@@ -17,7 +17,7 @@ In 2018, our group proposed [Spider 1.0](https://yale-lily.github.io/spider), wh
 
 However, real-world enterprise-level Text-to-SQL workflows often involve complex databases and require advanced SQL queries to solve sophisticated tasks (data transformation or analytics tasks).
 
-However, we lack a comprehensive and challenging testbed that encapsulates these phenomena, essential for advancing these models and fully evaluating their potential in code generation, specifically in text-to-SQL tasks.
+We lack a comprehensive and challenging testbed that encapsulates these phenomena, essential for advancing the capabilities of these models and fully evaluating their potential in code generation, specifically in text-to-SQL tasks.
 
 <!-- However, real-world enterprise-level Text-to-SQL workflows often involve: 
 1. Complex cloud or local data across various database systems with significantly larger schema.
