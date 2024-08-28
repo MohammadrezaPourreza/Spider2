@@ -22,8 +22,7 @@ pip install -r requirements.txt
 ```
 #### 2. Docker
 
-docker: Learn more [here](https://docs.docker.com/get-started/get-docker/) to install. Before running the below code, make sure the Docker daemon/application is running locally.
-
+Follow the instructions in the [Docker setup guide](https://docs.docker.com/engine/install/) to install Docker on your machine.
 
 ### Run Spider-Agent
 

@@ -17,6 +17,7 @@ For [`Spider 2.0`](./README.md), all evaluation examples are aggregated in file 
     "type": "Bigquery"
 }
 ```
+
 For each instance, we also provide a separate folder [`./evaluation_examples/{instruction_id}`](./evaluation_examples/) as its **Execution Contetxt** to simulate the agentic setting. Each folder may have the following files:
 
 - `README.md`: detailed requirements of the `instruction` field for the current example with `instance_id`;
@@ -24,10 +25,10 @@ For each instance, we also provide a separate folder [`./evaluation_examples/{in
 - `result.csv`: CSV file to store the execution results;
 - other instance-specific materials which assist in finishing the current task:
     - 🏗️ partial project, e.g., [`dbt_project/`](./evaluation_examples/43d5ad49-0f99-4b90-a6df-d3afc5c216ff/).
-    - 🎞️ query history or samples, e.g., [QUERY_HISTORY/](./evaluation_examples/1d009ac3-1c75-447b-a7e0-49ccc2b5fbf9/FIREBASE_QUERY_HISTORY/), [BASIC_SQLS/](./evaluation_examples/e4a35097-4ff3-4ca7-8304-f593e039735b/BASIC_SQLS), etc.
+    - 🎞️ query history or samples, e.g., [`QUERY_HISTORY/`](./evaluation_examples/1d009ac3-1c75-447b-a7e0-49ccc2b5fbf9/FIREBASE_QUERY_HISTORY/), [`BASIC_SQLS/`](./evaluation_examples/e4a35097-4ff3-4ca7-8304-f593e039735b/BASIC_SQLS), etc.
     - 📝 reference documentation: [`ga4_dimensions_and_metrics.md`](./evaluation_examples/3a348be1-aed2-44fb-8185-c66c9d14a6ef/ga4_dimensions_and_metrics.md), [`retention_rate.md`](./evaluation_examples/22faca18-f766-46f5-a22b-c79de56fb6ec/retention_rate.md), etc.
     - 🔍 query interface: We have predefined how to access the diverse database systems.
-```
+
 
 ## Baseline
 
