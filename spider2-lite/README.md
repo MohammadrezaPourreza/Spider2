@@ -16,8 +16,8 @@ To meet with research interests in traditional Text2SQL settings, we have releas
 │   │   ├── bigquery
 │   │   ├── local
 │   │   └── snowflake
-│   ├── documents
-│   │   ├── bigquery_documents  # Bigquery official grammar documents
+│   ├── documentation
+│   │   ├── bigquery_documentation  # Bigquery official grammar documentation
 │   │   ├── bigquery_function   # Bigquery SQL dialect functions
 │   │   ├── external_knowledge  # Important external knowledge for examples
 │   │   └── snowflake_functions # Snowflake SQL dialect functions
@@ -38,7 +38,7 @@ To meet with research interests in traditional Text2SQL settings, we have releas
 ## 🚀 Quickstart
 You don't need to download any data. The current version of the database is entirely in the cloud.
 
-If your method doesn't require dynamic interaction with the databases, you can make full use of the data in the [`databases`](https://github.com/xlang-ai/Spider2/tree/main/spider2-lite/resource/databases) and the content in the [`documents`](https://github.com/xlang-ai/Spider2/tree/main/spider2-lite/resource/documents).
+If your method doesn't require dynamic interaction with the databases, you can make full use of the data in the [`databases`](https://github.com/xlang-ai/Spider2/tree/main/spider2-lite/resource/databases) and the content in the [`documentation`](https://github.com/xlang-ai/Spider2/tree/main/spider2-lite/resource/documentation).
 
 If your method requires dynamic interaction with the database, in addition to these, you can use the scripts in the [`interface`](https://github.com/xlang-ai/Spider2/tree/main/spider2-lite/resource/interface) to interact with the cloud database.
 
@@ -49,15 +49,15 @@ In addition, if you want to view the data in more detail, you need to register f
 
 Each file in `spider2-lite.json` contains the following fields:
 - `instance_id`: the unique example id
-- `db`: the database id to which this question is addressed.
+- `db`: the database id to which this question is addressed
 - `question`: the natural language question
-- `external_knowledge`: The filenames of external knowledge, documentation, and information required to answer this question are stored in documents.
+- `external_knowledge`: the filenames of external knowledge, documentation, and information required to answer this question are stored in documents
 - `plan`: detailed instruction / reference plan for solving this problem
-- `special_functions`: Special functions that may be needed to answer this question.
+- `special_functions`: special functions that may be needed to answer this question
 
 > **Note that** `plan` and `special_functions` are **not** standard inputs of Spider2 challenge; they are used for ablation experiments and analysis.
 
-The [`databases`](https://github.com/xlang-ai/Spider2/tree/main/spider2-lite/resource/databases) and the content in [`documents`](https://github.com/xlang-ai/Spider2/tree/main/spider2-lite/resource/documents) are resources you can use when benchmarking methods.
+The [`databases`](https://github.com/xlang-ai/Spider2/tree/main/spider2-lite/resource/databases) and the content in [`documentation`](https://github.com/xlang-ai/Spider2/tree/main/spider2-lite/resource/documentation) are resources you can use when benchmarking methods.
 
 
 
