@@ -33,6 +33,7 @@ Notably, as shown below, even the most advanced LLMs, including GPT-4, solve onl
 
 
 ### Spider 2.0
+
 For [`Spider 2.0`](./spider2/README.md), all evaluation examples are aggregated in file [`spider2.jsonl`](./spider2/evaluation_examples/spider2.jsonl), where each data point contains the following field:
 ```json
 {
@@ -58,7 +59,7 @@ For each instance, we also provide a separate folder [`./spider2/evaluation_exam
 - `./evaluation_examples/instanceid/*`: evaluation context
 [`evaluation_examples`](https://github.com/xlang-ai/Spider2/tree/main/spider2/evaluation_examples). -->
 
-🤗 Feel free to devise your intelligent agent and resolve the task defined in `instruction` field.
+The agent has to interact with complex SQL workflows, process extremely long contexts, perform intricate reasoning, and generate multiple SQL queries with diverse operations, often exceeding 100 lines across multiple turns.
 
 
 #### Run Spider-Agent
