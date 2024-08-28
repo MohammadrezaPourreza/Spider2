@@ -33,7 +33,7 @@ We evaluated Spider 1.0, BIRD, and Spider 2.0 using the popular frameworks [Dail
 
 
 ### Spider 2.0
-For [`Spider 2.0`](./spider2/README.md), all evaluation examples are aggregated in file [`spider2_world.jsonl`](./spider2/evaluation_examples/spider2_world.jsonl), where each data point contains the following field:
+For [`Spider 2.0`](./spider2/README.md), all evaluation examples are aggregated in file [`spider2.jsonl`](./spider2/evaluation_examples/spider2.jsonl), where each data point contains the following field:
 ```json
 {
     "instance_id": "3a348be1-aed2-44fb-8185-c66c9d14a6ef",
