@@ -13,6 +13,7 @@ methods/spider-agent/output/*
 
 spider-agent/bigquery_credential.json
 spider2-lite/bigquery_credential.json
+spider2/bigquery_credential.json
 
 spider2-lite/evaluation_suite/*
 

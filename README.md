@@ -121,3 +121,11 @@ bash run.sh
 ```
 
 For a detailed guideline of running Dail-SQL, please refer to [Installation](https://github.com/xlang-ai/Spider2/tree/main/spider2-lite/baselines/dailsql#installation).
+
+
+# ✍️ Citation
+```
+
+
+
+```
