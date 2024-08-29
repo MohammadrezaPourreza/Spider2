@@ -76,4 +76,10 @@ spider2-lite/baselines/yyx_tmp/
 
 **/subset*.json
 **/run_check.sh
+**/snowflake_credential.json
 **/bigquery_credential.json
+
+
+# Ignore any folder named 'credentials'
+credentials/
+**/credentials/
