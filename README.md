@@ -79,9 +79,9 @@ cd methods/spider-agent
 # Install required dependencies
 pip install -r requirements.txt
 ```
-3. **Configure credential**: follow this [instruction]([./spider2/README.md](https://github.com/xlang-ai/Spider2/blob/1d558fcbf9e275693d644cb93631f022115e663c/spider2/README.md?plain=1#L34)) to configure BigQuery for running the SQL queries.
+1. **Configure credential**: follow this [instruction](https://github.com/xlang-ai/Spider2/tree/main/spider2#configure-credential) to configure BigQuery for running the SQL queries.
    
-4. **Run agent**
+2. **Run agent**
 ```
 export OPENAI_API_KEY=your_openai_api_key
 python run.py --model gpt-4o --suffix test1
