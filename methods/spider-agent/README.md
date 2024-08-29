@@ -24,9 +24,11 @@ pip install -r requirements.txt
 
 Follow the instructions in the [Docker setup guide](https://docs.docker.com/engine/install/) to install Docker on your machine.
 
-### Run Spider-Agent
+#### 3. **Configure credential**: follow this [instruction]([./spider2/README.md](https://github.com/xlang-ai/Spider2/blob/1d558fcbf9e275693d644cb93631f022115e663c/spider2/README.md?plain=1#L34)).
 
-#### Set LLM API Key
+#### 4. Run Spider-Agent
+
+##### Set LLM API Key
 
 ```
 export AZURE_API_KEY=your_azure_api_key
@@ -35,7 +37,7 @@ export OPENAI_API_KEY=your_openai_api_key
 export GEMINI_API_KEY=your_genmini_api_key
 ```
 
-#### Run 
+##### Run 
 
 
 ```python
@@ -44,22 +46,6 @@ python run.py --model gpt-4o --suffix test1
 ```
 
 
-## Bigquery Credential
-
-Due to the quota limit of BigQuery’s free tier, you might encounter [quota limit issues](https://cloud.google.com/bigquery/quotas) when running Spider-Agent. 
-
-In Spider 2.0, we use the free tier `bigquery_credential.json` by default.
-
-This could affect the results by approximately **4%**. We recommend that you [register for a BigQuery account](../assets/Bigquery_Guideline.md) and replace the bigquery_credential.json in Spider 2.0 with your own file:
-
-**Note that this will typically incur a small expense.**
-
-```python
-cd ../../spider2
-
-# move your bigquery_credential.json in this folder
-python use_your_own_credential.py
-```
 
 
 
