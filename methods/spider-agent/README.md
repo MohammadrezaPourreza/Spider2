@@ -24,7 +24,8 @@ pip install -r requirements.txt
 
 Follow the instructions in the [Docker setup guide](https://docs.docker.com/engine/install/) to install Docker on your machine.
 
-#### 3. **Configure credential**: follow this [instruction]([./spider2/README.md](https://github.com/xlang-ai/Spider2/blob/1d558fcbf9e275693d644cb93631f022115e663c/spider2/README.md?plain=1#L34)).
+#### 3. Configure credential
+Follow this [instruction]([./spider2/README.md](https://github.com/xlang-ai/Spider2/blob/1d558fcbf9e275693d644cb93631f022115e663c/spider2/README.md?plain=1#L34)) to configure BigQuery for running the SQL queries.
 
 #### 4. Run Spider-Agent
 
