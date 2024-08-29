@@ -79,7 +79,7 @@ cd methods/spider-agent
 # Install required dependencies
 pip install -r requirements.txt
 ```
-3. **Configure credential**: follow this [instruction](./spider2/README.md).
+3. **Configure credential**: follow this [instruction]([./spider2/README.md](https://github.com/xlang-ai/Spider2/blob/1d558fcbf9e275693d644cb93631f022115e663c/spider2/README.md?plain=1#L34)).
 4. **Run agent**
 ```
 export OPENAI_API_KEY=your_openai_api_key
