@@ -42,7 +42,7 @@ We provide two solutions for configuring BigQuery credentials:
 By default, Spider 2.0 uses the BigQuery free tier `bigquery_credential.json`. Due to the quota limitations of the free tier, this could affect the results by approximately **4%**. If you choose to use our free credential, please unzip the credential file:
 ```bash
 unzip credential.zip
-python use_your_own_credential.py
+python add_credential.py
 ```
 
 ### 2. Use Your Own BigQuery Credential
@@ -53,7 +53,7 @@ In Spider 2.0, we use the free tier `bigquery_credential.json` by default.
 To avoid these issues and achieve more accurate results (avoiding the approximately 4% deviation), we recommend that you [register for a BigQuery account](../assets/Bigquery_Guideline.md) and replace the bigquery_credential.json in Spider 2.0 with your own file:
 **Note that you need to add your [billing account](https://cloud.google.com/billing/docs/how-to/create-billing-account) to your BigQuery account. If you don't do this, there is essentially no difference from using the first solution. However, this will typically incur a small expense.**
 
-```python
+```bash
 # move your bigquery_credential.json in this folder
 python add_credential.py
 ```
