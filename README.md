@@ -42,7 +42,7 @@ For [`Spider 2.0`](./spider2/README.md), all evaluation examples are aggregated 
     "type": "Bigquery"
 }
 ```
-For each instance, we also provide a separate folder [`./spider2/evaluation_examples/{instruction_id}`](./spider2/evaluation_examples/) as its **Execution Contetxt** to simulate the agentic setting. Each folder may have the following files:
+For each instance, we also provide a separate folder [`./spider2/evaluation_examples/{instruction_id}`](./spider2/evaluation_examples/) as its **Execution Context** to simulate the agentic setting. Each folder may have the following files:
 
 - `README.md`: detailed requirements of the `instruction` field for the current example with `instance_id`;
 - `*_credential.json`: credential file connecting to realistic enterprise-level databases, e.g., BigQuery. Can be replaced with your OWN;
