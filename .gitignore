@@ -2,6 +2,7 @@
 spider2/evaluation_suite/*
 spider2/release_spider2/spider2c.jsonl
 spider2/evaluation_suite/gold/spider2c_eval.jsonl
+spider2/delete.py
 get_doc.py
 get_bigquery_schema.py
 .vscode/*
@@ -13,10 +14,11 @@ methods/spider-agent/output/*
 
 spider-agent/bigquery_credential.json
 spider2-lite/bigquery_credential.json
+spider2-lite/snowflake_credential.json
 spider2/bigquery_credential.json
 
 spider2-lite/evaluation_suite/*
-
+spider2-lite/resource/databases/snowflake
 
 !spider2-lite/evaluation_suite/README.md
 !spider2-lite/evaluation_suite/gold/

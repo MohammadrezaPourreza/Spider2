@@ -64,8 +64,10 @@ The agent has to interact with complex SQL workflows, process extremely long con
 
 #### Run Spider-Agent
 
-For Spider 2.0, we proposed an agent framework [Spider-Agent](https://github.com/xlang-ai/Spider2/tree/0b1656dd2e82272ca194e6098d4b58a08497f966/spider-agent) based on Docker environment. Follow the instructions in the [Docker setup guide](https://docs.docker.com/engine/install/) to install Docker on your machine.
+For Spider 2.0, we proposed an agent framework [Spider-Agent](https://github.com/xlang-ai/Spider2/tree/0b1656dd2e82272ca194e6098d4b58a08497f966/spider-agent) based on Docker environment. 
 
+1. **Install Docker**. Follow the instructions in the [Docker setup guide](https://docs.docker.com/engine/install/) to install Docker on your machine. 
+2. **Install conda environment**.
 ```
 git clone https://github.com/xlang-ai/Spider2.git
 cd methods/spider-agent
@@ -76,7 +78,10 @@ cd methods/spider-agent
 
 # Install required dependencies
 pip install -r requirements.txt
-
+```
+3. **Configure credential**: follow this [instruction](./spider2/README.md).
+4. **Run agent**
+```
 export OPENAI_API_KEY=your_openai_api_key
 python run.py --model gpt-4o --suffix test1
 ```

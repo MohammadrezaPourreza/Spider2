@@ -100,7 +100,7 @@ def get_bigquery_sql_result(sql_query, is_save, save_dir=None, file_name="result
     is_save = True, output a 'result.csv'
     if_save = False, output a string
     """
-    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "bigquery_credential.json"
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "./credentials/bigquery_credential.json"
     client = bigquery.Client()
 
     try:

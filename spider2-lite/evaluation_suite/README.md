@@ -28,6 +28,17 @@ Please organize your submissions in the following structure:
 
 ## How to evaluate ?
 
+### Credential
+
+You need to first extract the pre-prepared credential file.
+
+```
+unzip credentials.zip
+
+```
+
+### Evaluation
+
 There are two modes of your submission data, sql or exec_result. You only need to select one, we recommand the `sql` mode.
 - sql: Provide the SQL you predicted for each task.
 - exec_result: Provide the execution result for each SQL, stored in a CSV file (not commonly used)

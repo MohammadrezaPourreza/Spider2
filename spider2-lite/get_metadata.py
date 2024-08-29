@@ -256,6 +256,12 @@ def get_bq_metadata(db_name):
     return output_list
 
 
+def load_json(filename):
+    with open(filename, 'r') as file:
+        data = json.load(file)
+    return data
+
+
 def get_bigquery_metadata(project_name, dataset_name):
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "bigquery_credential.json"
     client = bigquery.Client()
@@ -326,26 +332,122 @@ def get_bigquery_metadata(project_name, dataset_name):
 
 
 
+
+
+def load_json(filename):
+    with open(filename, 'r') as file:
+        data = json.load(file)
+    return data
+
+
+import traceback
+import snowflake.connector
+def get_snowflake_schema(database_name, schema_name):
+    print(f"{database_name}.{schema_name}")
+    snowflake_credential = load_json('snowflake_credential.json')
+    table_number = 0
+    conn = snowflake.connector.connect(
+        **snowflake_credential,
+        database=database_name
+    )
+    
+    cursor = conn.cursor()
+    output_str = ""
+    
+    dataset_metadata = None
+    
+    query = f"""
+    SELECT table_name, comment
+    FROM "{database_name}".INFORMATION_SCHEMA.TABLES
+    WHERE table_schema = '{schema_name}'
+    """
+    
+    cursor.execute(query)
+    tables_information = cursor.fetchall()
+    dataset_metadata = pd.DataFrame(tables_information, columns=['table_name', 'description'])
+    
+    tables_metadata = []
+    
+    for table_name in tqdm(dataset_metadata['table_name'].tolist()):
+        
+        table_metadata = {}
+        try:
+            query = f"""
+            SELECT
+                *
+            FROM
+                {schema_name}.{table_name}
+            TABLESAMPLE BERNOULLI (0.001)
+            LIMIT 5;
+            """
+            cursor.execute(query)
+            output = cursor.fetchall()
+            columns = [desc[0] for desc in cursor.description]
+            df = pd.DataFrame(output, columns=columns)
+            sample_rows = df.to_dict(orient='records')
+            table_metadata['sample_rows'] = sample_rows   
+        except Exception as e:
+            error_message = traceback.format_exc()
+            if "does not exist or not authorized" in error_message:
+                print("error_message")
+                continue
+            else:
+                print(error_message)
+                pass
+        
+        query = f"""
+        SELECT
+            column_name,
+            data_type,
+            comment
+        FROM
+            "{database_name}".INFORMATION_SCHEMA.COLUMNS
+        WHERE
+            table_schema = '{schema_name}' AND
+            table_name = '{table_name}'
+        """
+        cursor.execute(query)
+        df = pd.DataFrame(cursor.fetchall(), columns=['column_names', 'column_types', "description"])
+        
+        table_metadata['table_name'] = f"{schema_name}.{table_name}"
+        table_metadata['table_fullname'] = f"{database_name}.{schema_name}.{table_name}"
+        table_metadata['column_names'] = df["column_names"].tolist()
+        table_metadata['column_types'] = df["column_types"].tolist()
+        table_metadata['description'] = df["description"].tolist()
+        tables_metadata.append(table_metadata)
+        
+        table_number += 1
+        
+    os.makedirs('snowflake', exist_ok=True)
+    cursor.close()
+    conn.close()
+    print("Number of tables: ", table_number)
+    return dataset_metadata, tables_metadata
+
+
+
 if __name__ == "__main__":
 
     
     with open("spider2-lite.json", 'r', encoding='utf-8') as file:
         spider2_data = json.load(file)
         
-    local_db_name, bq_db_name = set(), set()
+    local_db_name, bq_db_name, sf_db_name = set(), set(), set()
     local_db_path = []
     for data in spider2_data:
-        if '.' not in data['db']:
+        if data['instance_id'].startswith('local') and not data['instance_id'].endswith('bq'):
             local_db_name.add(data['db'])
-        else:
+        elif data['instance_id'].startswith('bq') or data['instance_id'].startswith('ga') or (data['instance_id'].startswith('local') and data['instance_id'].endswith('bq')):
             if '\n' in data['db']:
                 bq_db_name.update(data['db'].split('\n'))
             else:
                 bq_db_name.add(data['db'])
+        elif data['instance'].startswith('sf'):
+            sf_db_name.add(data['db'])
                 
 
     db_ids = []
-    root_dir = './databases/bigquery/'
+    root_dir = './resource/databases/bigquery/'
     for folder_name_a in os.listdir(root_dir):
         folder_path_a = os.path.join(root_dir, folder_name_a)
         if os.path.isdir(folder_path_a):  # Check if it's a directory
@@ -377,4 +479,33 @@ if __name__ == "__main__":
             json_data = json.dumps(table_meta, indent=4, default=str)
             with open(file_path, 'w') as json_file: 
                 json_file.write(json_data)
-        
+
+
+    sf_db_ids = []
+    root_dir = './resource/databases/snowflake/'
+    for folder_name_a in os.listdir(root_dir):
+        folder_path_a = os.path.join(root_dir, folder_name_a)
+        if os.path.isdir(folder_path_a):  # Check if it's a directory
+            has_json = any(file.endswith('.json') for file in os.listdir(folder_path_a))
+            if has_json:
+                sf_db_ids.append(f"{folder_name_a}")
+    
+    sf_db_name = list(sf_db_name - set(sf_db_ids))
+    # import pdb; pdb.set_trace()
+    
+    for item in sf_db_name:
+        database_name, schema_name = item.split(".")
+        dataset_metadata, tables_metadata = get_snowflake_schema(database_name, schema_name)
+        directory = os.path.join("./", f"{database_name}.{schema_name}")
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+        df = pd.DataFrame(dataset_metadata)
+        ddl_csv_path = os.path.join(directory, 'DDL.csv')
+        df.to_csv(ddl_csv_path, index=False)
+
+        for table_meta in tables_metadata:
+            table_name = table_meta['table_name']
+            file_path = os.path.join(directory, f"{table_name}.json")
+            json_data = json.dumps(table_meta, indent=4, default=str)
+            with open(file_path, 'w') as json_file: 
+                json_file.write(json_data)

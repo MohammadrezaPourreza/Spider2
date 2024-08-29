@@ -30,25 +30,38 @@ For each instance, we also provide a separate folder [`./evaluation_examples/{in
     - 🔍 query interface: We have predefined how to access the diverse database systems.
 
 
-## Baseline
 
-We proposed an agent framework [`Spider-Agent`](../methods/spider-agent) baseline with interactive environment.
+## Configure credential
 
+We have 50% of the examples using a database hosted on BigQuery. If you are not interested in this type of data, please skip this section. If you are interested, **you must** complete the configuration below! You will need to have a BigQuery Account Credential. This will take approximately 1-5 minutes.
 
-## Bigquery Credential
+We provide two solutions for configuring BigQuery credentials:
 
+### 1. Use Our Free Tier Account Credential
+
+By default, Spider 2.0 uses the BigQuery free tier `bigquery_credential.json`. Due to the quota limitations of the free tier, this could affect the results by approximately **4%**. If you choose to use our free credential, please unzip the credential file:
+```bash
+unzip credential.zip
+python use_your_own_credential.py
+```
+
+### 2. Use Your Own BigQuery Credential
 Due to the quota limit of BigQuery’s free tier, you might encounter [quota limit issues](https://cloud.google.com/bigquery/quotas) when running Spider-Agent. 
 
 In Spider 2.0, we use the free tier `bigquery_credential.json` by default.
 
-This could affect the results by approximately **4%**. We recommend that you [register for a BigQuery account](../assets/Bigquery_Guideline.md) and replace the bigquery_credential.json in Spider 2.0 with your own file:
-
-**Note that this will typically incur a small expense.**
+To avoid these issues and achieve more accurate results (avoiding the approximately 4% deviation), we recommend that you [register for a BigQuery account](../assets/Bigquery_Guideline.md) and replace the bigquery_credential.json in Spider 2.0 with your own file:
+**Note that you need to add your [billing account](https://cloud.google.com/billing/docs/how-to/create-billing-account) to your BigQuery account. If you don't do this, there is essentially no difference from using the first solution. However, this will typically incur a small expense.**
 
 ```python
 # move your bigquery_credential.json in this folder
-python use_your_own_credential.py
+python add_credential.py
 ```
+
+
+## Baseline
+
+We proposed an agent framework [`Spider-Agent`](../methods/spider-agent) baseline with interactive environment.
 
 
 ## Evaluation

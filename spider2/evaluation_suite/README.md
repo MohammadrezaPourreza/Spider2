@@ -61,6 +61,15 @@ The gold answers are saved in './gold'
 
 ### How to use ?
 
+
+#### Credential
+
+You need to first extract the pre-prepared credential file.
+```
+unzip credentials.zip
+```
+
+
 ```python
 python evaluate.py --result_dir <your-submission-folder> --gold_dir gold
 python evaluate.py --result_dir example_submission_folder --gold_dir gold
