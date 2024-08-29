@@ -76,3 +76,4 @@ spider2-lite/baselines/yyx_tmp/
 
 **/subset*.json
 **/run_check.sh
+**/bigquery_credential.json
