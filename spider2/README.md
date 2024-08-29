@@ -51,7 +51,8 @@ Due to the quota limit of BigQuery’s free tier, you might encounter [quota lim
 In Spider 2.0, we use the free tier `bigquery_credential.json` by default.
 
 To avoid these issues and achieve more accurate results (avoiding the approximately 4% deviation), we recommend that you [register for a BigQuery account](../assets/Bigquery_Guideline.md) and replace the bigquery_credential.json in Spider 2.0 with your own file:
-**Note that you need to add your [billing account](https://cloud.google.com/billing/docs/how-to/create-billing-account) to your BigQuery account. If you don't do this, there is essentially no difference from using the first solution. However, this will typically incur a small expense.**
+
+Note that you need to add your [billing account](https://cloud.google.com/billing/docs/how-to/create-billing-account) to your BigQuery account. If you don't do this, there is essentially no difference from using the first solution. **However, this will typically incur a small expense.**
 
 ```bash
 # move your bigquery_credential.json in this folder
