@@ -95,7 +95,8 @@ def run_evaluation(result_dir, gold_dir):
                     score = duckdb_match(os.path.join(result_dir,data['instance_id'], data['answer_or_path']), **eval_metadata['parameters'])    
                     
         if score == 1:
-            print(data)      
+            print(data)   
+            import pdb; pdb.set_trace()   
                         
         output_dict['score'] = score
         output_list.append(output_dict)
