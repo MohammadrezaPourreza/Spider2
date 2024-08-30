@@ -18,10 +18,6 @@ Please organize your submissions in the following structure:
 │   ├── bq001.sql
 │   ├── bq009.sql
 │   └── ...
-├── spider2sql_example_submit_result # Not commonly used, unless your method directly executes to obtain results.
-│   ├── ga003.csv
-│   ├── bq004.sql
-│   └── ...
 └── temp                             # cache
 ```
 
@@ -53,11 +49,9 @@ or
 python evaluate.py --mode exec_result  --result_dir <your pred folder>
 ```
 
-We provide two sample submissions, `spider2lite_example_submit` and `spider2lite_example_submit_result`
+We provide a sample submissions, `spider2lite_example_submit` 
 
 ```
 python evaluate.py --mode sql --result_dir spider2lite_example_submit
-or
-python evaluate.py --mode exec_result --result_dir spider2lite_example_submit_result
 
 ```
