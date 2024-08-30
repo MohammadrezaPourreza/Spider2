@@ -14,10 +14,13 @@ Please organize your submissions in the following structure:
 │   ├── exec_result                      # Gold execution results
 │   ├── sql                              # Gold SQL
 │   └── spider2lite_eval.jsonl            # Config file
-├── spider2sql_example_submit        # Predicted SQLs
+├── example_submission_folder        # Predicted SQLs
 │   ├── bq001.sql
 │   ├── bq009.sql
 │   └── ...
+├── your_predicted_sqls_folder1
+├── your_predicted_sqls_folder2
+├── ...
 └── temp                             # cache
 ```
 
@@ -35,23 +38,13 @@ unzip credentials.zip
 
 ### Evaluation
 
-There are two modes of your submission data, sql or exec_result. You only need to select one, we recommand the `sql` mode.
-- sql: Provide the SQL you predicted for each task.
-- exec_result: Provide the execution result for each SQL, stored in a CSV file (not commonly used)
-
 ```
-python evaluate.py --mode sql --result_dir <your pred folder>
+python evaluate.py --result_dir <your_predicted_sqls_folder>
 ```
 
-or
+We provide a sample submissions, `example_submission_folder` 
 
 ```
-python evaluate.py --mode exec_result  --result_dir <your pred folder>
-```
-
-We provide a sample submissions, `spider2lite_example_submit` 
-
-```
-python evaluate.py --mode sql --result_dir spider2lite_example_submit
+python evaluate.py --result_dir example_submission_folder
 
 ```

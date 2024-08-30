@@ -1,8 +1,8 @@
 -- Define the date range and calculate the minimum date for filtering results
 WITH dates AS (
     SELECT 
-        DATE('2018-06-18') AS start_date,
-        DATE('2018-07-01') AS end_date
+        DATE('2018-08-01') AS start_date,
+        DATE('2018-08-15') AS end_date
 ),
 -- Create a table of active dates for each user within the specified date range
 dates_active_table AS (

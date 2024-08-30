@@ -248,7 +248,7 @@ def evaluate_spider2sql(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run evaluations for NLP models.")
-    parser.add_argument("--mode", type=str, choices=["sql", "exec_result"], required=True, help="Mode of submission results")
+    parser.add_argument("--mode", type=str, choices=["sql", "exec_result"], default='sql', help="Mode of submission results")
     parser.add_argument("--result_dir", type=str, default="spider2sql_example_submit_result", help="Result directory")
     parser.add_argument("--gold_dir", type=str, default="gold", help="Result directory")
     parser.add_argument("--is_sql_debug", action="store_true", default=False)

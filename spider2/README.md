@@ -55,7 +55,7 @@ To avoid these issues and achieve more accurate results (avoiding the approximat
 Note that you need to add your [billing account](https://cloud.google.com/billing/docs/how-to/create-billing-account) to your BigQuery account. If you don't do this, there is essentially no difference from using the first solution. **However, this will typically incur a small expense.**
 
 ```bash
-# move your bigquery_credential.json in this folder
+# move your `bigquery_credential.json` in this folder, must name as `bigquery_credential.json`
 python add_credential.py
 ```
 

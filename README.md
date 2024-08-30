@@ -104,11 +104,6 @@ Each file in `spider2-lite.json` contains the following fields:
 - `db`: the database id to which this question is addressed
 - `question`: the natural language question
 - `external_knowledge`: the filenames of external knowledge, documentation, and information required to answer this question are stored in documents
-- `plan`: detailed instruction / reference plan for solving this problem
-- `special_functions`: special functions that may be needed to answer this question
-
-> **Note that** `plan` and `special_functions` are **not** standard inputs of Spider 2.0 challenge; they are used for ablation experiments and analysis.
-
 
 
 We proposed baselines based on the widely used text2sql methods: [`Dail-SQL`](https://github.com/xlang-ai/Spider2/tree/main/spider2-lite/baselines/dailsql#installation) and [`CodeS`](https://github.com/xlang-ai/Spider2/tree/main/spider2-lite/baselines/codes#installation), with evaluation results reported :test_tube:.

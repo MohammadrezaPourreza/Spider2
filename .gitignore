@@ -25,8 +25,7 @@ spider2-lite/resource/databases/snowflake
 !spider2-lite/evaluation_suite/bigquery_credential.json
 !spider2-lite/evaluation_suite/evaluate.py
 !spider2-lite/evaluation_suite/spider2sql_eval_config_file.py
-!spider2-lite/evaluation_suite/spider2lite_example_submit/
-!spider2-lite/evaluation_suite/spider2lite_example_submit_result/
+!spider2-lite/evaluation_suite/example_submission_folder/
 
 
 # Do not ignore specific files and directories
@@ -64,6 +63,8 @@ spider2-lite/baselines/codes/preprocessed_data/*
 !spider2-lite/baselines/codes/preprocessed_data/spider2_preprocess.py
 spider2-lite/baselines/codes/postprocessed_data/*
 !spider2-lite/baselines/codes/postprocessed_data/spider2_postprocess.py
+
+
 
 # yuxiao's tmp code
 spider2-lite/baselines/yyx_tmp/

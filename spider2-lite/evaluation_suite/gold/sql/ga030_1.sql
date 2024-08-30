@@ -57,7 +57,7 @@ retention_counts AS (
         weeks_since_start,
         COUNT(DISTINCT user_pseudo_id) AS retained_users
     FROM weeks_retention
-    WHERE week_cohort >= DATE('2018-07-09') AND week_cohort <= (SELECT min_date FROM dates) 
+    WHERE week_cohort >= DATE('2018-07-02') AND week_cohort <= (SELECT min_date FROM dates) 
     GROUP BY 
         week_cohort,
         weeks_since_start
