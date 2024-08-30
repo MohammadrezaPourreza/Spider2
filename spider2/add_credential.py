@@ -6,7 +6,7 @@ import shutil
 credential_path = 'bigquery_credential.json'
 
 # Path to the jsonl file to be processed
-jsonl_path = 'evaluation_examples/spider2.jsonl'
+jsonl_path = 'examples/spider2.jsonl'
 
 # Read the jsonl file and filter records where type is "Bigquery", then save the corresponding instance_ids to a list
 instance_ids = []
@@ -20,7 +20,7 @@ with open(jsonl_path, 'r') as file:
 
 # Iterate over the instance_ids list to process corresponding folders
 for instance_id in instance_ids:
-    folder_path = f'evaluation_examples/{instance_id}'
+    folder_path = f'examples/{instance_id}'
     target_credential_path = os.path.join(folder_path, 'bigquery_credential.json')
     
     # Check if the folder exists

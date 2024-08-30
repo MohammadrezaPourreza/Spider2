@@ -34,7 +34,7 @@ Notably, as shown below, even the most advanced LLMs, including GPT-4, solve onl
 
 ### Spider 2.0
 
-For [`Spider 2.0`](./spider2/README.md), all evaluation examples are aggregated in file [`spider2.jsonl`](./spider2/evaluation_examples/spider2.jsonl), where each data point contains the following field:
+For [`Spider 2.0`](./spider2/README.md), all evaluation examples are aggregated in file [`spider2.jsonl`](./spider2/examples/spider2.jsonl), where each data point contains the following field:
 ```json
 {
     "instance_id": "3a348be1-aed2-44fb-8185-c66c9d14a6ef",
@@ -42,22 +42,22 @@ For [`Spider 2.0`](./spider2/README.md), all evaluation examples are aggregated 
     "type": "Bigquery"
 }
 ```
-For each instance, we also provide a separate folder [`./spider2/evaluation_examples/{instruction_id}`](./spider2/evaluation_examples/) as its **Execution Context** to simulate the agentic setting. Each folder may have the following files:
+For each instance, we also provide a separate folder [`./spider2/examples/{instruction_id}`](./spider2/examples/) as its **Execution Context** to simulate the agentic setting. Each folder may have the following files:
 
 - `README.md`: detailed requirements of the `instruction` field for the current example with `instance_id`;
 - `*_credential.json`: credential file connecting to realistic enterprise-level databases, e.g., BigQuery. Can be replaced with your OWN;
 - `result.csv`: CSV file to store the execution results;
 - other instance-specific materials which assist in finishing the current task:
-    - 🏗️ partial project, e.g., [`dbt_project/`](./spider2/evaluation_examples/43d5ad49-0f99-4b90-a6df-d3afc5c216ff/).
-    - 📝 reference documentation: [`ga4_dimensions_and_metrics.md`](./spider2/evaluation_examples/3a348be1-aed2-44fb-8185-c66c9d14a6ef/ga4_dimensions_and_metrics.md), [`retention_rate.md`](./spider2/evaluation_examples/22faca18-f766-46f5-a22b-c79de56fb6ec/retention_rate.md), etc.
+    - 🏗️ partial project, e.g., [`dbt_project/`](./spider2/examples/43d5ad49-0f99-4b90-a6df-d3afc5c216ff/).
+    - 📝 reference documentation: [`ga4_dimensions_and_metrics.md`](./spider2/examples/3a348be1-aed2-44fb-8185-c66c9d14a6ef/ga4_dimensions_and_metrics.md), [`retention_rate.md`](./spider2/examples/22faca18-f766-46f5-a22b-c79de56fb6ec/retention_rate.md), etc.
     - 🔍 query interface: We have predefined how to access the diverse database systems.
-    - 🎞️ query history or samples, e.g., [`QUERY_HISTORY/`](./spider2/evaluation_examples/1d009ac3-1c75-447b-a7e0-49ccc2b5fbf9/FIREBASE_QUERY_HISTORY/), [`BASIC_SQLS/`](./spider2/evaluation_examples/e4a35097-4ff3-4ca7-8304-f593e039735b/BASIC_SQLS), etc.
+    - 🎞️ query history or samples, e.g., [`QUERY_HISTORY/`](./spider2/examples/1d009ac3-1c75-447b-a7e0-49ccc2b5fbf9/FIREBASE_QUERY_HISTORY/), [`BASIC_SQLS/`](./spider2/examples/e4a35097-4ff3-4ca7-8304-f593e039735b/BASIC_SQLS), etc.
 
 <!-- - `instance_id`: (str) - A formatted instance identifier, UUID
 - `instruction`: (str) - The instruction
 - `type`: (str) - [Local, Bigquery, DBT, Snowflake]
-- `./evaluation_examples/instanceid/*`: evaluation context
-[`evaluation_examples`](https://github.com/xlang-ai/Spider2/tree/main/spider2/evaluation_examples). -->
+- `./examples/instanceid/*`: evaluation context
+[`examples`](https://github.com/xlang-ai/Spider2/tree/main/spider2/examples). -->
 
 The agent has to interact with complex SQL workflows, process extremely long contexts, perform intricate reasoning, and generate multiple SQL queries with diverse operations, often exceeding 100 lines across multiple turns.
 
