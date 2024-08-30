@@ -361,7 +361,7 @@ def get_snowflake_schema(database_name, schema_name):
     FROM "{database_name}".INFORMATION_SCHEMA.TABLES
     WHERE table_schema = '{schema_name}'
     """
-    
+
     cursor.execute(query)
     tables_information = cursor.fetchall()
     dataset_metadata = pd.DataFrame(tables_information, columns=['table_name', 'description'])
@@ -491,7 +491,10 @@ if __name__ == "__main__":
                 sf_db_ids.append(f"{folder_name_a}")
     
     sf_db_name = list(sf_db_name - set(sf_db_ids))
-    # import pdb; pdb.set_trace()
+    
+    sf_db_name =[
+        "GLOBAL_GOVERNMENT.CYBERSYN"
+    ]
     
     for item in sf_db_name:
         database_name, schema_name = item.split(".")

@@ -1,0 +1,86 @@
+{
+    "sample_rows": [
+        {
+            "GEO_ID": "MGHERegion/WBINC_LOINC",
+            "VARIABLE": "GHE_DALYRATE_SEX_BTSX_AGEGROUP_AGEALL_GHECAUSES_GHE030",
+            "VARIABLE_NAME": "DALYs, per 100,000 people | Sex: Both sexes | Age Group: Total (All ages) | Causes: Dengue | Estimate",
+            "DATE": "2000-12-31",
+            "VALUE": 33.0,
+            "UNIT": "Count",
+            "WHO_SOURCE": null,
+            "VALUE_COMMENT": null
+        },
+        {
+            "GEO_ID": "MGHERegion/REG6_EUR",
+            "VARIABLE": "GHE_YLLNUM_SEX_FMLE_AGEGROUP_MONTHS1-59_GHECAUSES_GHE074",
+            "VARIABLE_NAME": "Years of life lost from mortality (YLLs) | Sex: Female | Age Group: 1-59 months | Causes: Prostate cancer | Estimate",
+            "DATE": "2000-12-31",
+            "VALUE": 0.0,
+            "UNIT": "Count",
+            "WHO_SOURCE": null,
+            "VALUE_COMMENT": null
+        },
+        {
+            "GEO_ID": "MGHERegion/MDG_DEV",
+            "VARIABLE": "GHE_YLDNUM_SEX_MLE_AGEGROUP_AGEALL_GHECAUSES_GHE054",
+            "VARIABLE_NAME": "Years of healthy life lost due to disability (YLDs) | Sex: Male | Age Group: Total (All ages) | Causes: Nutritional deficiencies | Estimate",
+            "DATE": "2000-12-31",
+            "VALUE": 866658.0,
+            "UNIT": "Count",
+            "WHO_SOURCE": null,
+            "VALUE_COMMENT": null
+        },
+        {
+            "GEO_ID": "MGHERegion/WBDCP_HIINCOME",
+            "VARIABLE": "GHE_DALYRATE_SEX_MLE_AGEGROUP_AGEALL_GHECAUSES_GHE072",
+            "VARIABLE_NAME": "DALYs, per 100,000 people | Sex: Male | Age Group: Total (All ages) | Causes: Corpus uteri cancer | Estimate",
+            "DATE": "2000-12-31",
+            "VALUE": 0.0,
+            "UNIT": "Count",
+            "WHO_SOURCE": null,
+            "VALUE_COMMENT": null
+        },
+        {
+            "GEO_ID": "MGHERegion/WBDCP_HIINCOME",
+            "VARIABLE": "GHE_YLLRATE_SEX_FMLE_AGEGROUP_AGEALL_GHECAUSES_GHE098",
+            "VARIABLE_NAME": "Years of life lost from mortality (YLLs), per 100,000 people | Sex: Female | Age Group: Total (All ages) | Causes: Multiple sclerosis | Estimate",
+            "DATE": "2012-12-31",
+            "VALUE": 32.52534,
+            "UNIT": "Count",
+            "WHO_SOURCE": null,
+            "VALUE_COMMENT": null
+        }
+    ],
+    "table_name": "CYBERSYN.WORLD_HEALTH_ORGANIZATION_TIMESERIES",
+    "table_fullname": "GLOBAL_GOVERNMENT.CYBERSYN.WORLD_HEALTH_ORGANIZATION_TIMESERIES",
+    "column_names": [
+        "VARIABLE_NAME",
+        "GEO_ID",
+        "DATE",
+        "VARIABLE",
+        "UNIT",
+        "WHO_SOURCE",
+        "VALUE_COMMENT",
+        "VALUE"
+    ],
+    "column_types": [
+        "TEXT",
+        "TEXT",
+        "DATE",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "FLOAT"
+    ],
+    "description": [
+        "Human-readable description of the reported attribute.",
+        "A unique identifier for a country, group of countries, or region, joinable to the GEOGRAPHY_INDEX table.",
+        "Date the data was published.",
+        "Unique identifier for a variable created from the unique characteristics of the World Health Organization (WHO) variables.",
+        "Unit of measurement for the reported value (ex. USD).",
+        "Source that the World Health Organization (WHO) has received this data.",
+        "Comment on the source, measurement, or definition of the value.",
+        "Reported figure for the variable."
+    ]
+}

@@ -1,0 +1,23 @@
+{
+    "sample_rows": [],
+    "table_name": "CYBERSYN.AIRCRAFT_INDEX",
+    "table_fullname": "GLOBAL_GOVERNMENT.CYBERSYN.AIRCRAFT_INDEX",
+    "column_names": [
+        "AIRCRAFT_NAME",
+        "AIRCRAFT_ID",
+        "CABIN_CONFIGURATION",
+        "AIRCRAFT_GROUP"
+    ],
+    "column_types": [
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT"
+    ],
+    "description": [
+        "Specific model or type of the aircraft used for a flight; can include both the manufacturer and model.",
+        "ID for the aircraft type, a distinctive model as designated by the manufacturer.",
+        "Description of the layout and seating arrangement within the aircraft cabin.",
+        "Classification of an aircraft based on size, range, and operational characteristics."
+    ]
+}

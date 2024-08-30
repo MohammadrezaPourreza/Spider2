@@ -1,0 +1,78 @@
+{
+    "sample_rows": [
+        {
+            "GEO_NAME": "Bexar County",
+            "GEO_ID": "geoId/48029",
+            "LEVEL": "County",
+            "RELATED_GEO_NAME": "Census Tract 1817.30, Bexar County, Texas",
+            "RELATED_GEO_ID": "geoId/48029181730",
+            "RELATED_LEVEL": "CensusTract",
+            "RELATIONSHIP_TYPE": "Contains"
+        },
+        {
+            "GEO_NAME": "92618",
+            "GEO_ID": "zip/92618",
+            "LEVEL": "CensusZipCodeTabulationArea",
+            "RELATED_GEO_NAME": "Los Angeles-Long Beach-Anaheim, CA Metro Area",
+            "RELATED_GEO_ID": "geoId/C31080",
+            "RELATED_LEVEL": "CensusCoreBasedStatisticalArea",
+            "RELATIONSHIP_TYPE": "Overlaps"
+        },
+        {
+            "GEO_NAME": "Russell County",
+            "GEO_ID": "geoId/21207",
+            "LEVEL": "County",
+            "RELATED_GEO_NAME": "42602",
+            "RELATED_GEO_ID": "zip/42602",
+            "RELATED_LEVEL": "CensusZipCodeTabulationArea",
+            "RELATIONSHIP_TYPE": "Overlaps"
+        },
+        {
+            "GEO_NAME": "35150290",
+            "GEO_ID": "statcanId/S051235150290",
+            "LEVEL": "DisseminationArea",
+            "RELATED_GEO_NAME": "North America",
+            "RELATED_GEO_ID": "continent/NA",
+            "RELATED_LEVEL": "Continent",
+            "RELATIONSHIP_TYPE": "Overlaps"
+        },
+        {
+            "GEO_NAME": "Block Group 5, Census Tract 3, Lowndes County, Mississippi",
+            "GEO_ID": "censusBlockGroup/280870003005",
+            "LEVEL": "CensusBlockGroup",
+            "RELATED_GEO_NAME": "United States",
+            "RELATED_GEO_ID": "country/USA",
+            "RELATED_LEVEL": "Country",
+            "RELATIONSHIP_TYPE": "Overlaps"
+        }
+    ],
+    "table_name": "CYBERSYN.GEOGRAPHY_RELATIONSHIPS",
+    "table_fullname": "GLOBAL_GOVERNMENT.CYBERSYN.GEOGRAPHY_RELATIONSHIPS",
+    "column_names": [
+        "RELATED_GEO_NAME",
+        "RELATED_LEVEL",
+        "RELATIONSHIP_TYPE",
+        "RELATED_GEO_ID",
+        "GEO_ID",
+        "LEVEL",
+        "GEO_NAME"
+    ],
+    "column_types": [
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT"
+    ],
+    "description": [
+        "Name of the place related to GEO_NAME. This is a place that overlaps or is contained within the primary geo (e.g., city within a state)",
+        "Geographic level or hierarchy of the related place (e.g., Country, State, County, City, Continent, CountrySubRegion, etc.)",
+        "Relationship between the two places. Contains means the RELATED_GEO_ID is fully contained within the GEO_ID (e.g., relationship of state to a city) while Overlaps indicates the GEO_ID is a subpart of the RELATED_GEO_ID (e.g., relationship of city to a state)",
+        "A unique identifier for the related place joinable to the GEOGRAPHY_INDEX table",
+        "A unique identifier for a place joinable to the GEOGRAPHY_INDEX table",
+        "Geographic level or hierarchy (e.g., Country, State, County, City, Continent, CountrySubRegion, etc.)",
+        "Full name of the place"
+    ]
+}

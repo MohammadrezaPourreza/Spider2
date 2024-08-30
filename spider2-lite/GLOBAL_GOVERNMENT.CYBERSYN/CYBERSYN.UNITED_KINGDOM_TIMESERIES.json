@@ -1,0 +1,70 @@
+{
+    "sample_rows": [
+        {
+            "GEO_ID": "uk/E07000117",
+            "VARIABLE": "weekly-deaths-local-authority_occurrences_hospice_covid-19",
+            "VARIABLE_NAME": "Death Occurrences from COVID 19: Hospice",
+            "DATE": "2023-05-07",
+            "VALUE": 0.0,
+            "UNIT": "Count"
+        },
+        {
+            "GEO_ID": "uk/E08000002",
+            "VARIABLE": "weekly-deaths-local-authority_occurrences_elsewhere_all-causes",
+            "VARIABLE_NAME": "Death Occurrences from All causes: Elsewhere",
+            "DATE": "2023-12-10",
+            "VALUE": 0.0,
+            "UNIT": "Count"
+        },
+        {
+            "GEO_ID": "uk/E06000032",
+            "VARIABLE": "weekly-deaths-local-authority_registrations_care-home_covid-19",
+            "VARIABLE_NAME": "Death Registrations from COVID 19: Care home",
+            "DATE": "2023-04-23",
+            "VALUE": 0.0,
+            "UNIT": "Count"
+        },
+        {
+            "GEO_ID": "uk/K03000001",
+            "VARIABLE": "retail-sales-index-all-businesses_flowers-plants-seeds-fertilisers-and-pet-foods-all-businesses_monthly_chained-volume-of-retail-sales_seasonal-adjustment",
+            "VARIABLE_NAME": "Retail Sales Index for All Businesses: Flowers, plants, seeds, fertilisers and pet foods - Monthly Chained volume of retail sales (Seasonally Adjusted)",
+            "DATE": "2024-04-30",
+            "VALUE": 107.6,
+            "UNIT": "Index"
+        },
+        {
+            "GEO_ID": "uk/E12000001",
+            "VARIABLE": "weekly-deaths-age-sex_registrations_all_90+",
+            "VARIABLE_NAME": "Death Registrations of 90+ year olds",
+            "DATE": "2024-06-23",
+            "VALUE": 100.0,
+            "UNIT": "Count"
+        }
+    ],
+    "table_name": "CYBERSYN.UNITED_KINGDOM_TIMESERIES",
+    "table_fullname": "GLOBAL_GOVERNMENT.CYBERSYN.UNITED_KINGDOM_TIMESERIES",
+    "column_names": [
+        "VARIABLE_NAME",
+        "VARIABLE",
+        "GEO_ID",
+        "UNIT",
+        "DATE",
+        "VALUE"
+    ],
+    "column_types": [
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "DATE",
+        "FLOAT"
+    ],
+    "description": [
+        "Human-readable unique name for the variable.",
+        "Unique identifier for a variable, joinable to the timeseries table.",
+        "A unique identifier for a place. Joinable to other geography tables including GEOGRAPHY_INDEX, GEOGRAPHY_RELATIONSHIPS, and GEOGRAPHY_CHARACTERISTICS.",
+        "Unit of measurement for the reported value.",
+        "Date associated with the value.",
+        "Value reported for the variable."
+    ]
+}

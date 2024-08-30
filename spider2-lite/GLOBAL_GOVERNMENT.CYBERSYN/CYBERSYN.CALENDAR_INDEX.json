@@ -1,0 +1,29 @@
+{
+    "sample_rows": [],
+    "table_name": "CYBERSYN.CALENDAR_INDEX",
+    "table_fullname": "GLOBAL_GOVERNMENT.CYBERSYN.CALENDAR_INDEX",
+    "column_names": [
+        "CALENDAR_NAME",
+        "ORDINAL_POSITION_IN_ANNUAL_PERIOD",
+        "CALENDAR_ID",
+        "PERIOD_END_DATE",
+        "PERIOD_START_DATE",
+        "ANNUAL_PERIOD"
+    ],
+    "column_types": [
+        "TEXT",
+        "NUMBER",
+        "TEXT",
+        "DATE",
+        "DATE",
+        "NUMBER"
+    ],
+    "description": [
+        "Human-readable name for the type of calendar.",
+        "The ordinal position of the period within the annual period.",
+        "Unique ID denoting a type of calendar (e.g., Month, Quarter, Retail 4-5-4 Month).",
+        "The last day of the period.",
+        "The first day of the period.",
+        "The year number related to the annual calendar for the period. It reflects the calendar year for calendar periods and the 4-5-4 retail year for retail periods."
+    ]
+}

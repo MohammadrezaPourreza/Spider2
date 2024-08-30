@@ -22,10 +22,13 @@ def string_match(pred, gold, conj="or", exclude=[]):
 
     """
     
+    if not isinstance(gold, list):
+        gold = [gold]
+    
     pred_lower = pred.lower()
     gold_lower = [sub.lower() for sub in gold]
     exclude_lower = [sub.lower() for sub in exclude]
-    
+
     if any(sub in pred_lower for sub in exclude_lower):
         return 0  # Return 0 if any excluded items are found
     

@@ -1,0 +1,50 @@
+{
+    "sample_rows": [],
+    "table_name": "CYBERSYN.INTERNATIONAL_TRADE_ADMINISTRATION_EXPORT_ASSISTANCE_CENTERS_INDEX",
+    "table_fullname": "GLOBAL_GOVERNMENT.CYBERSYN.INTERNATIONAL_TRADE_ADMINISTRATION_EXPORT_ASSISTANCE_CENTERS_INDEX",
+    "column_names": [
+        "INTERNATIONAL_TRADE_ADMINISTRATION_EXPORT_ASSISTANCE_CENTER_NAME",
+        "MAIL_INSTRUCTIONS",
+        "APO_ADDRESS",
+        "ADDRESS",
+        "WEBSITE_URL",
+        "ASSOCIATED_GEO_ID_ZIPS",
+        "EMAIL",
+        "GEO_ID_COUNTRY",
+        "INTERNATIONAL_TRADE_ADMINISTRATION_EXPORT_ASSISTANCE_CENTER_POST",
+        "FAX",
+        "PHONE",
+        "INTERNATIONAL_TRADE_ADMINISTRATION_EXPORT_ASSISTANCE_CENTER_ID",
+        "GEO_ID_STATE"
+    ],
+    "column_types": [
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "ARRAY",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT"
+    ],
+    "description": [
+        "Name of the ITA export assistance center.",
+        "Special mail instructions for reaching out to the ITA export assistance center.",
+        "Mailing address for military posts abroad.",
+        "Address for the ITA export assistance center.",
+        "URL for the ITA export assistance center.",
+        "Array of zip codes that are associated with the ITA export assistance center, joinable to GEOGRAPHY_INDEX.",
+        "Email address for the ITA export assistance center.",
+        "Unique geographic identifier for the country associated with the ITA export assistance center.",
+        "Name of the ITA post (usually a major city associated with the ITA export assistance center).",
+        "Fax number for the ITA export assistance center.",
+        "Phone number for the ITA export assistance center.",
+        "Unique identifier for each International Trade Administration (ITA) export assistance center.",
+        "Unique geographic identifier for the state associated with the ITA export assistance center."
+    ]
+}

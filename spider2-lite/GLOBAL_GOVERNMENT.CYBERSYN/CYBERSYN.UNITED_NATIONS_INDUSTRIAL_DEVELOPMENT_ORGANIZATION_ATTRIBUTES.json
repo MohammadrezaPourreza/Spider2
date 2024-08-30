@@ -1,0 +1,32 @@
+{
+    "sample_rows": [],
+    "table_name": "CYBERSYN.UNITED_NATIONS_INDUSTRIAL_DEVELOPMENT_ORGANIZATION_ATTRIBUTES",
+    "table_fullname": "GLOBAL_GOVERNMENT.CYBERSYN.UNITED_NATIONS_INDUSTRIAL_DEVELOPMENT_ORGANIZATION_ATTRIBUTES",
+    "column_names": [
+        "MEASURE",
+        "VARIABLE",
+        "FREQUENCY",
+        "UNIT",
+        "ISIC_ECONOMIC_ACTIVITY",
+        "INDSTAT_VERSION",
+        "VARIABLE_NAME"
+    ],
+    "column_types": [
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT"
+    ],
+    "description": [
+        "Quantifiable attribute or subject; description of what is being recorded.",
+        "Unique identifier for a variable, joinable to the timeseries table.",
+        "Frequency of aggregations.",
+        "Unit of measurement for the reported value.",
+        "An economic activity category within the International Standard Industrial Classification (ISIC) of All Economic Activites system, which was developed by the United Nations.",
+        "INDSTAT database version; INDSTAT releases new versions of INDSTAT 2 with ISIC Revision 3 on an annual basis.",
+        "Human-readable unique name for the variable."
+    ]
+}

@@ -1,0 +1,70 @@
+{
+    "sample_rows": [
+        {
+            "GEO_ID": "country/IDN",
+            "VARIABLE": "gross_fixed_capital_formation_2413_plastics_in_primary_forms_synthetic_rubber_indstat_2024_isic_revision_3_in_usd",
+            "VARIABLE_NAME": "Gross fixed capital formation: 2413 Plastics in primary forms; synthetic rubber (INDSTAT 2024, ISIC Revision 3) (in USD)",
+            "DATE": "1999-12-31",
+            "VALUE": "76337553",
+            "UNIT": "USD"
+        },
+        {
+            "GEO_ID": "country/DEU",
+            "VARIABLE": "establishments_103_extraction_and_agglomeration_of_peat_indstat_2024_isic_revision_3",
+            "VARIABLE_NAME": "Establishments: 103 Extraction and agglomeration of peat (INDSTAT 2024, ISIC Revision 3)",
+            "DATE": "1999-12-31",
+            "VALUE": "114",
+            "UNIT": "Count"
+        },
+        {
+            "GEO_ID": "country/BGR",
+            "VARIABLE": "wages_and_salaries_20_wood_products_excl_furniture_indstat_2024_isic_revision_3_in_usd",
+            "VARIABLE_NAME": "Wages and salaries: 20 Wood products (excl. furniture) (INDSTAT 2024, ISIC Revision 3) (in USD)",
+            "DATE": "1978-12-31",
+            "VALUE": "36238806",
+            "UNIT": "USD"
+        },
+        {
+            "GEO_ID": "country/DEU",
+            "VARIABLE": "output_314_accumulators_primary_cells_and_batteries_indstat_2024_isic_revision_3_in_usd",
+            "VARIABLE_NAME": "Output: 314 Accumulators, primary cells and batteries (INDSTAT 2024, ISIC Revision 3) (in USD)",
+            "DATE": "2002-12-31",
+            "VALUE": "1070578523",
+            "UNIT": "USD"
+        },
+        {
+            "GEO_ID": "country/CYP",
+            "VARIABLE": "value_added_34_motor_vehicles_trailers_semi-trailers_indstat_2024_isic_revision_3_in_usd",
+            "VARIABLE_NAME": "Value added: 34 Motor vehicles, trailers, semi-trailers (INDSTAT 2024, ISIC Revision 3) (in USD)",
+            "DATE": "1996-12-31",
+            "VALUE": "10780355",
+            "UNIT": "USD"
+        }
+    ],
+    "table_name": "CYBERSYN.UNITED_NATIONS_INDUSTRIAL_DEVELOPMENT_ORGANIZATION_TIMESERIES",
+    "table_fullname": "GLOBAL_GOVERNMENT.CYBERSYN.UNITED_NATIONS_INDUSTRIAL_DEVELOPMENT_ORGANIZATION_TIMESERIES",
+    "column_names": [
+        "VALUE",
+        "VARIABLE_NAME",
+        "VARIABLE",
+        "UNIT",
+        "GEO_ID",
+        "DATE"
+    ],
+    "column_types": [
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "DATE"
+    ],
+    "description": [
+        "Value reported for the variable.",
+        "Human-readable unique name for the variable.",
+        "Unique identifier for a variable, joinable to the timeseries table.",
+        "Unit of measurement for the reported value.",
+        "A unique identifier for a place. Joinable to other geography tables including GEOGRAPHY_INDEX, GEOGRAPHY_RELATIONSHIPS, and GEOGRAPHY_CHARACTERISTICS.",
+        "Date associated with the value."
+    ]
+}

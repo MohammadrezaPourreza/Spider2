@@ -1,0 +1,38 @@
+{
+    "sample_rows": [],
+    "table_name": "CYBERSYN.AIRPORT_INDEX",
+    "table_fullname": "GLOBAL_GOVERNMENT.CYBERSYN.AIRPORT_INDEX",
+    "column_names": [
+        "AIRPORT_NAME",
+        "STATE_GEO_ID",
+        "AIRPORT_ALPHA_CODE",
+        "AIRPORT_CITY_NAME",
+        "AIRPORT_DOT_CODE",
+        "AIRPORT_WORLD_AREA_CODE",
+        "COUNTRY_GEO_ID",
+        "LOCATION",
+        "AIRPORT_ID"
+    ],
+    "column_types": [
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "NUMBER",
+        "NUMBER",
+        "TEXT",
+        "TEXT",
+        "TEXT"
+    ],
+    "description": [
+        "Name of the airport.",
+        "A unique identifier for a state, joinable to the GEOGRAPHY_INDEX table, representing the primary geography for the variable.",
+        "Code assigned to airports by the International Air Transport Association (IATA), which are widely used in the aviation industry for ticketing, baggage handling, and flight planning.",
+        "Name of the city where the airport is located.",
+        "Unique identifier assigned by the US DOT to each airport, used for administrative and reporting purposes.",
+        "US DOT identifier for the geographical area where the airport is based.",
+        "A unique identifier for a country, joinable to the GEOGRAPHY_INDEX table, representing the primary geography for the variable.",
+        "Full location name of the airport.",
+        "ID for the origin airport that is part of the flight route being measured, combination of the DOT unique code and official 3 letter OAG code issued for that airport."
+    ]
+}

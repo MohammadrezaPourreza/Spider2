@@ -1,0 +1,110 @@
+{
+    "sample_rows": [
+        {
+            "VARIABLE": "PAYQTR1_311824_2012_00_00",
+            "VARIABLE_NAME": "First-quarter payroll | Dry pasta, dough, and flour mixes manufacturing from purchased flour (NAICS 2012 code: 311824) | Type of Operation: All establishments | Tax Status: All establishments",
+            "MEASURE": "Wages",
+            "UNIT": "USD",
+            "FREQUENCY": "Annual",
+            "NAICS_CODE": "311824",
+            "NAICS_DESCRIPTION": "Dry pasta, dough, and flour mixes manufacturing from purchased flour",
+            "OPERATION_TYPE": "All establishments",
+            "TAX_STATUS": "All establishments",
+            "PRODUCT_SERVICES_LINE": null,
+            "CREDIT_CARD_SERVICES_INCOME": null
+        },
+        {
+            "VARIABLE": "RCPCNR_S_5311901_2012",
+            "VARIABLE_NAME": "Relative standard error of estimate of value of construction work for establishments not reporting inventories | Lessors of manufactured (mobile) home sites (NAICS 2012 code: 5311901)",
+            "MEASURE": "Construction work",
+            "UNIT": "Percent",
+            "FREQUENCY": "Annual",
+            "NAICS_CODE": "5311901",
+            "NAICS_DESCRIPTION": "Lessors of manufactured (mobile) home sites",
+            "OPERATION_TYPE": null,
+            "TAX_STATUS": null,
+            "PRODUCT_SERVICES_LINE": null,
+            "CREDIT_CARD_SERVICES_INCOME": null
+        },
+        {
+            "VARIABLE": "CSTLAND_5321_2017",
+            "VARIABLE_NAME": "Cost of purchased land | Automotive equipment rental and leasing (NAICS 2017 code: 5321)",
+            "MEASURE": "Purchased land",
+            "UNIT": "USD",
+            "FREQUENCY": "Annual",
+            "NAICS_CODE": "5321",
+            "NAICS_DESCRIPTION": "Automotive equipment rental and leasing",
+            "OPERATION_TYPE": null,
+            "TAX_STATUS": null,
+            "PRODUCT_SERVICES_LINE": null,
+            "CREDIT_CARD_SERVICES_INCOME": null
+        },
+        {
+            "VARIABLE": "RCPCWRK_62111_2012",
+            "VARIABLE_NAME": "Value of construction work | Offices of physicians (NAICS 2012 code: 62111)",
+            "MEASURE": "Construction work",
+            "UNIT": "USD",
+            "FREQUENCY": "Annual",
+            "NAICS_CODE": "62111",
+            "NAICS_DESCRIPTION": "Offices of physicians",
+            "OPERATION_TYPE": null,
+            "TAX_STATUS": null,
+            "PRODUCT_SERVICES_LINE": null,
+            "CREDIT_CARD_SERVICES_INCOME": null
+        },
+        {
+            "VARIABLE": "PAYANPW_561312_2012",
+            "VARIABLE_NAME": "Production and/or development and exploration workers annual wages | Executive search services (NAICS 2012 code: 561312)",
+            "MEASURE": "Wages",
+            "UNIT": "USD",
+            "FREQUENCY": "Annual",
+            "NAICS_CODE": "561312",
+            "NAICS_DESCRIPTION": "Executive search services",
+            "OPERATION_TYPE": null,
+            "TAX_STATUS": null,
+            "PRODUCT_SERVICES_LINE": null,
+            "CREDIT_CARD_SERVICES_INCOME": null
+        }
+    ],
+    "table_name": "CYBERSYN.US_ECONOMIC_CENSUS_ATTRIBUTES",
+    "table_fullname": "GLOBAL_GOVERNMENT.CYBERSYN.US_ECONOMIC_CENSUS_ATTRIBUTES",
+    "column_names": [
+        "VARIABLE_NAME",
+        "CREDIT_CARD_SERVICES_INCOME",
+        "VARIABLE",
+        "MEASURE",
+        "TAX_STATUS",
+        "PRODUCT_SERVICES_LINE",
+        "NAICS_CODE",
+        "FREQUENCY",
+        "NAICS_DESCRIPTION",
+        "UNIT",
+        "OPERATION_TYPE"
+    ],
+    "column_types": [
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT"
+    ],
+    "description": [
+        "Human-readable unique name for the variable.",
+        "Specific source of credit card products or services income category (e.g., from cardholder fees, interest, merchant fees).",
+        "Unique identifier for a variable, joinable to the timeseries table.",
+        "Quantifiable attribute or subject; description of what is being recorded.",
+        "Establishment's tax status (e.g., exempt from or subject to federal income tax).",
+        "Related product or service.",
+        "Industry classification according to North American Industry Classification System.",
+        "Frequency of aggregations.",
+        "Description of Industry classification according to North American Industry Classification System.",
+        "Unit of measurement for the reported value.",
+        "Type of operation run by the establishment (e.g., Merchant wholesalers; Manufacturer's sales branches and offices)."
+    ]
+}

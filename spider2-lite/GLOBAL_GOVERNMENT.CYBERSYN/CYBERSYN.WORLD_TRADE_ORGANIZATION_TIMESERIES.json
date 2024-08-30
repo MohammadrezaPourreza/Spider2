@@ -1,0 +1,78 @@
+{
+    "sample_rows": [
+        {
+            "REPORTING_GEO_ID": "country/CAN",
+            "PARTNER_GEO_ID": "country/IRQ",
+            "VARIABLE": "4f35d758c2d812b489c0f4627360a147",
+            "VARIABLE_NAME": "Bilateral imports by detailed HS codes (2,4,6 digit): Sugars and sugar confectionery (Harmonized System)",
+            "DATE": "2013-12-31",
+            "VALUE": 22633.0,
+            "UNIT": "USD"
+        },
+        {
+            "REPORTING_GEO_ID": "country/DNK",
+            "PARTNER_GEO_ID": "countryGroup/WORLD",
+            "VARIABLE": "119a2c50dd2496a4c4544a474f51064c",
+            "VARIABLE_NAME": "Commercial services exports of selected economies (growth) \u2013 monthly: Memo item: Goods and services (Services - Extended Balance of Payments Classification (EBOPS 2010))",
+            "DATE": "2017-10-31",
+            "VALUE": 0.15,
+            "UNIT": "Percent"
+        },
+        {
+            "REPORTING_GEO_ID": "country/LKA",
+            "PARTNER_GEO_ID": "countryGroup/WORLD",
+            "VARIABLE": "3d07faf884adaf43a7a8605d3217ffc6",
+            "VARIABLE_NAME": "Merchandise import volume indices, seasonally adjusted - quarterly: Total merchandise (Merchandise - SITC Revision 3 (aggregates))",
+            "DATE": "2013-09-30",
+            "VALUE": 143.0,
+            "UNIT": "Index"
+        },
+        {
+            "REPORTING_GEO_ID": "country/SVN",
+            "PARTNER_GEO_ID": "country/NOR",
+            "VARIABLE": "7e6ec7d18dfd7349088a6becb7155426",
+            "VARIABLE_NAME": "Commercial services imports by sector and partner \u2013 annual: Memo item: Other government goods and services n.i.e. (Services - Extended Balance of Payments Classification (EBOPS 2010))",
+            "DATE": "2016-12-31",
+            "VALUE": 0.0,
+            "UNIT": "USD"
+        },
+        {
+            "REPORTING_GEO_ID": "country/KAZ",
+            "PARTNER_GEO_ID": "country/ESP",
+            "VARIABLE": "bfb2dcd95a31301dd0a38fe9b9e43f22",
+            "VARIABLE_NAME": "Bilateral imports by detailed HS codes (2,4,6 digit): Copper and articles thereof (Harmonized System)",
+            "DATE": "2017-12-31",
+            "VALUE": 293579.0,
+            "UNIT": "USD"
+        }
+    ],
+    "table_name": "CYBERSYN.WORLD_TRADE_ORGANIZATION_TIMESERIES",
+    "table_fullname": "GLOBAL_GOVERNMENT.CYBERSYN.WORLD_TRADE_ORGANIZATION_TIMESERIES",
+    "column_names": [
+        "PARTNER_GEO_ID",
+        "REPORTING_GEO_ID",
+        "DATE",
+        "VARIABLE_NAME",
+        "UNIT",
+        "VARIABLE",
+        "VALUE"
+    ],
+    "column_types": [
+        "TEXT",
+        "TEXT",
+        "DATE",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "FLOAT"
+    ],
+    "description": [
+        "The country or region involved in the trade with the reporting economy; the destination.",
+        "Source (e.g., country or country group) reporting the trade data; the origin.",
+        "Date the data was published.",
+        "Human-readable description of the reported attribute.",
+        "Unit of measurement for the reported value (ex. USD).",
+        "Unique identifier for a variable created from a hash of the unique attributes of the World Trade Organization (WTO) variables.",
+        "Reported figure for the variable."
+    ]
+}

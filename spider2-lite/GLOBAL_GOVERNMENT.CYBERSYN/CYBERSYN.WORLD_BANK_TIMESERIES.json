@@ -1,0 +1,70 @@
+{
+    "sample_rows": [
+        {
+            "GEO_ID": "country/CAF",
+            "VARIABLE": "WDI_TM.VAL.MRCH.XD.WD",
+            "VARIABLE_NAME": "Import value index (2015 = 100)",
+            "DATE": "2015-12-31",
+            "VALUE": 100.0,
+            "UNIT": "Index"
+        },
+        {
+            "GEO_ID": "country/LKA",
+            "VARIABLE": "WDI_EG.CFT.ACCS.RU.ZS",
+            "VARIABLE_NAME": "Access to clean fuels and technologies for cooking, rural (percent of rural population)",
+            "DATE": "2014-12-31",
+            "VALUE": 0.16899999999999998,
+            "UNIT": "Percent"
+        },
+        {
+            "GEO_ID": "countryGroup/X13",
+            "VARIABLE": "WDI_NY.GDP.PCAP.PP.CD",
+            "VARIABLE_NAME": "Gross Domestic Product (GDP) per capita, PPP (current international $)",
+            "DATE": "1992-12-31",
+            "VALUE": 1796.41661632687,
+            "UNIT": "International Dollar"
+        },
+        {
+            "GEO_ID": "country/BLR",
+            "VARIABLE": "WDI_SE.XPD.TOTL.GD.ZS",
+            "VARIABLE_NAME": "Government expenditure on education, total (percent of Gross Domestic Product (GDP))",
+            "DATE": "2019-12-31",
+            "VALUE": 0.0497948980331421,
+            "UNIT": "Percent"
+        },
+        {
+            "GEO_ID": "country/HUN",
+            "VARIABLE": "QPSD_DP.DOD.DLLO.CR.GG",
+            "VARIABLE_NAME": "Gross Public Sector Debt, General Government, All maturities, Loans, Nominal Value, National Currency",
+            "DATE": "2023-12-31",
+            "VALUE": 6352103000000.0,
+            "UNIT": "Local currency"
+        }
+    ],
+    "table_name": "CYBERSYN.WORLD_BANK_TIMESERIES",
+    "table_fullname": "GLOBAL_GOVERNMENT.CYBERSYN.WORLD_BANK_TIMESERIES",
+    "column_names": [
+        "UNIT",
+        "VARIABLE",
+        "VALUE",
+        "DATE",
+        "GEO_ID",
+        "VARIABLE_NAME"
+    ],
+    "column_types": [
+        "TEXT",
+        "TEXT",
+        "FLOAT",
+        "DATE",
+        "TEXT",
+        "TEXT"
+    ],
+    "description": [
+        "Unit of measurement for the reported value.",
+        "Unique identifier for a variable, joinable to the attributes table. This variable combines the World Bank dataset abbreviation with the unique timeseries code (provided by the World Bank).",
+        "Value reported for the variable.",
+        "Date associated with the value.",
+        "A unique identifier for a place. Joinable to other geography tables including GEOGRAPHY_INDEX, GEOGRAPHY_RELATIONSHIPS, and GEOGRAPHY_CHARACTERISTICS.",
+        "Human-readable unique name for the variable."
+    ]
+}

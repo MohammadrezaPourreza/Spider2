@@ -1,0 +1,44 @@
+{
+    "sample_rows": [],
+    "table_name": "CYBERSYN.INTERNATIONAL_TRADE_ADMINISTRATION_BUSINESS_SERVICE_PROVIDERS_INDEX",
+    "table_fullname": "GLOBAL_GOVERNMENT.CYBERSYN.INTERNATIONAL_TRADE_ADMINISTRATION_BUSINESS_SERVICE_PROVIDERS_INDEX",
+    "column_names": [
+        "BUSINESS_SERVICE_PROVIDER_EMAIL",
+        "BUSINESS_SERVICE_PROVIDER_CONTACT",
+        "BUSINESS_SERVICE_PROVIDER_DESCRIPTION",
+        "BUSINESS_SERVICE_PROVIDER_WEBSITE",
+        "INTERNATIONAL_TRADE_ADMINISTRATION_EMAIL",
+        "BUSINESS_SERVICE_PROVIDER_ADDRESS",
+        "GEO_ID_COUNTRY",
+        "BUSINESS_SERVICE_PROVIDER_ID",
+        "SERVICE_CATEGORY",
+        "BUSINESS_SERVICE_PROVIDER_PHONE",
+        "BUSINESS_SERVICE_PROVIDER_NAME"
+    ],
+    "column_types": [
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT"
+    ],
+    "description": [
+        "Email of the point of contact at the business service provider.",
+        "Main point of contact for inquiries and requests at the business service provider.",
+        "Description of the business service provider.",
+        "Website of the business service provider.",
+        "Email of the associated International Trade Administration office.",
+        "Address of the business service provider.",
+        "Unique geographic identifier for the country of the business service provider.",
+        "Unique company identifier for US and international business service providers provided by the US Commercial Service.",
+        "Category of export/investment assistance service provided by the business service provider.",
+        "Phone number of the point of contact at the business service provider.",
+        "Name of the business service provider."
+    ]
+}
