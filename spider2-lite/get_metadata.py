@@ -496,10 +496,11 @@ if __name__ == "__main__":
         "GLOBAL_GOVERNMENT.CYBERSYN"
     ]
     
+    root_dir = './resource/databases/snowflake/'
     for item in sf_db_name:
         database_name, schema_name = item.split(".")
         dataset_metadata, tables_metadata = get_snowflake_schema(database_name, schema_name)
-        directory = os.path.join("./", f"{database_name}.{schema_name}")
+        directory = os.path.join(root_dir, f"{database_name}.{schema_name}")
         if not os.path.exists(directory):
             os.makedirs(directory)
         df = pd.DataFrame(dataset_metadata)
