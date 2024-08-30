@@ -93,7 +93,7 @@ python run.py --model gpt-4o --suffix test1
 
 To align with research interests in **traditional Text2SQL settings**, we also release [`Spider 2.0-Lite`](https://github.com/xlang-ai/Spider2/tree/main/spider2-lite#spider-20-lite). This set is more self-contained, with well-prepared database metadata and documentation, making it a text-in, text-out task that supports faster development and evaluation.
 
-You can also access the Spider 2.0-Lite by huggingface dataset.🤗
+You can also access the Spider 2.0-Lite by [huggingface dataset](https://huggingface.co/datasets/xlangai/spider2-lite).🤗
 ```
 from datasets import load_dataset
 ds = load_dataset("xlangai/spider2-lite")
