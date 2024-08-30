@@ -31,7 +31,12 @@ def copy_folder(src, dest, files_to_copy=None):
         for file in files_to_copy:
             full_file_path = os.path.join(src, file)
             if os.path.exists(full_file_path):
-                shutil.copy(full_file_path, dest)
+                if os.path.isdir(full_file_path):
+                    # If the item is a directory, use copytree
+                    shutil.copytree(full_file_path, os.path.join(dest, file), dirs_exist_ok=True)
+                else:
+                    # Otherwise, use copy for files
+                    shutil.copy(full_file_path, dest)
             else:
                 print(f"File {file} does not exist in the source path {src}")
 
@@ -68,7 +73,10 @@ def postprocess(args):
             continue        
         elif os.path.exists(os.path.join(result_folder_root_path,answer_or_path)):
             results_metadata.append({'instance_id': instance_id, 'answer_or_path': answer_or_path, 'answer_type': 'file'})
-            copy_folder(result_folder_root_path, os.path.join(submission_dir, instance_id), files_to_copy=answer_or_path)
+            try:
+                copy_folder(result_folder_root_path, os.path.join(submission_dir, instance_id), files_to_copy=answer_or_path)
+            except:
+                import pdb; pdb.set_trace()
         elif not os.path.exists(os.path.join(result_folder_root_path,answer_or_path)):
             results_metadata.append({'instance_id': instance_id, 'answer_or_path': answer_or_path, 'answer_type': 'answer'})
     
