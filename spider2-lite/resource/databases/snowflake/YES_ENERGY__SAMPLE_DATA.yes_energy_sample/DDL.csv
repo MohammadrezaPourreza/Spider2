@@ -1,0 +1,20 @@
+table_name,description
+RT_LOADS_SAMPLE,
+TS_FORECAST_SAMPLE,"Forecasted energy generation, load and more."
+ALL_WEATHER_MV_SAMPLE,
+DART_LOADS_SAMPLE,
+DATATYPE_SAMPLE,
+PRICE_NODES_SAMPLE,
+DART_PRICES_SAMPLE,Day Ahead and Real Time energy market prices.
+ISO_MARKET_TIMES_SAMPLE,Standardized datetime data to which to join data.
+LOAD_ZONES_SAMPLE,
+RT15_PRICES_SAMPLE,
+TS_ACE_SAMPLE,
+TS_ANCILLARY_SAMPLE,
+DS_OBJECT_LIST_SAMPLE,Attribute metadata associated with datatypes.
+RT_PRICES_RECENT_SAMPLE,
+TS_LOAD_SAMPLE,
+V_DATA_CATALOG_SAMPLE,Catalog of datatypes for easy lookup.
+WX_STATIONS_SAMPLE,
+TS_GEN_SAMPLE,
+WX_FORECASTS_SAMPLE,

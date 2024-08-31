@@ -1,0 +1,9 @@
+table_name,description
+Xref_TractToZip_Residential,
+Xref_ZipToTract_Residential,
+Fact_CensusValues_ACS2021,
+Dim_CensusMetrics,
+Fact_CensusValues_ACS2021_ByZip,
+LU_GeographyExpanded,
+Dim_CensusGeography,
+Fact_StateBenchmark_ACS2021,
