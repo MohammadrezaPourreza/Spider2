@@ -376,8 +376,8 @@ def get_snowflake_schema(database_name, schema_name):
             SELECT
                 *
             FROM
-                {schema_name}.{table_name}
-            TABLESAMPLE BERNOULLI (0.001)
+                \"{schema_name}\".\"{table_name}\"
+            TABLESAMPLE BERNOULLI (50)
             LIMIT 5;
             """
             cursor.execute(query)
@@ -389,7 +389,7 @@ def get_snowflake_schema(database_name, schema_name):
         except Exception as e:
             error_message = traceback.format_exc()
             if "does not exist or not authorized" in error_message:
-                print("error_message")
+                print(f"{schema_name}.{table_name}, error_message")
                 continue
             else:
                 print(error_message)
@@ -493,7 +493,8 @@ if __name__ == "__main__":
     sf_db_name = list(sf_db_name - set(sf_db_ids))
     
     sf_db_name =[
-        "GLOBAL_GOVERNMENT.CYBERSYN"
+        "CENSUS_GALAXY__ZIP_CODE_TO_BLOCK_GROUP_SAMPLE.PUBLIC",
+        "CENSUS_GALAXY__AIML_MODEL_DATA_ENRICHMENT_SAMPLE.PUBLIC"
     ]
     
     root_dir = './resource/databases/snowflake/'
