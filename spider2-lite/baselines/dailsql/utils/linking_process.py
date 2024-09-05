@@ -86,7 +86,10 @@ def preprocess_schema_uncached(schema,
         r.table_names.append(table_toks)
         if bert:
             r.normalized_table_names.append(Bertokens(table_toks))
-    last_table = schema.tables[-1]
+    try:  # TODO NEXT bug fixing  # can we skip this process?
+        last_table = schema.tables[-1]
+    except:
+        print(1)
 
     r.foreign_keys_tables = serialization.to_dict_with_sorted_values(r.foreign_keys_tables)
     r.primary_keys = [

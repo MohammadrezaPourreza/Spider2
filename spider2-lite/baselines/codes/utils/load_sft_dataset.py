@@ -16,7 +16,7 @@ def prepare_text2sql_prefix_sequence(data, args):
         return len(current_prompt) + len(data["text"]) + len(new) < 1048570
 
     if args.use_external_knowledge and data['external_knowledge'] is not None:
-        with open(osp.join(proj_dir, '../resource/documentation/external_knowledge', data['external_knowledge']), "r", encoding="utf-8") as file:
+        with open(osp.join(proj_dir, '../../resource/documentation/external_knowledge', data['external_knowledge']), "r", encoding="utf-8") as file:
             content = file.read()
         knowledge = 'external knowledge:' + content + "\n"
     else: 

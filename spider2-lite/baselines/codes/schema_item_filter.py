@@ -212,17 +212,38 @@ def filter_schema(dataset, dataset_type, sic, num_top_k_tables = 5, num_top_k_co
                     column_indices += random.sample(unused_column_indices, min(len(unused_column_indices), num_top_k_columns - len(column_indices)))
                 random.shuffle(column_indices)
 
-            filtered_schema["schema_items"].append(
-                {
-                    "table_name": table_names[table_idx],
-                    "table_comment": table_comments[table_idx],
-                    "column_names": [column_names[table_idx][column_idx] for column_idx in column_indices],
-                    "column_types": [column_types[table_idx][column_idx] for column_idx in column_indices],
-                    "column_comments": [column_comments[table_idx][column_idx] for column_idx in column_indices],
-                    "column_contents": [column_contents[table_idx][column_idx] for column_idx in column_indices],
-                    "pk_indicators": [pk_indicators[table_idx][column_idx] for column_idx in column_indices]
-                }
-            )
+            try:
+                filtered_schema["schema_items"].append(
+                    {
+                        "table_name": table_names[table_idx],
+                        "table_comment": table_comments[table_idx],
+                        "column_names": [column_names[table_idx][column_idx] for column_idx in column_indices],
+                        "column_types": [column_types[table_idx][column_idx] for column_idx in column_indices],
+                        "column_comments": [column_comments[table_idx][column_idx] for column_idx in column_indices],
+                        "column_contents": [column_contents[table_idx][column_idx] for column_idx in column_indices],
+                        "pk_indicators": [pk_indicators[table_idx][column_idx] for column_idx in column_indices]
+                    }
+                )
+            except:
+                print(f"warning: for instance {data['instance_id']} column_names length is invalid!")
+                column_indices = np.random.choice(
+                    len(column_names[table_idx]), 
+                    min(len(column_names[table_idx]), num_top_k_columns), 
+                    replace=False
+                )
+                
+                filtered_schema["schema_items"].append(
+                    {
+                        "table_name": table_names[table_idx],
+                        "table_comment": table_comments[table_idx],
+                        "column_names": [column_names[table_idx][column_idx] for column_idx in column_indices],
+                        "column_types": [column_types[table_idx][column_idx] for column_idx in column_indices],
+                        "column_comments": [column_comments[table_idx][column_idx] for column_idx in column_indices],
+                        "column_contents": [column_contents[table_idx][column_idx] for column_idx in column_indices],
+                        "pk_indicators": [pk_indicators[table_idx][column_idx] for column_idx in column_indices]
+                    }
+                )
+
         
             for column_name in [column_names[table_idx][column_idx] for column_idx in column_indices]:
                 tc_name = "{}.{}".format(table_names[table_idx], column_name)  # tc_name = 'singer.singer_id'

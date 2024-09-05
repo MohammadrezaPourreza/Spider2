@@ -128,7 +128,7 @@ def db_stats_bar_chart(db_stats_list):
 
 def walk_metadata(dev):
 
-    with open(osp.join(proj_dir, f'../..//{dev}.json'), 'r', encoding='utf-8') as file:
+    with open(osp.join(proj_dir, f'../../{dev}.json'), 'r', encoding='utf-8') as file:
         dev_data = json.load(file)
         
     db_ids = set()
