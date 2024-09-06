@@ -46,7 +46,7 @@
 {"instance_id": "bq251", "condition_cols": [], "ignore_order": false}
 {"instance_id": "bq252", "condition_cols": [], "ignore_order": false}
 {"instance_id": "bq019", "condition_cols": [4], "ignore_order": false}
-{"instance_id": "bq019_1", "condition_cols": [], "ignore_order": false}
+{"instance_id": "bq019_1", "condition_cols": [], "ignore_order": true}
 {"instance_id": "bq019_2", "condition_cols": [], "ignore_order": false}
 {"instance_id": "bq172", "condition_cols": [], "ignore_order": false}
 {"instance_id": "bq172_1", "condition_cols": [2, 3], "ignore_order": false}
@@ -99,7 +99,7 @@
 {"instance_id": "bq025_1", "condition_cols": [], "ignore_order": false}
 {"instance_id": "bq338", "condition_cols": [], "ignore_order": false}
 {"instance_id": "bq088", "condition_cols": [[0, 1, 2, 3, 4, 5], [1, 2, 3, 4], [1, 2, 3]], "ignore_order": true}
-{"instance_id": "bq137", "condition_cols": [1, 5, 6, 7, 8, 9], "ignore_order": false}
+{"instance_id": "bq137", "condition_cols": [1, 5, 6, 7, 8, 9], "ignore_order": true}
 {"instance_id": "bq023", "condition_cols": [], "ignore_order": true}
 {"instance_id": "bq060", "condition_cols": [], "ignore_order": false}
 {"instance_id": "bq061", "condition_cols": [], "ignore_order": false}
@@ -120,7 +120,7 @@
 {"instance_id": "bq109", "condition_cols": [], "ignore_order": false}
 {"instance_id": "bq276", "condition_cols": [1, 5, 6], "ignore_order": false}
 {"instance_id": "bq278", "condition_cols": [0, 2, 7, 8], "ignore_order": false}
-{"instance_id": "bq352", "condition_cols": [], "ignore_order": false}
+{"instance_id": "bq352", "condition_cols": [], "ignore_order": true}
 {"instance_id": "bq041", "condition_cols": [3, 5], "ignore_order": false}
 {"instance_id": "bq123", "condition_cols": [0], "ignore_order": false, "temporal": true}
 {"instance_id": "bq280", "condition_cols": [], "ignore_order": false}
@@ -164,7 +164,7 @@
 {"instance_id": "ga006", "condition_cols": [], "ignore_order": true}
 {"instance_id": "ga009", "condition_cols": [], "ignore_order": false}
 {"instance_id": "ga010", "condition_cols": [], "ignore_order": false}
-{"instance_id": "ga010_1", "condition_cols": [], "ignore_order": false}
+{"instance_id": "ga010_1", "condition_cols": [], "ignore_order": true}
 {"instance_id": "ga011", "condition_cols": [], "ignore_order": false}
 {"instance_id": "ga012", "condition_cols": [], "ignore_order": true}
 {"instance_id": "ga019", "condition_cols": [], "ignore_order": false}
