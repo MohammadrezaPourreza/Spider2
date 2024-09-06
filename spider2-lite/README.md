@@ -61,16 +61,7 @@ The [`databases`](https://github.com/xlang-ai/Spider2/tree/main/spider2-lite/res
     "instance_id": "ga010",
     "db": "bigquery-public-data.ga4_obfuscated_sample_ecommerce",
     "question": "Can you give me an overview of our website traffic for December 2020? I'm particularly interested in the channel with the fourth highest number of sessions.",
-    "external_knowledge": "ga4_dimensions_and_metrics.md",
-    "plan": "1.First, read the document to understand how traffic is divided into 18 channel groups, primarily based on the metrics of source, medium, and campaign.\n2.Extract all visits from the database for December, each visit having a unique user ID and session ID. Retrieve the source, medium, and campaign for each visit.\n3.Based on the classification standards for channel groups in the document, write conditional statements to determine which channel each set of data belongs to, mainly using regular expressions. If the data source (source) contains any of the 4.following: 'badoo', 'facebook', 'fb', 'instagram', 'linkedin', 'pinterest', 'tiktok', 'twitter', or 'whatsapp', and the medium (medium) includes 'cp', 'ppc', or starts with 'paid', then categorize it as 'Paid Social'.\n5.Calculate the number of sessions for each channel based on the channel grouping.\n6.Select the name of the channel ranked fourth as the answer.",
-    "special_function": [
-        "aggregate-functions/ARRAY_AGG",
-        "aggregate-functions/COUNT",
-        "aggregate-functions/GROUPING",
-        "differentially-private-aggregate-functions/COUNT",
-        "string-functions/CONCAT",
-        "string-functions/REGEXP_CONTAINS"
-    ]
+    "external_knowledge": "ga4_dimensions_and_metrics.md"
 }
 ```
 
