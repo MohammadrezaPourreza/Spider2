@@ -2,6 +2,13 @@
 
 To align with research interests in **traditional Text2SQL settings**, we released Spider 2.0-Lite. This set is more self-contained, with well-prepared database metadata and documentation, making it a text-in, text-out task that supports faster development and evaluation.
 
+
+## 🚀 Quickstart
+
+1. Download  [local database](https://drive.google.com/uc?export=download&id=1mdcGd2EwizOZp4JNPZQTYKnSC3QCIFKS)
+
+
+
 ## Folder
 
 ```
