@@ -1,0 +1,75 @@
+  H3_CELL_TO_CHILDREN  ¶
+
+Returns an [ array  ](../data-types-semistructured.html#label-data-type-array)
+of the INTEGER IDs of the children of an [ H3  ](../data-types-
+geospatial.html#label-data-types-geospatial-h3) cell for a given resolution.
+
+See also:
+
+    
+
+[ H3_CELL_TO_CHILDREN_STRING  ](h3_cell_to_children_string) , [
+H3_CELL_TO_PARENT  ](h3_cell_to_parent)
+
+##  Syntax  ¶
+
+    
+    
+    H3_CELL_TO_CHILDREN( <cell_id> , <target_resolution> )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ cell_id  _ `
+
+    
+
+An INTEGER that represents the H3 cell ID ( [ index
+](https://h3geo.org/docs/core-library/h3Indexing) ).
+
+` _ target_resolution  _ `
+
+    
+
+An INTEGER between 0 and 15 (inclusive) specifying the H3 [ resolution
+](https://h3geo.org/docs/core-library/restable) that you want to use for the
+returned H3 cells.
+
+Specifying any other INTEGER value results in an error.
+
+##  Returns  ¶
+
+Returns an array of the INTEGER values of the IDs of the children of an H3
+cell at the specified target resolution.
+
+##  Examples  ¶
+
+The following example returns an array of the IDs of the children of the H3
+cell with the ID ` 613036919424548863  ` :
+
+    
+    
+    SELECT H3_CELL_TO_CHILDREN(613036919424548863, 9);
+    
+
+Copy
+
+    
+    
+    +--------------------------------------------+
+    | H3_CELL_TO_CHILDREN(613036919424548863, 9) |
+    |--------------------------------------------|
+    | [                                          |
+    |   617540519050084351,                      |
+    |   617540519050346495,                      |
+    |   617540519050608639,                      |
+    |   617540519050870783,                      |
+    |   617540519051132927,                      |
+    |   617540519051395071,                      |
+    |   617540519051657215                       |
+    | ]                                          |
+    +--------------------------------------------+
+    
+

@@ -1,0 +1,82 @@
+  TO_OBJECT  ¶
+
+Converts the input value to an [ OBJECT  ](../data-types-
+semistructured.html#label-data-type-object) :
+
+  * For a [ VARIANT  ](../data-types-semistructured.html#label-data-type-variant) value containing an OBJECT, returns the OBJECT. 
+
+  * For NULL input, or for a VARIANT value containing only [ JSON null  ](../../user-guide/semistructured-considerations.html#label-variant-null) , returns NULL. 
+
+  * For an OBJECT, returns the OBJECT itself. 
+
+  * For all other input values, reports an error. 
+
+##  Syntax  ¶
+
+    
+    
+    TO_OBJECT( <expr> )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ expr  _ `
+
+    
+
+An expression that evaluates to a VARIANT that contains an OBJECT.
+
+##  Returns  ¶
+
+The data type of the returned value is OBJECT.
+
+##  Examples  ¶
+
+This demonstrates simple usage of the TO_OBJECT function:
+
+> Create a table and insert a value of type VARIANT. (The function [
+> PARSE_JSON  ](parse_json) returns a VARIANT.)
+>
+
+>>
+
+>>     CREATE TABLE t1 (vo VARIANT);
+
+>>     INSERT INTO t1 (vo)
+
+>>         SELECT PARSE_JSON('{"a":1}');
+
+>>  
+>>
+
+>> Copy
+
+>
+> Call the TO_OBJECT function:
+>
+
+>>
+
+>>     SELECT TO_OBJECT(vo) from t1;
+
+>>     +---------------+
+
+>>     | TO_OBJECT(VO) |
+
+>>     |---------------|
+
+>>     | {             |
+
+>>     |   "a": 1      |
+
+>>     | }             |
+
+>>     +---------------+
+
+>>  
+>>
+
+>> Copy
+

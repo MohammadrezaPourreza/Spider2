@@ -1,0 +1,74 @@
+  NVL2  ¶
+
+Returns values depending on whether the first input is NULL:
+
+  * If ` _ expr1  _ ` is NOT NULL, then NVL2 returns ` _ expr2  _ ` . 
+
+  * If ` _ expr1  _ ` is NULL, then NVL2 returns ` _ expr3  _ ` . 
+
+##  Syntax  ¶
+
+    
+    
+    NVL2( <expr1> , <expr2> , <expr3> )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ expr1  _ `
+
+    
+
+The expression to be checked to see whether it is NULL.
+
+` _ expr2  _ `
+
+    
+
+If ` _ expr1  _ ` is not NULL, this expression will be evaluated and its value
+will be returned.
+
+` _ expr3  _ `
+
+    
+
+If ` _ expr1  _ ` is NULL, this expression will be evaluated and its value
+will be returned.
+
+##  Usage notes  ¶
+
+  * All three expressions should have the same (or compatible) data type. 
+
+##  Collation details  ¶
+
+  * The collation specification for ` _ expr1  _ ` is ignored because all that matters about this expression is whether it is NULL or not. 
+
+  * The collation specifications for ` _ expr2  _ ` and ` _ expr3  _ ` must be compatible. 
+
+  * The value returned from the function is the highest- [ precedence  ](../collation.html#label-determining-the-collation-used-in-an-operation) collation of ` _ expr2  _ ` and ` _ expr3  _ ` . 
+
+##  Examples  ¶
+
+If ` a  ` is not null, then return ` b  ` , else return ` c  ` :
+
+>
+>     SELECT a, b, c, NVL2(a, b, c) FROM i2;
+>  
+>     --------+--------+--------+---------------+
+>        A    |   B    |   C    | NVL2(A, B, C) |
+>     --------+--------+--------+---------------+
+>      0      | 5      | 3      | 5             |
+>      0      | 5      | [NULL] | 5             |
+>      0      | [NULL] | 3      | [NULL]        |
+>      0      | [NULL] | [NULL] | [NULL]        |
+>      [NULL] | 5      | 3      | 3             |
+>      [NULL] | 5      | [NULL] | [NULL]        |
+>      [NULL] | [NULL] | 3      | 3             |
+>      [NULL] | [NULL] | [NULL] | [NULL]        |
+>     --------+--------+--------+---------------+
+>  
+>
+> Copy
+

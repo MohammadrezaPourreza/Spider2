@@ -1,0 +1,41 @@
+  ATAN  ¶
+
+Computes the inverse tangent (arc tangent) of its argument; the result is a
+number in the interval ` [-pi,  pi]  ` .
+
+##  Syntax  ¶
+
+    
+    
+    ATAN( <real_expr> )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ real_expr  _ `
+
+    
+
+This expression should evaluate to a real number.
+
+##  Returns  ¶
+
+Returns the arc tangent in radians (not degrees) in the range ` [-pi,  pi]  `
+.
+
+##  Examples  ¶
+
+>
+>     SELECT ATAN(1);
+>  
+>     --------------+
+>        ATAN(1)    |
+>     --------------+
+>      0.7853981634 |
+>     --------------+
+>  
+>
+> Copy
+

@@ -1,0 +1,253 @@
+  [ NOT ] IN  ¶
+
+Tests whether its argument is or is not one of the members of an explicit list
+or the result of a subquery.
+
+Note
+
+In subquery form, IN is equivalent to ` =  ANY  ` and NOT IN is equivalent to
+` <> ALL  ` .
+
+Tip
+
+You can use the search optimization service to improve the performance of
+queries that call this function. For details, see [ Search Optimization
+Service  ](../../user-guide/search-optimization-service) .
+
+##  Syntax  ¶
+
+To compare individual values:
+
+    
+    
+    <value> [ NOT ] IN ( <value_1> [ , <value_2> ...  ] )
+    
+
+Copy
+
+To compare _row constructors_ (parenthesized lists of values):
+
+    
+    
+    ( <value_A> [, <value_B> ... ] ) [ NOT ] IN (  ( <value_1> [ , <value_2> ... ] )  [ , ( <value_3> [ , <value_4> ... ] )  ...  ]  )
+    
+
+Copy
+
+To compare a value to the values returned by a subquery:
+
+    
+    
+    <value> [ NOT ] IN ( <subquery> )
+    
+
+Copy
+
+##  Parameters  ¶
+
+` _ value  _ `
+
+    
+
+The value for which to search.
+
+` _ value_A  _ ` , ` _ value_B  _ `
+
+    
+
+The elements of a row constructor for which to search.
+
+Ensure that each value on the right of ` IN  ` (e.g. ` (value3,  value4)  ` )
+has the same number of elements as the value on the left of ` IN  ` (e.g. `
+(value_A,  value_B)  ` ).
+
+` _ value_#  _ `
+
+    
+
+A value to which ` _ value  _ ` should be compared.
+
+If the values to compare to are row constructors, then each ` _ value_#  _ `
+is an individual element of a row constructor.
+
+` _ subquery  _ `
+
+    
+
+A subquery that returns a list of values to which ` _ value  _ ` can be
+compared.
+
+##  Usage notes  ¶
+
+  * As in most contexts, NULL is not equal to NULL. If ` _ value  _ ` is NULL, then the return value of the function is NULL, whether or not the list or subquery contains NULL. 
+
+For example, the following returns NULL, not TRUE:
+
+> >     SELECT NULL IN (1, 2, NULL) AS RESULT;
+>  
+>
+> Copy
+
+  * Syntactically, ` IN  ` is treated as an operator rather than a function. The example below shows the difference between using ` IN  ` as an operator and calling ` f()  ` as a function: 
+    
+        SELECT
+        f(a, b),
+        x IN (y, z) ...
+    
+
+Copy
+
+You  cannot  use function syntax with ` IN  ` . For example, you cannot
+rewrite the preceding example as:
+
+    
+        SELECT
+        f(a, b),
+        IN(x, (y, z)) ...
+    
+
+Copy
+
+  * ` IN  ` is also considered a [ subquery operator  ](../operators-subquery) . 
+
+##  Collation details  ¶
+
+Arguments with collation specifications are currently not supported.
+
+##  Examples  ¶
+
+###  Using IN with simple literals  ¶
+
+The following examples show how to use ` IN  ` and ` NOT  IN  ` with simple
+literals:
+
+>
+>     SELECT 1 IN (1, 2, 3) AS RESULT;
+>     +--------+
+>     | RESULT |
+>     |--------|
+>     | True   |
+>     +--------+
+>  
+>
+> Copy
+>  
+>  
+>     SELECT 4 NOT IN (1, 2, 3) AS RESULT;
+>     +--------+
+>     | RESULT |
+>     |--------|
+>     | True   |
+>     +--------+
+>  
+>
+> Copy
+
+###  Using IN with a subquery  ¶
+
+>
+>     SELECT 'a' IN (
+>         SELECT column1 FROM VALUES ('b'), ('c'), ('d')
+>         ) AS RESULT;
+>     +--------+
+>     | RESULT |
+>     |--------|
+>     | False  |
+>     +--------+
+>  
+>
+> Copy
+
+###  Using IN with a table  ¶
+
+These examples show how to use ` IN  ` with a table. The statement below
+creates the table used in the examples.
+
+>
+>     CREATE TABLE my_table (col_1 INTEGER, col_2 INTEGER, col_3 INTEGER);
+>     INSERT INTO my_table (col_1, col_2, col_3) VALUES
+>         (1, 1, 1),
+>         (1, 2, 3),
+>         (4, 5, NULL);
+>  
+>
+> Copy
+
+This example shows how to use ` IN  ` with a single column of a table:
+
+>
+>     SELECT col_1, col_2, col_3
+>         FROM my_table
+>         WHERE (col_1) IN (1, 10, 100, 1000)
+>         ORDER BY col_1, col_2, col_3;
+>     +-------+-------+-------+
+>     | COL_1 | COL_2 | COL_3 |
+>     |-------+-------+-------|
+>     |     1 |     1 |     1 |
+>     |     1 |     2 |     3 |
+>     +-------+-------+-------+
+>  
+>
+> Copy
+
+This example shows how to use ` IN  ` with multiple columns of a table:
+
+>
+>     SELECT col_1, col_2, col_3
+>         FROM my_table
+>         WHERE (col_1, col_2, col_3) IN (
+>                                        (1,2,3),
+>                                        (4,5,6)
+>                                        );
+>     +-------+-------+-------+
+>     | COL_1 | COL_2 | COL_3 |
+>     |-------+-------+-------|
+>     |     1 |     2 |     3 |
+>     +-------+-------+-------+
+>  
+>
+> Copy
+
+This example shows how to use ` IN  ` with a subquery that reads multiple
+columns of a table:
+
+>
+>     SELECT (1, 2, 3) IN (
+>         SELECT col_1, col_2, col_3 FROM my_table
+>         ) AS RESULT;
+>     +--------+
+>     | RESULT |
+>     |--------|
+>     | True   |
+>     +--------+
+>  
+>
+> Copy
+
+###  Using NULL  ¶
+
+Remember that NULL != NULL. Neither of the following queries returns a match
+when the value on the left or right of the ` IN  ` contains a NULL:
+
+>
+>     SELECT NULL IN (1, 2, NULL) AS RESULT;
+>     +--------+
+>     | RESULT |
+>     |--------|
+>     | NULL   |
+>     +--------+
+>  
+>
+> Copy
+>  
+>  
+>     SELECT (4, 5, NULL) IN ( (4, 5, NULL), (7, 8, 9) ) AS RESULT;
+>     +--------+
+>     | RESULT |
+>     |--------|
+>     | NULL   |
+>     +--------+
+>  
+>
+> Copy
+

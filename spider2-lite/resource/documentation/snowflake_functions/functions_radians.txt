@@ -1,0 +1,34 @@
+  RADIANS  ¶
+
+Converts degrees to radians.
+
+##  Syntax  ¶
+
+    
+    
+    RADIANS( <real_expr> )
+    
+
+Copy
+
+##  Examples  ¶
+
+Show the results of calling the ` RADIANS  ` function:
+
+>
+>     SELECT RADIANS(0), RADIANS(60), RADIANS(180), RADIANS(360),
+> RADIANS(720);
+>
+> +------------+-------------+--------------+--------------+--------------+
+>     | RADIANS(0) | RADIANS(60) | RADIANS(180) | RADIANS(360) | RADIANS(720)
+> |
+>
+> |------------+-------------+--------------+--------------+--------------|
+>     |          0 | 1.047197551 |  3.141592654 |  6.283185307 | 12.566370614
+> |
+>
+> +------------+-------------+--------------+--------------+--------------+
+>  
+>
+> Copy
+

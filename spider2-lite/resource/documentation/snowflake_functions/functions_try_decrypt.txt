@@ -1,0 +1,207 @@
+  TRY_DECRYPT  ¶
+
+A special version of [ DECRYPT  ](decrypt) that returns a NULL value if an
+error occurs during decryption.
+
+See also:
+
+    
+
+[ ENCRYPT  ](encrypt) , [ ENCRYPT_RAW  ](encrypt_raw) , [ DECRYPT  ](decrypt)
+, [ DECRYPT_RAW  ](decrypt_raw) , [ TRY_DECRYPT_RAW  ](try_decrypt_raw)
+
+##  Syntax  ¶
+
+    
+    
+    TRY_DECRYPT( <value_to_decrypt> , <passphrase> ,
+             [ [ <additional_authenticated_data> , ] <encryption_method> ]
+           )
+    
+
+Copy
+
+##  Arguments  ¶
+
+**Required:**
+
+` _ value_to_decrypt  _ `
+
+    
+
+The BINARY value to decrypt.
+
+` _ passphrase  _ `
+
+    
+
+The passphrase to use to encrypt/decrypt the data. The passphrase is a
+VARCHAR.
+
+**Optional:**
+
+` _ additional_authenticated_data  _ `
+
+    
+
+Additional authenticated data (AAD) is additional data whose confidentiality
+and authenticity is assured during the decryption process. However, this AAD
+is not encrypted and is not included as a field in the returned value from the
+ENCRYPT or ENCRYPT_RAW function.
+
+If AAD is passed to the encryption function (ENCRYPT or ENCRYPT_RAW), then the
+same AAD must be passed to the decryption function (DECRYPT or DECRYPT_RAW).
+If the AAD passed to the decryption function does not match the AAD passed to
+the encryption function, then decryption fails.
+
+The difference between the AAD and the ` _ passphrase  _ ` is that the
+passphrase is intended to be kept secret (otherwise, the encryption is
+essentially worthless) while the AAD can be left public. The AAD helps
+authenticate that a public piece of information and an encrypted value are
+associated with each other. The examples section in the [ ENCRYPT  ](encrypt)
+function includes an example showing the behavior when the AAD matches and the
+behavior when it doesn’t match.
+
+For ENCRYPT_RAW and DECRYPT_RAW, the data type of the AAD should be BINARY.
+For ENCRYPT and DECRYPT, the data type of the AAD can be either VARCHAR or
+BINARY, and does not need to match the data type of the value that was
+encrypted.
+
+AAD is supported only by AEAD-enabled encryption modes like GCM (default).
+
+` _ encryption_method  _ `
+
+    
+
+This string specifies the method to use for encrypting/decrypting the data.
+This string contains subfields:
+
+    
+    
+    <algorithm>-<mode> [ /pad: <padding> ]
+    
+
+Copy
+
+The ` algorithm  ` is currently limited to:
+
+>   * ` 'AES'  ` : When a passphrase is passed (e.g. to ENCRYPT), the function
+> uses AES-256 encryption (256 bits). When a key is passed (e.g. to
+> ENCRYPT_RAW), the function uses 128, 192, or 256-bit encryption, depending
+> upon the key length.
+>
+>
+
+The ` algorithm  ` is case-insensitive.
+
+The ` mode  ` specifies which block cipher mode should be used to encrypt
+messages. The following table shows which modes are supported, and which of
+those modes support padding:
+
+Mode
+
+|
+
+Padding
+
+|
+
+Description  
+  
+---|---|---  
+  
+` 'ECB'  `
+
+|
+
+Yes
+
+|
+
+Encrypt every block individually with the key. This mode is generally
+discouraged and is included only for compatibility with external
+implementations.  
+  
+` 'CBC'  `
+
+|
+
+Yes
+
+|
+
+The encrypted block is XORed with the previous block.  
+  
+` 'GCM'  `
+
+|
+
+No
+
+|
+
+Galois/Counter Mode is a high-performance encryption mode that is AEAD-
+enabled. AEAD additionally assures the authenticity and confidentiality of the
+encrypted data by generating an AEAD tag. Moreover, AEAD supports AAD
+(additional authenticated data).  
+  
+` 'CTR'  `
+
+|
+
+No
+
+|
+
+Counter mode.  
+  
+` 'OFB'  `
+
+|
+
+No
+
+|
+
+Output feedback. The ciphertext is XORed with the plaintext of a block.  
+  
+` 'CFB'  `
+
+|
+
+No
+
+|
+
+Cipher feedback is a combination of OFB and CBC.  
+  
+The ` mode  ` is case-insensitive.
+
+The ` padding  ` specifies how to pad messages whose length is not a multiple
+of the block size. Padding is applicable only for ECB and CBC modes; padding
+is ignored for other modes. The possible values for padding are:
+
+>   * ` 'PKCS'  ` : Uses PKCS5 for block padding.
+>
+>   * ` 'NONE'  ` : No padding. The user needs to take care of the padding
+> when using ECB or CBC mode.
+>
+>
+
+The ` padding  ` is case-insensitive.
+
+Default setting: ` 'AES-GCM'  ` .
+
+If the ` mode  ` is not specified, GCM is used.
+
+If the ` padding  ` is not specified, PKCS is used.
+
+##  Returns  ¶
+
+Returns the decrypted value as a BINARY value or a NULL value if any runtime
+error occurs during decryption.
+
+##  Usage notes and examples  ¶
+
+See the [ DECRYPT  ](decrypt) function for the usage notes and examples.
+

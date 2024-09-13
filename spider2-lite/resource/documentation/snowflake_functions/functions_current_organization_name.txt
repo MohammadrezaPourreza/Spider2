@@ -1,0 +1,41 @@
+  CURRENT_ORGANIZATION_NAME  ¶
+
+Returns the name of the organization to which the current account belongs.
+
+##  Syntax  ¶
+
+    
+    
+    CURRENT_ORGANIZATION_NAME()
+    
+
+Copy
+
+##  Arguments  ¶
+
+None.
+
+##  Returns  ¶
+
+The data type of the returned value is ` VARCHAR  ` .
+
+##  Example  ¶
+
+This shows how to call the CURRENT_ORGANIZATION_NAME function:
+
+>
+>     SELECT CURRENT_ORGANIZATION_NAME();
+>  
+>
+> Copy
+>
+> Output:
+>  
+>  
+>     +-----------------------------+
+>     | CURRENT_ORGANIZATION_NAME() |
+>     |-----------------------------|
+>     | bazco                       |
+>     +-----------------------------+
+>  
+

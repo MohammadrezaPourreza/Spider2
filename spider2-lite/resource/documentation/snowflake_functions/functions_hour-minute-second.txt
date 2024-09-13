@@ -1,0 +1,93 @@
+  HOUR / MINUTE / SECOND  ¶
+
+Extracts the corresponding time part from a time or timestamp value.
+
+These functions are alternatives to using the [ DATE_PART  ](date_part) (or [
+EXTRACT  ](extract) ) function with the equivalent time part (see [ Supported
+date and time parts  ](../functions-date-time.html#label-supported-date-time-
+parts) ).
+
+See also:
+
+    
+
+[ YEAR* / DAY* / WEEK* / MONTH / QUARTER  ](year)
+
+##  Syntax  ¶
+
+    
+    
+    HOUR( <time_or_timestamp_expr> )
+    
+    MINUTE( <time_or_timestamp_expr> )
+    
+    SECOND( <time_or_timestamp_expr> )
+    
+
+Copy
+
+##  Usage notes  ¶
+
+Function Name
+
+|
+
+Time Part Extracted from Time / Timestamp
+
+|
+
+Possible Values  
+  
+---|---|---  
+  
+HOUR
+
+|
+
+Hour of the specified day
+
+|
+
+0 to 23  
+  
+MINUTE
+
+|
+
+Minute of the specified hour
+
+|
+
+0 to 59  
+  
+SECOND
+
+|
+
+Second of the specified minute
+
+|
+
+0 to 59  
+  
+##  Examples  ¶
+
+This demonstrates the ` HOUR  ` , ` MINUTE  ` , and ` SECOND  ` functions:
+
+>
+>     SELECT '2013-05-08T23:39:20.123-07:00'::TIMESTAMP AS TSTAMP,
+>              HOUR(tstamp) AS "HOUR",
+>              MINUTE(tstamp) AS "MINUTE",
+>              SECOND(tstamp) AS "SECOND";
+>     +-------------------------+------+--------+--------+
+>     | TSTAMP                  | HOUR | MINUTE | SECOND |
+>     |-------------------------+------+--------+--------|
+>     | 2013-05-08 23:39:20.123 |   23 |     39 |     20 |
+>     +-------------------------+------+--------+--------+
+>  
+>
+> Copy
+
+For more examples, see [ Working with date and time values  ](../date-time-
+examples) .
+

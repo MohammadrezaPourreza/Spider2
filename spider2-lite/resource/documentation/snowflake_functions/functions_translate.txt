@@ -1,0 +1,85 @@
+  TRANSLATE  ¶
+
+The ` TRANSLATE()  ` function replaces characters in a string. Specifically,
+given a string, a set of characters to replace, and the characters to
+substitute for the original characters, ` TRANSLATE()  ` makes the specified
+substitutions.
+
+Attention
+
+This function does not translate between languages. See the [ TRANSLATE
+(SNOWFLAKE.CORTEX)  ](translate-snowflake-cortex) function for translating
+text between natural languages.
+
+##  Syntax  ¶
+
+    
+    
+    TRANSLATE( <subject>, <sourceAlphabet>, <targetAlphabet> )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ subject  _ `
+
+    
+
+A string expression that is translated. If a character in ` subject  ` is not
+contained in ` _ sourceAlphabet  _ ` , the character is added to the result
+without any translation.
+
+` _ sourceAlphabet  _ `
+
+    
+
+A string with all characters that are modified by this function. Each
+character is either translated to the corresponding character in the ` _
+targetAlphabet  _ ` or omitted in the result if the ` _ targetAlphabet  _ `
+has no corresponding character (i.e. has fewer characters than the ` _
+sourceAlphabet  _ ` ).
+
+` _ targetAlphabet  _ `
+
+    
+
+A string with all characters that are used to replace characters from the ` _
+sourceAlphabet  _ ` .
+
+If ` _ targetAlphabet  _ ` is longer than ` _ sourceAlphabet  _ ` , Snowflake
+reports the error ` String  '(target  alphabet)'  is  too  long  and  would
+be  truncated.  ` .
+
+##  Collation details  ¶
+
+Arguments with collation specifications are currently not supported.
+
+##  Examples  ¶
+
+Translate the character ‘ñ’ to ‘n’.
+
+>
+>     SELECT TRANSLATE('peña','ñ','n');
+>     +---------------------------+
+>     | TRANSLATE('PEÑA','Ñ','N') |
+>     |---------------------------|
+>     | pena                      |
+>     +---------------------------+
+>  
+>
+> Copy
+
+Translate ‘X’ to ‘c’, ‘Y’ to ‘e’, ‘Z’ to ‘f’ and remove ‘❄’ characters:
+
+>
+>     SELECT TRANSLATE('❄a❄bX❄dYZ❄','XYZ❄','cef');
+>     +--------------------------------------+
+>     | TRANSLATE('❄A❄BX❄DYZ❄','XYZ❄','CEF') |
+>     |--------------------------------------|
+>     | abcdef                               |
+>     +--------------------------------------+
+>  
+>
+> Copy
+

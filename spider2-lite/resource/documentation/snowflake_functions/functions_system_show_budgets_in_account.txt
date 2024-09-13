@@ -1,0 +1,129 @@
+  SYSTEM$SHOW_BUDGETS_IN_ACCOUNT  ¶
+
+[ ![Snowflake logo in black \(no text\)](../../_images/logo-snowflake-
+black.png) ](../../_images/logo-snowflake-black.png) Feature — Generally
+Available
+
+Budgets are unavailable in [ trial accounts  ](../../user-guide/admin-trial-
+account) .
+
+Returns the [ budgets  ](../../user-guide/budgets) in the account for which
+you have access privileges.
+
+See also:
+
+    
+
+[ CREATE BUDGET  ](../classes/budget/commands/create-budget)
+
+##  Syntax  ¶
+
+    
+    
+    SYSTEM$SHOW_BUDGETS_IN_ACCOUNT()
+    
+
+Copy
+
+##  Returns  ¶
+
+The function returns the following elements in a JSON object:
+
+Column Name
+
+|
+
+Data Type
+
+|
+
+Description  
+  
+---|---|---  
+  
+DATABASE
+
+|
+
+TEXT
+
+|
+
+Name of the database to which the budget instance belongs.  
+  
+SCHEMA
+
+|
+
+TEXT
+
+|
+
+Name of the schema to which the budget instance belongs.  
+  
+CREATED_ON
+
+|
+
+NUMBER
+
+|
+
+UTC timestamp when the budget instance was created.  
+  
+ID
+
+|
+
+NUMBER
+
+|
+
+Internal/system identifier for the budget instance.  
+  
+CURRENT_VERSION
+
+|
+
+TEXT
+
+|
+
+Budget class version used to create the budget instance.  
+  
+COMMENT
+
+|
+
+TEXT
+
+|
+
+Comment for the budget instance.  
+  
+NAME
+
+|
+
+TEXT
+
+|
+
+Name of the budget instance.  
+  
+##  Usage notes  ¶
+
+The results include budgets for which the role executing the function has been
+granted any privileges.
+
+##  Examples  ¶
+
+The following example retrieves the budgets in the account:
+
+    
+    
+    SELECT SYSTEM$SHOW_BUDGETS_IN_ACCOUNT();
+    
+
+Copy
+

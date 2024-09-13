@@ -1,0 +1,87 @@
+  ARRAY_CONSTRUCT  ¶
+
+Returns an array constructed from zero, one, or more inputs.
+
+See also:
+
+    
+
+[ ARRAY_CONSTRUCT_COMPACT  ](array_construct_compact)
+
+##  Syntax  ¶
+
+    
+    
+    ARRAY_CONSTRUCT( [ <expr1> ] [ , <expr2> [ , ... ] ] )
+    
+
+Copy
+
+##  Arguments  ¶
+
+The arguments are values (or expressions that evaluate to values). The
+arguments do not all need to be of the same data type.
+
+##  Returns  ¶
+
+The data type of the returned value is ` ARRAY  ` .
+
+##  Usage notes  ¶
+
+  * The data types of the inputs may vary. 
+
+  * If the function is called with ` _ N  _ ` arguments, the size of the resulting array will be ` _ N  _ ` . 
+
+  * In many contexts, you can use an [ ARRAY constant  ](../data-types-semistructured.html#label-array-constant) (also called an _ARRAY literal_ ) instead of the ARRAY_CONSTRUCT function. 
+
+##  Examples  ¶
+
+Construct a basic array consisting of numeric data types:
+
+>
+>     SELECT ARRAY_CONSTRUCT(10, 20, 30);
+>     +-----------------------------+
+>     | ARRAY_CONSTRUCT(10, 20, 30) |
+>     |-----------------------------|
+>     | [                           |
+>     |   10,                       |
+>     |   20,                       |
+>     |   30                        |
+>     | ]                           |
+>     +-----------------------------+
+>  
+>
+> Copy
+
+Construct a basic array consisting of different data types:
+
+>
+>     SELECT ARRAY_CONSTRUCT(null, 'hello', 3::double, 4, 5);
+>     +-------------------------------------------------+
+>     | ARRAY_CONSTRUCT(NULL, 'HELLO', 3::DOUBLE, 4, 5) |
+>     |-------------------------------------------------|
+>     | [                                               |
+>     |   undefined,                                    |
+>     |   "hello",                                      |
+>     |   3.000000000000000e+00,                        |
+>     |   4,                                            |
+>     |   5                                             |
+>     | ]                                               |
+>     +-------------------------------------------------+
+>  
+>
+> Copy
+
+Construct an empty array:
+
+>
+>     SELECT ARRAY_CONSTRUCT();
+>     +-------------------+
+>     | ARRAY_CONSTRUCT() |
+>     |-------------------|
+>     | []                |
+>     +-------------------+
+>  
+>
+> Copy
+

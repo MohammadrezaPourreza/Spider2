@@ -1,0 +1,111 @@
+  INITCAP  ¶
+
+Returns the input string ( ` _ expr  _ ` ) with the first letter of each word
+in uppercase and the subsequent letters in lowercase.
+
+##  Syntax  ¶
+
+    
+    
+    INITCAP( <expr> [ , <delimiters> ] )
+    
+
+Copy
+
+##  Usage notes  ¶
+
+  * ` _ delimiters  _ ` is an optional argument specifying a string of one or more characters that INITCAP uses as separators for words in the input expression: 
+
+>     * If ` _ delimiters  _ ` is not specified, any of the following
+> characters in the input expressions are treated as word separators:
+>  
+>         >         <whitespace> ! ? @ " ^ # $ & ~ _ , . : ; + - * % / | \ [ ]
+> ( ) { } < >
+>  
+>
+> Copy
+>
+>     * If ` _ delimiters  _ ` is specified, the specified value overrides all
+> of the characters listed above.
+
+  * ` _ delimiters  _ ` supports any UTF-8 characters, including whitespace characters, and is case-sensitive. 
+
+  * ` _ delimiters  _ ` must be enclosed in single quotes, e.g. ` 'x  '  ` (delimiters in this example are ` x  ` and blank spaces). 
+
+  * ` _ delimiters  _ ` specified as an empty string (i.e. ` ''  ` ) instructs INITCAP to ignore all delimiters, including whitespace characters, in the input expression (i.e. the input expression is treated as a single, continuous word). The resulting output is a string with the first character capitalized (if the first character is a letter) and all other letters in lowercase. 
+
+##  Collation details  ¶
+
+Arguments with collation specifications are currently not supported.
+
+##  Examples  ¶
+
+This example provides various outputs in different languages using the default
+delimiters:
+
+    
+    
+    SELECT v, INITCAP(v) FROM testinit;
+    
+    +---------------------------------+---------------------------------+
+    | C1                              | INITCAP(C1)                     |
+    |---------------------------------+---------------------------------|
+    | The Quick Gray Fox              | The Quick Gray Fox              |
+    | the sky is blue                 | The Sky Is Blue                 |
+    | OVER the River 2 Times          | Over The River 2 Times          |
+    | WE CAN HANDLE THIS              | We Can Handle This              |
+    | HelL0_hi+therE                  | Hell0_Hi+There                  |
+    | νησί του ποταμού                | Νησί Του Ποταμού                |
+    | ÄäÖößÜü                         | Ääöößüü                         |
+    | Hi,are?you!there                | Hi,Are?You!There                |
+    | to je dobré                     | To Je Dobré                     |
+    | ÉéÀàè]çÂâ ÊêÎÔô ÛûËÏ ïÜŸÇç ŒœÆæ | Ééààè]Çââ Êêîôô Ûûëï Ïüÿçç Œœææ |
+    | ĄąĆ ćĘęŁ łŃńÓ óŚśŹźŻż           | Ąąć Ćęęł Łńńó Óśśźźżż           |
+    | АаБб ВвГгД дЕеЁёЖ жЗзИиЙй       | Аабб Ввггд Дееёёж Жззиийй       |
+    | ХхЦц ЧчШш ЩщЪъ ЫыЬь ЭэЮ юЯя     | Ххцц Ччшш Щщъъ Ыыьь Ээю Юяя     |
+    | NULL                            | NULL                            |
+    +---------------------------------+---------------------------------+
+    
+
+Copy
+
+These examples use specified delimiters (through the ` _ delimiters  _ `
+argument):
+
+    
+    
+    select initcap('this is the new Frame+work', '');
+    
+    +-------------------------------------------+
+    | INITCAP('THIS IS THE NEW FRAME+WORK', '') |
+    |-------------------------------------------|
+    | This is the new frame+work                |
+    +-------------------------------------------+
+    
+    select initcap('iqamqinterestedqinqthisqtopic','q');
+    
+    +----------------------------------------------+
+    | INITCAP('IQAMQINTERESTEDQINQTHISQTOPIC','Q') |
+    |----------------------------------------------|
+    | IqAmqInterestedqInqThisqTopic                |
+    +----------------------------------------------+
+    
+    select initcap('lion☂fRog potato⨊cLoUD', '⨊☂');
+    
+    +-------------------------------------------+
+    | INITCAP('LION☂FROG POTATO⨊CLOUD', '⨊☂') |
+    |-------------------------------------------|
+    | Lion☂Frog potato⨊Cloud                   |
+    +-------------------------------------------+
+    
+    select initcap('apple is僉sweetandballIsROUND', '僉a b');
+    
+    +---------------------------------------------------+
+    | INITCAP('APPLE IS僉SWEETANDBALLISROUND', '僉A B') |
+    |---------------------------------------------------|
+    | aPple Is僉SweetaNdbaLlisround                     |
+    +---------------------------------------------------+
+    
+
+Copy
+

@@ -1,0 +1,178 @@
+  FLOOR  ¶
+
+Returns values from ` _ input_expr  _ ` rounded to the nearest equal or
+smaller integer, or to the nearest equal or smaller value with the specified
+number of places after the decimal point.
+
+See also:
+
+    
+
+[ CEIL  ](ceil) , [ ROUND  ](round) , [ TRUNCATE , TRUNC  ](trunc)
+
+##  Syntax  ¶
+
+    
+    
+    FLOOR( <input_expr> [, <scale_expr> ] )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ input_expr  _ `
+
+    
+
+The value or expression to operate on. The data type should be one of the
+numeric data types, such as FLOAT or NUMBER.
+
+` _ scale_expr  _ `
+
+    
+
+The number of digits the output should include after the decimal point. The
+expression should evaluate to an integer from -38 to +38.
+
+The default ` _ scale_expr  _ ` is zero, meaning that the function removes all
+digits after the decimal point.
+
+For information about negative scales, see the Usage Notes below.
+
+##  Returns  ¶
+
+The return type is based on the input type:
+
+  * If the input expression is a FLOAT, the returned type is a FLOAT. 
+
+  * If the input expression is a NUMBER, the returned type is a NUMBER. 
+
+    * If the input scale is constant: 
+
+      * If the input scale is positive, the returned type has a scale equal to the input scale and has a precision large enough to encompass any possible result. 
+
+      * If the input scale is negative, the returned type has a scale of 0. 
+
+    * If the input scale is not constant, the returned type’s scale is the same as the input expression’s. 
+
+If the scale is zero, then the value is effectively an INTEGER.
+
+For example:
+
+  * The data type returned by FLOOR(3.14::FLOAT, 1) is FLOAT. 
+
+  * The NUMBER returned by FLOOR(3.14, 1) has scale 1 and precision at least 3. 
+
+  * The NUMBER returned by FLOOR(-9.99, 0) has scale 0 and precision at least 2. 
+
+  * The NUMBER returned by FLOOR(33.33, -1) has scale 0 and precision at least 3. 
+
+##  Usage notes  ¶
+
+  * If ` _ scale_expr  _ ` is negative, then it specifies the number of places  before  the decimal point to which to adjust the number. For example, if the scale is -2, then the result is a multiple of 100. 
+
+  * If ` _ scale_expr  _ ` is larger than the input expression scale, the function does not have any effect. 
+
+  * If either the ` _ input_expr  _ ` or the ` _ scale_expr  _ ` is NULL, then the result is NULL. 
+
+  * When negative numbers are rounded down, the value is further from 0. For example, FLOOR(-1.1) is -2, not -1. 
+
+  * If rounding the number downward brings the number outside of the range of values of the data type, an error is returned. 
+
+##  Examples  ¶
+
+This example demonstrates the function without the ` _ scale_expr  _ `
+parameter:
+
+>
+>     SELECT FLOOR(135.135), FLOOR(-975.975);
+>     +----------------+-----------------+
+>     | FLOOR(135.135) | FLOOR(-975.975) |
+>     |----------------+-----------------|
+>     |            135 |            -976 |
+>     +----------------+-----------------+
+>  
+>
+> Copy
+
+This example demonstrates the function with the ` _ scale_expr  _ ` parameter,
+including with the scale set to negative numbers:
+
+> Create and fill a table:
+>
+
+>>
+
+>>     CREATE TABLE test_floor (n FLOAT, scale INTEGER);
+
+>>     INSERT INTO test_floor (n, scale) VALUES
+
+>>        (-975.975, -1),
+
+>>        (-975.975,  0),
+
+>>        (-975.975,  2),
+
+>>        ( 135.135, -2),
+
+>>        ( 135.135,  0),
+
+>>        ( 135.135,  1),
+
+>>        ( 135.135,  3),
+
+>>        ( 135.135, 50),
+
+>>        ( 135.135, NULL)
+
+>>        ;
+
+>>  
+>>
+
+>> Copy
+
+>
+> Output:
+>
+
+>>
+
+>>     SELECT n, scale, FLOOR(n, scale)
+
+>>       FROM test_floor
+
+>>       ORDER BY n, scale;
+
+>>     +----------+-------+-----------------+
+
+>>     |        N | SCALE | FLOOR(N, SCALE) |
+
+>>     |----------+-------+-----------------|
+
+>>     | -975.975 |    -1 |        -980     |
+
+>>     | -975.975 |     0 |        -976     |
+
+>>     | -975.975 |     2 |        -975.98  |
+
+>>     |  135.135 |    -2 |         100     |
+
+>>     |  135.135 |     0 |         135     |
+
+>>     |  135.135 |     1 |         135.1   |
+
+>>     |  135.135 |     3 |         135.135 |
+
+>>     |  135.135 |    50 |         135.135 |
+
+>>     |  135.135 |  NULL |            NULL |
+
+>>     +----------+-------+-----------------+
+
+>>  
+>>
+
+>> Copy
+

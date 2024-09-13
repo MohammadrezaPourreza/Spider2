@@ -1,0 +1,91 @@
+  GROUPING_ID  ¶
+
+Describes which of a list of expressions are grouped in a row produced by a [
+GROUP BY  ](../constructs/group-by) query.
+
+Alias for [ GROUPING  ](grouping) .
+
+##  Syntax  ¶
+
+    
+    
+    GROUPING_ID( <expr1> [ , <expr2> , ... ] )
+    
+
+Copy
+
+##  Usage notes  ¶
+
+GROUPING_ID is not an aggregate function, but rather a utility function that
+can be used alongside aggregation, to determine the level of aggregation a row
+was generated for:
+
+  * GROUPING_ID( ` _ expr  _ ` ) returns 0 for a row that is grouped on ` _ expr  _ ` , and 1 for a row that is not grouped on ` _ expr  _ ` . 
+
+  * GROUPING_ID( ` _ expr1  _ ` , ` _ expr2  _ ` , … , ` _ exprN  _ ` ) returns the integer representation of a bit-vector containing GROUPING_ID( ` _ expr1  _ ` ) , GROUPING_ID( ` _ expr2  _ ` ) , … , GROUPING_ID( ` _ exprN  _ ` ). 
+
+##  Examples  ¶
+
+The examples use the following table and data:
+
+>
+>     CREATE OR REPLACE TABLE aggr2(col_x int, col_y int, col_z int);
+>     INSERT INTO aggr2 VALUES (1, 2, 1),
+>                              (1, 2, 3);
+>     INSERT INTO aggr2 VALUES (2, 1, 10),
+>                              (2, 2, 11),
+>                              (2, 2, 3);
+>  
+>
+> Copy
+
+This example groups on col_x. Calling ` GROUPING_ID(col_x)  ` returns 0,
+indicating that col_x is indeed one of the grouping columns.
+
+>
+>     SELECT col_x, sum(col_z), GROUPING_ID(col_x)
+>         FROM aggr2
+>         GROUP BY col_x
+>         ORDER BY col_x;
+>     +-------+------------+--------------------+
+>     | COL_X | SUM(COL_Z) | GROUPING_ID(COL_X) |
+>     |-------+------------+--------------------|
+>     |     1 |          4 |                  0 |
+>     |     2 |         24 |                  0 |
+>     +-------+------------+--------------------+
+>  
+>
+> Copy
+
+This query groups by sets:
+
+>
+>     SELECT col_x, col_y, sum(col_z),
+>            GROUPING_ID(col_x),
+>            GROUPING_ID(col_y),
+>            GROUPING_ID(col_x, col_y)
+>         FROM aggr2
+>         GROUP BY GROUPING SETS ((col_x), (col_y), ())
+>         ORDER BY col_x ASC, col_y DESC;
+>
+> +-------+-------+------------+--------------------+--------------------+---------------------------+
+>     | COL_X | COL_Y | SUM(COL_Z) | GROUPING_ID(COL_X) | GROUPING_ID(COL_Y) |
+> GROUPING_ID(COL_X, COL_Y) |
+>
+> |-------+-------+------------+--------------------+--------------------+---------------------------|
+>     |     1 |  NULL |          4 |                  0 |                  1 |
+> 1 |
+>     |     2 |  NULL |         24 |                  0 |                  1 |
+> 1 |
+>     |  NULL |  NULL |         28 |                  1 |                  1 |
+> 3 |
+>     |  NULL |     2 |         18 |                  1 |                  0 |
+> 2 |
+>     |  NULL |     1 |         10 |                  1 |                  0 |
+> 2 |
+>
+> +-------+-------+------------+--------------------+--------------------+---------------------------+
+>  
+>
+> Copy
+

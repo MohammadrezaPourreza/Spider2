@@ -1,0 +1,35 @@
+  ASINH  ¶
+
+Computes the inverse (arc) hyperbolic sine of its argument.
+
+##  Syntax  ¶
+
+    
+    
+    ASINH( <real_expr> )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ real_expr  _ `
+
+    
+
+This expression should evaluate to a real number.
+
+##  Examples  ¶
+
+>
+>     SELECT ASINH(2.129279455);
+>  
+>     --------------------+
+>      ASINH(2.129279455) |
+>     --------------------+
+>      1.5                |
+>     --------------------+
+>  
+>
+> Copy
+

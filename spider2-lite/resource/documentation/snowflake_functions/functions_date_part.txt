@@ -1,0 +1,154 @@
+  DATE_PART  ¶
+
+Extracts the specified date or time part from a date, time, or timestamp.
+
+Alternatives:
+
+    
+
+[ EXTRACT  ](extract) , [ HOUR / MINUTE / SECOND  ](hour-minute-second) , [
+YEAR* / DAY* / WEEK* / MONTH / QUARTER  ](year)
+
+##  Syntax  ¶
+
+    
+    
+    DATE_PART( <date_or_time_part> , <date_or_timestamp_expr> )
+    
+
+Copy
+
+    
+    
+    DATE_PART( <date_or_time_part> FROM <date_or_time_expr> )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ date_or_time_part  _ `
+
+    
+
+The unit of time. Must be one of the values listed in [ Supported date and
+time parts  ](../functions-date-time.html#label-supported-date-time-parts)
+(e.g. ` month  ` ). The value can be a string literal or can be unquoted (e.g.
+` 'month'  ` or ` month  ` ).
+
+  * When ` _ date_or_time_part  _ ` is ` week  ` (or any of its variations), the output is controlled by the [ WEEK_START  ](../parameters.html#label-week-start) session parameter. 
+
+  * When ` _ date_or_time_part  _ ` is ` dayofweek  ` or ` yearofweek  ` (or any of their variations), the output is controlled by the [ WEEK_OF_YEAR_POLICY  ](../parameters.html#label-week-of-year-policy) and [ WEEK_START  ](../parameters.html#label-week-start) session parameters. 
+
+For more details, including examples, see [ Calendar weeks and weekdays
+](../functions-date-time.html#label-calendar-weeks-weekdays) .
+
+` _ date_or_timestamp_expr  _ `
+
+    
+
+A date, a time, a timestamp, or an expression that can be evaluated to a date,
+a time, or a timestamp.
+
+##  Returns  ¶
+
+Returns a value of NUMBER data type.
+
+##  Usage notes  ¶
+
+Currently, when ` _ date_or_timestamp_expr  _ ` is a DATE value, the following
+` _ date_or_time_part  _ ` values are not supported:
+
+  * ` epoch_millisecond  `
+
+  * ` epoch_microsecond  `
+
+  * ` epoch_nanosecond  `
+
+Other [ date and time parts  ](../functions-date-time.html#label-supported-
+date-time-parts) (including ` epoch_second  ` ) are supported.
+
+##  Examples  ¶
+
+This shows a simple example of extracting part of a DATE:
+
+    
+    
+    SELECT DATE_PART(quarter, '2024-04-08'::DATE);
+    
+
+Copy
+
+    
+    
+    +----------------------------------------+
+    | DATE_PART(QUARTER, '2024-04-08'::DATE) |
+    |----------------------------------------|
+    |                                      2 |
+    +----------------------------------------+
+    
+
+This shows an example of extracting part of a TIMESTAMP:
+
+    
+    
+    SELECT TO_TIMESTAMP(
+      '2024-04-08T23:39:20.123-07:00') AS "TIME_STAMP1",
+      DATE_PART(year, "TIME_STAMP1") AS "EXTRACTED YEAR";
+    
+
+Copy
+
+    
+    
+    +-------------------------+----------------+
+    | TIME_STAMP1             | EXTRACTED YEAR |
+    |-------------------------+----------------|
+    | 2024-04-08 23:39:20.123 |           2024 |
+    +-------------------------+----------------+
+    
+
+This shows an example of converting a TIMESTAMP to the number of seconds since
+the beginning of the [ Unix epoch ](https://en.wikipedia.org/wiki/Unix_time)
+(midnight January 1, 1970):
+
+    
+    
+    SELECT TO_TIMESTAMP(
+      '2024-04-08T23:39:20.123-07:00') AS "TIME_STAMP1",
+      DATE_PART(epoch_second, "TIME_STAMP1") AS "EXTRACTED EPOCH SECOND";
+    
+
+Copy
+
+    
+    
+    +-------------------------+------------------------+
+    | TIME_STAMP1             | EXTRACTED EPOCH SECOND |
+    |-------------------------+------------------------|
+    | 2024-04-08 23:39:20.123 |             1712619560 |
+    +-------------------------+------------------------+
+    
+
+This shows an example of converting a TIMESTAMP to the number of milliseconds
+since the beginning of the [ Unix epoch
+](https://en.wikipedia.org/wiki/Unix_time) (midnight January 1, 1970):
+
+    
+    
+    SELECT TO_TIMESTAMP(
+      '2024-04-08T23:39:20.123-07:00') AS "TIME_STAMP1",
+      DATE_PART(epoch_millisecond, "TIME_STAMP1") AS "EXTRACTED EPOCH MILLISECOND";
+    
+
+Copy
+
+    
+    
+    +-------------------------+-----------------------------+
+    | TIME_STAMP1             | EXTRACTED EPOCH MILLISECOND |
+    |-------------------------+-----------------------------|
+    | 2024-04-08 23:39:20.123 |               1712619560123 |
+    +-------------------------+-----------------------------+
+    
+

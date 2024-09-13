@@ -1,0 +1,189 @@
+  LPAD  ¶
+
+Left-pads a string with characters from another string, or left-pads a binary
+value with bytes from another binary value.
+
+The argument ( ` _ base  _ ` ) is left-padded to length ` _ length_expr  _ `
+with characters/bytes from the ` _ pad  _ ` argument.
+
+##  Syntax  ¶
+
+    
+    
+    LPAD(<base>, <length_expr> [, <pad>])
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ base  _ `
+
+    
+
+This must be a ` VARCHAR  ` or ` BINARY  ` value.
+
+` _ length_expr  _ `
+
+    
+
+The length should be an expression that evaluates to an integer. It should
+specify:
+
+  * The number of UTF-8 characters to return if the input is ` VARCHAR  ` . 
+
+  * The number of bytes to return if the input is ` BINARY  ` . 
+
+` _ pad  _ `
+
+    
+
+This must be a ` VARCHAR  ` or ` BINARY  ` value. The type must match the data
+type of the ` _ base  _ ` parameter. Characters (or bytes) from this parameter
+are used to pad the ` _ base  _ ` .
+
+##  Returns  ¶
+
+The data type of the returned value is the same as the data type of the ` _
+base  _ ` input value ( ` BINARY  ` or ` VARCHAR  ` ).
+
+##  Usage notes  ¶
+
+  * If the ` _ base  _ ` argument is longer than ` _ length_expr  _ ` , then the ` _ base  _ ` is truncated to length ` _ length_expr  _ ` . 
+
+  * The ` _ pad  _ ` argument can be multiple characters/bytes long. The ` _ pad  _ ` argument is repeated in the result until the desired length ` _ length_expr  _ ` is reached, truncating any superfluous characters/bytes in the ` _ pad  _ ` argument. If the ` _ pad  _ ` argument is empty, no padding is inserted, but the result is still truncated to length ` _ length_expr  _ ` . 
+
+  * When ` _ base  _ ` is a string, the default ` _ pad  _ ` string default is ‘ ‘ (a single blank space). When ` _ base  _ ` is a binary value, the ` _ pad  _ ` argument must be provided explicitly. 
+
+##  Collation details  ¶
+
+Collation applies to ` VARCHAR  ` inputs. Collation does not apply if the
+input data type of the first parameter is ` BINARY  ` .
+
+Although collation is accepted syntactically, collations have no impact on
+processing. For example, languages with two-character and three-character
+letters (e.g. “dzs” in Hungarian, “ch” in Czech) still count those as two or
+three characters (not one character) for the length argument.
+
+The collation of the result is the same as the collation of the first input.
+This might be useful if the returned value is passed to another function as
+part of nested function calls.
+
+Currently, Snowflake allows the ` _ base  _ ` and ` _ pad  _ ` arguments to
+have different collation specifiers. However, the individual collation
+specifiers cannot both be retained because the returned value will have only
+one collation specifier. Snowflake recommends that users avoid using ` _ pad
+_ ` strings that have different collation from the ` _ base  _ ` string.
+
+##  Examples  ¶
+
+This example shows padding of ` VARCHAR  ` and ` BINARY  ` data:
+
+> Create and fill a table:
+>
+
+>>
+
+>>     CREATE TABLE demo (v VARCHAR, b BINARY);
+
+>>     INSERT INTO demo (v, b) SELECT 'Hi', HEX_ENCODE('Hi');
+
+>>     INSERT INTO demo (v, b) SELECT '-123.00', HEX_ENCODE('-123.00');
+
+>>     INSERT INTO demo (v, b) SELECT 'Twelve Dollars',
+
+>>       TO_BINARY(HEX_ENCODE('Twelve Dollars'), 'HEX');
+
+>>  
+>>
+
+>> Copy
+
+>
+> Demonstrate padding of ` VARCHAR  ` :
+>
+
+>>
+
+>>     SELECT v, LPAD(v, 10, ' '),  
+>>               LPAD(v, 10, '$')
+
+>>         FROM demo
+
+>>         ORDER BY v;
+
+>>     +----------------+------------------+------------------+
+
+>>     | V              | LPAD(V, 10, ' ') | LPAD(V, 10, '$') |
+
+>>     |----------------+------------------+------------------|
+
+>>     | -123.00        |    -123.00       | $$$-123.00       |
+
+>>     | Hi             |         Hi       | $$$$$$$$Hi       |
+
+>>     | Twelve Dollars | Twelve Dol       | Twelve Dol       |
+
+>>     +----------------+------------------+------------------+
+
+>>  
+>>
+
+>> Copy
+
+>
+> Demonstrate padding of ` BINARY  ` :
+>
+
+>>
+
+>>     SELECT b, LPAD(b, 10, TO_BINARY(HEX_ENCODE(' '))) AS PAD_WITH_BLANK,
+
+>>               LPAD(b, 10, TO_BINARY(HEX_ENCODE('$'))) AS
+PAD_WITH_DOLLAR_SIGN
+
+>>         FROM demo
+
+>>         ORDER BY b;
+
+>>
++------------------------------+----------------------+----------------------+
+
+>>     | B                            | PAD_WITH_BLANK       |
+PAD_WITH_DOLLAR_SIGN |
+
+>>
+|------------------------------+----------------------+----------------------|
+
+>>     | 2D3132332E3030               | 2020202D3132332E3030 |
+2424242D3132332E3030 |
+
+>>     | 4869                         | 20202020202020204869 |
+24242424242424244869 |
+
+>>     | 5477656C766520446F6C6C617273 | 5477656C766520446F6C |
+5477656C766520446F6C |
+
+>>
++------------------------------+----------------------+----------------------+
+
+>>  
+>>
+
+>> Copy
+
+This example shows padding when multiple characters are used and when the
+padding is not an even multiple of the length of the multi-character padding
+string:
+
+>
+>     SELECT LPAD('123.50', 19, '*_');
+>     +--------------------------+
+>     | LPAD('123.50', 19, '*_') |
+>     |--------------------------|
+>     | *_*_*_*_*_*_*123.50      |
+>     +--------------------------+
+>  
+>
+> Copy
+

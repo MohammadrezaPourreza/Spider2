@@ -1,0 +1,194 @@
+  LAST_VALUE  ¶
+
+Returns the last value within an ordered group of values.
+
+See also:
+
+    
+
+[ FIRST_VALUE  ](first_value) , [ NTH_VALUE  ](nth_value)
+
+##  Syntax  ¶
+
+    
+    
+    LAST_VALUE( <expr> ) [ { IGNORE | RESPECT } NULLS ]
+                         OVER ( [ PARTITION BY <expr1> ] ORDER BY <expr2> [ { ASC | DESC } ] [ <window_frame> ] )
+    
+
+Copy
+
+For details about ` _ window_frame  _ ` syntax, see [ Usage notes for window
+frames  ](../functions-analytic.html#label-window-frames) .
+
+##  Arguments  ¶
+
+` _ expr  _ `
+
+    
+
+The expression that determines the return value.
+
+` _ expr1  _ `
+
+    
+
+The expression by which to partition the rows. You can specify a single
+expression or a comma-separated list of expressions. For example:
+
+    
+    
+    PARTITION BY column_1, column_2
+    
+
+Copy
+
+` _ expr2  _ `
+
+    
+
+The expression by which to order the rows. You can specify a single expression
+or a comma-separated list of expressions. For example:
+
+    
+    
+    ORDER BY column_3, column_4
+    
+
+Copy
+
+##  Usage notes  ¶
+
+  * For compatibility with implementations of this function in other systems, ` {  IGNORE  |  RESPECT  }  NULLS  ` can also be specified in the arguments for the function: 
+
+> ` LAST_VALUE(  <expr> [  {  IGNORE  |  RESPECT  }  NULLS  ]  )  OVER  ...  `
+
+  * If ` {  IGNORE  |  RESPECT  }  NULLS  ` is not specified, the default is ` RESPECT  NULLS  ` . For example, a NULL value is returned if the expression contains a NULL value and it is the last value in the expression. 
+
+  * This function is a rank-related function, so it must specify a window. A window clause consists of the following subclauses: 
+
+>     * ` PARTITION  BY  <expr1> ` subclause (optional).
+>
+>     * ` ORDER  BY  <expr2> ` subclause (required). For details about
+> additional supported ordering options (sort order, ordering of NULL values,
+> etc.), see the documentation for the [ ORDER BY  ](../constructs/order-by)
+> query construct, which follows the same rules.
+>
+>     * ` _ window_frame  _ ` subclause (optional).
+
+  * The order of rows in a window (and thus the result of the query) is fully deterministic only if the keys in the ORDER BY clause make each row unique. Consider the following example: 
+    
+        ... OVER (PARTITION BY p ORDER BY o COLLATE 'lower') ...
+    
+
+Copy
+
+The query result can vary if any partition contains values of column ` o  `
+that are identical, or would be identical in a case-insensitive comparison.
+
+  * The ORDER BY clause inside the OVER clause controls the order of rows only within the window, not the order of rows in the output of the entire query. To control output order, use a separate ORDER BY clause at the outermost level of the query. 
+
+  * The optional ` _ window_frame  _ ` (cumulative or sliding) specifies the subset of rows within the window for which the function is calculated. 
+
+>     * For window frames, this function supports only ROWS-based window
+> frames, not RANGE-based window frames.
+>
+> Supported  :
+>  
+>
+> ` ROWS  BETWEEN  ...  AND  ...  `
+>
+> Not supported  :
+>  
+>
+> ` RANGE  BETWEEN  ...  AND  ...  `
+>
+>     * If no ` _ window_frame  _ ` is specified, the default is the entire
+> window:
+>
+
+>> ` ROWS  BETWEEN  UNBOUNDED  PRECEDING  AND  UNBOUNDED  FOLLOWING  `
+
+>
+> This  differs  from the ANSI standard, which specifies the following default
+> for window frames:
+>
+
+>> ` RANGE  BETWEEN  UNBOUNDED  PRECEDING  AND  CURRENT  ROW  `
+
+For more details about window frames, including syntax and examples, see [
+Usage notes for window frames  ](../functions-analytic.html#label-window-
+frames) .
+
+##  Examples  ¶
+
+    
+    
+    SELECT
+        column1,
+        column2,
+        LAST_VALUE(column2) OVER (PARTITION BY column1 ORDER BY column2) AS column2_last
+    FROM VALUES
+        (1, 10), (1, 11), (1, 12),
+        (2, 20), (2, 21), (2, 22);
+    
+    +---------+---------+--------------+
+    | COLUMN1 | COLUMN2 | COLUMN2_LAST |
+    |---------+---------+--------------|
+    |       1 |      10 |           12 |
+    |       1 |      11 |           12 |
+    |       1 |      12 |           12 |
+    |       2 |      20 |           22 |
+    |       2 |      21 |           22 |
+    |       2 |      22 |           22 |
+    +---------+---------+--------------+
+    
+
+Copy
+
+The next query contrasts the outputs of ` FIRST_VALUE  ` , ` NTH_VALUE  ` ,
+and ` LAST_VALUE  ` . Note that:
+
+  * The query creates a sliding window frame that is 3 rows wide, which contains: 
+
+    * The row that precedes the current row. 
+
+    * The current row. 
+
+    * The row that follows the current row. 
+
+  * The ` 2  ` in the call ` NTH_VALUE(i,  2)  ` specifies the second row in the window frame (which, in this case, is also the current row). 
+
+  * When the current row is the very first row in the window frame, there is no preceding row to reference, so ` FIRST_VALUE()  ` returns a NULL for that row. 
+
+>
+
+    
+    
+    SELECT
+            partition_col, order_col, i,
+            FIRST_VALUE(i)  OVER (PARTITION BY partition_col ORDER BY order_col
+                ROWS BETWEEN 1 PRECEDING AND 1 FOLLOWING) AS FIRST_VAL,
+            NTH_VALUE(i, 2) OVER (PARTITION BY partition_col ORDER BY order_col
+                ROWS BETWEEN 1 PRECEDING AND 1 FOLLOWING) AS NTH_VAL,
+            LAST_VALUE(i)   OVER (PARTITION BY partition_col ORDER BY order_col
+                ROWS BETWEEN 1 PRECEDING AND 1 FOLLOWING) AS LAST_VAL
+        FROM demo1
+        ORDER BY partition_col, i, order_col;
+    +---------------+-----------+---+-----------+---------+----------+
+    | PARTITION_COL | ORDER_COL | I | FIRST_VAL | NTH_VAL | LAST_VAL |
+    |---------------+-----------+---+-----------+---------+----------|
+    |             1 |         1 | 1 |      NULL |       1 |        2 |
+    |             1 |         2 | 2 |         1 |       2 |        3 |
+    |             1 |         3 | 3 |         2 |       3 |        4 |
+    |             1 |         4 | 4 |         3 |       4 |        5 |
+    |             1 |         5 | 5 |         4 |       5 |        5 |
+    |             2 |         1 | 1 |      NULL |       1 |        2 |
+    |             2 |         2 | 2 |         1 |       2 |        3 |
+    |             2 |         3 | 3 |         2 |       3 |        4 |
+    |             2 |         4 | 4 |         3 |       4 |        4 |
+    +---------------+-----------+---+-----------+---------+----------+
+    
+
+Copy
+

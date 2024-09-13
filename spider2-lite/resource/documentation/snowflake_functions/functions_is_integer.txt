@@ -1,0 +1,116 @@
+  IS_INTEGER  ¶
+
+Returns TRUE if its VARIANT argument contains an integer value.
+
+See also:
+
+    
+
+[ IS_<object_type> ](is) , [ IS_DECIMAL  ](is_decimal) , [ IS_DOUBLE , IS_REAL
+](is_double-real)
+
+##  Syntax  ¶
+
+    
+    
+    IS_INTEGER( <variant_expr> )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ variant_expr  _ `
+
+    
+
+An expression that evaluates to a value of type VARIANT.
+
+##  Examples  ¶
+
+This shows how to use the function:
+
+> Create a table and data:
+>
+
+>>
+
+>>     CREATE TABLE multiple_types (
+
+>>         array1 VARIANT,
+
+>>         array2 VARIANT,
+
+>>         boolean1 VARIANT,
+
+>>         char1 VARIANT,
+
+>>         varchar1 VARIANT,
+
+>>         decimal1 VARIANT,
+
+>>         double1 VARIANT,
+
+>>         integer1 VARIANT,
+
+>>         object1 VARIANT
+
+>>         );
+
+>>     INSERT INTO multiple_types
+
+>>          (array1, array2, boolean1, char1, varchar1,
+
+>>           decimal1, double1, integer1, object1)
+
+>>        SELECT
+
+>>          TO_VARIANT(TO_ARRAY('Example')),
+
+>>          TO_VARIANT(ARRAY_CONSTRUCT('Array-like', 'example')),
+
+>>          TO_VARIANT(TRUE),
+
+>>          TO_VARIANT('X'),
+
+>>          TO_VARIANT('I am a real character'),
+
+>>          TO_VARIANT(1.23::DECIMAL(6, 3)),
+
+>>          TO_VARIANT(3.21::DOUBLE),
+
+>>          TO_VARIANT(15),
+
+>>          TO_VARIANT(TO_OBJECT(PARSE_JSON('{"Tree": "Pine"}')))
+
+>>          ;
+
+>>  
+>>
+
+>> Copy
+
+>
+> Now run the query:
+>
+
+>>
+
+>>     SELECT IS_INTEGER(integer1), IS_INTEGER(decimal1), IS_INTEGER(double1)
+FROM multiple_types;
+
+>>     +----------------------+----------------------+---------------------+
+
+>>     | IS_INTEGER(INTEGER1) | IS_INTEGER(DECIMAL1) | IS_INTEGER(DOUBLE1) |
+
+>>     |----------------------+----------------------+---------------------|
+
+>>     | True                 | False                | False               |
+
+>>     +----------------------+----------------------+---------------------+
+
+>>  
+>>
+
+>> Copy
+

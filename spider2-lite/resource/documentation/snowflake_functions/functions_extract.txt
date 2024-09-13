@@ -1,0 +1,123 @@
+  EXTRACT  ¶
+
+Extracts the specified date or time part from a date, time, or timestamp.
+
+Alternatives:
+
+    
+
+[ DATE_PART  ](date_part) , [ HOUR / MINUTE / SECOND  ](hour-minute-second) ,
+[ YEAR* / DAY* / WEEK* / MONTH / QUARTER  ](year)
+
+##  Syntax  ¶
+
+    
+    
+    EXTRACT( <date_or_time_part> FROM <date_or_time_expr> )
+    
+
+Copy
+
+    
+    
+    EXTRACT( <date_or_time_part> , <date_or_timestamp_expr> )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ date_or_time_part  _ `
+
+    
+
+The unit of time. Must be one of the values listed in [ Supported date and
+time parts  ](../functions-date-time.html#label-supported-date-time-parts)
+(e.g. ` month  ` ). The value can be a string literal or can be unquoted (e.g.
+` 'month'  ` or ` month  ` ).
+
+  * When ` _ date_or_time_part  _ ` is ` week  ` (or any of its variations), the output is controlled by the [ WEEK_START  ](../parameters.html#label-week-start) session parameter. 
+
+  * When ` _ date_or_time_part  _ ` is ` dayofweek  ` or ` yearofweek  ` (or any of their variations), the output is controlled by the [ WEEK_OF_YEAR_POLICY  ](../parameters.html#label-week-of-year-policy) and [ WEEK_START  ](../parameters.html#label-week-start) session parameters. 
+
+For more details, including examples, see [ Calendar weeks and weekdays
+](../functions-date-time.html#label-calendar-weeks-weekdays) .
+
+` _ date_or_timestamp_expr  _ `
+
+    
+
+A date, a time, a timestamp, or an expression that can be evaluated to a date,
+a time, or a timestamp.
+
+##  Returns  ¶
+
+Returns a value of NUMBER data type.
+
+##  Usage notes  ¶
+
+Currently, when ` _ date_or_timestamp_expr  _ ` is a DATE value, the following
+` _ date_or_time_part  _ ` values are not supported:
+
+  * ` epoch_millisecond  `
+
+  * ` epoch_microsecond  `
+
+  * ` epoch_nanosecond  `
+
+Other [ date and time parts  ](../functions-date-time.html#label-supported-
+date-time-parts) (including ` epoch_second  ` ) are supported.
+
+##  Examples  ¶
+
+Specify the ` year  ` part to extract the year from a timestamp:
+
+    
+    
+    SELECT EXTRACT(year FROM TO_TIMESTAMP('2024-04-10T23:39:20.123-07:00')) AS YEAR;
+    
+
+Copy
+
+    
+    
+    +------+
+    | YEAR |
+    |------|
+    | 2024 |
+    +------+
+    
+
+Use EXTRACT with the [ DECODE  ](decode) function and the ` dayofweek  ` part
+to return the full name of the current day of the week:
+
+    
+    
+    SELECT DECODE(EXTRACT(dayofweek FROM SYSTIMESTAMP()),
+      1, 'Monday',
+      2, 'Tuesday',
+      3, 'Wednesday',
+      4, 'Thursday',
+      5, 'Friday',
+      6, 'Saturday',
+      7, 'Sunday') AS DAYOFWEEK;
+    
+
+Copy
+
+    
+    
+    +-----------+
+    | DAYOFWEEK |
+    |-----------|
+    | Thursday  |
+    +-----------+
+    
+
+Note
+
+The output depends on the value returned by the [ SYSTIMESTAMP
+](systimestamp) function when you run the query. Also, you can use the [
+DAYNAME  ](dayname) function to extract the three-letter day-of-week name from
+the specified date or timestamp.
+

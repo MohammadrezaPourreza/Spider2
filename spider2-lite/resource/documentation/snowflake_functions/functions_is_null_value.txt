@@ -1,0 +1,131 @@
+  IS_NULL_VALUE  ¶
+
+Returns TRUE if its [ VARIANT  ](../data-types-semistructured.html#label-data-
+type-variant) argument is a [ JSON null  ](../../user-guide/semistructured-
+considerations.html#label-variant-null) value.
+
+Important
+
+The JSON null value is distinct from the SQL NULL value.
+
+This function returns TRUE only for JSON null values, not SQL NULL values. The
+difference is shown in the first and third rows in  the output for the example
+below  .
+
+A missing JSON value is converted to a SQL NULL value, for which IS_NULL_VALUE
+returns NULL. The 4th column in  the output for the example below  shows this.
+
+This function is different from the [ IS [ NOT ] NULL  ](is-null) function.
+
+See also:
+
+    
+
+[ IS_<object_type> ](is)
+
+##  Syntax  ¶
+
+    
+    
+    IS_NULL_VALUE( <variant_expr> )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ variant_expr  _ `
+
+    
+
+An expression that evaluates to a value of type VARIANT.
+
+##  Returns  ¶
+
+This function returns a value of type BOOLEAN or NULL:
+
+  * Returns TRUE for a JSON null value. 
+
+  * Returns FALSE for a non-null JSON value. 
+
+  * Returns NULL for a SQL NULL. 
+
+##  Examples  ¶
+
+This example uses the IS_NULL_VALUE function. First, create a table with a
+VARIANT column:
+
+    
+    
+    CREATE OR REPLACE TABLE test_is_null_value_function (
+      variant_value VARIANT);
+    
+
+Copy
+
+Insert two rows with JSON name/value pairs into the VARIANT column using the [
+PARSE_JSON  ](parse_json) function:
+
+Note
+
+The PARSE_JSON function returns a VARIANT value.
+
+    
+    
+    INSERT INTO test_is_null_value_function (variant_value)
+      (SELECT PARSE_JSON('{"x": null}'));
+    
+    INSERT INTO test_is_null_value_function (variant_value)
+      (SELECT PARSE_JSON('{"x": "foo"}'));
+    
+
+Copy
+
+Insert a NULL into the column:
+
+    
+    
+    INSERT INTO test_is_null_value_function (variant_value)
+      (SELECT PARSE_JSON(NULL));
+    
+
+Copy
+
+Query the table:
+
+    
+    
+    SELECT variant_value,
+           variant_value:x value_of_x,
+           IS_NULL_VALUE(variant_value:x) is_x_a_json_null,
+           IS_NULL_VALUE(variant_value:y) is_y_a_json_null
+      FROM test_is_null_value_function;
+    
+
+Copy
+
+    
+    
+    +---------------+------------+------------------+------------------+
+    | VARIANT_VALUE | VALUE_OF_X | IS_X_A_JSON_NULL | IS_Y_A_JSON_NULL |
+    |---------------+------------+------------------+------------------|
+    | {             | null       | True             | NULL             |
+    |   "x": null   |            |                  |                  |
+    | }             |            |                  |                  |
+    | {             | "foo"      | False            | NULL             |
+    |   "x": "foo"  |            |                  |                  |
+    | }             |            |                  |                  |
+    | NULL          | NULL       | NULL             | NULL             |
+    +---------------+------------+------------------+------------------+
+    
+
+In the query results:
+
+  * The ` variant_value  ` column shows three rows of inserted VARIANT values. 
+
+  * The ` value_of_x  ` column shows the JSON value for the name ` x  ` in each row. 
+
+  * The ` is_x_a_json_null  ` column returns the results of the IS_NULL_VALUE function for the name ` x  ` in each row. 
+
+  * The ` is_y_a_json_null  ` column returns the results of the IS_NULL_VALUE function for the name ` y  ` in each row. Because there is no matching ` y  ` name in any row, all of the rows return NULL. 
+

@@ -1,0 +1,83 @@
+  H3_TRY_COVERAGE_STRINGS  ¶
+
+A special version of [ H3_COVERAGE_STRINGS  ](h3_coverage_strings) that
+returns NULL if an error occurs when it attempts to return an [ array
+](../data-types-semistructured.html#label-data-type-array) of hexadecimal IDs
+(as VARCHAR values) identifying the minimal set of [ H3  ](../data-types-
+geospatial.html#label-data-types-geospatial-h3) cells that completely cover a
+shape (specified by a [ GEOGRAPHY  ](../data-types-geospatial.html#label-data-
+types-geography) object).
+
+##  Syntax  ¶
+
+    
+    
+    H3_TRY_COVERAGE_STRINGS( <geography_expression> , <target_resolution> )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ geography_expression  _ `
+
+    
+
+A GEOGRAPHY object.
+
+` _ target_resolution  _ `
+
+    
+
+An INTEGER between 0 and 15 (inclusive) specifying the H3 [ resolution
+](https://h3geo.org/docs/core-library/restable) that you want to use for the
+returned H3 cells.
+
+Specifying any other INTEGER value results in an error.
+
+##  Returns  ¶
+
+Returns an array of VARCHAR values or NULL.
+
+  * If the function can perform a successful calculation, returns an array of VARCHAR values for the hexadecimal IDs of the minimal set of H3 cells that completely cover the specified input shape. 
+
+  * If the function cannot perform a successful calculation, returns NULL without reporting an error. 
+
+##  Usage notes  ¶
+
+See [ H3_COVERAGE_STRINGS  ](h3_coverage_strings) for the usage notes.
+
+##  Examples  ¶
+
+The following example attempts to return an array of IDs that identify the
+minimal set of [ H3  ](../data-types-geospatial.html#label-data-types-
+geospatial-h3) cells that completely cover a shape (specified by a [ GEOGRAPHY
+](../data-types-geospatial.html#label-data-types-geography) object). Because
+the array with the cells that cover the given hexagon at the given resolution
+exceeds the allowed size limit, the function returns NULL.
+
+    
+    
+    SELECT H3_TRY_COVERAGE_STRINGS(
+      TO_GEOGRAPHY('POLYGON((-108.959 40.948,
+                             -109.015 37.077,
+                             -102.117 36.956,
+                             -102.134 40.953,
+                             -108.959 40.948))'
+                  ), 15) AS set_of_h3_cells_covering_polygon;
+    
+
+Copy
+
+    
+    
+    +----------------------------------+
+    | SET_OF_H3_CELLS_COVERING_POLYGON |
+    |----------------------------------|
+    | NULL                             |
+    +----------------------------------+
+    
+
+For examples that successfully return an array of IDs, see [
+H3_COVERAGE_STRINGS  ](h3_coverage_strings) .
+

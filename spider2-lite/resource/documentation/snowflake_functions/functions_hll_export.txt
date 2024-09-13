@@ -1,0 +1,43 @@
+  HLL_EXPORT  ¶
+
+Converts input in BINARY format to OBJECT format.
+
+The HyperLogLog states operated on by HLL_ACCUMULATE, HLL_COMBINE, and
+HLL_ESTIMATE are in a proprietary binary format that may change in future
+versions of Snowflake. For long-term storage of HyperLogLog states, and for
+integration with external tools, Snowflake supports converting states from the
+BINARY format to an OBJECT (which can be printed and exported as JSON), and
+vice versa.
+
+See also:
+
+    
+
+[ HLL  ](hll) , [ HLL_ACCUMULATE  ](hll_accumulate) , [ HLL_ESTIMATE
+](hll_estimate) , [ HLL_IMPORT  ](hll_import)
+
+##  Syntax  ¶
+
+    
+    
+    HLL_EXPORT( <binary_expr> )
+    
+
+Copy
+
+##  Examples  ¶
+
+    
+    
+    SELECT HLL(o_orderdate), HLL_ESTIMATE(HLL_IMPORT(HLL_EXPORT(HLL_ACCUMULATE(o_orderdate))))
+    FROM orders;
+    
+    ------------------+-------------------------------------------------------------------+
+     HLL(O_ORDERDATE) | HLL_ESTIMATE(HLL_IMPORT(HLL_EXPORT(HLL_ACCUMULATE(O_ORDERDATE)))) |
+    ------------------+-------------------------------------------------------------------+
+     2398             | 2398                                                              |
+    ------------------+-------------------------------------------------------------------+
+    
+
+Copy
+

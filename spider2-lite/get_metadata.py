@@ -492,11 +492,21 @@ if __name__ == "__main__":
     
     sf_db_name = list(sf_db_name - set(sf_db_ids))
     
-    sf_db_name =[
-        "CENSUS_GALAXY__ZIP_CODE_TO_BLOCK_GROUP_SAMPLE.PUBLIC",
-        "CENSUS_GALAXY__AIML_MODEL_DATA_ENRICHMENT_SAMPLE.PUBLIC"
+    sf_db_name = [
+        "AMAZON_VENDOR_ANALYTICS__SAMPLE_DATASET.PUBLIC",
+        "BRAZE_USER_EVENT_DEMO_DATASET.PUBLIC",
+        "CENSUS_GALAXY__AIML_MODEL_DATA_ENRICHMENT_SAMPLE.public",
+        "CENSUS_GALAXY__ZIP_CODE_TO_BLOCK_GROUP_SAMPLE.public",
+        "FINANCE__ECONOMICS.CYBERSYN",
+        "GLOBAL_GOVERNMENT.CYBERSYN",
+        "GLOBAL_WEATHER__CLIMATE_DATA_FOR_BI.STANDARD_TILE",
+        "NETHERLANDS_OPEN_MAP_DATA.NETHERLANDS",
+        "US_ADDRESSES__POI.CYBERSYN",
+        "US_REAL_ESTATE.CYBERSYN",
+        "WEATHER__ENVIRONMENT.CYBERSYN",
+        "YES_ENERGY__SAMPLE_DATA.yes_energy_sample"
     ]
-    
+
     root_dir = './resource/databases/snowflake/'
     for item in sf_db_name:
         database_name, schema_name = item.split(".")

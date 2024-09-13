@@ -1,0 +1,105 @@
+  STAGE_STORAGE_USAGE_HISTORY  ¶
+
+This table function can be used to query the average daily data storage usage,
+in bytes, for  all  the Snowflake stages in your account within a specified
+date range. The output will include storage for:
+
+  * Named internal stages. 
+
+  * Default staging areas (for tables and users). 
+
+Note
+
+This function returns stage storage usage within the last 6 months.
+
+See also:
+
+    
+
+[ DATABASE_STORAGE_USAGE_HISTORY  ](database_storage_usage_history) , [
+WAREHOUSE_METERING_HISTORY  ](warehouse_metering_history)
+
+##  Syntax  ¶
+
+    
+    
+    STAGE_STORAGE_USAGE_HISTORY(
+          [ DATE_RANGE_START => <constant_expr> ]
+          [, DATE_RANGE_END => <constant_expr> ] )
+    
+
+Copy
+
+##  Arguments  ¶
+
+All the arguments are optional.
+
+` DATE_RANGE_START  => _ constant_expr  _ ` ,  .  ` DATE_RANGE_END  => _
+constant_expr  _ `
+
+    
+
+The date range, within the last 6 months, for which to retrieve stage storage
+usage:
+
+  * If an end date is not specified, then [ CURRENT_DATE  ](current_date) is used as the end of the range. 
+
+  * If a start date is not specified, then ` DATE_RANGE_END  ` is used as the start of the range (i.e. the default is one day of storage usage). 
+
+If the range falls outside the last 6 months, an error is returned.
+
+##  Usage notes  ¶
+
+  * Returns results only for the ACCOUNTADMIN role or any role that has been explicitly granted the MONITOR USAGE global privilege. 
+
+  * When calling an Information Schema table function, the session must have an INFORMATION_SCHEMA schema in use  or  the function name must be fully-qualified. For more details, see [ Snowflake Information Schema  ](../info-schema) . 
+
+##  Output  ¶
+
+The function returns the following columns:
+
+Column Name
+
+|
+
+Data Type
+
+|
+
+Description  
+  
+---|---|---  
+  
+USAGE_DATE
+
+|
+
+DATE
+
+|
+
+Date (in the UTC time zone) of this storage usage record  
+  
+AVERAGE_STAGE_BYTES
+
+|
+
+NUMBER
+
+|
+
+Number of bytes of stage storage used  
+  
+##  Examples  ¶
+
+Retrieve average daily storage usage for the past 10 days for all internal
+stages in your account:
+
+    
+    
+    select *
+    from table(information_schema.stage_storage_usage_history(dateadd('days',-10,current_date()),current_date()));
+    
+
+Copy
+

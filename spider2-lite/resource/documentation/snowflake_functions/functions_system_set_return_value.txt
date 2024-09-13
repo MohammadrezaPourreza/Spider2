@@ -1,0 +1,156 @@
+  SYSTEM$SET_RETURN_VALUE  ¶
+
+Explicitly sets the return value for a task.
+
+In a [ task graph  ](../../user-guide/tasks-graphs.html#label-task-dag) , a
+task can call this function to set a return value. Another task that
+identifies this task as the predecessor task (using the ` AFTER  ` keyword in
+the task definition) can retrieve the return value set by the predecessor task
+using [ SYSTEM$GET_PREDECESSOR_RETURN_VALUE
+](system_get_predecessor_return_value) .
+
+##  Syntax  ¶
+
+    
+    
+    SYSTEM$SET_RETURN_VALUE( '<string_expression>' )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ string_expression  _ `
+
+    
+
+The string to set as the return value. The string size must be <= 10 kB (when
+encoded in UTF8).
+
+##  Examples  ¶
+
+Create a task that sets a return value. Create a second, child task that runs
+after the predecessor task has completed. The child task retrieves the return
+value set by the predecessor task (by calling [
+SYSTEM$GET_PREDECESSOR_RETURN_VALUE  ](system_get_predecessor_return_value) )
+and inserts it into a table row:
+
+>
+>     -- create a table to store the return values.
+>     create or replace table return_values (str varchar);
+>  
+>     -- create a task that sets the return value for the task.
+>     create task set_return_value
+>       warehouse=return_task_wh
+>       schedule='1 minute' as
+>       call system$set_return_value('The quick brown fox jumps over the lazy
+> dog');
+>  
+>     -- create a task that identifies the first task as the predecessor task
+> and retrieves the return value set for that task.
+>     create task get_return_value
+>       warehouse=return_task_wh
+>       after set_return_value
+>       as
+>         insert into return_values
+> values(system$get_predecessor_return_value());
+>  
+>  
+>     -- Note that if there are multiple predecessor tasks that are enabled,
+> you must specify the name of the task to retrieve the return value for that
+> task.
+>     create task get_return_value_by_pred
+>       warehouse=return_task_wh
+>       after set_return_value
+>       as
+>         insert into return_values
+> values(system$get_predecessor_return_value('SET_RETURN_VALUE'));
+>  
+>     -- resume task (using ALTER TASK ... RESUME).
+>     -- wait for task to run on schedule.
+>  
+>     select distinct(str) from return_values;
+>     +-----------------------------------------------+
+>     |                      STR                      |
+>     +-----------------------------------------------+
+>     |  The quick brown fox jumps over the lazy dog  |
+>     +-----------------------------------------------+
+>  
+>     select distinct(RETURN_VALUE)
+>       from table(information_schema.task_history())
+>       where RETURN_VALUE is not NULL;
+>  
+>     +-----------------------------------------------+
+>     |                  RETURN_VALUE                 |
+>     +-----------------------------------------------+
+>     |  The quick brown fox jumps over the lazy dog  |
+>     +-----------------------------------------------+
+>  
+>
+> Copy
+
+Similar to the first example, but set the return value for the task and
+retrieve it by calling separate stored procedures:
+
+    
+    
+    -- create a table to store the return values.
+    create or replace table return_values_sp (str varchar);
+    
+    -- create a stored procedure that sets the return value for the task.
+    create or replace procedure set_return_value_sp()
+    returns string
+    language javascript
+    execute as caller
+    as $$
+      var stmt = snowflake.createStatement({sqlText:`call system$set_return_value('The quick brown fox jumps over the lazy dog');`});
+      var res = stmt.execute();
+    $$;
+    
+    -- create a stored procedure that inserts the return value for the predecessor task into the 'return_values_sp' table.
+    create or replace procedure get_return_value_sp()
+    returns string
+    language javascript
+    execute as caller
+    as $$
+    var stmt = snowflake.createStatement({sqlText:`insert into return_values_sp values(system$get_predecessor_return_value());`});
+    var res = stmt.execute();
+    $$;
+    
+    -- create a task that calls the set_return_value stored procedure.
+    create task set_return_value_t
+    warehouse=warehouse1
+    schedule='1 minute'
+    as
+      call set_return_value_sp();
+    
+    -- create a task that calls the get_return_value stored procedure.
+    create task get_return_value_t
+    warehouse=warehouse1
+    after set_return_value_t
+    as
+      call get_return_value_sp();
+    
+    -- resume task.
+    -- wait for task to run on schedule.
+    
+    select distinct(str) from return_values_sp;
+    +-----------------------------------------------+
+    |                      STR                      |
+    +-----------------------------------------------+
+    |  The quick brown fox jumps over the lazy dog  |
+    +-----------------------------------------------+
+    
+    select distinct(RETURN_VALUE)
+      from table(information_schema.task_history())
+      where RETURN_VALUE is not NULL;
+    
+    +-----------------------------------------------+
+    |                  RETURN_VALUE                 |
+    +-----------------------------------------------+
+    |  The quick brown fox jumps over the lazy dog  |
+    +-----------------------------------------------+
+    
+
+Copy
+

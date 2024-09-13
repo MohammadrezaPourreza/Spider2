@@ -1,0 +1,82 @@
+  RPAD  ¶
+
+Right-pads a string with characters from another string, or right-pads a
+binary value with bytes from another binary value.
+
+The argument ( ` _ base  _ ` ) is padded to length ` _ length_expr  _ ` with
+characters/bytes from the ` _ pad  _ ` argument.
+
+##  Syntax  ¶
+
+    
+    
+    RPAD(<base>, <length_expr> [, <pad>])
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ base  _ `
+
+    
+
+This must be a ` VARCHAR  ` or ` BINARY  ` value.
+
+` _ length_expr  _ `
+
+    
+
+The length should be an expression that evaluates to an integer. It should
+specify:
+
+  * The number of UTF-8 characters to return if the input is ` VARCHAR  ` . 
+
+  * The number of bytes to return if the input is ` BINARY  ` . 
+
+` _ pad  _ `
+
+    
+
+This must be a ` VARCHAR  ` or ` BINARY  ` value. The type must match the data
+type of the ` _ base  _ ` parameter. Characters (or bytes) from this parameter
+are used to pad the ` _ base  _ ` .
+
+##  Returns  ¶
+
+The data type of the returned value is the same as the data type of the ` _
+base  _ ` input value ( ` BINARY  ` or ` VARCHAR  ` ).
+
+##  Usage notes  ¶
+
+  * If the ` _ base  _ ` argument is longer than ` _ length_expr  _ ` , it is truncated to length ` _ length_expr  _ ` . 
+
+  * The ` _ pad  _ ` argument can be multiple characters/bytes long. The ` _ pad  _ ` argument is repeated in the result until the desired length ` _ length_expr  _ ` is reached, truncating any superfluous characters/bytes in the ` _ pad  _ ` argument. If the ` _ pad  _ ` argument is empty, no padding is inserted, but the result is still truncated to length ` _ length_expr  _ ` . 
+
+  * When ` _ base  _ ` is a string, the default ` _ pad  _ ` string default is ‘ ‘ (a single blank space). When ` _ base  _ ` is a binary value, the ` _ pad  _ ` argument must be provided explicitly. 
+
+##  Collation details  ¶
+
+  * Collation applies to ` VARCHAR  ` inputs. Collation does not apply if the input data type of the first parameter is ` BINARY  ` . 
+
+  * No impact. Although collation is accepted syntactically, collations have no impact on processing. For example, languages with two-character and three-character letters (e.g. “dzs” in Hungarian, “ch” in Czech) still count those as two or three characters (not one character) for the length argument. 
+
+  * The collation of the result is the same as the collation of the input. This can be useful if the returned value is passed to another function as part of nested function calls. 
+
+  * Currently, Snowflake allows the ` _ base  _ ` and ` _ pad  _ ` arguments to have different collation specifiers. However, the individual collation specifiers cannot both be retained because the returned value will have only one collation specifier. Snowflake recommends that users avoid using ` _ pad  _ ` strings that have different collation from the ` _ base  _ ` string. 
+
+##  Examples  ¶
+
+    
+    
+    SELECT RPAD('123.50', 20, '*-') FROM dual;
+    
+    --------------------------+
+     RPAD('123.50', 20, '*-') |
+    --------------------------+
+     123.50*-*-*-*-*-*-*-     |
+    --------------------------+
+    
+
+Copy
+

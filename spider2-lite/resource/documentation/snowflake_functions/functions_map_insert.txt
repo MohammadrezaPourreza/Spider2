@@ -1,0 +1,144 @@
+  MAP_INSERT  ¶
+
+Returns a new [ MAP  ](../data-types-structured) consisting of the input MAP
+with a new key-value pair inserted (an existing key updated with a new value).
+
+##  Syntax  ¶
+
+    
+    
+    MAP_INSERT( <map> , <key> , <value> [ , <updateFlag> ] )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ map  _ `
+
+    
+
+The source map into which the new key-value pair is inserted.
+
+` _ key  _ `
+
+    
+
+The new key to insert into the map. Must be different from all existing keys
+in the map, unless ` _ updateFlag  _ ` is set to TRUE.
+
+` _ value  _ `
+
+    
+
+The value associated with the key.
+
+**Optional**
+
+` _ updateFlag  _ `
+
+    
+
+A Boolean flag that, when set to TRUE, specifies the input value is used to
+update/overwrite an existing key in the map, rather than inserting a new key-
+value pair.
+
+The default is FALSE.
+
+##  Returns  ¶
+
+Returns a MAP consisting of the input MAP with a new key-value pair inserted
+or an existing key updated with a new value.
+
+##  Usage notes  ¶
+
+  * The type of the key expression must match the type of the map’s key. If the type is VARCHAR, then the types can be different lengths. 
+
+  * The function supports JSON NULL values, but not SQL NULL values or keys: 
+
+    * If ` _ key  _ ` is any string other than NULL and ` _ value  _ ` is a JSON NULL (e.g. PARSE_JSON(‘NULL’)), then the key-value pair is inserted into the returned map. 
+
+    * If ` _ key  _ ` is any string other than NULL and ` _ value  _ ` is a SQL NULL (e.g. NULL), then the value is converted to JSON NULL, and the key-value pair is inserted into the returned map. 
+
+    * If ` _ key  _ ` is a SQL NULL, the key-value pair is omitted from the returned map. 
+
+  * If ` _ updateFlag  _ ` is set to TRUE, then the existing input ` _ key  _ ` is updated to the input ` _ value  _ ` . If ` _ updateFlag  _ ` is omitted or set to FALSE, and the input key already exists in the map, then an error is returned. 
+
+  * If ` _ updateFlag  _ ` is set to TRUE, but the corresponding key does not already exist in the map, then the key-value pair is added. 
+
+##  Examples  ¶
+
+Insert a third key-value pair into a map containing two key-value pairs:
+
+    
+    
+    SELECT MAP_INSERT({'a':1,'b':2}::MAP(VARCHAR,NUMBER),'c',3);
+    
+
+Copy
+
+    
+    
+    +------------------------------------------------------+
+    | MAP_INSERT({'A':1,'B':2}::MAP(VARCHAR,NUMBER),'C',3) |
+    |------------------------------------------------------|
+    | {                                                    |
+    |   "a": 1,                                            |
+    |   "b": 2,                                            |
+    |   "c": 3                                             |
+    | }                                                    |
+    +------------------------------------------------------+
+    
+
+Insert two new key-value pairs, while omitting one key-value pair, into an
+empty map:
+
+  * ` Key_One  ` consists of a JSON NULL value. 
+
+  * ` Key_Two  ` consists of a SQL NULL value, which is converted to a JSON NULL value. 
+
+  * ` Key_Three  ` consists of a string containing “null”. 
+
+    
+    
+    SELECT MAP_INSERT(MAP_INSERT(MAP_INSERT({}::MAP(VARCHAR,VARCHAR),
+      'Key_One', PARSE_JSON('NULL')), 'Key_Two', NULL), 'Key_Three', 'null');
+    
+
+Copy
+
+    
+    
+    +---------------------------------------------------------------------------+
+    | MAP_INSERT(MAP_INSERT(MAP_INSERT({}::MAP(VARCHAR,VARCHAR),                |
+    |    'KEY_ONE', PARSE_JSON('NULL')), 'KEY_TWO', NULL), 'KEY_THREE', 'NULL') |
+    |---------------------------------------------------------------------------|
+    | {                                                                         |
+    |   "Key_One": null,                                                        |
+    |   "Key_Three": "null",                                                    |
+    |   "Key_Two": null                                                         |
+    | }                                                                         |
+    +---------------------------------------------------------------------------+
+    
+
+Update an existing key-value pair ( ` "k1":  100  ` ) with a new value ( `
+"string-value"  ` ):
+
+    
+    
+    SELECT MAP_INSERT({'k1':100}::MAP(VARCHAR,VARCHAR), 'k1', 'string-value', TRUE) AS map;
+    
+
+Copy
+
+    
+    
+    +------------------------+
+    | MAP                    |
+    |------------------------|
+    | {                      |
+    |   "k1": "string-value" |
+    | }                      |
+    +------------------------+
+    
+

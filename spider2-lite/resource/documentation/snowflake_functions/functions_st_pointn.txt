@@ -1,0 +1,121 @@
+  ST_POINTN  ¶
+
+Returns a Point at a specified index in a LineString.
+
+See also:
+
+    
+
+[ ST_ENDPOINT  ](st_endpoint) , [ ST_STARTPOINT  ](st_startpoint)
+
+##  Syntax  ¶
+
+    
+    
+    ST_POINTN( <geography_or_geometry_expression> , <index> )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ geography_or_geometry_expression  _ `
+
+    
+
+The argument must be an expression of type GEOGRAPHY or GEOMETRY that
+represents a LineString.
+
+` _ index  _ `
+
+    
+
+The index of the Point to return. The index must be an integer.
+
+A negative index is interpreted as the offset from the end of the LineString.
+For example, ` -1  ` is interpreted as the last Point in the LineString, ` -2
+` is interpreted as the second to the last Point, etc.
+
+##  Returns  ¶
+
+The function returns a value of type GEOGRAPHY or GEOMETRY that contains the
+Point at the specified index of the LineString.
+
+##  Usage notes  ¶
+
+  * If ` _ geography_or_geometry_expression  _ ` is not a LineString, the function reports an error. 
+
+  * If ` _ index  _ ` is out of bounds (e.g. exceeds the number of Points in the LineString), the function reports an error. 
+
+##  Examples  ¶
+
+###  GEOGRAPHY examples  ¶
+
+The following query returns the second Point in a LineString:
+
+    
+    
+    ALTER SESSION SET GEOGRAPHY_OUTPUT_FORMAT='WKT';
+    SELECT ST_POINTN(TO_GEOGRAPHY('LINESTRING(1 1, 2 2, 3 3, 4 4)'), 2);
+    
+    +--------------------------------------------------------------+
+    | ST_POINTN(TO_GEOGRAPHY('LINESTRING(1 1, 2 2, 3 3, 4 4)'), 2) |
+    |--------------------------------------------------------------|
+    | POINT(2 2)                                                   |
+    +--------------------------------------------------------------+
+    
+
+Copy
+
+The following query uses a negative index to return the second Point from the
+end of a LineString:
+
+    
+    
+    ALTER SESSION SET GEOGRAPHY_OUTPUT_FORMAT='WKT';
+    SELECT ST_POINTN(TO_GEOGRAPHY('LINESTRING(1 1, 2 2, 3 3, 4 4)'), -2);
+    
+    +---------------------------------------------------------------+
+    | ST_POINTN(TO_GEOGRAPHY('LINESTRING(1 1, 2 2, 3 3, 4 4)'), -2) |
+    |---------------------------------------------------------------|
+    | POINT(3 3)                                                    |
+    +---------------------------------------------------------------+
+    
+
+Copy
+
+###  GEOMETRY examples  ¶
+
+The following query returns the second Point in a LineString:
+
+    
+    
+    ALTER SESSION SET GEOMETRY_OUTPUT_FORMAT='WKT';
+    SELECT ST_POINTN(TO_GEOMETRY('LINESTRING(1 1, 2 2, 3 3, 4 4)'), 2);
+    
+    +-------------------------------------------------------------+
+    | ST_POINTN(TO_GEOMETRY('LINESTRING(1 1, 2 2, 3 3, 4 4)'), 2) |
+    |-------------------------------------------------------------|
+    | POINT(2 2)                                                  |
+    +-------------------------------------------------------------+
+    
+
+Copy
+
+The following query uses a negative index to return the second Point from the
+end of a LineString:
+
+    
+    
+    ALTER SESSION SET GEOMETRY_OUTPUT_FORMAT='WKT';
+    SELECT ST_POINTN(TO_GEOMETRY('LINESTRING(1 1, 2 2, 3 3, 4 4)'), -2);
+    
+    +--------------------------------------------------------------+
+    | ST_POINTN(TO_GEOMETRY('LINESTRING(1 1, 2 2, 3 3, 4 4)'), -2) |
+    |--------------------------------------------------------------|
+    | POINT(3 3)                                                   |
+    +--------------------------------------------------------------+
+    
+
+Copy
+

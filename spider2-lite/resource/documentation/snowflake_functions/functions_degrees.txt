@@ -1,0 +1,41 @@
+  DEGREES  ¶
+
+Converts radians to degrees.
+
+##  Syntax  ¶
+
+    
+    
+    DEGREES( <real_expr> )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ real_expr  _ `
+
+    
+
+An expression representing the number of radians.
+
+##  Returns  ¶
+
+This returns a value of type [ REAL/FLOAT (double-precision floating point)
+](../data-types-numeric.html#label-data-type-float) .
+
+##  Examples  ¶
+
+Show the number of degrees for 1/3 of a radian, 1 radian, and 3 radians:
+
+>
+>     SELECT DEGREES(PI()/3), DEGREES(PI()), DEGREES(3 * PI()), DEGREES(1);
+>     +-----------------+---------------+-------------------+--------------+
+>     | DEGREES(PI()/3) | DEGREES(PI()) | DEGREES(3 * PI()) |   DEGREES(1) |
+>     |-----------------+---------------+-------------------+--------------|
+>     |              60 |           180 |               540 | 57.295779513 |
+>     +-----------------+---------------+-------------------+--------------+
+>  
+>
+> Copy
+

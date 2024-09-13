@@ -1,0 +1,238 @@
+  ARRAY_EXCEPT  ¶
+
+Returns a new [ ARRAY  ](../data-types-semistructured.html#label-data-type-
+array) that contains the elements from one input ARRAY that are not in another
+input ARRAY.
+
+The function is NULL-safe, meaning it treats NULLs as known values for
+comparing equality.
+
+See also:
+
+    
+
+[ ARRAY_INTERSECTION  ](array_intersection)
+
+##  Syntax  ¶
+
+    
+    
+    ARRAY_EXCEPT( <source_array> , <array_of_elements_to_exclude> )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ source_array  _ `
+
+    
+
+An array that contains elements to be included in the new ARRAY.
+
+` _ array_of_elements_to_exclude  _ `
+
+    
+
+An array that contains elements to be excluded from the new ARRAY.
+
+##  Returns  ¶
+
+This function returns an ARRAY that contains the elements from ` _
+source_array  _ ` that are not in ` _ array_of_elements_to_exclude  _ ` .
+
+If no elements remain after excluding the elements in ` _
+array_of_elements_to_exclude  _ ` from ` _ source_array  _ ` , the function
+returns an empty ARRAY.
+
+If one or both arguments are NULL, the function returns NULL.
+
+The order of the values within the returned array is unspecified.
+
+##  Usage notes  ¶
+
+  * When you compare data of the type OBJECT, the objects must be identical to be considered matching. For details, see  Examples  (in this topic). 
+
+  * In Snowflake, arrays are multi-sets, not sets. In other words, arrays can contain multiple copies of the same value. 
+
+` ARRAY_EXCEPT  ` compares arrays by using multi-set semantics (sometimes
+called “bag semantics”). If ` _ source_array  _ ` includes multiple copies of
+a value, the function only removes the number of copies of that value that are
+specified in ` _ array_of_elements_to_exclude  _ ` .
+
+In other words, if ` _ source_array  _ ` has N copies of a value and ` _
+array_of_elements_to_exclude  _ ` has M copies of the same value, the function
+excludes M copies of the value from the returned array. The number of copies
+of the value in the returned array is N - M or, if M is larger than N, 0.
+
+For example, if ` _ source_array  _ ` contains 5 elements with the value ` 'A'
+` and ` _ array_of_elements_to_exclude  _ ` contains 2 elements with the value
+` 'A'  ` , the returned array contains 3 elements with the value ` 'A'  ` .
+
+  * Both arguments must either be [ structured ARRAYs  ](../data-types-structured) or [ semi-structured ARRAYs  ](../data-types-semistructured.html#label-data-type-array) . 
+
+  * If you are passing in a structured ARRAY: 
+
+    * The ARRAY in the second argument must be [ comparable  ](../data-types-structured.html#label-structured-types-compare-struct-struct) to the ARRAY in the first argument. 
+
+    * The function returns a structured ARRAY of the same type as the ARRAY in the first argument. 
+
+##  Examples  ¶
+
+The examples in this section use [ ARRAY constants  ](../data-types-
+semistructured.html#label-array-constant) and [ OBJECT constants  ](../data-
+types-semistructured.html#label-object-constant) to specify ARRAYs and
+OBJECTs.
+
+The following example demonstrates how to use the function:
+
+    
+    
+    SELECT ARRAY_EXCEPT(['A', 'B'], ['B', 'C']);
+    
+    +--------------------------------------+
+    | ARRAY_EXCEPT(['A', 'B'], ['B', 'C']) |
+    |--------------------------------------|
+    | [                                    |
+    |   "A"                                |
+    | ]                                    |
+    +--------------------------------------+
+    
+
+Copy
+
+The following example adds the element ` 'C'  ` to ` _ source_array  _ ` . The
+returned ARRAY excludes ` 'C'  ` because ` 'C'  ` is also specified in ` _
+array_of_elements_to_exclude  _ ` .
+
+    
+    
+    SELECT ARRAY_EXCEPT(['A', 'B', 'C'], ['B', 'C']);
+    
+    +-------------------------------------------+
+    | ARRAY_EXCEPT(['A', 'B', 'C'], ['B', 'C']) |
+    |-------------------------------------------|
+    | [                                         |
+    |   "A"                                     |
+    | ]                                         |
+    +-------------------------------------------+
+    
+
+Copy
+
+In the following example, ` _ source_array  _ ` contains 3 elements with the
+value ` 'B'  ` . Because ` _ array_of_elements_to_exclude  _ ` contains only 1
+` 'B'  ` element, the function excludes only 1 ` 'B'  ` element and returns an
+ARRAY containing the other 2 ` 'B'  ` elements.
+
+    
+    
+    SELECT ARRAY_EXCEPT(['A', 'B', 'B', 'B', 'C'], ['B']);
+    
+    +------------------------------------------------+
+    | ARRAY_EXCEPT(['A', 'B', 'B', 'B', 'C'], ['B']) |
+    |------------------------------------------------|
+    | [                                              |
+    |   "A",                                         |
+    |   "B",                                         |
+    |   "B",                                         |
+    |   "C"                                          |
+    | ]                                              |
+    +------------------------------------------------+
+    
+
+Copy
+
+In the following example, no elements remain after excluding the elements in `
+_ array_of_elements_to_exclude  _ ` from ` _ source_array  _ ` . As a result,
+the function returns an empty ARRAY.
+
+    
+    
+    SELECT ARRAY_EXCEPT(['A', 'B'], ['A', 'B']);
+    
+    +--------------------------------------+
+    | ARRAY_EXCEPT(['A', 'B'], ['A', 'B']) |
+    |--------------------------------------|
+    | []                                   |
+    +--------------------------------------+
+    
+
+Copy
+
+The following example demonstrates how the function treats NULL elements as
+known values. As explained earlier, because ` _ source_array  _ ` contains one
+more NULL element than ` _ array_of_elements_to_exclude  _ ` , the returned
+ARRAY excludes only one NULL element and includes the other (which is printed
+out as ` undefined  ` ).
+
+    
+    
+    SELECT ARRAY_EXCEPT(['A', NULL, NULL], ['B', NULL]);
+    
+    +----------------------------------------------+
+    | ARRAY_EXCEPT(['A', NULL, NULL], ['B', NULL]) |
+    |----------------------------------------------|
+    | [                                            |
+    |   "A",                                       |
+    |   undefined                                  |
+    | ]                                            |
+    +----------------------------------------------+
+    
+
+Copy
+
+In the following example, ` _ source_array  _ ` and ` _
+array_of_elements_to_exclude  _ ` contain the same number of NULL elements, so
+the returned ARRAY excludes the NULL elements.
+
+    
+    
+    SELECT ARRAY_EXCEPT(['A', NULL, NULL], [NULL, 'B', NULL]);
+    
+    +----------------------------------------------------+
+    | ARRAY_EXCEPT(['A', NULL, NULL], [NULL, 'B', NULL]) |
+    |----------------------------------------------------|
+    | [                                                  |
+    |   "A"                                              |
+    | ]                                                  |
+    +----------------------------------------------------+
+    
+
+Copy
+
+The following example demonstrates how specifying the same object in ` _
+source_array  _ ` and ` _ array_of_elements_to_exclude  _ ` excludes that
+object from the returned ARRAY:
+
+    
+    
+    SELECT ARRAY_EXCEPT([{'a': 1, 'b': 2}, 1], [{'a': 1, 'b': 2}, 3]);
+    
+    +------------------------------------------------------------+
+    | ARRAY_EXCEPT([{'A': 1, 'B': 2}, 1], [{'A': 1, 'B': 2}, 3]) |
+    |------------------------------------------------------------|
+    | [                                                          |
+    |   1                                                        |
+    | ]                                                          |
+    +------------------------------------------------------------+
+    
+
+Copy
+
+The following example demonstrates that passing in NULL results in the
+function returning NULL.
+
+    
+    
+    SELECT ARRAY_EXCEPT(['A', 'B'], NULL);
+    
+    +--------------------------------+
+    | ARRAY_EXCEPT(['A', 'B'], NULL) |
+    |--------------------------------|
+    | NULL                           |
+    +--------------------------------+
+    
+
+Copy
+

@@ -1,0 +1,116 @@
+  OBJECT_AGG  ¶
+
+Returns one OBJECT per group. For each ( ` _ key  _ ` , ` _ value  _ ` ) input
+pair, where ` _ key  _ ` must be a VARCHAR and ` _ value  _ ` must be a
+VARIANT, the resulting OBJECT contains a ` _ key  _ ` : ` _ value  _ ` field.
+
+Aliases:
+
+    
+
+OBJECTAGG
+
+##  Syntax  ¶
+
+**Aggregate function**
+
+    
+    
+    OBJECT_AGG(<key>, <value>)
+    
+
+Copy
+
+**Window function**
+
+    
+    
+    OBJECT_AGG(<key>, <value>)
+        OVER ( [ PARTITION BY <expr2> ] )
+    
+
+Copy
+
+##  Usage notes  ¶
+
+  * Input tuples with NULL ` _ key  _ ` and/or ` _ value  _ ` are ignored. 
+
+  * Duplicate keys within a group result in a ` Duplicate  field  key  '  _ key  _ '  ` error. 
+
+  * The DISTINCT keyword is supported, but it only filters out duplicate rows where both ` _ key  _ ` and ` _ value  _ ` are equal. 
+
+  * When used as a window function: 
+
+>     * This function does not support:
+>
+
+>>       * ORDER BY sub-clause in the OVER() clause.
+
+>>
+
+>>       * Window frames.
+
+##  Examples  ¶
+
+    
+    
+    CREATE OR REPLACE TABLE objectagg_example(g NUMBER, k VARCHAR(30), v VARIANT);
+        INSERT INTO objectagg_example SELECT 0, 'name', 'Joe'::variant;
+        INSERT INTO objectagg_example SELECT 0, 'age', 21::variant;
+        INSERT INTO objectagg_example SELECT 1, 'name', 'Sue'::variant;
+        INSERT INTO objectagg_example SELECT 1, 'zip', 94401::variant;
+    
+    SELECT * FROM objectagg_example;
+    
+    ---+------+-------+
+     G |  K   |   V   |
+    ---+------+-------+
+     0 | name | "Joe" |
+     0 | age  | 21    |
+     1 | name | "Sue" |
+     1 | zip  | 94401 |
+    ---+------+-------+
+    
+
+Copy
+
+This example uses ` OBJECT_AGG()  ` as an aggregate function:
+
+    
+    
+    SELECT object_agg(k, v) FROM objectagg_example GROUP BY g;
+    
+    -------------------+
+     OBJECT_AGG(K, V)  |
+    -------------------+
+     {                 |
+       "name": "Sue",  |
+       "zip": 94401    |
+     }                 |
+     {                 |
+       "age": 21,      |
+       "name": "Joe"   |
+     }                 |
+    -------------------+
+    
+
+Copy
+
+    
+    
+    SELECT seq, key, value
+    FROM (SELECT object_agg(k, v) o FROM objectagg_example GROUP BY g),
+        LATERAL FLATTEN(input => o);
+    
+    -----+------+-------+
+     SEQ | KEY  | VALUE |
+    -----+------+-------+
+     1   | name | "Sue" |
+     1   | zip  | 94401 |
+     2   | age  | 21    |
+     2   | name | "Joe" |
+    -----+------+-------+
+    
+
+Copy
+

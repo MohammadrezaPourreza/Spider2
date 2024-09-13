@@ -1,0 +1,78 @@
+  CUME_DIST  ¶
+
+Finds the cumulative distribution of a value with regard to other values
+within the same window partition.
+
+##  Syntax  ¶
+
+    
+    
+    CUME_DIST() OVER ( [ PARTITION BY <partition_expr> ] ORDER BY <order_expr>  [ ASC | DESC ] )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ partition_expr  _ `
+
+    
+
+This is the optional expression to use to group rows into partitions.
+
+` _ order_expr  _ `
+
+    
+
+This expression specifies the order of the rows within each partition.
+
+##  Returns  ¶
+
+The data type of the returned value is DOUBLE.
+
+##  Usage notes  ¶
+
+The CUME_DIST function does not support:
+
+  * Cumulative frame windows. 
+
+  * Sliding frame windows. 
+
+##  Examples  ¶
+
+    
+    
+    SELECT
+      symbol,
+      exchange,
+      cume_dist() OVER (PARTITION BY exchange ORDER BY price) AS cume_dist
+    FROM trades;
+    
+    +------+--------+------------+
+    |symbol|exchange|CUME_DIST   |
+    +------+--------+------------+
+    |SPY   |C       |0.3333333333|
+    |AAPL  |C       |         1.0|
+    |AAPL  |C       |         1.0|
+    |YHOO  |N       |0.1666666667|
+    |QQQ   |N       |         0.5|
+    |QQQ   |N       |         0.5|
+    |SPY   |N       |0.8333333333|
+    |SPY   |N       |0.8333333333|
+    |AAPL  |N       |         1.0|
+    |YHOO  |Q       |0.3333333333|
+    |YHOO  |Q       |0.3333333333|
+    |MSFT  |Q       |0.6666666667|
+    |MSFT  |Q       |0.6666666667|
+    |QQQ   |Q       |         1.0|
+    |QQQ   |Q       |         1.0|
+    |YHOO  |P       |         0.2|
+    |MSFT  |P       |         0.6|
+    |MSFT  |P       |         0.6|
+    |SPY   |P       |         0.8|
+    |AAPL  |P       |         1.0|
+    +------+--------+------------+
+    
+
+Copy
+

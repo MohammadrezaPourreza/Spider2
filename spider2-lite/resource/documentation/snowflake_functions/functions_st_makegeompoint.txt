@@ -1,0 +1,49 @@
+  ST_MAKEGEOMPOINT , ST_GEOMPOINT  ¶
+
+Constructs a [ GEOMETRY  ](../data-types-geospatial.html#label-data-types-
+geometry) object that represents a Point with the specified longitude and
+latitude.
+
+See also:
+
+    
+
+[ TO_GEOMETRY  ](to_geometry)
+
+##  Syntax  ¶
+
+    
+    
+    ST_MAKEGEOMPOINT( <longitude> , <latitude> )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ longitude  _ `
+
+    
+
+A REAL that represents the longitude.
+
+` _ latitude  _ `
+
+    
+
+A REAL that represents the latitude.
+
+##  Returns  ¶
+
+The function returns a value of type GEOMETRY.
+
+##  Usage notes  ¶
+
+  * ST_GEOMPOINT is an alias for ST_MAKEGEOMPOINT. 
+
+##  Examples  ¶
+
+For examples, see [ Examples comparing the GEOGRAPHY and GEOMETRY data types
+](../data-types-geospatial.html#label-geometry-geography-diffs-examples) . The
+examples use the ST_GEOMPOINT alias.
+

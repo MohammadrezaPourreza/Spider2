@@ -1,0 +1,35 @@
+  SINH  ¶
+
+Computes the hyperbolic sine of its argument.
+
+##  Syntax  ¶
+
+    
+    
+    SINH( <real_expr> )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ real_expr  _ `
+
+    
+
+This expression should evaluate to a real number.
+
+##  Examples  ¶
+
+>
+>     SELECT SINH(1.5);
+>  
+>     -------------+
+>       SINH(1.5)  |
+>     -------------+
+>      2.129279455 |
+>     -------------+
+>  
+>
+> Copy
+

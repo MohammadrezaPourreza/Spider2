@@ -1,0 +1,141 @@
+  ILIKE ANY  ¶
+
+Performs a case-insensitive comparison to match a string against any of one or
+more specified patterns. Use this function in a WHERE clause to filter for
+matches. For case-sensitive matching, use LIKE ANY instead.
+
+Tip
+
+You can use the search optimization service to improve the performance of
+queries that call this function. For details, see [ Search Optimization
+Service  ](../../user-guide/search-optimization-service) .
+
+See also:
+
+    
+
+[ [ NOT ] LIKE  ](like) , [ [ NOT ] ILIKE  ](ilike) , [ LIKE ANY  ](like_any)
+
+##  Syntax  ¶
+
+    
+    
+    <subject> ILIKE ANY (<pattern1> [, <pattern2> ... ] ) [ ESCAPE <escape_char> ]
+    
+
+Copy
+
+##  Arguments  ¶
+
+**Required:**
+
+` _ subject  _ `
+
+    
+
+The string to compare to the pattern(s).
+
+` _ pattern#  _ `
+
+    
+
+The pattern(s) that the string is to be compared to. You must specify at least
+one pattern.
+
+**Optional:**
+
+` _ escape_char  _ `
+
+    
+
+Character(s) inserted in front of a wildcard character to indicate that the
+wildcard should be interpreted as a regular character rather than as a
+wildcard.
+
+##  Returns  ¶
+
+Returns a BOOLEAN or NULL. The value is TRUE if there is a match. Otherwise,
+returns FALSE. Returns NULL if any argument is NULL.
+
+##  Usage notes  ¶
+
+  * To include single quotes or other special characters in pattern matching, you can use a [ backslash escape sequence  ](../data-types-text.html#label-single-quoted-string-constants-escape-sequences) . 
+
+  * NULL does not match NULL. In other words, if the subject is NULL and one of the patterns is NULL, that is not considered a match. 
+
+  * You can use the [ NOT  ](../operators-logical) logical operator before the ` _ subject  _ ` to perform a case-sensitive comparison that returns TRUE if it does not match any of the specified patterns. 
+
+  * SQL wildcards are supported in ` _ pattern  _ ` : 
+
+    * An underscore ( ` _  ` ) matches any single character. 
+
+    * A percent sign ( ` %  ` ) matches any sequence of zero or more characters. 
+
+  * Wildcards in ` _ pattern  _ ` include newline characters ( ` n  ` ) in ` _ subject  _ ` as matches. 
+
+  * The pattern is considered a match if the pattern matches the entire input string (subject). To match a sequence anywhere within a string, start and end the pattern with ` %  ` (e.g. ` %something%  ` ). 
+
+  * If the function is used with a subquery, the subquery should return a single row. 
+
+For example, the following should be used only if the subquery returns a
+single row:
+
+    
+        SELECT ...
+      WHERE x ILIKE ANY (SELECT ...)
+    
+
+Copy
+
+##  Collation details  ¶
+
+Only the ` upper  ` , ` lower  ` , and ` trim  ` collation specifications are
+supported. Combinations with ` upper  ` , ` lower  ` , and ` trim  ` are also
+supported (for example, ` upper-trim  ` and ` lower-trim  ` ), except for
+locale combinations (for example, ` en-upper  ` ).
+
+##  Examples  ¶
+
+Create a table that contains some strings:
+
+    
+    
+    CREATE OR REPLACE TABLE ilike_example(name VARCHAR(20));
+    INSERT INTO ilike_example VALUES
+        ('jane doe'),
+        ('Jane Doe'),
+        ('JANE DOE'),
+        ('John Doe'),
+        ('John Smith');
+    
+
+Copy
+
+This query shows how to use patterns with wildcards ( ` %  ` ) to find
+matches:
+
+    
+    
+    SELECT * 
+      FROM ilike_example 
+      WHERE name ILIKE ANY ('jane%', '%SMITH')
+      ORDER BY name;
+    
+
+Copy
+
+    
+    
+    +------------+                                                                  
+    | NAME       |
+    |------------|
+    | JANE DOE   |
+    | Jane Doe   |
+    | John Smith |
+    | jane doe   |
+    +------------+
+    
+
+For examples of how to escape wildcard characters, see [ LIKE ANY  ](like_any)
+.
+

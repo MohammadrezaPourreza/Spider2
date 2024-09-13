@@ -1,0 +1,62 @@
+  SYSTEM$GET_SNOWFLAKE_PLATFORM_INFO  ¶
+
+Returns the IDs of the virtual network in which your Snowflake account is
+located. Depending on whether your account is hosted on Amazon Web Services
+(AWS) or Microsoft Azure, the function returns the Amazon Virtual Private
+Cloud (Amazon VPC) IDs or Azure Virtual Network (VNet) IDs.
+
+A cloud administrator in your company can specify this ID in trust policies to
+allow Snowflake to connect to any of the following while denying requests that
+originate from outside the virtual network:
+
+  * Your cloud storage. 
+
+  * Your [ proxy service  ](../external-functions-introduction.html#label-external-functions-introduction-miniglossary-proxy-service) for your [ external function  ](../external-functions) . 
+
+This security restriction can limit traffic to your cloud storage or proxy
+service on the same cloud platform.
+
+For more information, see the following information for your cloud platform:
+
+AWS  :
+
+    
+
+[ Allowing the Virtual Private Cloud IDs  ](../../user-guide/data-
+load-s3-allow)
+
+Azure  :
+
+    
+
+[ Allowing the VNet subnet IDs  ](../../user-guide/data-load-azure-allow)
+
+##  Syntax  ¶
+
+    
+    
+    SYSTEM$GET_SNOWFLAKE_PLATFORM_INFO()
+    
+
+Copy
+
+##  Arguments  ¶
+
+None.
+
+##  Usage notes  ¶
+
+Only returns results for account administrators (users with the ACCOUNTADMIN
+role).
+
+##  Examples  ¶
+
+Query the IDs of the virtual network in which your Snowflake account is
+located:
+
+>
+>     SELECT SYSTEM$GET_SNOWFLAKE_PLATFORM_INFO();
+>  
+>
+> Copy
+

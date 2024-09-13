@@ -1,0 +1,53 @@
+  IS_BINARY  ¶
+
+Returns TRUE if its VARIANT argument contains a binary string.
+
+See also:
+
+    
+
+[ IS_<object_type> ](is)
+
+##  Syntax  ¶
+
+    
+    
+    IS_BINARY( <variant_expr> )
+    
+
+Copy
+
+##  Examples  ¶
+
+Get all binary values in a variable column.
+
+Note
+
+The output format for binary values is set using the [ BINARY_OUTPUT_FORMAT
+](../parameters.html#label-binary-output-format) parameter. The default
+setting is ` HEX  ` .
+
+Create and load the table:
+
+>
+>     create or replace table varbin (v variant);
+>     insert into varbin select to_variant(to_binary('snow', 'utf-8'));
+>  
+>
+> Copy
+
+Show the data:
+
+>
+>     select v AS hex_encoded_binary_value
+>         from varbin
+>         where is_binary(v);
+>     +--------------------------+
+>     | HEX_ENCODED_BINARY_VALUE |
+>     |--------------------------|
+>     | "736E6F77"               |
+>     +--------------------------+
+>  
+>
+> Copy
+

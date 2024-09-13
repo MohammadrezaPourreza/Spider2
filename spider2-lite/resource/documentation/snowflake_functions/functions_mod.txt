@@ -1,0 +1,62 @@
+  MOD  ¶
+
+Returns the remainder of input ` _ expr1  _ ` divided by input ` _ expr2  _ `
+.
+
+Equivalent to the modulo [ arithmetic operator  ](../operators-arithmetic)
+(e.g. ` expr1  %  expr2  ` ).
+
+##  Syntax  ¶
+
+    
+    
+    MOD( <expr1> , <expr2> )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ expr1  _ `
+
+    
+
+A numeric expression.
+
+` _ expr2  _ `
+
+    
+
+A numeric expression.
+
+##  Returns  ¶
+
+Returns either an integer or a fixed-point decimal number.
+
+##  Usage notes  ¶
+
+  * Both ` _ expr1  _ ` and ` _ expr2  _ ` must be numeric expressions. They are not required to be integers. 
+
+##  Examples  ¶
+
+The following example shows usage of the ` MOD()  ` function on both integer
+and non-integer values:
+
+>
+>     SELECT MOD(3, 2) AS mod1, MOD(4.5, 1.2) AS mod2;
+>  
+>
+> Copy
+>
+> Output:
+>  
+>  
+>     +------+------+
+>     | MOD1 | MOD2 |
+>     +------+------+
+>     |    1 |  0.9 |
+>     +------+------+
+>  
+>
+> Copy
+

@@ -1,0 +1,107 @@
+  AS_DATE  ¶
+
+Casts a VARIANT value to a date. Does  not  convert from timestamps.
+
+See also:
+
+    
+
+[ AS_<object_type> ](as)
+
+##  Syntax  ¶
+
+    
+    
+    AS_DATE( <variant_expr> )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ variant_expr  _ `
+
+    
+
+An expression that evaluates to a value of type VARIANT.
+
+##  Examples  ¶
+
+This shows how to use the function:
+
+> Create a table and data:
+>
+
+>>
+
+>>     CREATE TABLE multiple_types (
+
+>>         binary1 VARIANT,
+
+>>         date1 VARIANT,
+
+>>         decimal1 VARIANT,
+
+>>         time1 VARIANT,
+
+>>         timestamp1 VARIANT
+
+>>         );
+
+>>     INSERT INTO multiple_types
+
+>>          (binary1, date1, decimal1, time1, timestamp1)
+
+>>        SELECT
+
+>>          TO_VARIANT(TO_BINARY('F0A5')),
+
+>>          TO_VARIANT(TO_DATE('2018-10-10')),
+
+>>          TO_VARIANT(TO_DECIMAL(1.23, 6, 3)),
+
+>>          TO_VARIANT(TO_TIME('12:34:56')),
+
+>>          TO_VARIANT(TO_TIMESTAMP_NTZ('2018-10-10 12:34:56'))
+
+>>          ;
+
+>>  
+>>
+
+>> Copy
+
+>
+> Now run the query:
+>
+
+>>
+
+>>     SELECT AS_DATE(date1) AS "Date" FROM multiple_types;
+
+>>  
+>>
+
+>> Copy
+
+>
+> Output:
+>
+
+>>
+
+>>     +------------+
+
+>>     | Date       |
+
+>>     |------------|
+
+>>     | 2018-10-10 |
+
+>>     +------------+
+
+>>  
+>>
+
+>> Copy
+

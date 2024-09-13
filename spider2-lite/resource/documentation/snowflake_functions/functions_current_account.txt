@@ -1,0 +1,52 @@
+  CURRENT_ACCOUNT  ¶
+
+Returns the [ account locator  ](../../user-guide/admin-account-
+identifier.html#label-account-locator) used by the user’s current session.
+
+Note
+
+If you want to find the [ account name  ](../../user-guide/admin-account-
+identifier.html#label-account-name) rather than the account locator, use [
+CURRENT_ACCOUNT_NAME  ](current_account_name) instead. The preferred account
+identifier ( ` _ orgname  _ -  _ account_name  _ ` ) uses the account name,
+not the account locator.
+
+##  Syntax  ¶
+
+    
+    
+    CURRENT_ACCOUNT()
+    
+
+Copy
+
+##  Arguments  ¶
+
+None.
+
+##  Returns  ¶
+
+The data type of the returned value is ` VARCHAR  ` .
+
+##  Examples  ¶
+
+This shows how to call the ` CURRENT_ACCOUNT  ` function:
+
+>
+>     SELECT CURRENT_ACCOUNT();
+>  
+>
+> Copy
+>
+> Output:
+>  
+>  
+>     +-------------------+
+>     | CURRENT_ACCOUNT() |
+>     |-------------------|
+>     | XY12345           |
+>     +-------------------+
+>  
+>
+> Copy
+

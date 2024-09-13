@@ -1,0 +1,46 @@
+  MAP_SIZE  ¶
+
+Returns the size of a [ MAP  ](../data-types-structured) .
+
+##  Syntax  ¶
+
+    
+    
+    MAP_SIZE( <map> )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ map  _ `
+
+    
+
+The input map.
+
+##  Returns  ¶
+
+Returns the number of entries in the map.
+
+##  Examples  ¶
+
+Determine the number of entries in a map:
+
+    
+    
+    SELECT MAP_SIZE({'a':1,'b':2,'c':3}::MAP(VARCHAR,NUMBER))
+      AS map_size;
+    
+
+Copy
+
+    
+    
+    +----------+
+    | MAP_SIZE |
+    |----------|
+    |        3 |
+    +----------+
+    
+

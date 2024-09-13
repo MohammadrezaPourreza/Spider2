@@ -1,0 +1,137 @@
+  BASE64_DECODE_STRING  ¶
+
+Decodes a Base64-encoded string to a string.
+
+See also:
+
+    
+
+[ TRY_BASE64_DECODE_STRING  ](try_base64_decode_string)
+
+[ BASE64_DECODE_BINARY  ](base64_decode_binary) , [ BASE64_ENCODE
+](base64_encode)
+
+##  Syntax  ¶
+
+    
+    
+    BASE64_DECODE_STRING( <input> [ , <alphabet> ] )
+    
+
+Copy
+
+##  Arguments  ¶
+
+**Required:**
+
+` _ input  _ `
+
+    
+
+A Base64-encoded string expression.
+
+**Optional:**
+
+` _ alphabet  _ `
+
+    
+
+A string consisting of up to three ASCII characters:
+
+  * The first two characters in the string specify the last two characters (indexes 62 and 63) in the alphabet used to encode the input: 
+
+    * ` A  ` to ` Z  ` (indexes 0-25) 
+
+    * ` a  ` to ` z  ` (indexes 26-51) 
+
+    * ` 0  ` to ` 9  ` (indexes 52-61) 
+
+    * ` +  ` and ` /  ` (indexes 62, 63) 
+
+Defaults: ` +  ` and ` /  `
+
+  * The third character in the string specifies the character used for padding. 
+
+Default: ` =  `
+
+##  Returns  ¶
+
+A string.
+
+##  Usage notes  ¶
+
+  * The characters in the ` _ alphabet  _ ` string are positionally parsed; to specify different characters in the second or third positions in the string, you must explicitly specify all preceding characters even if you wish to use the defaults. 
+
+For example:
+
+>     * ` +$  ` specifies the default ( ` +  ` ) for index 62 and a different
+> character ( ` $  ` ) for index 63; no character is explicitly specified for
+> padding so the default character ( ` =  ` ) is used.
+>
+>     * ` +/%  ` specifies the defaults ( ` +  ` and ` /  ` ) for indexes 62
+> and 63, and specifies a different character ( ` %  ` ) for padding.
+
+  * The ` _ alphabet  _ ` string used to decode ` _ input  _ ` must  match the string originally used to encode ` _ input  _ ` . 
+
+For more information about base64 format, see [ base64  ](../binary-input-
+output.html#label-base64-format) .
+
+##  Examples  ¶
+
+This shows a simple example of using ` BASE64_DECODE_STRING  ` :
+
+>
+>     SELECT BASE64_DECODE_STRING('U25vd2ZsYWtl');
+>     +--------------------------------------+
+>     | BASE64_DECODE_STRING('U25VD2ZSYWTL') |
+>     |--------------------------------------|
+>     | Snowflake                            |
+>     +--------------------------------------+
+>  
+>
+> Copy
+
+This shows another example of using ` BASE64_DECODE_STRING  ` :
+
+> Create a table and data:
+>
+
+>>
+
+>>     CREATE OR REPLACE TABLE base64_table (v VARCHAR, base64_string
+VARCHAR);
+
+>>     INSERT INTO base64_table (v) VALUES ('HELLO');
+
+>>     UPDATE base64_table SET base64_string = BASE64_ENCODE(v);
+
+>>  
+>>
+
+>> Copy
+
+>
+> Now run a query using ` BASE64_DECODE_STRING  ` :
+>
+
+>>
+
+>>     SELECT v, base64_string, BASE64_DECODE_STRING(base64_string)
+
+>>         FROM base64_table;
+
+>>     +-------+---------------+-------------------------------------+
+
+>>     | V     | BASE64_STRING | BASE64_DECODE_STRING(BASE64_STRING) |
+
+>>     |-------+---------------+-------------------------------------|
+
+>>     | HELLO | SEVMTE8=      | HELLO                               |
+
+>>     +-------+---------------+-------------------------------------+
+
+>>  
+>>
+
+>> Copy
+

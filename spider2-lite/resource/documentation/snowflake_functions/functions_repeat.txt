@@ -1,0 +1,43 @@
+  REPEAT  ¶
+
+Builds a string by repeating the input for the specified number of times.
+
+##  Syntax  ¶
+
+    
+    
+    REPEAT(<input>, <n>)
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ input  _ `
+
+    
+
+The input string from which the output string is built.
+
+` _ n  _ `
+
+    
+
+The number of times the input string should be repeated. The minimum valid
+number is 0 (which results in an empty string).
+
+##  Examples  ¶
+
+    
+    
+    SELECT REPEAT('xy', 5);
+    
+    -----------------+
+     REPEAT('XY', 5) |
+    -----------------+
+     xyxyxyxyxy      |
+    -----------------+
+    
+
+Copy
+

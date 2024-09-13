@@ -1,0 +1,77 @@
+  NEXT_DAY  ¶
+
+Returns the date of the first specified DOW (day of week) that occurs after
+the input date.
+
+See also:
+
+    
+
+[ PREVIOUS_DAY  ](previous_day)
+
+##  Syntax  ¶
+
+    
+    
+    NEXT_DAY( <date_or_time_expr> , <dow_string> )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ date_or_time_expr  _ `
+
+    
+
+Specifies the input date; can be a date or timestamp.
+
+` _ dow_string  _ `
+
+    
+
+Specifies the day of week used to calculate the date for the previous day. The
+value can be a string literal or an expression that returns a string. The
+string must start with the first two characters (case-insensitive) of the day
+name:
+
+>   * ` su  ` (Sunday)
+>
+>   * ` mo  ` (Monday)
+>
+>   * ` tu  ` (Tuesday)
+>
+>   * ` we  ` (Wednesday)
+>
+>   * ` th  ` (Thursday)
+>
+>   * ` fr  ` (Friday)
+>
+>   * ` sa  ` (Saturday)
+>
+>
+
+Any leading spaces and trailing characters, including spaces, in the string
+are ignored.
+
+##  Usage notes  ¶
+
+  * The return value is always a date regardless of whether ` _ date_or_time_expr  _ ` is a date or timestamp. 
+
+##  Examples  ¶
+
+Return the date of the next Friday that occurs after the current date:
+
+>
+>     SELECT CURRENT_DATE() AS "Today's Date",
+>            NEXT_DAY("Today's Date", 'Friday ') AS "Next Friday";
+>  
+>     +--------------+-------------+
+>     | Today's Date | Next Friday |
+>     |--------------+-------------|
+>     | 2018-06-12   | 2018-06-15  |
+>     +--------------+-------------+
+>  
+>
+> Copy
+

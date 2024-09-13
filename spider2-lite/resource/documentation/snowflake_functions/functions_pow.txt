@@ -1,0 +1,38 @@
+  POW, POWER  ¶
+
+Returns a number (x) raised to the specified power (y).
+
+##  Syntax  ¶
+
+    
+    
+    POW(x, y)
+    
+    POWER (x, y)
+    
+
+Copy
+
+##  Usage notes  ¶
+
+Always returns a floating point number, even if the input expressions are of
+integer types.
+
+##  Examples  ¶
+
+    
+    
+    SELECT x, y, pow(x, y) FROM tab;
+    
+    -----+-----+-------------+
+      X  |  Y  |  POW(X, Y)  |
+    -----+-----+-------------+
+     0.1 | 2   | 0.01        |
+     2   | 3   | 8           |
+     2   | 0.5 | 1.414213562 |
+     2   | -1  | 0.5         |
+    -----+-----+-------------+
+    
+
+Copy
+

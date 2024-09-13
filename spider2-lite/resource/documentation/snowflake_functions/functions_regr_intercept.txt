@@ -1,0 +1,96 @@
+  REGR_INTERCEPT  ¶
+
+Returns the intercept of the univariate linear regression line for non-null
+pairs in a group. It is computed for non-null pairs using the following
+formula:
+
+> ` AVG(y)-REGR_SLOPE(y,x)*AVG(x)  `
+
+Where ` x  ` is the independent variable and ` y  ` is the dependent variable.
+
+##  Syntax  ¶
+
+**Aggregation function**
+
+    
+    
+    REGR_INTERCEPT(y, x)
+    
+
+Copy
+
+**Window function**
+
+    
+    
+    REGR_INTERCEPT(y, x) OVER ( [ PARTITION BY <expr3> ] )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ y  _ `
+
+    
+
+The dependent variable. This must be an expression that can be evaluated to a
+numeric type.
+
+` _ x  _ `
+
+    
+
+The independent variable. This must be an expression that can be evaluated to
+a numeric type.
+
+` _ expr3  _ `
+
+    
+
+This is the optional expression used to group rows into partitions.
+
+Important
+
+Note the order of the arguments; the dependent variable is first.
+
+##  Usage notes  ¶
+
+  * DISTINCT is not supported for this function. 
+
+  * When used as a window function: 
+
+>     * This function does not support:
+>
+
+>>       * ORDER BY sub-clause in the OVER() clause.
+
+>>
+
+>>       * Window frames.
+
+##  Examples  ¶
+
+    
+    
+    create or replace table aggr(k int, v decimal(10,2), v2 decimal(10, 2));
+    insert into aggr values(1, 10, null);
+    insert into aggr values(2, 10, 11), (2, 20, 22), (2, 25,null), (2, 30, 35);
+    
+
+Copy
+
+    
+    
+    select k, regr_intercept(v, v2) from aggr group by k;
+    
+    ---+-----------------------+
+     k | regr_intercept(v, v2) |
+    ---+-----------------------+
+     1 | [NULL]                |
+     2 | 1.154734411           |
+    ---+-----------------------+
+    
+
+Copy
+

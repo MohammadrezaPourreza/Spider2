@@ -1,0 +1,102 @@
+  ARRAY_CAT  ¶
+
+Returns a concatenation of two arrays.
+
+##  Syntax  ¶
+
+    
+    
+    ARRAY_CAT( <array1> , <array2> )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ array1  _ `
+
+    
+
+The source array.
+
+` _ array2  _ `
+
+    
+
+The array to be appended to ` _ array1  _ ` .
+
+##  Returns  ¶
+
+An ARRAY containing the elements from ` _ array2  _ ` appended after the
+elements of ` _ array1  _ ` .
+
+##  Usage notes  ¶
+
+  * Both arguments must either be [ structured ARRAYs  ](../data-types-structured) or [ semi-structured ARRAYs  ](../data-types-semistructured.html#label-data-type-array) . 
+
+  * If you are passing in semi-structured ARRAYs, both arguments must be of ARRAY type or VARIANT containing an array. 
+
+  * If you are passing in structured ARRAYs, the function returns an ARRAY of a type that can accommodate both input types. 
+
+  * If either argument is NULL, the function returns NULL without reporting any error. 
+
+##  Examples  ¶
+
+This example shows how to use ` ARRAY_CAT()  ` :
+
+> Create a simple table and data:
+>
+
+>>
+
+>>     CREATE TABLE array_demo (ID INTEGER, array1 ARRAY, array2 ARRAY);
+
+>>  
+>>
+
+>> Copy
+
+>>  
+>>  
+>>     INSERT INTO array_demo (ID, array1, array2)
+
+>>         SELECT 1, ARRAY_CONSTRUCT(1, 2), ARRAY_CONSTRUCT(3, 4);
+
+>>  
+>>
+
+>> Copy
+
+>
+> Execute the query:
+>
+
+>>
+
+>>     SELECT ARRAY_CAT(array1, array2) FROM array_demo;
+
+>>     +---------------------------+
+
+>>     | ARRAY_CAT(ARRAY1, ARRAY2) |
+
+>>     |---------------------------|
+
+>>     | [                         |
+
+>>     |   1,                      |
+
+>>     |   2,                      |
+
+>>     |   3,                      |
+
+>>     |   4                       |
+
+>>     | ]                         |
+
+>>     +---------------------------+
+
+>>  
+>>
+
+>> Copy
+

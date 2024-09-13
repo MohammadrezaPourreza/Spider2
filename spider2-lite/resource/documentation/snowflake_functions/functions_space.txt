@@ -1,0 +1,30 @@
+  SPACE  ¶
+
+Builds a string consisting of the specified number of blank spaces.
+
+##  Syntax  ¶
+
+    
+    
+    SPACE(<n>)
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ n  _ `
+
+    
+
+The number of blank spaces used to build the string.
+
+##  Examples  ¶
+
+    
+    
+    SELECT SPACE(3);
+    
+
+Copy
+

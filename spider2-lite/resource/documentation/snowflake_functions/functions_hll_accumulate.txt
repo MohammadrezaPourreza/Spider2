@@ -1,0 +1,214 @@
+  HLL_ACCUMULATE  ¶
+
+Returns the HyperLogLog state at the end of aggregation.
+
+For more information about HyperLogLog, see [ Estimating the Number of
+Distinct Values  ](../../user-guide/querying-approximate-cardinality) .
+
+[ HLL  ](hll) discards its intermediate state when the final cardinality
+estimate is returned. In advanced use cases, such as incremental cardinality
+estimation during bulk loading, one may want to keep the intermediate state.
+The intermediate state can later be combined (merged) with other intermediate
+states, or can be exported to external tools.
+
+In contrast to [ HLL  ](hll) , HLL_ACCUMULATE does not return a cardinality
+estimate. Instead, it skips the final estimation step and returns the
+algorithm state itself. The state is a binary of at most 4096 Bytes. For more
+information, see [ Estimating the Number of Distinct Values  ](../../user-
+guide/querying-approximate-cardinality) .
+
+See also:
+
+    
+
+[ HLL_COMBINE  ](hll_combine) , [ HLL_ESTIMATE  ](hll_estimate)
+
+##  Syntax  ¶
+
+    
+    
+    HLL_ACCUMULATE( [ DISTINCT ] <expr> )
+    
+    HLL_ACCUMULATE(*)
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ expr  _ `
+
+    
+
+The expression for which you want to estimate cardinality (number of distinct
+values). This is typically a column name, but can be a more general
+expression.
+
+##  Usage notes  ¶
+
+  * DISTINCT can be included as an argument, but has no effect. 
+
+##  Examples  ¶
+
+This shows one step towards estimating the number of distinct postal codes in
+province(s) of Canada. In this step, we calculate the approximate number of
+distinct postal codes in Manitoba and store an internal representation of the
+“state” of the calculation, which we can later combine with similar
+information for other provinces:
+
+>
+>     CREATE TABLE temporary_hll_state_for_manitoba AS
+>      SELECT HLL_ACCUMULATE(postal_code) as h_a_p_c
+>       FROM postal_data
+>       WHERE province = 'Manitoba'
+>       ;
+>  
+>
+> Copy
+
+Here is another example. This example shows how to use the three related
+functions ` HLL_ACCUMULATE  ` , ` HLL_ESTIMATE  ` , and ` HLL_COMBINE  ` .
+
+> Create a simple table and data:
+>
+
+>>
+
+>>     -- Create a sequence to use to generate values for the table.
+
+>>     CREATE OR REPLACE SEQUENCE seq92;
+
+>>     CREATE OR REPLACE TABLE sequence_demo (c1 INTEGER DEFAULT
+seq92.nextval, dummy SMALLINT);
+
+>>     INSERT INTO sequence_demo (dummy) VALUES (0);
+
+>>  
+>>     -- Double the number of rows a few times, until there are 8 rows:
+
+>>     INSERT INTO sequence_demo (dummy) SELECT dummy FROM sequence_demo;
+
+>>     INSERT INTO sequence_demo (dummy) SELECT dummy FROM sequence_demo;
+
+>>     INSERT INTO sequence_demo (dummy) SELECT dummy FROM sequence_demo;
+
+>>  
+>>
+
+>> Copy
+
+>
+> Create a table that contains the “state” that represents the current
+> approximate cardinality information for the table named sequence_demo:
+>
+
+>>
+
+>>     CREATE OR REPLACE TABLE resultstate1 AS (
+
+>>          SELECT hll_accumulate(c1) AS rs1
+
+>>             FROM sequence_demo);
+
+>>  
+>>
+
+>> Copy
+
+>
+> Now create a second table and add data. (In a more realistic situation, the
+> user could have loaded more data into the first table and divided the data
+> into non-overlapping sets based on the time that the data was loaded.)
+>
+
+>>
+
+>>     CREATE OR REPLACE TABLE test_table2 (c1 INTEGER);
+
+>>     -- Insert data.
+
+>>     INSERT INTO test_table2 (c1) SELECT c1 + 4 FROM sequence_demo;
+
+>>  
+>>
+
+>> Copy
+
+>
+> Get the “state” information for just the new data.
+>
+
+>>
+
+>>     CREATE OR REPLACE TABLE resultstate2 AS
+
+>>       (SELECT hll_accumulate(c1) AS rs1
+
+>>          FROM test_table2);
+
+>>  
+>>
+
+>> Copy
+
+>
+> Combine the “state” information for the two batches of rows:
+>
+
+>>
+
+>>     CREATE OR REPLACE TABLE combined_resultstate (c1) AS
+
+>>       SELECT hll_combine(rs1) AS apc1
+
+>>         FROM (
+
+>>             SELECT rs1 FROM resultstate1
+
+>>             UNION ALL
+
+>>             SELECT rs1 FROM resultstate2
+
+>>           )
+
+>>           ;
+
+>>  
+>>
+
+>> Copy
+
+>
+> Get the approximate cardinality of the combined set of rows:
+>
+
+>>
+
+>>     SELECT hll_estimate(c1) FROM combined_resultstate;
+
+>>  
+>>
+
+>> Copy
+
+>
+> Output:
+>
+
+>>
+
+>>     +------------------+
+
+>>     | HLL_ESTIMATE(C1) |
+
+>>     |------------------|
+
+>>     |               12 |
+
+>>     +------------------+
+
+>>  
+>>
+
+>> Copy
+

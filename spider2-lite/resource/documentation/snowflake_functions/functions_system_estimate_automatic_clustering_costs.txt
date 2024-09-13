@@ -1,0 +1,185 @@
+  SYSTEM$ESTIMATE_AUTOMATIC_CLUSTERING_COSTS  ¶
+
+[ ![Snowflake logo in black \(no text\)](../../_images/logo-snowflake-
+black.png) ](../../_images/logo-snowflake-black.png) [ Preview Feature
+](../../release-notes/preview-features) — Open
+
+Available to all accounts.
+
+Returns estimated costs associated with enabling [ Automatic Clustering
+](../../user-guide/tables-auto-reclustering) for a table. You can execute this
+function to:
+
+  * Estimate the cost of clustering a table for the first time. 
+
+  * Estimate the cost of changing the cluster key of a table. 
+
+When possible, the function also provides an estimate of the cost associated
+with maintaining the table after it is clustered around the specified key. In
+some cases, there might not be enough DML history for the table to estimate
+future maintenance costs.
+
+Important
+
+The cost estimates returned by the SYSTEM$ESTIMATE_AUTOMATIC_CLUSTERING_COSTS
+function are best efforts. The actual realized costs can vary by up to 100%
+(or, in rare cases, by several times) from the estimated costs.
+
+The most common reason for an inaccurate cost estimate is if past DML
+patterns, on which the estimate was based, do not match future DML patterns.
+
+##  Syntax  ¶
+
+    
+    
+    SYSTEM$ESTIMATE_AUTOMATIC_CLUSTERING_COSTS( '<table_name>' ,
+      '( <expr1> [ , <expr2> ... ] )' )
+    
+
+Copy
+
+##  Arguments  ¶
+
+‘ ` _ table_name  _ ` ’
+
+    
+
+Table for which you want to return the estimated cost of clustering.
+
+‘ ` (  _ expr1  _ [  ,  _ expr2  _ ...  ])  ` ’
+
+    
+
+Proposed cluster key for the table, where each expression resolves to a column
+of the table. The function estimates the cost of clustering the table using
+these columns as the cluster key.
+
+Even if only one column name or expression is passed, it must be inside
+parentheses.
+
+##  Returns  ¶
+
+The function returns a value of type VARCHAR. The returned string is in JSON
+format and contains the following name/value pairs:
+
+` warnings  `
+
+    
+
+Indicates whether there are conditions that might affect the accuracy of the
+cost estimation or the impact of choosing a cluster key.
+
+` reportTime  `
+
+    
+
+Date when the output of the function was generated.
+
+` clusteringKey  `
+
+    
+
+Columns that comprise the cluster key.
+
+` initial  `
+
+    
+
+Describes the predicted cost of clustering the table around the specified
+cluster key. This cost does not include the estimated cost of maintaining the
+table once it is clustered. The ` initial  ` JSON object contains the
+following name/value pairs.
+
+` unit  `
+
+    
+
+Indicates the units in which the initial cost is expressed.
+
+` value  `
+
+    
+
+Indicates how much it will cost to cluster the table, expressed in ` unit  ` .
+
+` comment  `
+
+    
+
+A comment used to interpret the initial cost of clustering.
+
+` maintenance  `
+
+    
+
+Describes the predicted costs of maintaining the table in a well-clustered
+state after it is initially clustered. This prediction is based on recent DML
+activity because a table is reclustered as a table changes.
+
+An empty object indicates that the table or one of the cluster key columns is
+new, meaning the function does not have enough historical data about DML
+operations to estimate the maintenance costs.
+
+` unit  `
+
+    
+
+Indicates the units in which the cost is expressed.
+
+` value  `
+
+    
+
+Indicates how much it will cost to maintain the table after its initial
+clustering, expressed in ` units  ` per day.
+
+` comment  `
+
+    
+
+A comment that includes the time period during which costs will be incurred
+and the time frame upon which the estimate is based.
+
+##  Access control requirements  ¶
+
+The privileges needed to estimate costs are the same as those required to
+change the cluster key. You need the following privileges:
+
+  * OWNERSHIP on the table. 
+
+  * USAGE or OWNERSHIP on the schema and database. 
+
+##  Usage notes  ¶
+
+None.
+
+##  Examples  ¶
+
+Return the estimated costs associated with defining column ` tenantId  ` as
+the cluster key for table ` myTable  ` .
+
+    
+    
+    SELECT SYSTEM$ESTIMATE_AUTOMATIC_CLUSTERING_COSTS('myTable', '(tenantId)');
+    
+
+Copy
+
+    
+    
+    {
+      "reportTime": "Fri, 12 Jul 2024 01:06:18 GMT",
+      "clusteringKey": "LINEAR(tenantId)",
+      "initial": {
+        "unit": "Credits",
+        "value": 98.197987412,
+        "comment": "Total upper bound of one time cost"
+      },
+      "maintenance": {
+        "unit": "Credits",
+        "value": 10.0,
+        "comment": "Daily maintenance cost estimate provided based on DML history from the past 7 day(s)."
+      }
+    }
+    
+

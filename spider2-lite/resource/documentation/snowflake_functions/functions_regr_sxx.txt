@@ -1,0 +1,90 @@
+  REGR_SXX  ¶
+
+Returns REGR_COUNT(y, x) * VAR_POP(x) for non-null pairs.
+
+##  Syntax  ¶
+
+**Aggregate function**
+
+    
+    
+    REGR_SXX(y, x)
+    
+
+Copy
+
+**Window function**
+
+    
+    
+    REGR_SXX(y, x) OVER ( [ PARTITION BY <expr3> ] )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ y  _ `
+
+    
+
+The dependent variable. This must be an expression that can be evaluated to a
+numeric type.
+
+` _ x  _ `
+
+    
+
+The independent variable. This must be an expression that can be evaluated to
+a numeric type.
+
+` _ expr3  _ `
+
+    
+
+This is the optional expression used to group rows into partitions.
+
+Important
+
+Note the order of the arguments; the dependent variable is first.
+
+##  Usage notes  ¶
+
+  * DISTINCT is not supported for this function. 
+
+  * When used as a window function: 
+
+>     * This function does not support:
+>
+
+>>       * ORDER BY sub-clause in the OVER() clause.
+
+>>
+
+>>       * Window frames.
+
+##  Examples  ¶
+
+    
+    
+    create or replace table aggr(k int, v decimal(10,2), v2 decimal(10, 2));
+    insert into aggr values(1, 10, null);
+    insert into aggr values(2, 10, 11), (2, 20, 22), (2, 25,null), (2, 30, 35);
+    
+
+Copy
+
+    
+    
+    select k, regr_sxx(v, v2) from aggr group by k;
+    
+    ---+-----------------+
+     k | regr_sxx(v, v2) |
+    ---+-----------------+
+     1 | [NULL]          |
+     2 | 288.666666667   |
+    ---+-----------------+
+    
+
+Copy
+

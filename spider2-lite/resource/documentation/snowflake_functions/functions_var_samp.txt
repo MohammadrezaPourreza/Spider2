@@ -1,0 +1,139 @@
+  VAR_SAMP  ¶
+
+Returns the sample variance of non-NULL records in a group. If all records
+inside a group are NULL, a NULL is returned.
+
+Aliases:
+
+    
+
+[ VARIANCE , VARIANCE_SAMP  ](variance)
+
+##  Syntax  ¶
+
+**Aggregate function**
+
+    
+    
+    VAR_SAMP( [DISTINCT] <expr1> )
+    
+
+Copy
+
+**Window function**
+
+    
+    
+    VAR_SAMP( <expr1> ) OVER (
+                             [ PARTITION BY <expr2> ]
+                             [ ORDER BY <expr3> [ ASC | DESC ] [ <window_frame> ] ]
+                             )
+    
+
+Copy
+
+For details about ` _ window_frame  _ ` syntax, see [ Usage notes for window
+frames  ](../functions-analytic.html#label-window-frames) .
+
+##  Arguments  ¶
+
+` _ expr1  _ `
+
+    
+
+The ` _ expr1  _ ` should evaluate to one of the numeric data types.
+
+` _ expr2  _ `
+
+    
+
+This is the expression to partition by.
+
+` _ expr3  _ `
+
+    
+
+This is the expression to order by within each partition.
+
+##  Returns  ¶
+
+The data type of the returned value is ` NUMBER(<precision>,  <scale>)  ` .
+The scale depends upon the values being processed.
+
+##  Usage notes  ¶
+
+  * For single-record inputs, VAR_SAMP, VARIANCE, and VARIANCE_SAMP all return NULL. This is different from the Oracle behavior, where VAR_SAMP returns NULL for a single record and VARIANCE returns 0. 
+
+  * When passed a VARCHAR expression, this function implicitly casts the input to floating point values. If the cast cannot be performed, an error is returned. 
+
+  * When called as a window function: 
+
+    * The keyword DISTINCT is permitted syntactically, but is ignored. 
+
+    * If an ORDER BY sub-clause is used inside the OVER clause, then a window frame must be used. If no window frame is specified, then the ORDER BY implies a cumulative window frame: 
+
+> ` RANGE  BETWEEN  UNBOUNDED  PRECEDING  AND  CURRENT  ROW  `
+
+For more details about window frames, including syntax and examples, see [
+Usage notes for window frames  ](../functions-analytic.html#label-window-
+frames) .
+
+##  Examples  ¶
+
+This example shows how to use the ` VAR_SAMP  ` function:
+
+> Create and fill a table:
+>
+
+>>
+
+>>     create table aggr(k int, v decimal(10,2), v2 decimal(10, 2));
+
+>>     insert into aggr values
+
+>>        (1, 10, null),
+
+>>        (2, 10, 11),
+
+>>        (2, 20, 22),
+
+>>        (2, 25, null),
+
+>>        (2, 30, 35);
+
+>>  
+>>
+
+>> Copy
+
+>
+> Query the table, calling VAR_SAMP():
+>
+
+>>
+
+>>     SELECT k, var_samp(v), var_samp(v2)
+
+>>         FROM aggr
+
+>>         GROUP BY k
+
+>>         ORDER BY k;
+
+>>     +---+---------------+----------------+
+
+>>     | K |   VAR_SAMP(V) |   VAR_SAMP(V2) |
+
+>>     |---+---------------+----------------|
+
+>>     | 1 |          NULL |           NULL |
+
+>>     | 2 | 72.9166666667 | 144.3333333333 |
+
+>>     +---+---------------+----------------+
+
+>>  
+>>
+
+>> Copy
+

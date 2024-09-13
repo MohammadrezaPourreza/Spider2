@@ -1,0 +1,274 @@
+  ARRAY_AGG  ¶
+
+Returns the input values, pivoted into an array. If the input is empty, the
+function returns an empty array.
+
+Aliases:
+
+    
+
+ARRAYAGG
+
+##  Syntax  ¶
+
+**Aggregate function**
+
+    
+    
+    ARRAY_AGG( [ DISTINCT ] <expr1> ) [ WITHIN GROUP ( <orderby_clause> ) ]
+    
+
+Copy
+
+**Window function**
+
+    
+    
+    ARRAY_AGG( [ DISTINCT ] <expr1> )
+        [ WITHIN GROUP ( <orderby_clause> ) ]
+        OVER ( [ PARTITION BY <expr2> ] )
+    
+
+Copy
+
+##  Arguments  ¶
+
+**Required:**
+
+` _ expr1  _ `
+
+    
+
+An expression (typically a column name) that determines the values to be put
+into the array.
+
+` OVER()  `
+
+    
+
+The OVER clause specifies that the function is being used as a window
+function. For details, see [ Window functions  ](../functions-analytic) .
+
+**Optional:**
+
+` DISTINCT  `
+
+    
+
+Removes duplicate values from the array.
+
+` WITHIN  GROUP  _ orderby_clause  _ `
+
+    
+
+Clause that contains one or more expressions (typically column names) that
+determine the order of the values in each array.
+
+The WITHIN GROUP(ORDER BY) syntax supports the same parameters as the main
+ORDER BY clause in a SELECT statement. See [ ORDER BY  ](../constructs/order-
+by) .
+
+` PARTITION  BY  _ expr2  _ `
+
+    
+
+Window function sub-clause that specifies an expression (typically a column
+name). This expression defines partitions that group the input rows before the
+function is applied. For details, see [ Window functions  ](../functions-
+analytic) .
+
+##  Returns  ¶
+
+Returns a value of type ARRAY.
+
+The maximum amount of data that ARRAY_AGG can return for a single call is
+16MB.
+
+##  Usage notes  ¶
+
+  * If you do not specify WITHIN GROUP(ORDER BY), the order of elements within each array is unpredictable. (An ORDER BY clause outside the WITHIN GROUP clause applies to the order of the output rows, not to the order of the array elements within a row.) 
+
+  * If you specify a number for an expression in WITHIN GROUP(ORDER BY), this number is parsed as a numeric constant, not as the ordinal position of a column in the SELECT list. Therefore, do not specify numbers as WITHIN GROUP(ORDER BY) expressions. 
+
+  * If you specify DISTINCT and WITHIN GROUP, both must refer to the same column. For example: 
+    
+        SELECT ARRAY_AGG(DISTINCT O_ORDERKEY) WITHIN GROUP (ORDER BY O_ORDERKEY) ...;
+    
+
+Copy
+
+If you specify different columns for DISTINCT and WITHIN GROUP, an error
+occurs:
+
+    
+        SELECT ARRAY_AGG(DISTINCT O_ORDERKEY) WITHIN GROUP (ORDER BY O_ORDERSTATUS) ...;
+    
+
+Copy
+
+    
+        SQL compilation error: [ORDERS.O_ORDERSTATUS] is not a valid order by expression
+    
+
+You must either specify the same column for DISTINCT and WITHIN GROUP or omit
+DISTINCT.
+
+  * NULL values are omitted from the output. 
+
+  * When used as a window function, this function does not support: 
+
+>     * The ORDER BY sub-clause in the OVER() clause.
+>
+>     * Window frames.
+
+##  Examples  ¶
+
+The example queries below use the tables and data shown below:
+
+>
+>     CREATE TABLE orders (
+>         o_orderkey INTEGER,         -- unique ID for each order.
+>         o_clerk VARCHAR,            -- identifies which clerk is
+> responsible.
+>         o_totalprice NUMBER(12, 2), -- total price.
+>         o_orderstatus CHAR(1)       -- 'F' = Fulfilled (sent);
+>                                     -- 'O' = 'Ordered but not yet
+> Fulfilled'.
+>         );
+>  
+>     INSERT INTO orders (o_orderkey, o_orderstatus, o_clerk, o_totalprice)
+>       VALUES
+>         ( 32123, 'O', 'Clerk#000000321',     321.23),
+>         ( 41445, 'F', 'Clerk#000000386', 1041445.00),
+>         ( 55937, 'O', 'Clerk#000000114', 1055937.00),
+>         ( 67781, 'F', 'Clerk#000000521', 1067781.00),
+>         ( 80550, 'O', 'Clerk#000000411', 1080550.00),
+>         ( 95808, 'F', 'Clerk#000000136', 1095808.00),
+>         (101700, 'O', 'Clerk#000000220', 1101700.00),
+>         (103136, 'F', 'Clerk#000000508', 1103136.00);
+>  
+>
+> Copy
+
+This example shows non-pivoted output from a query that does not use
+ARRAY_AGG(). The contrast in output between this example and the following
+example shows that ARRAY_AGG() pivots the data.
+
+>
+>     SELECT O_ORDERKEY AS order_keys
+>       FROM orders
+>       WHERE O_TOTALPRICE > 450000
+>       ORDER BY O_ORDERKEY;
+>     +------------+
+>     | ORDER_KEYS |
+>     |------------|
+>     |      41445 |
+>     |      55937 |
+>     |      67781 |
+>     |      80550 |
+>     |      95808 |
+>     |     101700 |
+>     |     103136 |
+>     +------------+
+>  
+>
+> Copy
+
+This example shows how to use ARRAY_AGG() to pivot a column of output into an
+array in a single row:
+
+>
+>     SELECT ARRAY_AGG(O_ORDERKEY) WITHIN GROUP (ORDER BY O_ORDERKEY ASC)
+>       FROM orders
+>       WHERE O_TOTALPRICE > 450000;
+>     +--------------------------------------------------------------+
+>     | ARRAY_AGG(O_ORDERKEY) WITHIN GROUP (ORDER BY O_ORDERKEY ASC) |
+>     |--------------------------------------------------------------|
+>     | [                                                            |
+>     |   41445,                                                     |
+>     |   55937,                                                     |
+>     |   67781,                                                     |
+>     |   80550,                                                     |
+>     |   95808,                                                     |
+>     |   101700,                                                    |
+>     |   103136                                                     |
+>     | ]                                                            |
+>     +--------------------------------------------------------------+
+>  
+>
+> Copy
+
+This example shows the use of the DISTINCT keyword with ARRAY_AGG().
+
+>
+>     SELECT ARRAY_AGG(DISTINCT O_ORDERSTATUS) WITHIN GROUP (ORDER BY
+> O_ORDERSTATUS ASC)
+>       FROM orders
+>       WHERE O_TOTALPRICE > 450000
+>       ORDER BY O_ORDERSTATUS ASC;
+>
+> +-----------------------------------------------------------------------------+
+>     | ARRAY_AGG(DISTINCT O_ORDERSTATUS) WITHIN GROUP (ORDER BY O_ORDERSTATUS
+> ASC) |
+>
+> |-----------------------------------------------------------------------------|
+>     | [
+> |
+>     |   "F",
+> |
+>     |   "O"
+> |
+>     | ]
+> |
+>
+> +-----------------------------------------------------------------------------+
+>  
+>
+> Copy
+
+This example uses two separate ORDER BY clauses, one of which controls the
+order within the output array inside each row, and one of which controls the
+order of the output rows:
+
+>
+>     SELECT
+>         O_ORDERSTATUS,
+>         ARRAYAGG(O_CLERK) WITHIN GROUP (ORDER BY O_TOTALPRICE DESC)
+>       FROM orders
+>       WHERE O_TOTALPRICE > 450000
+>       GROUP BY O_ORDERSTATUS
+>       ORDER BY O_ORDERSTATUS DESC;
+>
+> +---------------+-------------------------------------------------------------+
+>     | O_ORDERSTATUS | ARRAYAGG(O_CLERK) WITHIN GROUP (ORDER BY O_TOTALPRICE
+> DESC) |
+>
+> |---------------+-------------------------------------------------------------|
+>     | O             | [
+> |
+>     |               |   "Clerk#000000220",
+> |
+>     |               |   "Clerk#000000411",
+> |
+>     |               |   "Clerk#000000114"
+> |
+>     |               | ]
+> |
+>     | F             | [
+> |
+>     |               |   "Clerk#000000508",
+> |
+>     |               |   "Clerk#000000136",
+> |
+>     |               |   "Clerk#000000521",
+> |
+>     |               |   "Clerk#000000386"
+> |
+>     |               | ]
+> |
+>
+> +---------------+-------------------------------------------------------------+
+>  
+>
+> Copy
+

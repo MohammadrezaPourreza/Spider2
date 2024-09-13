@@ -1,0 +1,178 @@
+  WAREHOUSE_METERING_HISTORY  ¶
+
+This table function can be used in queries to return the hourly credit usage
+for a single warehouse (or all the warehouses in your account) within a
+specified date range.
+
+Note
+
+This function returns credit usage within the last 6 months. However, if you
+are querying multiple warehouses over a lengthy time period, it might not
+return a complete data set. To obtain a complete data set, use the [
+ACCOUNT_USAGE view  ](../account-usage/warehouse_metering_history) instead.
+
+See also:
+
+    
+
+[ WAREHOUSE_LOAD_HISTORY  ](warehouse_load_history)
+
+##  Syntax  ¶
+
+    
+    
+    WAREHOUSE_METERING_HISTORY(
+          DATE_RANGE_START => <constant_expr>
+          [ , DATE_RANGE_END => <constant_expr> ]
+          [ , WAREHOUSE_NAME => '<string>' ] )
+    
+
+Copy
+
+##  Arguments  ¶
+
+**Required:**
+
+` DATE_RANGE_START  => _ constant_expr  _ `
+
+    
+
+The starting date, within the last 6 months, for which warehouse usage is
+returned.
+
+**Optional:**
+
+` DATE_RANGE_END  => _ constant_expr  _ `
+
+    
+
+The ending date, within the last 6 months, for which warehouse usage is
+returned.
+
+Default: [ CURRENT_DATE  ](current_date) is used.
+
+` WAREHOUSE_NAME  => '  _ string  _ '  `
+
+    
+
+The name of the warehouse to retrieve credit usage for. Note that the
+warehouse name must be enclosed in single quotes. Also, if the warehouse name
+any spaces, mixed-case characters, or special characters, the name must be
+double-quoted within the single quotes (e.g. ` '"My  Warehouse"'  ` vs `
+'mywarehouse'  ` ).
+
+Default: All warehouses that ran during the specified date range.
+
+##  Usage notes  ¶
+
+  * Returns results only for the ACCOUNTADMIN role or any role that has been explicitly granted the MONITOR USAGE global privilege. 
+
+  * When calling an Information Schema table function, the session must have an INFORMATION_SCHEMA schema in use  or  the function name must be fully-qualified. For more details, see [ Snowflake Information Schema  ](../info-schema) . 
+
+  * The order and structure of the arguments depends on whether the argument keywords (e.g. ` DATE_RANGE_START  ` ) are included: 
+
+    * The keywords are not required if the arguments are specified in order. 
+
+    * If the argument keywords are included, the arguments can be specified in any order. 
+
+##  Output  ¶
+
+The function returns the following columns, ordered by WAREHOUSE_NAME and
+START_TIME:
+
+Column Name
+
+|
+
+Data Type
+
+|
+
+Description  
+  
+---|---|---  
+  
+START_TIME
+
+|
+
+TIMESTAMP_LTZ
+
+|
+
+The beginning of the hour in which this warehouse usage took place.  
+  
+END_TIME
+
+|
+
+TIMESTAMP_LTZ
+
+|
+
+The end of the hour in which this warehouse usage took place.  
+  
+WAREHOUSE_NAME
+
+|
+
+TEXT
+
+|
+
+Name of the warehouse.  
+  
+CREDITS_USED
+
+|
+
+NUMBER
+
+|
+
+Number of credits billed for this warehouse in this hour.  
+  
+CREDITS_USED_COMPUTE
+
+|
+
+NUMBER
+
+|
+
+Number of credits used for the warehouse in the hour.  
+  
+CREDITS_USED_CLOUD_SERVICES
+
+|
+
+NUMBER
+
+|
+
+Number of credits used for cloud services in the hour.  
+  
+##  Examples  ¶
+
+Retrieve hourly warehouse usage over the past 10 days for all warehouses that
+ran during this time period:
+
+>
+>     select *
+>     from
+> table(information_schema.warehouse_metering_history(dateadd('days',-10,current_date())));
+>  
+>
+> Copy
+
+Retrieve hourly warehouse usage for the ` testingwh  ` warehouse on a
+specified date:
+
+>
+>     select *
+>     from table(information_schema.warehouse_metering_history('2017-10-23',
+> '2017-10-23', 'testingwh'));
+>  
+>
+> Copy
+

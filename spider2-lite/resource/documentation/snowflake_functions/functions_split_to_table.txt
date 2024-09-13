@@ -1,0 +1,121 @@
+  SPLIT_TO_TABLE  ¶
+
+This table function splits a string (based on a specified delimiter) and
+flattens the results into rows.
+
+See also:
+
+    
+
+[ SPLIT  ](split)
+
+##  Syntax  ¶
+
+    
+    
+    SPLIT_TO_TABLE(<string>, <delimiter>)
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ string  _ `
+
+    
+
+Text to be split.
+
+` _ delimiter  _ `
+
+    
+
+Text to split string by.
+
+##  Returns  ¶
+
+The returned value is a table.
+
+The returned rows consist of a fixed set of columns:
+
+>
+>     +-----+-------+-------+
+>     | SEQ | INDEX | VALUE |
+>     |-----+-------+-------|
+>  
+>
+> Copy
+
+SEQ  :
+
+    
+
+A unique sequence number associated with the input record; the sequence is not
+guaranteed to be gap-free or ordered in any particular way.
+
+INDEX  :
+
+    
+
+The index of the element. One based.
+
+VALUE  :
+
+    
+
+The value of the element of the flattened array.
+
+Note
+
+The query can also access the columns of the original (correlated) table that
+served as the source of data for this function. If a single row from the
+original table resulted in multiple rows in the flattened view, the values in
+this input row are replicated to match the number of rows produced by
+SPLIT_TO_TABLE.
+
+##  Examples  ¶
+
+Here is a simple example on constant input.
+
+>
+>     SELECT table1.value
+>         FROM table(split_to_table('a.b', '.')) AS table1
+>         ORDER BY table1.value;
+>     +-------+
+>     | VALUE |
+>     |-------|
+>     | a     |
+>     | b     |
+>     +-------+
+>  
+>
+> Copy
+
+The following example uses the table and data created below:
+
+>
+>     CREATE OR REPLACE TABLE splittable (v VARCHAR);
+>     INSERT INTO splittable (v) VALUES ('a.b.c'), ('d'), ('');
+>  
+>
+> Copy
+>
+> This query shows usage of the function as a correlated table:
+>  
+>  
+>     SELECT *
+>         FROM splittable, LATERAL SPLIT_TO_TABLE(splittable.v, '.')
+>         ORDER BY SEQ, INDEX;
+>     +-------+-----+-------+-------+
+>     | V     | SEQ | INDEX | VALUE |
+>     |-------+-----+-------+-------|
+>     | a.b.c |   1 |     1 | a     |
+>     | a.b.c |   1 |     2 | b     |
+>     | a.b.c |   1 |     3 | c     |
+>     | d     |   2 |     1 | d     |
+>     |       |   3 |     1 |       |
+>     +-------+-----+-------+-------+
+>  
+>
+> Copy
+

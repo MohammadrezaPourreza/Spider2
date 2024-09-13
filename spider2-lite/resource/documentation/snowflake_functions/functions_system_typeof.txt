@@ -1,0 +1,129 @@
+  SYSTEM$TYPEOF  ¶
+
+Returns a string representing the SQL data type associated with an expression.
+
+See also:
+
+    
+
+[ TYPEOF  ](typeof)
+
+##  Syntax  ¶
+
+    
+    
+    SYSTEM$TYPEOF( <expr> )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ expr  _ `
+
+    
+
+The argument can be a column name or a general expression.
+
+##  Returns  ¶
+
+Returns a VARCHAR value that contains the data type of the input expression,
+for example, BOOLEAN, NUMBER, ARRAY, OBJECT, etc.
+
+##  Usage notes  ¶
+
+  * If TYPEOF is executed without the SYSTEM$ prefix (i.e. as a regular function rather than a system function), it returns different results (see [ TYPEOF  ](typeof) ). 
+
+##  Examples  ¶
+
+    
+    
+    SELECT SYSTEM$TYPEOF(NULL);
+    
+
+Copy
+
+    
+    
+    +---------------------+
+    | SYSTEM$TYPEOF(NULL) |
+    |---------------------|
+    | NULL[LOB]           |
+    +---------------------+
+    
+    
+    
+    SELECT SYSTEM$TYPEOF(1);
+    
+
+Copy
+
+    
+    
+    +------------------+
+    | SYSTEM$TYPEOF(1) |
+    |------------------|
+    | NUMBER(1,0)[SB1] |
+    +------------------+
+    
+    
+    
+    SELECT SYSTEM$TYPEOF(1e10);
+    
+
+Copy
+
+    
+    
+    +---------------------+
+    | SYSTEM$TYPEOF(1E10) |
+    |---------------------|
+    | NUMBER(11,0)[SB8]   |
+    +---------------------+
+    
+    
+    
+    SELECT SYSTEM$TYPEOF(10000);
+    
+
+Copy
+
+    
+    
+    +----------------------+
+    | SYSTEM$TYPEOF(10000) |
+    |----------------------|
+    | NUMBER(5,0)[SB2]     |
+    +----------------------+
+    
+    
+    
+    SELECT SYSTEM$TYPEOF('something');
+    
+
+Copy
+
+    
+    
+    +----------------------------+
+    | SYSTEM$TYPEOF('SOMETHING') |
+    |----------------------------|
+    | VARCHAR(9)[LOB]            |
+    +----------------------------+
+    
+    
+    
+    SELECT SYSTEM$TYPEOF(CONCAT('every', 'body'));
+    
+
+Copy
+
+    
+    
+    +----------------------------------------+
+    | SYSTEM$TYPEOF(CONCAT('EVERY', 'BODY')) |
+    |----------------------------------------|
+    | VARCHAR(9)[LOB]                        |
+    +----------------------------------------+
+    
+

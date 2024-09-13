@@ -1,0 +1,80 @@
+  HEX_ENCODE  ¶
+
+Encodes the input using hexadecimal (also ‘hex’ or ‘base16’) encoding. The
+result is comprised of 16 different symbols: The numbers ‘0’ to ‘9’ as well as
+the letters ‘A’ to ‘F’ (or ‘a’ to ‘f’, see below).
+
+See also:
+
+    
+
+[ HEX_DECODE_BINARY  ](hex_decode_binary) , [ HEX_DECODE_STRING
+](hex_decode_string)
+
+##  Syntax  ¶
+
+    
+    
+    HEX_ENCODE(<input> [, <case>])
+    
+
+Copy
+
+##  Arguments  ¶
+
+**Required:**
+
+` _ input  _ `
+
+    
+
+A binary or string expression to be encoded.
+
+**Optional:**
+
+` _ case  _ `
+
+    
+
+This optional boolean argument controls the case of the letters (‘A’, ‘B’,
+‘C’, ‘D’, ‘E’ and ‘F’) used in the encoding. The default value is ` 1  ` and
+indicates that uppercase letters are used. The value ` 0  ` indicates that
+lowercase letters are used. All other values are illegal and result in an
+error.
+
+##  Returns  ¶
+
+This returns a string that contains only hexadecimal digits.
+
+##  Examples  ¶
+
+Encode a string:
+
+    
+    
+    SELECT HEX_ENCODE('Snowflake');
+    
+    -------------------------+
+     HEX_ENCODE('SNOWFLAKE') |
+    -------------------------+
+     536E6F77666C616B65      |
+    -------------------------+
+    
+
+Copy
+
+Encode a string using lowercase letters:
+
+    
+    
+    SELECT HEX_ENCODE('Snowflake',0);
+    
+    ---------------------------+
+     HEX_ENCODE('SNOWFLAKE',0) |
+    ---------------------------+
+     536e6f77666c616b65        |
+    ---------------------------+
+    
+
+Copy
+
