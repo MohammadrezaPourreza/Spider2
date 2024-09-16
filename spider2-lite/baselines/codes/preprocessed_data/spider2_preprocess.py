@@ -124,6 +124,9 @@ def preprocess_dev_json(args):
         item['text'] = item['question']
         item['db_id'] = item['db']
         del item['db']
+        if '\n' in item['db_id']:
+            item['db_id'] = item['db_id'].split('\n')
+
         item['table_labels'] = None
         item['column_labels'] = None
         item['matched_contents'] = {}
@@ -148,29 +151,31 @@ def combine_table_dev_json(args):
     keeped_data = []
     for i in range(len(dev_data)):
         new_item = dev_data[i]
-        print('------------instance_id:', new_item['instance_id'])
-        if '\n' in new_item['db_id']:  # multi-db
-            new_item['db_id'] = new_item['db_id'].split('\n') 
+        # print('------------instance_id:', new_item['instance_id'])
+        if isinstance(new_item['db_id'], list):  # multi-db
+            # print(f'for instance_id: {new_item["instance_id"]}, db_ids: {new_item["db_id"]}')
             if not all([db_id in tables_dict for db_id in new_item['db_id']]):
                 continue
 
             for db_id in new_item['db_id']:
                 # print('keys:', tables_dict[db_id].keys())
-                print('table num of db:', len(tables_dict[db_id]['schema']['schema_items']))
+                # print('table num of db:', len(tables_dict[db_id]['schema']['schema_items']))
                 
                 if 'schema' not in new_item:
                     new_item['schema'] = copy.deepcopy(tables_dict[db_id]['schema'])  # caution: must use deepcopy
-                    print('initial:', len(new_item['schema']['schema_items']))
+                    # print('initial:', len(new_item['schema']['schema_items']))
                 else:
                     new_item['schema']['schema_items'] += tables_dict[db_id]['schema']['schema_items']
                     new_item['schema']['foreign_keys'] += tables_dict[db_id]['schema']['foreign_keys']
-                    print('added to:', len(new_item['schema']['schema_items']))
+                    # print('added to:', len(new_item['schema']['schema_items']))
                     
         else:  # single-db
+            # print(f'for instance_id: {new_item["instance_id"]}, db_ids: {new_item["db_id"]}')
+            assert isinstance(new_item['db_id'], str)
             if new_item['db_id'] not in tables_dict:
                 continue
             new_item['schema'] = tables_dict[new_item['db_id']]['schema']
-        print('id(new_item):', id(new_item))
+        # print('id(new_item):', id(new_item))
         keeped_data.append(copy.deepcopy(new_item))
 
 

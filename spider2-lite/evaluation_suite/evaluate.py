@@ -103,6 +103,7 @@ def get_bigquery_sql_result(sql_query, is_save, save_dir=None, file_name="result
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "./credentials/bigquery_credential.json"
     client = bigquery.Client()
 
+
     try:
       query_job = client.query(sql_query)
       results = query_job.result().to_dataframe() 

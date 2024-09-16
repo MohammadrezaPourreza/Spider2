@@ -52,6 +52,15 @@ class SQLPrompt(BasicPrompt):
             return len("\n\n".join(prompt_components)) + len(prompt_question) + len(new) < 1048576
 
         prompt_components = [prompt_info]
+
+        if args.use_few_shot:
+            with open(osp.join(proj_dir, '../utils/3-shot.txt'), 'r', encoding='utf-8') as file:
+                new = file.read()
+            if check_length(prompt_components, new):
+                prompt_components.append(new)
+            else:
+                print("Few-shot examples too long, skip. length: ", len(new))
+
         if args.use_sample_rows:
             sample_rows = get_sample_rows_for_database_from_tables_json(example["db_id"], tables_json)  
             new = self.sample_rows_info.format(sample_rows)

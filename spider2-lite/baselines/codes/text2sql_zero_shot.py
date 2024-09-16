@@ -53,11 +53,13 @@ if __name__ == "__main__":
     parser.add_argument('--max_tokens', type = int, default = 4096)
     parser.add_argument('--max_new_tokens', type = int, default = 256)    
 
-    parser.add_argument('--dev', default='spider2_dev', type=str, help='the name of dev file')
-
     parser.add_argument("--use_external_knowledge", action="store_false", default=True)
+    parser.add_argument("--use_few_shot", action="store_true", default=False)
     parser.add_argument("--use_special_function", action="store_true", default=False)
     parser.add_argument("--use_plan", action="store_true", default=False)
+
+    parser.add_argument('--dev', default='spider2_dev', type=str, help='the name of dev file')
+    parser.add_argument("--comment", type=str, default='')
 
     args = parser.parse_args()
 
@@ -120,7 +122,7 @@ if __name__ == "__main__":
         )
     )
 
-    submit_folder = os.path.join("postprocessed_data", f"{args.dev}/{args.dev}-pred-sqls")
+    submit_folder = os.path.join("postprocessed_data", f"{args.comment}-{args.dev}/{args.dev}-pred-sqls")
     os.makedirs(submit_folder, exist_ok=True)
 
     for idx, (data, predicted_sql) in enumerate(zip(raw_dataset, predicted_sqls)):

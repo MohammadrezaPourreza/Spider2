@@ -77,6 +77,7 @@ spider2-lite/baselines/yyx_tmp/
 **/subset*.json
 **/multi_db_40.json
 **/yyx*.sh
+**/yyx*.py
 
 **/subset*.json
 **/run_check.sh

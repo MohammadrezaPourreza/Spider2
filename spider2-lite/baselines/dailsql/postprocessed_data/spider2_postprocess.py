@@ -47,7 +47,6 @@ def main(root_path, dev_json, table_json):
 
                 db_id = instance_id_to_db_id[instance_id]
                 if isinstance(db_id, str): db_id = [db_id]
-
                 selected_tables_to_dbid = {}        
                 for k, v in dbid_to_tables.items():
                     if k in db_id:
@@ -56,7 +55,6 @@ def main(root_path, dev_json, table_json):
                                 print(f"WARNING: Key '{vv}' already exists in 'selected_tables_to_dbid'.")
                             else:
                                 selected_tables_to_dbid[vv] = k  
-
 
                 sql_file_path = os.path.join(root, file_name)
                 with open(sql_file_path, 'r', encoding='utf-8') as sql_file:

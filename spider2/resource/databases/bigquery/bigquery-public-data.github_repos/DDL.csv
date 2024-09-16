@@ -28,7 +28,7 @@ OPTIONS(
 sample_repos,"CREATE TABLE `bigquery-public-data.github_repos.sample_repos`
 (
   repo_name STRING,
-  watch_count INT64
+  watch_count INTno such table: sample_commits64
 )
 OPTIONS(
   description=""Top 400k GitHub repositories with more than 2 stars received during Jan-May 2016.\n\nThis set is used to select entries for sample_files and sample_contents.\n\nSELECT\n    repo_name,\n    COUNT(*) watch_count\nFROM\n  [githubarchive:month.201605],\n  [githubarchive:month.201604],\n  [githubarchive:month.201603],\n  [githubarchive:month.201602],\n  [githubarchive:month.201601]\nWHERE type=\""WatchEvent\""\nGROUP BY 1\nHAVING watch_count >= 2\nORDER BY watch_count DESC\nLIMIT 400000""
