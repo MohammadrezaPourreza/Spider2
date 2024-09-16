@@ -1,0 +1,60 @@
+  SYSTEM$REVOKE_STAGE_PRIVATELINK_ACCESS  ¶
+
+Revokes the authorization for Snowflake to access the Microsoft Azure Private
+Endpoint for [ Azure Private Endpoints for Internal Stages  ](../../user-
+guide/private-internal-stages-azure) for the current account.
+
+See also:
+
+    
+
+[ SYSTEM$AUTHORIZE_STAGE_PRIVATELINK_ACCESS
+](system_authorize_stage_privatelink_access) , [ Revoking Private Endpoints to
+access Snowflake internal stages  ](../../user-guide/private-internal-stages-
+azure.html#label-private-internal-stages-azure-disable-endpoints)
+
+##  Syntax  ¶
+
+    
+    
+    -- Azure
+    SYSTEM$REVOKE_STAGE_PRIVATELINK_ACCESS( '<privateEndpointResourceID>' )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` '  _ privateEndpointResourceID  _ '  `
+
+    
+
+The unique identifier for the Private Endpoint in Azure.
+
+Snowflake uses this endpoint value to access the internal stage through the
+Azure internal network to avoid the public Internet.
+
+For instructions on how to obtain this value, see [ Configuring private
+endpoints to access Snowflake internal stages  ](../../user-guide/private-
+internal-stages-azure.html#label-private-internal-stages-azure-configure-
+endpoints) .
+
+##  Usage notes  ¶
+
+  * Only account administrators (i.e. users with the ACCOUNTADMIN role) can execute this function. 
+
+  * This function can be used with Snowflake accounts on Azure. This function is not supported for Snowflake accounts on Amazon Web Services or Google Cloud Platform. 
+
+##  Examples  ¶
+
+Revoke Snowflake to access the Private Endpoint in Azure:
+
+>
+>     use role accountadmin;
+>  
+>     select
+> SYSTEM$REVOKE_STAGE_PRIVATELINK_ACCESS('/subscriptions/subId/resourceGroups/rg1/providers/Microsoft.Network/privateEndpoints/pe1');
+>  
+>
+> Copy
+

@@ -1,0 +1,141 @@
+  ARRAY_CONTAINS  ¶
+
+Returns TRUE if the specified value is found in the specified array.
+
+##  Syntax  ¶
+
+    
+    
+    ARRAY_CONTAINS( <value_expr> , <array> )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ value_expr  _ `
+
+    
+
+Value to find in ` _ array  _ ` .
+
+  * If ` _ array  _ ` is a [ semi-structured array  ](../data-types-semistructured.html#label-data-type-array) , ` _ value_expr  _ ` must evaluate to a [ VARIANT  ](../data-types-semistructured.html#label-data-type-variant) . 
+
+  * If ` _ array  _ ` is a [ structured array  ](../data-types-structured) , ` _ value_expr  _ ` must evaluate to a type that is [ comparable  ](../data-types-structured.html#label-structured-types-compare-struct-struct) to the type of the array. 
+
+` _ array  _ `
+
+    
+
+The array to search.
+
+##  Returns  ¶
+
+This function returns a value of BOOLEAN type:
+
+  * The function returns TRUE if ` _ value_expr  _ ` is present in ` _ array  _ ` . 
+
+  * The function returns FALSE if ` _ value_expr  _ ` is not present in ` _ array  _ ` . 
+
+##  Usage notes  ¶
+
+The function does not support wildcards in ` _ value_expr  _ ` . However, you
+can use the [ ARRAY_TO_STRING  ](array_to_string) function to convert an array
+to a string, then search the string with wildcard characters. For example, you
+can specify wildcards to search the returned string using the [ [ NOT ] LIKE
+](like) and [ REGEXP_LIKE  ](regexp_like) functions.
+
+##  Examples  ¶
+
+The following queries use the ARRAY_CONTAINS function in a SELECT list:
+
+    
+    
+    SELECT ARRAY_CONTAINS('hello'::VARIANT, ARRAY_CONSTRUCT('hello', 'hi'));
+    
+
+Copy
+
+    
+    
+    +------------------------------------------------------------------+
+    | ARRAY_CONTAINS('HELLO'::VARIANT, ARRAY_CONSTRUCT('HELLO', 'HI')) |
+    |------------------------------------------------------------------|
+    | True                                                             |
+    +------------------------------------------------------------------+
+    
+    
+    
+    SELECT ARRAY_CONTAINS('hello'::VARIANT, ARRAY_CONSTRUCT('hola', 'bonjour'));
+    
+
+Copy
+
+    
+    
+    +----------------------------------------------------------------------+
+    | ARRAY_CONTAINS('HELLO'::VARIANT, ARRAY_CONSTRUCT('HOLA', 'BONJOUR')) |
+    |----------------------------------------------------------------------|
+    | False                                                                |
+    +----------------------------------------------------------------------+
+    
+
+The following query uses the ARRAY_CONTAINS function in a WHERE clause. First,
+create a table with an ARRAY column and insert data:
+
+    
+    
+    CREATE OR REPLACE TABLE array_example (id INT, array_column ARRAY);
+    
+    INSERT INTO array_example (id, array_column)
+      SELECT 1, ARRAY_CONSTRUCT(1, 2, 3);
+    
+    INSERT INTO array_example (id, array_column)
+      SELECT 2, ARRAY_CONSTRUCT(4, 5, 6);
+    
+    SELECT * FROM array_example;
+    
+
+Copy
+
+    
+    
+    +----+--------------+
+    | ID | ARRAY_COLUMN |
+    |----+--------------|
+    |  1 | [            |
+    |    |   1,         |
+    |    |   2,         |
+    |    |   3          |
+    |    | ]            |
+    |  2 | [            |
+    |    |   4,         |
+    |    |   5,         |
+    |    |   6          |
+    |    | ]            |
+    +----+--------------+
+    
+
+Run a query that specifies the value to find for ` _ value_expr  _ ` and the
+ARRAY column for ` _ array  _ ` :
+
+    
+    
+    SELECT * FROM array_example WHERE ARRAY_CONTAINS(5, array_column);
+    
+
+Copy
+
+    
+    
+    +----+--------------+
+    | ID | ARRAY_COLUMN |
+    |----+--------------|
+    |  2 | [            |
+    |    |   4,         |
+    |    |   5,         |
+    |    |   6          |
+    |    | ]            |
+    +----+--------------+
+    
+

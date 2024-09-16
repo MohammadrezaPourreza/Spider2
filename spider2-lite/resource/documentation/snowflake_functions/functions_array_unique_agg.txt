@@ -1,0 +1,59 @@
+  ARRAY_UNIQUE_AGG  ¶
+
+Returns an [ ARRAY  ](../data-types-semistructured.html#label-data-type-array)
+that contains all of the distinct values from the specified column.
+
+See also:
+
+    
+
+[ Using Arrays to Compute Distinct Values for Hierarchical Aggregations
+](../../user-guide/querying-arrays-for-distinct-counts)
+
+##  Syntax  ¶
+
+    
+    
+    ARRAY_UNIQUE_AGG( <column> )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ column  _ `
+
+    
+
+The column containing the values.
+
+##  Returns  ¶
+
+The function returns an ARRAY containing the distinct values in the specified
+column. The values in the ARRAY are in no particular order, and the order is
+not deterministic.
+
+The function ignores NULL values in ` _ column  _ ` . If ` _ column  _ `
+contains only NULL values or the table containing ` _ column  _ ` is empty,
+the function returns an empty ARRAY.
+
+##  Usage notes  ¶
+
+  * This function can be used as either of the following types of functions: 
+
+    * [ aggregate function  ](../functions-aggregation)
+
+    * [ window function  ](../functions-analytic) . 
+
+When used as a window function, this does not support [ window frames
+](../functions-analytic.html#label-what-is-a-window-frame) .
+
+  * This function does not support a [ structured type  ](../data-types-structured) as an input argument. 
+
+##  Examples  ¶
+
+###  Aggregation  ¶
+
+See [ Using Arrays to Compute Distinct Values for Hierarchical Aggregations
+](../../user-guide/querying-arrays-for-distinct-counts) .
+

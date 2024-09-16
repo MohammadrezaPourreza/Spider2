@@ -1,0 +1,64 @@
+  STARTSWITH  ¶
+
+Returns true if ` _ expr1  _ ` starts with ` _ expr2  _ ` . Both expressions
+must be text or binary expressions.
+
+Tip
+
+You can use the search optimization service to improve the performance of
+queries that call this function. For details, see [ Search Optimization
+Service  ](../../user-guide/search-optimization-service) .
+
+##  Syntax  ¶
+
+    
+    
+    STARTSWITH( <expr1> , <expr2> )
+    
+
+Copy
+
+##  Returns  ¶
+
+Returns a BOOLEAN. The value is TRUE if ` _ expr1  _ ` starts with ` _ expr2
+_ ` . Returns NULL if either input expression is NULL. Otherwise, returns
+FALSE.
+
+##  Collation details  ¶
+
+The [ collation specifications  ](../collation.html#label-collation-
+specification) of all input arguments must be compatible.
+
+This function does not support the following collation specifications:
+
+  * ` pi  ` (punctuation-insensitive). 
+
+  * ` cs-ai  ` (case-sensitive, accent-insensitive). 
+
+##  Examples  ¶
+
+    
+    
+    select * from strings;
+    
+    ---------+
+        S    |
+    ---------+
+     coffee  |
+     ice tea |
+     latte   |
+     tea     |
+     [NULL]  |
+    ---------+
+    
+    select * from strings where startswith(s, 'te');
+    
+    -----+
+      S  |
+    -----+
+     tea |
+    -----+
+    
+
+Copy
+

@@ -1,0 +1,55 @@
+  INTEGRATION  ¶
+
+Returns a JSON object that specifies the notification integration to use to
+send a message. This is a helper function that you use to construct an
+integration configuration object for the [ SYSTEM$SEND_SNOWFLAKE_NOTIFICATION
+](../stored-procedures/system_send_snowflake_notification) stored procedure.
+
+See also:
+
+    
+
+[ Using SYSTEM$SEND_SNOWFLAKE_NOTIFICATION to send notifications
+](../../user-guide/notifications/snowflake-notifications) , [
+SYSTEM$SEND_SNOWFLAKE_NOTIFICATION  ](../stored-
+procedures/system_send_snowflake_notification) , [ EMAIL_INTEGRATION_CONFIG
+](email_integration_config)
+
+##  Syntax  ¶
+
+    
+    
+    SNOWFLAKE.NOTIFICATION.INTEGRATION( '<integration_name>' )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` '  _ integration_name  _ '  `
+
+    
+
+Name of the notification integration to use.
+
+##  Returns  ¶
+
+A JSON-formatted string that specifies a notification integration for the [
+SYSTEM$SEND_SNOWFLAKE_NOTIFICATION  ](../stored-
+procedures/system_send_snowflake_notification) stored procedure to send.
+
+For example, if you pass in the notification integration name ` 'my_queue_int'
+` , the function returns:
+
+    
+    
+    '{"my_queue_int":{}}'
+    
+
+Copy
+
+##  Examples  ¶
+
+See [ Using SYSTEM$SEND_SNOWFLAKE_NOTIFICATION to send notifications
+](../../user-guide/notifications/snowflake-notifications) .
+

@@ -1,0 +1,46 @@
+  UPPER  ¶
+
+Returns the input string ` _ expr  _ ` with all characters converted to
+uppercase.
+
+##  Syntax  ¶
+
+    
+    
+    UPPER( <expr> )
+    
+
+Copy
+
+##  Collation details  ¶
+
+Arguments with collation specifications are currently not supported.
+
+##  Examples  ¶
+
+    
+    
+    SELECT v, UPPER(v) FROM lu;
+    
+    ----------------------------------+----------------------------------+
+                    v                 |             upper(v)             |
+    ----------------------------------+----------------------------------+
+                                      |                                  |
+     1č2Щ3ß4Ę!-?abc@                  | 1Č2Щ3SS4Ę!-?ABC@                 |
+     AaBbCcDdEeFfGgHhIiJj             | AABBCCDDEEFFGGHHIIJJ             |
+     KkLlMmNnOoPpQqRrSsTt             | KKLLMMNNOOPPQQRRSSTT             |
+     UuVvWwXxYyZz                     | UUVVWWXXYYZZ                     |
+     ÁáÄäÉéÍíÓóÔôÚúÝý                 | ÁÁÄÄÉÉÍÍÓÓÔÔÚÚÝÝ                 |
+     ÄäÖößÜü                          | ÄÄÖÖSSÜÜ                         |
+     ÉéÀàÈèÙùÂâÊêÎîÔôÛûËëÏïÜüŸÿÇçŒœÆæ | ÉÉÀÀÈÈÙÙÂÂÊÊÎÎÔÔÛÛËËÏÏÜÜŸŸÇÇŒŒÆÆ |
+     ĄąĆćĘęŁłŃńÓóŚśŹźŻż               | ĄĄĆĆĘĘŁŁŃŃÓÓŚŚŹŹŻŻ               |
+     ČčĎďĹĺĽľŇňŔŕŠšŤťŽž               | ČČĎĎĹĹĽĽŇŇŔŔŠŠŤŤŽŽ               |
+     АаБбВвГгДдЕеЁёЖжЗзИиЙй           | ААББВВГГДДЕЕЁЁЖЖЗЗИИЙЙ           |
+     КкЛлМмНнОоПпРрСсТтУуФф           | ККЛЛММННООППРРССТТУУФФ           |
+     ХхЦцЧчШшЩщЪъЫыЬьЭэЮюЯя           | ХХЦЦЧЧШШЩЩЪЪЫЫЬЬЭЭЮЮЯЯ           |
+     [NULL]                           | [NULL]                           |
+    ----------------------------------+----------------------------------+
+    
+
+Copy
+

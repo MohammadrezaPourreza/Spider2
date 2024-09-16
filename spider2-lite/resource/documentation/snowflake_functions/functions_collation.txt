@@ -1,0 +1,61 @@
+  COLLATION  ¶
+
+Returns the collation specification of the expression.
+
+##  Syntax  ¶
+
+    
+    
+    COLLATION(<expression>)
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ expression  _ `
+
+    
+
+The expression for which you want to know the collation specification.
+Typically, this is a column name.
+
+##  Returns  ¶
+
+Returns a VARCHAR value that contains the collation specification of the
+expression.
+
+##  Examples  ¶
+
+This example shows how to get the collation specification of a specified
+column.
+
+First, create the table and insert data:
+
+    
+    
+    CREATE OR REPLACE TABLE collation1 (v VARCHAR COLLATE 'es');
+    INSERT INTO collation1 (v) VALUES ('ñ');
+    
+
+Copy
+
+Second, show the collation of the column:
+
+    
+    
+    SELECT COLLATION(v)
+      FROM collation1;
+    
+
+Copy
+
+    
+    
+    +--------------+
+    | COLLATION(V) |
+    |--------------|
+    | es           |
+    +--------------+
+    
+

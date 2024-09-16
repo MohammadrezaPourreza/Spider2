@@ -1,0 +1,165 @@
+  SPLIT_PART  ¶
+
+Splits a given string at a specified character and returns the requested part.
+
+If any parameter is NULL, NULL is returned.
+
+Tip
+
+You can use the search optimization service to improve the performance of
+queries that call this function. For details, see [ Search Optimization
+Service  ](../../user-guide/search-optimization-service) .
+
+See also  :
+
+    
+
+[ SPLIT  ](split)
+
+##  Syntax  ¶
+
+    
+    
+    SPLIT_PART(<string>, <delimiter>, <partNumber>)
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ string  _ `
+
+    
+
+Text to be split into parts.
+
+` _ delimiter  _ `
+
+    
+
+Text representing the delimiter to split by.
+
+` _ partNumber  _ `
+
+    
+
+Requested part of the split (1-based).
+
+If the value is negative, the parts are counted backward from the end of the
+string.
+
+##  Usage notes  ¶
+
+  * If the ` _ partNumber  _ ` is out of range, the returned value is an empty string. 
+
+  * If the string starts or is terminated with the delimiter, the system considers empty space before or after the delimiter, respectively, as a valid part of the split result. For an example, see the  Examples  section below. 
+
+  * If the ` _ partNumber  _ ` is 0, it is treated as 1. In other words, it gets the first element of the split. To avoid confusion over whether indexes are 1-based or 0-based, Snowflake recommends avoiding the use of 0 as a synonym for 1. 
+
+  * If the separator is an empty string, then after the split, the returned value is the input string (the string is not split). 
+
+##  Collation details  ¶
+
+The [ collation specifications  ](../collation.html#label-collation-
+specification) of all input arguments must be compatible.
+
+This function does not support the following collation specifications:
+
+  * ` pi  ` (punctuation-insensitive). 
+
+  * ` cs-ai  ` (case-sensitive, accent-insensitive). 
+
+##  Examples  ¶
+
+Demonstrate the portions returned by different ` _ partNumber  _ ` values.
+
+>
+>     select  0, split_part('11.22.33', '.',  0) UNION
+>     select  1, split_part('11.22.33', '.',  1) UNION
+>     select  2, split_part('11.22.33', '.',  2) UNION
+>     select  3, split_part('11.22.33', '.',  3) UNION
+>     select  4, split_part('11.22.33', '.',  4) UNION
+>     select -1, split_part('11.22.33', '.', -1) UNION
+>     select -2, split_part('11.22.33', '.', -2) UNION
+>     select -3, split_part('11.22.33', '.', -3) UNION
+>     select -4, split_part('11.22.33', '.', -4)
+>     ;
+>     +----+---------------------------------+
+>     |  0 | SPLIT_PART('11.22.33', '.',  0) |
+>     |----+---------------------------------|
+>     |  0 | 11                              |
+>     |  1 | 11                              |
+>     |  2 | 22                              |
+>     |  3 | 33                              |
+>     |  4 |                                 |
+>     | -1 | 33                              |
+>     | -2 | 22                              |
+>     | -3 | 11                              |
+>     | -4 |                                 |
+>     +----+---------------------------------+
+>  
+>
+> Copy
+
+Return the first and last parts of the localhost IP address ` 127.0.0.1  ` :
+
+>
+>     SELECT SPLIT_PART('127.0.0.1', '.', 1), SPLIT_PART('127.0.0.1', '.',
+> -1);
+>     +---------------------------------+----------------------------------+
+>     | SPLIT_PART('127.0.0.1', '.', 1) | SPLIT_PART('127.0.0.1', '.', -1) |
+>     |---------------------------------+----------------------------------|
+>     | 127                             | 1                                |
+>     +---------------------------------+----------------------------------+
+>  
+>
+> Copy
+
+Return the first and second parts of a string of characters that are separated
+by vertical bars. Note that the separator is the first part of the input
+string, and therefore the first element after the split is an empty string.
+
+>
+>     SELECT SPLIT_PART('|a|b|c|', '|', 1), SPLIT_PART('|a|b|c|', '|', 2);
+>     +-------------------------------+-------------------------------+
+>     | SPLIT_PART('|A|B|C|', '|', 1) | SPLIT_PART('|A|B|C|', '|', 2) |
+>     |-------------------------------+-------------------------------|
+>     |                               | a                             |
+>     +-------------------------------+-------------------------------+
+>  
+>
+> Copy
+
+The following example shows a multi-character separator:
+
+>
+>     SELECT SPLIT_PART('aaa--bbb-BBB--ccc', '--', 2);
+>     +------------------------------------------+
+>     | SPLIT_PART('AAA--BBB-BBB--CCC', '--', 2) |
+>     |------------------------------------------|
+>     | bbb-BBB                                  |
+>     +------------------------------------------+
+>  
+>
+> Copy
+
+The following example shows that if the separator is an empty string, then
+after the split, there is still only one string:
+
+>
+>     select  1, split_part('user@snowflake.com', '',  1) UNION
+>     select -1, split_part('user@snowflake.com', '', -1) UNION
+>     select  2, split_part('user@snowflake.com', '',  2) UNION
+>     select -2, split_part('user@snowflake.com', '', -2);
+>     +----+------------------------------------------+
+>     |  1 | SPLIT_PART('USER@SNOWFLAKE.COM', '',  1) |
+>     |----+------------------------------------------|
+>     |  1 | user@snowflake.com                       |
+>     | -1 | user@snowflake.com                       |
+>     |  2 |                                          |
+>     | -2 |                                          |
+>     +----+------------------------------------------+
+>  
+>
+> Copy
+

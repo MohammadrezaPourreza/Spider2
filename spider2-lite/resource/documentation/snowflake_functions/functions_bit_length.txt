@@ -1,0 +1,68 @@
+  BIT_LENGTH  ¶
+
+Returns the length of a string or binary value in bits.
+
+Snowflake doesn’t use fractional bytes so length is always calculated as 8 * [
+OCTET_LENGTH  ](octet_length) .
+
+##  Syntax  ¶
+
+    
+    
+    BIT_LENGTH(<string_or_binary>)
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ string_or_binary  _ `
+
+    
+
+The string or binary value for which the length is returned.
+
+##  Examples  ¶
+
+This shows use of the ` BIT_LENGTH  ` function on both string and BINARY
+values:
+
+> >
+>>     CREATE TABLE bl (v VARCHAR, b BINARY);
+
+>>     INSERT INTO bl (v, b) VALUES
+
+>>        ('abc', NULL),
+
+>>        ('\u0394', X'A1B2');
+
+>>  
+>>
+
+>> Copy
+
+>
+> Query the data:
+>
+
+>>
+
+>>     SELECT v, b, BIT_LENGTH(v), BIT_LENGTH(b) FROM bl ORDER BY v;
+
+>>     +-----+------+---------------+---------------+
+
+>>     | V   | B    | BIT_LENGTH(V) | BIT_LENGTH(B) |
+
+>>     |-----+------+---------------+---------------|
+
+>>     | abc | NULL |            24 |          NULL |
+
+>>     | Δ   | A1B2 |            16 |            16 |
+
+>>     +-----+------+---------------+---------------+
+
+>>  
+>>
+
+>> Copy
+

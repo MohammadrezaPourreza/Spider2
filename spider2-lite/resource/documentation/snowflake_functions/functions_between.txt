@@ -1,0 +1,111 @@
+  [ NOT ] BETWEEN  ¶
+
+Returns ` TRUE  ` when the input expression (numeric or string) is within the
+specified lower and upper boundary.
+
+##  Syntax  ¶
+
+    
+    
+    <expr> [ NOT ] BETWEEN <lower_bound> AND <upper_bound>
+    
+
+Copy
+
+##  Usage notes  ¶
+
+  * ` _ expr  _ BETWEEN  _ lower_bound  _ AND  _ upper_bound  _ ` is equivalent to ` _ expr  _ >=  _ lower_bound  _ AND  _ expr  _ <=  _ upper_bound  _ ` . 
+
+  * The specified upper boundary must be larger/greater than the lower boundary. 
+
+##  Collation details  ¶
+
+The expression ` A  BETWEEN  X  AND  Y  ` is equivalent to ` A  >=  X  AND  A
+<=  Y  ` . The collations used for comparing with ` X  ` and ` Y  ` are
+independent and do not need to be identical, but both need to be compatible
+with the collation of ` A  ` .
+
+##  Examples  ¶
+
+Here are a few simple examples of using BETWEEN with numeric and string
+values:
+
+    
+    
+    SELECT 'true' WHERE 1 BETWEEN 0 AND 10;
+    
+
+Copy
+
+    
+    
+    +--------+
+    | 'TRUE' |
+    |--------|
+    | true   |
+    +--------+
+    
+    
+    
+    SELECT 'true' WHERE 1.35 BETWEEN 1 AND 2;
+    
+
+Copy
+
+    
+    
+    +--------+
+    | 'TRUE' |
+    |--------|
+    | true   |
+    +--------+
+    
+    
+    
+    SELECT 'true' WHERE 'the' BETWEEN 'that' AND 'then';
+    
+
+Copy
+
+    
+    
+    +--------+
+    | 'TRUE' |
+    |--------|
+    | true   |
+    +--------+
+    
+
+The following examples use COLLATE with BETWEEN:
+
+    
+    
+    SELECT 'm' BETWEEN COLLATE('A', 'lower') AND COLLATE('Z', 'lower');
+    
+
+Copy
+
+    
+    
+    +-------------------------------------------------------------+
+    | 'M' BETWEEN COLLATE('A', 'LOWER') AND COLLATE('Z', 'LOWER') |
+    |-------------------------------------------------------------|
+    | True                                                        |
+    +-------------------------------------------------------------+
+    
+    
+    
+    SELECT COLLATE('m', 'upper') BETWEEN 'A' AND 'Z';
+    
+
+Copy
+
+    
+    
+    +-------------------------------------------+
+    | COLLATE('M', 'UPPER') BETWEEN 'A' AND 'Z' |
+    |-------------------------------------------|
+    | True                                      |
+    +-------------------------------------------+
+    
+

@@ -1,0 +1,110 @@
+{
+    "sample_rows": [
+        {
+            "id": 950862,
+            "case_id": "5090125",
+            "party_number": 2,
+            "victim_role": "passenger",
+            "victim_sex": "male",
+            "victim_age": 13,
+            "victim_degree_of_injury": "no injury",
+            "victim_seating_position": "passenger seat 3",
+            "victim_safety_equipment_1": "air bag not deployed",
+            "victim_safety_equipment_2": "lap/shoulder harness used",
+            "victim_ejected": "not ejected"
+        },
+        {
+            "id": 2461268,
+            "case_id": "6618623",
+            "party_number": 3,
+            "victim_role": "passenger",
+            "victim_sex": "male",
+            "victim_age": 6,
+            "victim_degree_of_injury": "no injury",
+            "victim_seating_position": "passenger seat 3",
+            "victim_safety_equipment_1": "air bag not deployed",
+            "victim_safety_equipment_2": "lap/shoulder harness used",
+            "victim_ejected": "not ejected"
+        },
+        {
+            "id": 1855436,
+            "case_id": "1821010",
+            "party_number": 1,
+            "victim_role": "passenger",
+            "victim_sex": "male",
+            "victim_age": 32,
+            "victim_degree_of_injury": "no injury",
+            "victim_seating_position": "passenger seat 3",
+            "victim_safety_equipment_1": "air bag not deployed",
+            "victim_safety_equipment_2": "lap/shoulder harness used",
+            "victim_ejected": "not ejected"
+        },
+        {
+            "id": 2340629,
+            "case_id": "2202546",
+            "party_number": 2,
+            "victim_role": "driver",
+            "victim_sex": "female",
+            "victim_age": 31,
+            "victim_degree_of_injury": "complaint of pain",
+            "victim_seating_position": "driver",
+            "victim_safety_equipment_1": "air bag deployed",
+            "victim_safety_equipment_2": "lap/shoulder harness used",
+            "victim_ejected": "not ejected"
+        },
+        {
+            "id": 2486144,
+            "case_id": "2354092",
+            "party_number": 1,
+            "victim_role": "passenger",
+            "victim_sex": "female",
+            "victim_age": 10,
+            "victim_degree_of_injury": "no injury",
+            "victim_seating_position": "passenger seat 3",
+            "victim_safety_equipment_1": "air bag not deployed",
+            "victim_safety_equipment_2": "lap/shoulder harness used",
+            "victim_ejected": "not ejected"
+        }
+    ],
+    "table_name": "victims",
+    "table_fullname": "victims",
+    "column_names": [
+        "id",
+        "case_id",
+        "party_number",
+        "victim_role",
+        "victim_sex",
+        "victim_age",
+        "victim_degree_of_injury",
+        "victim_seating_position",
+        "victim_safety_equipment_1",
+        "victim_safety_equipment_2",
+        "victim_ejected"
+    ],
+    "column_types": [
+        "INT",
+        "TEXT",
+        "INT",
+        "TEXT",
+        "TEXT",
+        "INT",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT"
+    ],
+    "description": [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+    ]
+}

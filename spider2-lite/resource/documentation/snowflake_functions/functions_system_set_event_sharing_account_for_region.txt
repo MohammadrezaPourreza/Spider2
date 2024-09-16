@@ -1,0 +1,58 @@
+  SYSTEM$SET_EVENT_SHARING_ACCOUNT_FOR_REGION  ¶
+
+Sets the event account for a region.
+
+See also:
+
+    
+
+[ SYSTEM$UNSET_EVENT_SHARING_ACCOUNT_FOR_REGION
+](system_unset_event_sharing_account_for_region)
+
+##  Syntax  ¶
+
+    
+    
+    SYSTEM$SET_EVENT_SHARING_ACCOUNT_FOR_REGION( '<snowflake_region>' , '<region_group>' , '<account_name>' )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ snowflake_region  _ `
+
+    
+
+Specifies the region where the account is located, for example: `
+AWS_US_WEST_2,  AWS_US_EAST_1  ` .
+
+` _ region_group  _ `
+
+    
+
+Specifies the region group, for example: ` PUBLIC  ` . Refer to [ Region
+groups  ](../../user-guide/admin-account-identifier.html#label-region-groups)
+for details.
+
+` _ account_name  _ `
+
+    
+
+Specifies the account name. If another account is already set as the events
+account in the specified region, calling this function changes the events
+account to be the account specified here.
+
+##  Access control requirements  ¶
+
+  * Only users with the ORGADMIN role can execute this SQL function. 
+
+##  Examples  ¶
+
+    
+    
+    SELECT SYSTEM$SET_EVENT_SHARING_ACCOUNT_FOR_REGION('aws_us_west_2', 'public', 'myaccount');
+    
+
+Copy
+

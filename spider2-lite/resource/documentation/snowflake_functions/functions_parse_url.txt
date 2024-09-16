@@ -1,0 +1,142 @@
+  PARSE_URL  ¶
+
+Returns a JSON object consisting of all the components (fragment, host, path,
+port, query, scheme) in a valid input URL/URI.
+
+##  Syntax  ¶
+
+    
+    
+    PARSE_URL(<string>, [<permissive>])
+    
+
+Copy
+
+##  Arguments  ¶
+
+**Required:**
+
+` _ string  _ `
+
+    
+
+String to parse.
+
+**Optional:**
+
+` _ permissive  _ `
+
+    
+
+Flag that determines how parse errors are handled:
+
+  * If set to 0, parse errors cause the function to fail. 
+
+  * If set to 1, parse errors result in an object with the ` error  ` field set to the respective error message (and no other fields set). 
+
+Default value is 0.
+
+##  Returns  ¶
+
+The data type of the returned value is ` OBJECT  ` . The object contains JSON.
+
+##  Examples  ¶
+
+Parse a simple URL:
+
+>
+>     SELECT PARSE_URL('https://www.snowflake.com/');
+>     +-----------------------------------------+
+>     | PARSE_URL('HTTPS://WWW.SNOWFLAKE.COM/') |
+>     |-----------------------------------------|
+>     | {                                       |
+>     |   "fragment": null,                     |
+>     |   "host": "www.snowflake.com",          |
+>     |   "parameters": null,                   |
+>     |   "path": "",                           |
+>     |   "port": null,                         |
+>     |   "query": null,                        |
+>     |   "scheme": "https"                     |
+>     | }                                       |
+>     +-----------------------------------------+
+>  
+>
+> Copy
+
+Parse a URL that includes a path and a port number:
+
+>
+>     SELECT PARSE_URL('HTTP://USER:PASS@EXAMPLE.INT:4345/HELLO.PHP?USER=1');
+>     +-----------------------------------------------------------------+
+>     | PARSE_URL('HTTP://USER:PASS@EXAMPLE.INT:4345/HELLO.PHP?USER=1') |
+>     |-----------------------------------------------------------------|
+>     | {                                                               |
+>     |   "fragment": null,                                             |
+>     |   "host": "USER:PASS@EXAMPLE.INT",                              |
+>     |   "parameters": {                                               |
+>     |     "USER": "1"                                                 |
+>     |   },                                                            |
+>     |   "path": "HELLO.PHP",                                          |
+>     |   "port": "4345",                                               |
+>     |   "query": "USER=1",                                            |
+>     |   "scheme": "HTTP"                                              |
+>     | }                                                               |
+>     +-----------------------------------------------------------------+
+>  
+>
+> Copy
+
+Parse an email URL:
+
+>
+>     SELECT PARSE_URL('mailto:abc@xyz.com');
+>     +---------------------------------+
+>     | PARSE_URL('MAILTO:ABC@XYZ.COM') |
+>     |---------------------------------|
+>     | {                               |
+>     |   "fragment": null,             |
+>     |   "host": null,                 |
+>     |   "parameters": null,           |
+>     |   "path": "abc@xyz.com",        |
+>     |   "port": null,                 |
+>     |   "query": null,                |
+>     |   "scheme": "mailto"            |
+>     | }                               |
+>     +---------------------------------+
+>  
+>
+> Copy
+
+Parse an invalid URL that is missing the scheme. Set ` _ permissive  _ `
+parameter set to 0 to indicate that the function should fail if the input is
+invalid:
+
+>
+>     SELECT PARSE_URL('example.int/hello.php?user=12#nofragment', 0);
+>  
+>
+> Copy
+>  
+>  
+>     100139 (22000): Error parsing URL: scheme not specified
+>  
+>
+> Copy
+
+Parse an invalid URL, with the ` _ permissive  _ ` parameter set to 1 to
+indicate that the function should return an object that contains the error
+message in JSON format:
+
+>
+>     SELECT PARSE_URL('example.int/hello.php?user=12#nofragment', 1);
+>     +----------------------------------------------------------+
+>     | PARSE_URL('EXAMPLE.INT/HELLO.PHP?USER=12#NOFRAGMENT', 1) |
+>     |----------------------------------------------------------|
+>     | {                                                        |
+>     |   "error": "scheme not specified"                        |
+>     | }                                                        |
+>     +----------------------------------------------------------+
+>  
+>
+> Copy
+

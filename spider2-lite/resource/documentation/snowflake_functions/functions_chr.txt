@@ -1,0 +1,100 @@
+  CHR , CHAR  ¶
+
+Converts a Unicode code point (including 7-bit ASCII) into the character that
+matches the input Unicode. If an invalid code point is specified, an error is
+returned.
+
+CHAR is an alias for CHR.
+
+See also:
+
+    
+
+[ ASCII  ](ascii) , [ UNICODE  ](unicode)
+
+##  Syntax  ¶
+
+    
+    
+    CHR( <input> )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ input  _ `
+
+    
+
+The Unicode code point for which the character is returned.
+
+##  Returns  ¶
+
+The data type of the returned value is VARCHAR.
+
+##  Examples  ¶
+
+This example demonstrates the function behavior for some valid Unicode code
+points:
+
+>
+>     SELECT column1, CHR(column1)
+>     FROM (VALUES(83), (33), (169), (8364), (0), (null));
+>  
+>
+> Copy
+
+This shows the output for the preceding query:
+
+>
+>     +---------+--------------+
+>     | COLUMN1 | CHR(COLUMN1) |
+>     |---------+--------------|
+>     |      83 | S            |
+>     |      33 | !            |
+>     |     169 | ©            |
+>     |    8364 | €            |
+>     |       0 |              |
+>     |    NULL | NULL         |
+>     +---------+--------------+
+>  
+>
+> Copy
+
+This example demonstrates the function behavior for an invalid Unicode code
+point:
+
+>
+>     SELECT column1, CHR(column1)
+>     FROM (VALUES(-1));
+>  
+>
+> Copy
+
+This shows the output for the preceding query:
+
+>
+>     FAILURE: Invalid character code -1 in the CHR input
+>  
+>
+> Copy
+
+This example demonstrates the function behavior for another invalid Unicode
+code point:
+
+>
+>     SELECT column1, CHR(column1)
+>     FROM (VALUES(999999999999));
+>  
+>
+> Copy
+
+This shows the output for the preceding query:
+
+>
+>     FAILURE: Invalid character code 999999999999 in the CHR input
+>  
+>
+> Copy
+

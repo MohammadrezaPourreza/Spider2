@@ -1,0 +1,118 @@
+  ST_INTERSECTS  ¶
+
+Returns TRUE if the two [ GEOGRAPHY  ](../data-types-geospatial.html#label-
+data-types-geography) objects or the two [ GEOMETRY  ](../data-types-
+geospatial.html#label-data-types-geometry) objects intersect (i.e. share any
+portion of space).
+
+Note
+
+This function does not support using a GeometryCollection or FeatureCollection
+as input values.
+
+Tip
+
+You can use the search optimization service to improve the performance of
+queries that call this function. For details, see [ Search Optimization
+Service  ](../../user-guide/search-optimization-service) .
+
+See also:
+
+    
+
+[ ST_DISJOINT  ](st_disjoint)
+
+##  Syntax  ¶
+
+    
+    
+    ST_INTERSECTS( <geography_expression_1> , <geography_expression_2> )
+    
+    ST_INTERSECTS( <geometry_expression_1> , <geometry_expression_2> )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ geography_expression_1  _ `
+
+    
+
+A GEOGRAPHY object.
+
+` _ geography_expression_2  _ `
+
+    
+
+A GEOGRAPHY object.
+
+` _ geometry_expression_1  _ `
+
+    
+
+A GEOMETRY object.
+
+` _ geometry_expression_2  _ `
+
+    
+
+A GEOMETRY object.
+
+##  Returns  ¶
+
+BOOLEAN.
+
+##  Usage notes  ¶
+
+  * For GEOMETRY objects, the function reports an error if the two input GEOMETRY objects have different SRIDs. 
+
+##  Examples  ¶
+
+###  GEOGRAPHY examples  ¶
+
+This shows a simple use of the ST_INTERSECTS function:
+
+>
+>     SELECT ST_INTERSECTS(
+>         TO_GEOGRAPHY('POLYGON((0 0, 2 0, 2 2, 0 2, 0 0))'),
+>         TO_GEOGRAPHY('POLYGON((1 1, 3 1, 3 3, 1 3, 1 1))')
+>         );
+>     +---------------------------------------------------------+
+>     | ST_INTERSECTS(                                          |
+>     |     TO_GEOGRAPHY('POLYGON((0 0, 2 0, 2 2, 0 2, 0 0))'), |
+>     |     TO_GEOGRAPHY('POLYGON((1 1, 3 1, 3 3, 1 3, 1 1))')  |
+>     |     )                                                   |
+>     |---------------------------------------------------------|
+>     | True                                                    |
+>     +---------------------------------------------------------+
+>  
+>
+> Copy
+
+###  GEOMETRY examples  ¶
+
+This shows a simple use of the ST_INTERSECTS function:
+
+>
+>     SELECT ST_INTERSECTS(
+>       TO_GEOMETRY('POLYGON((0 0, 0 2, 2 2, 2 0, 0 0))'),
+>       TO_GEOMETRY('POLYGON((1 1, 3 1, 3 3, 1 3, 1 1))')
+>     );
+>  
+>
+> Copy
+>  
+>  
+>     +------------------------------------------------------+
+>     | ST_INTERSECTS(                                       |
+>     |   TO_GEOMETRY('POLYGON((0 0, 0 2, 2 2, 2 0, 0 0))'), |
+>     |   TO_GEOMETRY('POLYGON((1 1, 3 1, 3 3, 1 3, 1 1))')  |
+>     | )                                                    |
+>     |------------------------------------------------------|
+>     | True                                                 |
+>     +------------------------------------------------------+
+>  
+>
+> Copy
+

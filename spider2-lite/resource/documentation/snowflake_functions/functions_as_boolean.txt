@@ -1,0 +1,53 @@
+  AS_BOOLEAN  ¶
+
+Casts a VARIANT value to a BOOLEAN value.
+
+See also:
+
+    
+
+[ AS_<object_type> ](as)
+
+##  Syntax  ¶
+
+    
+    
+    AS_BOOLEAN( <variant> )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ variant  _ `
+
+    
+
+This should be an expression that evaluates to a VARIANT that contains a valid
+BOOLEAN value.
+
+##  Returns  ¶
+
+The data type of the returned value is ` BOOLEAN  ` .
+
+##  Examples  ¶
+
+Here is a simple example of using ` AS_BOOLEAN  ` :
+
+>
+>     SELECT AS_BOOLEAN(TO_VARIANT(TRUE)), AS_BOOLEAN(TO_VARIANT(FALSE)),
+> AS_BOOLEAN(TO_VARIANT(NULL));
+>
+> +------------------------------+-------------------------------+------------------------------+
+>     | AS_BOOLEAN(TO_VARIANT(TRUE)) | AS_BOOLEAN(TO_VARIANT(FALSE)) |
+> AS_BOOLEAN(TO_VARIANT(NULL)) |
+>
+> |------------------------------+-------------------------------+------------------------------|
+>     | True                         | False                         | NULL
+> |
+>
+> +------------------------------+-------------------------------+------------------------------+
+>  
+>
+> Copy
+

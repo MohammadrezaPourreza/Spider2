@@ -1,0 +1,65 @@
+  SYSTEM$ENABLE_BEHAVIOR_CHANGE_BUNDLE  ¶
+
+Enables behavior changes included in the specified [ behavior change release
+bundle  ](../../release-notes/behavior-change-policy.html#label-behavior-
+change-bundles) for the current account.
+
+By default, behavior change bundles are not enabled during the pre-
+announcement period. Use this function to test behavior changes before they
+are enabled for your account.
+
+See also:
+
+    
+
+[ SYSTEM$DISABLE_BEHAVIOR_CHANGE_BUNDLE
+](system_disable_behavior_change_bundle) , [
+SYSTEM$BEHAVIOR_CHANGE_BUNDLE_STATUS  ](system_behavior_change_bundle_status)
+[ SYSTEM$SHOW_ACTIVE_BEHAVIOR_CHANGE_BUNDLES
+](system_show_active_behavior_change_bundles)
+
+##  Syntax  ¶
+
+    
+    
+    SYSTEM$ENABLE_BEHAVIOR_CHANGE_BUNDLE( '<bundle_name>' )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ bundle_name  _ `
+
+    
+
+Name of the behavior change bundle, specified as a string. To obtain the name
+for a bundle, see [ Behavior Change Log  ](../../release-notes/behavior-
+changes) .
+
+##  Returns  ¶
+
+Returns the VARCHAR value ` ENABLED  ` if the function successfully enables
+the behavior changes.
+
+##  Examples  ¶
+
+The following example enables the ` 2020_08  ` behavior change bundle for the
+current account.
+
+    
+    
+    SELECT SYSTEM$ENABLE_BEHAVIOR_CHANGE_BUNDLE('2020_08');
+    
+
+Copy
+
+    
+    
+    +-------------------------------------------------+
+    | SYSTEM$ENABLE_BEHAVIOR_CHANGE_BUNDLE('2020_08') |
+    |-------------------------------------------------|
+    | ENABLED                                         |
+    +-------------------------------------------------+
+    
+

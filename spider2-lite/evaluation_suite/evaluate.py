@@ -174,29 +174,41 @@ def evaluate_spider2sql(args):
                 if exe_flag == False: 
                     score = 0
                     error_info = dbms_error_info
-                else:
+                else:                    
                     pred_pd = pd.read_csv(os.path.join("temp", f"{id}_pred.csv"))  
                     if '_' in id:
                         pattern = re.compile(rf'^{re.escape(id)}(_[a-z])?\.csv$')
                     else:
                         pattern = re.compile(rf'^{re.escape(id)}(_[a-z])?\.csv$')
-                    all_files = os.listdir(gold_result_dir)
-                    csv_files = [file for file in all_files if pattern.match(file)]
-                    if len(csv_files) == 1:
-                        gold_pd = pd.read_csv(os.path.join(gold_result_dir, f"{id}.csv"))
-                        try:
-                            score = compare_pandas_table(pred_pd, gold_pd, eval_standard_dict.get(id)['condition_cols'], eval_standard_dict.get(id)['ignore_order'])
-                        except Exception as e:
-                            print(f"An error occurred: {e}")
+                        
+                    
+                    if 'temporal' in eval_standard_dict[id] and eval_standard_dict[id]['temporal']:
+                        gold_sql_query = open(os.path.join(gold_sql_dir, f"{id}.sql")).read()
+                        exe_flag, dbms_error_info = get_bigquery_sql_result(gold_sql_query, True, "temp", f"{id}_gold.csv")
+                        if exe_flag == False: 
                             score = 0
-                            error_info = 'Python Script Error:' + str(e)
-                        if score == 0 and error_info is None:
-                            error_info = 'Result Error'     
-                    elif len(csv_files) > 1:
-                        gold_pds = [pd.read_csv(os.path.join(gold_result_dir, file)) for file in csv_files]
-                        score = compare_multi_pandas_table(pred_pd, gold_pds, eval_standard_dict.get(id)['condition_cols'], eval_standard_dict.get(id)['ignore_order'])
-                        if score == 0 and error_info is None:
-                            error_info = 'Result Error'
+                            error_info = dbms_error_info
+                        else:
+                            gold_pd = pd.read_csv(os.path.join("temp", f"{id}_gold.csv"))
+                            score = compare_pandas_table(pred_pd, gold_pd, eval_standard_dict.get(id)['condition_cols'], eval_standard_dict.get(id)['ignore_order'])
+                    else:
+                        all_files = os.listdir(gold_result_dir)
+                        csv_files = [file for file in all_files if pattern.match(file)]
+                        if len(csv_files) == 1:
+                            gold_pd = pd.read_csv(os.path.join(gold_result_dir, f"{id}.csv"))
+                            try:
+                                score = compare_pandas_table(pred_pd, gold_pd, eval_standard_dict.get(id)['condition_cols'], eval_standard_dict.get(id)['ignore_order'])
+                            except Exception as e:
+                                print(f"An error occurred: {e}")
+                                score = 0
+                                error_info = 'Python Script Error:' + str(e)
+                            if score == 0 and error_info is None:
+                                error_info = 'Result Error'     
+                        elif len(csv_files) > 1:
+                            gold_pds = [pd.read_csv(os.path.join(gold_result_dir, file)) for file in csv_files]
+                            score = compare_multi_pandas_table(pred_pd, gold_pds, eval_standard_dict.get(id)['condition_cols'], eval_standard_dict.get(id)['ignore_order'])
+                            if score == 0 and error_info is None:
+                                error_info = 'Result Error'
 
             elif "local" in id:
                 exe_flag = get_sqlite_result(f"../databases/{spider2sql_metadata.get(id)['db']}.db", pred_sql_query, "temp", f"{id}_pred.csv" )

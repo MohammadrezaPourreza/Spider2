@@ -57,6 +57,7 @@
         "instance_id": "bq026",
         "db": "patents-public-data.patents\npatents-public-data.cpc",
         "question": "For the assignee who has been the most active in the patent category 'A61K39', I'd like to know the five patent jurisdictions code where they filed the most patents during their busiest year, separated by commas.",
+        "temporal": "Yes",
         "external_knowledge": null
     },
     {
@@ -69,6 +70,7 @@
         "instance_id": "bq026_2",
         "db": "patents-public-data.patents\npatents-public-data.cpc",
         "question": "For patent class A01B3, I want to analyze the information of the top 20 assignees based on the total number of applications. Please provide the following five pieces of information: the names of these assignees, their total number of applications, the year with the most applications, the number of applications in that year, and the country code with the most applications during that year.",
+        "temporal": "Yes",
         "external_knowledge": null
     },
     {
@@ -153,6 +155,7 @@
         "instance_id": "bq247",
         "db": "patents-public-data.patents\npatents-public-data.google_patents_research",
         "question": "Which valid family has the most publications? Just provide their publication abstracts.",
+        "temporal": "Yes",
         "external_knowledge": null
     },
     {
@@ -165,12 +168,14 @@
         "instance_id": "bq052",
         "db": "patents-public-data.patentsview",
         "question": "I wonder which patents within CPC subsection 'C05' or group 'A01G' in the USA have at least one forward or backward citations within one month of their application dates. Give me the ids, titles, application date, forward/backward citation counts and summary texts.",
+        "temporal": "Yes",
         "external_knowledge": null
     },
     {
         "instance_id": "bq207",
         "db": "patents-public-data.patents\nbigquery-public-data.uspto_oce_assignment\nbigquery-public-data.uspto_oce_cancer\nbigquery-public-data.uspto_oce_claims\nbigquery-public-data.uspto_oce_litigation\nbigquery-public-data.uspto_ptab",
         "question": "Can you provide the initial publication numbers for our top 100 independent patent claims with the highest word count?",
+        "temporal": "Yes",
         "external_knowledge": null
     },
     {
@@ -246,6 +251,12 @@
         "external_knowledge": null
     },
     {
+        "instance_id": "bq193",
+        "db": "bigquery-public-data.github_repos",
+        "question": "Help me retrieve the top 5 most frequently occurring non-empty, non-commented lines of text in `requirements.txt` files from GitHub repositories that primarily use Python for development.",
+        "external_knowledge": null
+    },
+    {
         "instance_id": "bq295",
         "db": "bigquery-public-data.github_repos",
         "question": "Among the repositories from the GitHub Archive which include a Python file with less than 15,000 bytes in size and a keyword 'def' in the content, find the top 3 that have the highest number of watch events in 2017?",
@@ -255,6 +266,12 @@
         "instance_id": "bq249",
         "db": "bigquery-public-data.github_repos",
         "question": "Can you provide a report showing the counts of different types of lines in SQL files from the GitHub repository in descending order, specifically categorizing them into 'trailing' if there is at least one blank character at the end of the line, 'Space' if the line starts with at least one space, and 'Other' for any other types? ",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq375",
+        "db": "bigquery-public-data.github_repos",
+        "question": "Determine which file type among Python (.py), C (.c), Jupyter Notebook (.ipynb), Java (.java), and JavaScript (.js) in the GitHub codebase has the most files with a directory depth greater than 10, and provide the file count.",
         "external_knowledge": null
     },
     {
@@ -380,6 +397,12 @@
         "external_knowledge": null
     },
     {
+        "instance_id": "bq050",
+        "db": "bigquery-public-data.geo_us_boundaries\nbigquery-public-data.noaa_gsod\nbigquery-public-data.new_york_citibike\nspider2-public-data.cyclistic.zip_codes",
+        "question": "Help me look at the total number of bike trips, average trip duration (in minutes), average daily temperature, wind speed, and precipitation when trip starts (rounded to 1 decimal), as well as the month with the most trips (e.g., `4`), categorized by different starting and ending neighborhoods in New York City for the year 2014.",
+        "external_knowledge": null
+    },
+    {
         "instance_id": "bq291",
         "db": "spider2-public-data.noaa_global_forecast_system",
         "question": "What is the daily weather forecast summary, including temperature stats (max, min and average), precipitation, cloud cover, snow and rain, for the specified location (latitude 17.5, longitude 23.25) and on November 28, 2021?",
@@ -428,6 +451,18 @@
         "external_knowledge": null
     },
     {
+        "instance_id": "bq253",
+        "db": "bigquery-public-data.geo_openstreetmap",
+        "question": "Can you find the name of the relation from the OpenStreetMap data that has the most associated features within the same bounding area as the multipolygon with Wikidata item Q218, where the relation itself does not have a Wikidata tag but its name is specified, and at least one of its associated features does have a Wikidata tag?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq254",
+        "db": "bigquery-public-data.geo_openstreetmap",
+        "question": "Can you find the name of the multipolygon with a valid id that ranks second in terms of the number of points within its boundary, among those multipolygons that do not have a Wikidata tag but are located within the same geographic area as the multipolygon associated with Wikidata item Q218? ",
+        "external_knowledge": null
+    },
+    {
         "instance_id": "bq184",
         "db": "bigquery-public-data.crypto_ethereum",
         "question": "I want to compute and compare the cumulative count of Ethereum smart contracts created by users versus created by other contracts. Please list out the daily cumulative tallies in August 2021.",
@@ -443,6 +478,48 @@
         "instance_id": "bq256",
         "db": "spider2-public-data.crypto_ethereum",
         "question": "What is the balance of the Ethereum address that initiated the highest number of transactions before September 1, 2021?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq341",
+        "db": "spider2-public-data.crypto_ethereum",
+        "question": "Which Ethereum address has the smallest positive balance from transactions involving the token at address \"0xa92a861fc11b99b24296af880011b47f9cafb5ab\" after March 17, 2023?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq336",
+        "db": "bigquery-public-data.crypto_bitcoin",
+        "question": "Which address has the highest net balance after accounting for both debits and credits?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq092",
+        "db": "bigquery-public-data.crypto_dash",
+        "question": "Tell me the highest and lowest net changes among all addresses and types on Bitcoin Cash as of January, 2019?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq093",
+        "db": "bigquery-public-data.crypto_ethereum_classic",
+        "question": "Tell me the maximum and minimum net changes in balances for Ethereum Classic addresses on January 1, 2019, considering debits, credits, and gas fees, while excluding internal calls like 'delegatecall', 'callcode', and 'staticcall'.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq037",
+        "db": "bigquery-public-data.human_genome_variants",
+        "question": "About the refined human genetic variations collected in phase 3 on 2015-02-20, I want to know the minimum and maximum start positions as well as the proportions of these two respectively for reference bases 'AT' and 'TA'.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq135",
+        "db": "spider2-public-data.crypto_zilliqa",
+        "question": "Which date before 2022 had the highest total transaction amount in the Zilliqa blockchain data?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq065",
+        "db": "public-data-finance.crypto_band.oracle_requests",
+        "question": "Provide the most recent 10 results of symbols and their corresponding rates, adjusted for the multiplier, from oracle requests with the script ID 3.",
         "external_knowledge": null
     },
     {
@@ -493,12 +570,14 @@
         "instance_id": "bq258",
         "db": "bigquery-public-data.thelook_ecommerce",
         "question": "Can you provide a report that shows, for each product category by month and year prior to 2023, the percentage growth in revenue compared to the previous month, the percentage growth in orders compared to the previous month, the total cost of products sold, the total profit earned, and the profit to cost ratio? ",
+        "temporal": "Yes",
         "external_knowledge": null
     },
     {
         "instance_id": "bq259",
         "db": "bigquery-public-data.thelook_ecommerce",
         "question": "Can you provide the percentage of users who made a purchase in the first, second, and third months after their initial purchase, organized by the month of their first purchase, using data up until the end of 2023?",
+        "temporal": "Yes",
         "external_knowledge": null
     },
     {
@@ -512,36 +591,42 @@
         "instance_id": "bq260",
         "db": "bigquery-public-data.thelook_ecommerce",
         "question": "Find the total number of youngest and oldest users separately for each gender in the e-commerce platform created from January 1, 2019, to April 30, 2022.",
+        "temporal": "Yes",
         "external_knowledge": null
     },
     {
         "instance_id": "bq261",
         "db": "bigquery-public-data.thelook_ecommerce",
         "question": "What is the total cost and profit of products whose profit rank first per month sorted chronologically? Only consider data before 2024.",
+        "temporal": "Yes",
         "external_knowledge": null
     },
     {
         "instance_id": "bq262",
         "db": "bigquery-public-data.thelook_ecommerce",
         "question": "Help me generate a monthly analysis report on e-commerce sales in the second half of 2019, which should contain the total sum of order count/revenue/profit as well as their growth rates for each product category monthly. Please sort the results by months (e.g., 2019-07) and product categories in ascending order.",
+        "temporal": "Yes",
         "external_knowledge": null
     },
     {
         "instance_id": "bq190",
         "db": "bigquery-public-data.thelook_ecommerce",
         "question": "What is the count of the youngest and oldest users respectively, broken down by gender from January 2019 to April 2022?",
+        "temporal": "Yes",
         "external_knowledge": null
     },
     {
         "instance_id": "bq263",
         "db": "bigquery-public-data.thelook_ecommerce",
         "question": "Can you provide a report showing the total purchase value, total cost, total number of orders, total profit, and profit-to-cost ratio for product category \u2018Sleep & Lounge\u2019 each month in 2023? Make sure to only include completed orders.",
+        "temporal": "Yes",
         "external_knowledge": null
     },
     {
         "instance_id": "bq264",
         "db": "bigquery-public-data.thelook_ecommerce",
         "question": "Identify the difference in the number of the oldest and youngest users registered between January 1, 2019, and April 30, 2022, from our e-commerce platform data.",
+        "temporal": "Yes",
         "external_knowledge": null
     },
     {
@@ -555,24 +640,28 @@
         "instance_id": "bq265",
         "db": "bigquery-public-data.thelook_ecommerce",
         "question": "Can you provide me with the emails of the top 10 users who have the highest average order value, considering only those users who registered in 2019 and made purchases within the same year?",
+        "temporal": "Yes",
         "external_knowledge": null
     },
     {
         "instance_id": "bq266",
         "db": "bigquery-public-data.thelook_ecommerce",
         "question": "Can you provide me with the names of the products that had the lowest profit margin each month throughout the year 2020, excluding any months where this data isn't available? Please list them in chronological order based on the month.",
+        "temporal": "Yes",
         "external_knowledge": null
     },
     {
         "instance_id": "bq271",
         "db": "bigquery-public-data.thelook_ecommerce",
         "question": "Could you provide me with the country that had the highest profit from orders in 2021 and its profit, considering the difference between the total retail prices and the costs of products sold during the year?",
+        "temporal": "Yes",
         "external_knowledge": null
     },
     {
         "instance_id": "bq273",
         "db": "bigquery-public-data.thelook_ecommerce",
         "question": "Could you provide me with the top 5 months where there was the highest increase in profit compared to the previous month for completed orders made by users who came from Facebook, between January 1, 2022, and June 30, 2023?",
+        "temporal": "Yes",
         "external_knowledge": null
     },
     {
@@ -639,6 +728,12 @@
         "instance_id": "bq198",
         "db": "bigquery-public-data.ncaa_basketball",
         "question": "What are the top 5 most successful college basketball teams over the seasons from 1900 to 2000, based on the number of times they had the maximum wins in a season?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq055",
+        "db": "bigquery-public-data.bls\nbigquery-public-data.google_dei",
+        "question": "Can you provide the top 3 races with the largest percentage differences between Google's 2023 hiring data and the average percentages from the 2022 BLS reports, along with their respective differences?",
         "external_knowledge": null
     },
     {
@@ -726,9 +821,9 @@
         "external_knowledge": null
     },
     {
-        "instance_id": "bq276",
-        "db": "bigquery-public-data.persistent_udfs\nbigquery-public-data.noaa_hurricanes\nbigquery-public-data.geo_international_ports\nbigquery-public-data.geo_us_boundaries",
-        "question": "Can you provide me with the details of the port that has been affected by the highest average wind speed of tropical storms in region number 6585 including the port name, storm name and the average storm category? Only consider named storms in the North Atlantic basin with wind speeds of at least 35 knots and at least a minimal tropical storm strength on the SSHS scale. Also, ensure that this port is located within a U.S. state boundary.",
+        "instance_id": "bq084",
+        "db": "bigquery-public-data.goog_blockchain_polygon_mainnet_us",
+        "question": "Please count the monthly transaction numbers and transactions per second for each month in 2023, and arrange them in descending order of monthly transaction count.",
         "external_knowledge": null
     },
     {
@@ -744,9 +839,51 @@
         "external_knowledge": null
     },
     {
+        "instance_id": "bq352_1",
+        "db": "bigquery-public-data.sdoh_cdc_wonder_natality\nbigquery-public-data.census_bureau_acs",
+        "question": "How much higher is the average percentage of employees commuting between 45 and 59 minutes in 2017 among the top three Wisconsin counties with the highest average prenatal weeks in 2018, compared to that in the bottom three counties?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq074",
+        "db": "bigquery-public-data.sdoh_cms_dual_eligible_enrollment\nbigquery-public-data.census_bureau_acs",
+        "question": "How many counties experienced an increase in unemployment between 2015 and 2018, and a decrease in dual-eligible enrollee counts between 2015-12-01 and 2018-12-01?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq066",
+        "db": "bigquery-public-data.sdoh_cdc_wonder_natality\nbigquery-public-data.census_bureau_acs",
+        "question": "Could you assess the relationship between poverty rates in 2017 and the percentage of births without maternal morbidity in 2018 by computing their Pearson correlation coefficient?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq114",
+        "db": "bigquery-public-data.openaq\nbigquery-public-data.epa_historical_air_quality",
+        "question": "What are the top two cities with the largest difference values between the 1990 EPA PM2.5 annual mean and the 2020 PM2.5 values?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq116",
+        "db": "bigquery-public-data.sec_quarterly_financials",
+        "question": "What was the highest annual revenue in billions of dollars reported by a U.S. state in 2016, across the main revenue categories and covering all four quarters?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq015",
+        "db": "bigquery-public-data.stackoverflow\nfh-bigquery.hackernews",
+        "question": "Rank the top 10 most discussed tags on Stack Overflow questions that were mentioned on Hacker News since 2014.",
+        "external_knowledge": null
+    },
+    {
         "instance_id": "bq041",
         "db": "bigquery-public-data.stackoverflow",
         "question": "What are the monthly statistics for new StackOverflow users created in 2021, including the percentage of new users who asked questions and the percentage of those who asked questions and then answered questions within their first 30 days?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq121",
+        "db": "bigquery-public-data.stackoverflow",
+        "question": "How does average reputation and badge count vary among Stack Overflow users based on their tenure, measured in years?",
         "external_knowledge": null
     },
     {
@@ -763,15 +900,111 @@
         "external_knowledge": null
     },
     {
+        "instance_id": "bq300",
+        "db": "bigquery-public-data.stackoverflow",
+        "question": "What is the highest number of answers received for a single Python 2 specific question on Stack Overflow, excluding any discussions that involve Python 3?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq301",
+        "db": "bigquery-public-data.stackoverflow",
+        "question": "Retrieve details of accepted answers related to JavaScript security topics such as XSS, cross-site scripting, exploits, and cybersecurity, for questions posted in January 2016 on Stack Overflow. For each accepted answer, include the answer's ID, the answerer's reputation, score, and comment count, along with the associated question's tags, score, answer count, the asker's reputation, view count, and comment count.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq302",
+        "db": "bigquery-public-data.stackoverflow",
+        "question": "What is the monthly proportion of Stack Overflow questions tagged with 'python' in the year 2022?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq303",
+        "db": "bigquery-public-data.stackoverflow",
+        "question": "What are the user IDs and tags for comments, answers, and questions posted by users with IDs between 16712208 and 18712208 on Stack Overflow during July to December 2019?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq304",
+        "db": "bigquery-public-data.stackoverflow",
+        "question": "What are the top 50 most viewed 'how-to' questions for each of the following Android-related tags on StackOverflow: 'android-layout', 'android-activity', 'android-intent', 'android-edittext', 'android-fragments', 'android-recyclerview', 'listview', 'android-actionbar', 'google-maps', and 'android-asynctask'? Ensure that each tag has at least 50 questions and exclude any questions containing terms typically associated with troubleshooting, such as 'fail', 'problem', 'error', 'wrong', 'fix', 'bug', 'issue', 'solve', or 'trouble'.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq304_1",
+        "db": "bigquery-public-data.stackoverflow",
+        "question": "What is the title of the most viewed \"how-to\" question related to Android development on StackOverflow, across specified tags such as 'android-layout', 'android-activity', 'android-intent', and others",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq305",
+        "db": "bigquery-public-data.stackoverflow",
+        "question": "Identify the top 10 users by the total view count of their associated questions. Include users who own a question, provide an accepted answer, have an answer with a score above 5, rank in the top 3 for a question, or have an answer with a score over 20% of the total answer score for that question. Use these criteria to determine the questions and answers to include in the view count calculation.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq306",
+        "db": "bigquery-public-data.stackoverflow",
+        "question": "Identify the top 10 tags for user 1908967 by calculating a reputation score based on upvotes and accepted answers before June 7, 2018. The score is calculated as 10 times the upvotes plus 15 times the accepted answers.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq307",
+        "db": "bigquery-public-data.stackoverflow",
+        "question": "Find the top 10 most common first gold badges on Stack Overflow, showing how many users earned each and the average days from account creation to earning the badge.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq308",
+        "db": "bigquery-public-data.stackoverflow",
+        "question": "Show the number of Stack Overflow questions asked each day of the week in 2020, and find out how many and what percentage of those were answered within one hour.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq309",
+        "db": "bigquery-public-data.stackoverflow",
+        "question": "Show the top 10 longest Stack Overflow questions where the question has an accepted answer or an answer with a score-to-view ratio above 0.01, including the user's reputation, net votes, and badge count.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq124",
+        "db": "bigquery-public-data.fhir_synthea",
+        "question": "Can you identify how many alive patients, currently managing chronic conditions such as diabetes or hypertension, are prescribed seven or more medications?",
+        "external_knowledge": null
+    },
+    {
         "instance_id": "bq126",
         "db": "bigquery-public-data.the_met",
         "question": "What are the titles, artist names, mediums, and original image URLs of objects with 'Photograph' in their names from the 'Photographs' department, created by known artists, with an object end date of 1839 or earlier?",
         "external_knowledge": null
     },
     {
+        "instance_id": "bq200",
+        "db": "bigquery-public-data.baseball",
+        "question": "Can you find the full name of the fastest pitcher on each team by maximum pitch speed, using both regular and post-season data?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq204",
+        "db": "bigquery-public-data.eclipse_megamovie",
+        "question": "Find the user with the highest total clicks across all records from all available photo collections.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq360",
+        "db": "bigquery-public-data.nppes",
+        "question": "Which of the top 10 most common healthcare provider specializations in Mountain View, CA, has a specialist count closest to the average of these ten specializations?",
+        "external_knowledge": null
+    },
+    {
         "instance_id": "bq286",
         "db": "bigquery-public-data.usa_names",
         "question": "Can you tell me the name of the most popular female baby in Wyoming for the year 2021, based on the proportion of female babies given that name compared to the total number of female babies given the same name across all states?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq043",
+        "db": "isb-cgc-bq.TCGA_versioned",
+        "question": "What are the RNA expression levels of the genes MDM2, TP53, CDKN1A, and CCNE1, along with associated clinical information, in bladder cancer patients with CDKN2A mutations in the 'TCGA-BLCA' project?",
         "external_knowledge": null
     },
     {
@@ -790,6 +1023,18 @@
         "instance_id": "bq048",
         "db": "bigquery-public-data.noaa_gsod\nbigquery-public-data.new_york",
         "question": "Which common complaint types have the strongest positive and negative correlation with wind speed respectively, given the data in NYC JFK Airport from year 2011 to 2020? Also, provide the corresponding correlation values (rounded to 4 decimals).",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq158",
+        "db": "pancancer-atlas.Filtered",
+        "question": "What histological type of breast cancer (BRCA) has the highest percentage of CDH1 gene mutations, according to the data in the PanCancer Atlas?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq159",
+        "db": "pancancer-atlas.Filtered",
+        "question": "What is the chi-square value for the association between histological types and the presence of CDH1 gene mutations in BRCA patients, according to the PanCancer Atlas?",
         "external_knowledge": null
     },
     {
@@ -826,6 +1071,12 @@
         "instance_id": "bq284",
         "db": "bigquery-public-data.bbc_news",
         "question": "Can you provide a breakdown of the total number of articles into different categories and the percentage of those articles that mention \"Education\" within each category (tech, sport, business, politics, and entertainment) from the BBC News dataset?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq355",
+        "db": "bigquery-public-data.cms_medicare\nbigquery-public-data.cms_codes\nbigquery-public-data.cms_synthetic_patient_data_omop",
+        "question": "Please tell me the proportion of participants not using quinapril and related medications(Quinapril RxCUI: 35208).",
         "external_knowledge": null
     },
     {
@@ -895,6 +1146,19 @@
         "external_knowledge": null
     },
     {
+        "instance_id": "bq229",
+        "db": "bigquery-public-data.open_images",
+        "question": "Can you provide a count of how many image URLs are categorized as \u2018cat\u2019 (with label '/m/01yrx' and full confidence) and how many contain no such cat labels(categorized as \u2018other\u2019) at all? ",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq325",
+        "db": "bigquery-public-data.open_targets_genetics",
+        "question": "What are the top 10 genes with the lowest p-values across studies?",
+        "temporal": "Yes",
+        "external_knowledge": null
+    },
+    {
         "instance_id": "bq230",
         "db": "bigquery-public-data.usda_nass_agriculture",
         "question": "Can you provide the maximum amount of corn produced (measured in bushels) by each state in the year 2018, listing the results by state name?",
@@ -908,14 +1172,50 @@
     },
     {
         "instance_id": "bq326",
-        "db": "bigquery-public-data.world_bank_health_population",
+        "db": "bigquery-public-data.world_bank_intl_debt\nbigquery-public-data.world_bank_wdi\nbigquery-public-data.world_bank_intl_education\nbigquery-public-data.world_bank_health_population\nbigquery-public-data.world_bank_global_population",
         "question": "How many countries experienced both a change in population and a change in Current health expenditure per capita, PPP (current international $) of greater than 1 in the year 2018?",
         "external_knowledge": null
     },
     {
         "instance_id": "bq327",
-        "db": "bigquery-public-data.world_bank_intl_debt",
+        "db": "bigquery-public-data.world_bank_intl_debt\nbigquery-public-data.world_bank_wdi\nbigquery-public-data.world_bank_intl_education\nbigquery-public-data.world_bank_health_population\nbigquery-public-data.world_bank_global_population",
         "question": "How many debt indicators for Russia have a value of 0, excluding NULL values?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq328",
+        "db": "bigquery-public-data.world_bank_intl_debt\nbigquery-public-data.world_bank_wdi\nbigquery-public-data.world_bank_intl_education\nbigquery-public-data.world_bank_health_population\nbigquery-public-data.world_bank_global_population",
+        "question": "Which region has the highest median GDP (constant 2015 US$) value?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq370",
+        "db": "spider2-public-data.wide_world_importers",
+        "question": "How many customers have an equal number of orders and invoices, and where the total value of their orders matches the total value of their invoices?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq371",
+        "db": "spider2-public-data.wide_world_importers",
+        "question": "What is the difference between the maximum and minimum average invoice values across all quarters for the year 2013?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq372",
+        "db": "spider2-public-data.wide_world_importers",
+        "question": "Which customer category has the maximum order loss closest to the average maximum loss across all categories?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq373",
+        "db": "spider2-public-data.wide_world_importers",
+        "question": "What's the median of the average monthly spending across all customers for the year 2014?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq398",
+        "db": "bigquery-public-data.world_bank_intl_debt\nbigquery-public-data.world_bank_wdi\nbigquery-public-data.world_bank_intl_education\nbigquery-public-data.world_bank_health_population\nbigquery-public-data.world_bank_global_population",
+        "question": "What are the top three debt indicators for Russia based on the highest debt values?",
         "external_knowledge": null
     },
     {
@@ -1060,6 +1360,696 @@
         "instance_id": "ga025",
         "db": "firebase-public-project.analytics_153293282",
         "question": "For all users who first opened the app in September 2018 and then uninstalled within seven days, I want to know what percentage of them experienced an app crash.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local002",
+        "db": "E_commerce",
+        "question": "Can you calculate the 5-day symmetric moving average of predicted toy sales for December 5, 6, and 7, 2018, using daily sales data from January 1, 2017, to August 29, 2018, with a simple linear regression model? Provide the total of the moving averages for those three days.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local003",
+        "db": "E_commerce",
+        "question": "How much is the average sales per order per customer in each RFM bucket, considering only 'delivered' orders?",
+        "external_knowledge": "RFM.md"
+    },
+    {
+        "instance_id": "local004",
+        "db": "E_commerce",
+        "question": "Could you tell me the number of orders, average payment per order and customer lifespan in weeks of the 3 custumers with the highest average payment per order. Attention: I want the lifespan in float number if it's longer than one week, otherwise set it to be 1.0.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local007",
+        "db": "Baseball",
+        "question": "Could you help me calculate the average single career span value in years for all baseball players? Please precise the result as a float number.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local009",
+        "db": "Airlines",
+        "question": "What is the distance of the longest route where Abakan is either the departure or destination city (in kilometers)?",
+        "external_knowledge": "haversine_formula.md"
+    },
+    {
+        "instance_id": "local010",
+        "db": "Airlines",
+        "question": "Distribute all the unique city pairs into the distance ranges 0, 1000, 2000, 3000, 4000, 5000, and 6000+, based on their average distance of all routes between them. Then how many pairs are there in the distance range with the fewest unique city paires?",
+        "external_knowledge": "haversine_formula.md"
+    },
+    {
+        "instance_id": "local015",
+        "db": "California_Traffic_Collision",
+        "question": "Help me respectively caulculate the percentage of motorcycle accident fatalities involving riders who were wearing helmets and those who weren't?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local017",
+        "db": "California_Traffic_Collision",
+        "question": "In which year were the two most common causes of traffic accidents different from those in other years?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local017_1",
+        "db": "California_Traffic_Collision",
+        "question": "For the most common cause of traffic accidents in 2021, how much did its share (percentage in the annual roal incidents) decrease compared to 10 years earlier?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local019",
+        "db": "WWE",
+        "question": "For the NXT title that had the shortest match (excluding titles with \"title change\"), what were the names of the two wrestlers involved?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local026",
+        "db": "IPL",
+        "question": "Please help me find the top 3 bowlers who conceded the maximum runs in a single over, along with the corresponding matches.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local026_1",
+        "db": "IPL",
+        "question": "Which bowler has the lowest bowling average per wicket taken?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local026_6",
+        "db": "IPL",
+        "question": "Please calculate the average of the highest runs conceded in a single over for each match.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local028_1",
+        "db": "Brazilian_E_Commerce",
+        "question": "What is the highest monthly delivered orders volume in the year with the lowest annual delivered orders volume among 2016, 2017, and 2018?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local029",
+        "db": "Brazilian_E_Commerce",
+        "question": "Please calculate the average payment value, city, and state for the top 3 customers with the most delivered orders.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local030",
+        "db": "Brazilian_E_Commerce",
+        "question": "Can you find the average payments and order counts for the five cities with the lowest total payments from delivered orders?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local038",
+        "db": "Pagila",
+        "question": "Could you help me find the actor who appeared most in English G or PG-rated children's movies no longer than 2 hours, released between 2000 and 2010\uff1fGive me a full name.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local039",
+        "db": "Pagila",
+        "question": "Please help me find the film category with the highest total rental hours in cities where the city's name either starts with \"A\" or contains a hyphen. ",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local041",
+        "db": "tree_and_income",
+        "question": "What percentage of trees in the Bronx have a health status of Good?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local053_1",
+        "db": "unicorn_companies",
+        "question": "Can you help me calculate the average number of new unicorn companies per year in the top industry from 2019 to 2021?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local054_2",
+        "db": "chinook",
+        "question": "What is the difference in average spending between customers who bought albums from the best-selling artist and those who bought from the least-selling artist? If there is a tie for either best-selling or lowest-selling, choose the artist whose name comes first alphabetically.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local059",
+        "db": "atliq",
+        "question": "What is the average quantity sold for the top 3 products in each division in 2021? I want the answer in descending order of the average quantity.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local062_2",
+        "db": "complex_oracle",
+        "question": "Could you group customers in Italy into 10 buckets based on their monthly profitability in December 2021 and calculate the average from minimum profits of each bucket?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local062_3",
+        "db": "complex_oracle",
+        "question": "Could you group customers in Italy into 10 buckets based on their monthly profitability in December 2021 and calculate the average from maximum profits of each bucket?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local062_4",
+        "db": "complex_oracle",
+        "question": "Could you group customers in Italy into 10 buckets based on their monthly profitability in December 2021 and calculate the difference between the largest and smallest number of customer?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local070_3_3",
+        "db": "cleaned_data",
+        "question": "Could you review our records in June 2022 and identify which countries have the longest streak of consecutive inserted dates? Please list the 2-letter length country codes of these countries.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local070_3_4",
+        "db": "cleaned_data",
+        "question": "How many countries have more than 10 consecutive insertion dates in June 2021?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local074",
+        "db": "data_bank",
+        "question": "Please generate a summary of the closing balances at the end of each month for each customer, show the monthly changes and monthly cumulative bank account balances.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local074_4",
+        "db": "data_bank",
+        "question": "What is the difference in average month-end balance between the month with the most and the month with the fewest customers having a positive balance in 2020?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local297",
+        "db": "data_bank",
+        "question": "I want to know if the closing balances of each customer have increased by at least 5% in the most recent month based on their existing data. Can you provide these figures? (If the previous month's balance is zero, multiply the current balance by 100 as the growth rate)",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local298",
+        "db": "data_bank",
+        "question": "We need to optimize our data allocation strategy. One option we're considering is allocating data based on the customer\u2019s balance at the end of the previous month. Could you calculate the monthly data requirements for this approach, starting from February",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local299",
+        "db": "data_bank",
+        "question": "To optimize our data allocation strategy, calculate the average balance for each user over the past 30 days on a monthly basis. Identify the highest average balance among all users each month and sum these highest values to determine the total data allocation needed, starting from February.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local300",
+        "db": "data_bank",
+        "question": "We need to understand the trends in user account balances. Calculate the sum of the highest daily balances for each user per month. This data will help us forecast future resource needs.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local075_2",
+        "db": "clique_bait_schema",
+        "question": "I need to understand customer engagement better. Can you provide a breakdown of how many times each product was viewed, how many times they were added to the cart, and how many times they were left in the cart without being purchased? Also, give me the count of actual purchases for each product.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local077",
+        "db": "fresh_segments_schema",
+        "question": "Please review our interest data from September 2018 to August 2019. I need to know the max average composition value for each month, as well as the three-month rolling average. Ensure the output includes the date, the interest name, the max index composition for that month, the rolling average, and the top-ranking interests from the one month ago and two months ago with their names.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local077_2",
+        "db": "fresh_segments_schema",
+        "question": "Identify the top 10 and bottom 10 interest categories based on their highest composition values across all months. For each category, display the time(MM-YYYY), interest name, and the composition value",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local081",
+        "db": "northwind",
+        "question": "How many customers were in each spending group in 1998, and what percentage of the total customer base does each group represent?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local084",
+        "db": "northwind",
+        "question": "Can you tell me the ID of employee who has the highest proportion of late orders compared to their total orders?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local097",
+        "db": "Db-IMDB",
+        "question": "I'm curious about the most prolific decade in terms of film production. Could you analyze our data and identify which decade had the largest number of films? I need the total count for that specific period.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local098",
+        "db": "Db-IMDB",
+        "question": "I'd like to know how many actors have managed to avoid long breaks in their careers. Could you check our records to see how many actors haven't been out of work for more than three years at any point?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local099",
+        "db": "Db-IMDB",
+        "question": "I need you to look into the actor collaborations and tell me how many actors have made more films with Yash Chopra than with any other director. This will help us understand his influence on the industry better.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local100",
+        "db": "Db-IMDB",
+        "question": "Can you investigate our database and find out how many actors have a 'Shahrukh number' of 2? This means they acted in a film with someone who acted with Shahrukh Khan, but not directly with him.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local114",
+        "db": "parch_posey",
+        "question": "How many total orders were placed for the region with the largest sales in USD?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local115",
+        "db": "parch_posey",
+        "question": "Who is the sales representative with the largest sales in USD in each region?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local128",
+        "db": "BowlingLeague",
+        "question": "Can you list the bowlers, the match number, the game number, the handicap score, the tournament date, and the tournament location for bowlers who won a game with a handicap score of 190 or less at Thunderbird Lanes, Totem Lanes, and Bolero Lanes?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local130",
+        "db": "school_scheduling",
+        "question": "Can you list the last name of all students who have completed English courses, rank them by Quintile based on the grades they received, and order the results from the highest to the lowest grades?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local131",
+        "db": "EntertainmentAgency",
+        "question": "Which musical styles are the most frequently ranked as first, second, or third preferences, and how many times does each style appear in each rank?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local131_3",
+        "db": "EntertainmentAgency",
+        "question": "Which musical style has a weighted score closest to the average, where first preferences are weighted by 3, second preferences by 2, and third preferences by 1, if there are ties, choose the one that comes first alphabetically?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local132",
+        "db": "EntertainmentAgency",
+        "question": "Show entertainer and customer pairs where both the first and second style preferences of customers match the first and second strengths of entertainers (or vice versa), displaying only the entertainer's stage name and the customer's last name.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local141",
+        "db": "AdventureWorks",
+        "question": "How did each salesperson's annual total sales compare to their annual sales quota? Provide the difference between their total sales and the quota for each year, organized by salesperson and year.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local230",
+        "db": "imdb_movies",
+        "question": "Please analyze our database to identify the top three genres with the most movies that have ratings above 8. Then, determine which director has directed the most movies in these genres and provide the number of movies for each director.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local156",
+        "db": "trading",
+        "question": "Could you provide the yearly average cost of Bitcoin purchases for each region? Rank the regions based on these averages for each year, and calculate the annual percentage change. This data will be crucial for our upcoming financial planning. Please exclude the results for 2017 from the output.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local157",
+        "db": "trading",
+        "question": "For our upcoming meeting, please provide the daily percentage change in trading volume for all tickers from August 1 to August 10, 2021. This trend analysis is crucial for our strategic planning.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local162",
+        "db": "university",
+        "question": "How many students have taken every IS course offered and managed to secure at least a grade of 3.0 in each course?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local162_2",
+        "db": "university",
+        "question": "Which faculty members' salaries are closest to the average salary for their respective ranks? Please provide the ranks, first names, last names, and salaries.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local168",
+        "db": "job",
+        "question": "What is the average salary for remote Data Analyst jobs requiring the top three most in-demand skills?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local194",
+        "db": "sakila_master",
+        "question": "I'd like a report on our top-performing films based on revenue per actor. Could you provide a list of the top-three films that generate the most revenue for each actor involved and the average revenue?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local202",
+        "db": "aliens",
+        "question": "How many of the top 10 states by alien population have a higher percentage of friendly aliens than hostile aliens, with an average alien age exceeding 200?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local209",
+        "db": "delivery_center",
+        "question": "Can you calculate the delivery completion ratio of the store with the most orders?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local210",
+        "db": "delivery_center",
+        "question": "Can you identify the hubs that saw more than a 20% increase in finished orders from February to March?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local211_2",
+        "db": "delivery_center",
+        "question": "Can you find 5 delivery drivers with the highest average number of daily deliveries?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local220",
+        "db": "EU_soccer",
+        "question": "Who is the player with the most wins?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local220_1",
+        "db": "EU_soccer",
+        "question": "Who is the player with the most losses?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local228",
+        "db": "ipl_database",
+        "question": "Identify the top three batsmen with the most runs and the top three bowlers with the most wickets in each season. In case of ties, prioritize players with lower player_ids. Exclude 'run out', 'hit wicket', and 'retired hurt' as out_types for bowlers.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local229",
+        "db": "ipl_database",
+        "question": "Find the IDs of players who scored the highest number of partnership runs for each match. The output should include the IDs of two players, each with their individual scores and the total partnership score. There can  be multiple rows for a single match.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local253",
+        "db": "salary",
+        "question": "reate a detailed SQL report that compares the top 5 companies by average salary in Mumbai, Pune, New Delhi, and Hyderabad to the national average salary. The report should include the following columns: Location, Company Name, Average Salary in State, and Average Salary in Country.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local262",
+        "db": "stacking",
+        "question": "Identify the models where, across all steps and versions, traditional models (excluding the Stack model) perform worse than the Stack model more times than the total number of evaluations of that model across all steps.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local269",
+        "db": "oracle_sql",
+        "question": "What is average quantity across all packaging combinations?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local270",
+        "db": "oracle_sql",
+        "question": "Which packaging containers include items in quantities greater than 500, and what are those items?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local272",
+        "db": "oracle_sql",
+        "question": "Which product ID, aisle, and position should be selected to pick the highest quantity for order 423, ensuring the picked quantity does not exceed the available inventory in warehouse 1, and calculate the quantity to be picked while prioritizing locations with earlier dates and smaller quantities?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local273",
+        "db": "oracle_sql",
+        "question": "What is the average pick percentage for each product, considering the quantity picked from inventory locations that are ordered by the earliest purchase date and smallest quantity, while ensuring that the picked quantity matches the overlapping range between the order quantity and the available inventory?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local274",
+        "db": "oracle_sql",
+        "question": "Which products were picked for order 421, and what is the average number of units picked for each product, using FIFO (First-In, First-Out) method?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local275",
+        "db": "oracle_sql",
+        "question": "What are products with a seasonality-adjusted sales ratio greater than 2 for the year 2017, based on monthly sales data starting from January 2016?",
+        "external_knowledge": "calculation_method.md"
+    },
+    {
+        "instance_id": "local277",
+        "db": "oracle_sql",
+        "question": "What is the average forecasted annual sales for products 4160 and 7790 in 2018, using a weighted regression model based on the first 36 months from January 2016, with time steps between 7 and 30?",
+        "external_knowledge": "calculation_method.md"
+    },
+    {
+        "instance_id": "local279",
+        "db": "oracle_sql",
+        "question": "Can you provide the product_id, month, and the smallest difference between the inventory and the minimum required level for each product in 2019?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local283",
+        "db": "EU_soccer",
+        "question": "Analyze our match data to identify the name, leagues, and countries of the champion team for each season. Include the total points accumulated by each team.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local284",
+        "db": "annex",
+        "question": "Can you generate a summary of our items' loss rates? Include the average loss rate, and also break down the count of items that are below, above, and within one standard deviation from this average.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local285",
+        "db": "annex",
+        "question": "Can you analyze our financial performance over the years 2020 to 2023? I need insights into the average wholesale price, maximum wholesale price, minimum wholesale price, wholesale price difference, total wholesale price, total selling price, average loss rate, total loss, and profit for each category within each year.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local286",
+        "db": "electronic_sales",
+        "question": "Prepare a comprehensive performance report on our sellers, focusing on total sales, average item price, average review scores, and packing times. Ensure that the report includes only those sellers who handle more than 100 products and highlight their top-selling product.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local301",
+        "db": "data_mart",
+        "question": "I need an analysis of our sales performance around mid-June for the years 2018, 2019, and 2020. Specifically, calculate the percentage change in sales between the four weeks leading up to June 15 and the four weeks following June 15 for each year.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local302",
+        "db": "data_mart",
+        "question": "Analyze the sales performance across various business areas for the 12 weeks before and after June 15, 2020. Focus on regions, platforms, age band, demographics, and customer types, identify the area with the highest negative impact in sales metrics performance, provied its name and the percentage change in sales.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local329",
+        "db": "log",
+        "question": "How many unique sessions visited the /regist/input page and then the /regist/confirm page, in that order?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local329_2",
+        "db": "log",
+        "question": "Which path has the highest total count of visits across both landing and exit types? ",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local329_3",
+        "db": "log",
+        "question": "Which page type has fewer unique paths: landing or exit? ",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local330",
+        "db": "log",
+        "question": "What is the most common path after two consecutive '/detail' pages, including previous paths taken?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local334",
+        "db": "log",
+        "question": "What is the action count for the most frequent user action, categorized by login status?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local334_1",
+        "db": "log",
+        "question": "What is the difference between the maximum and minimum action counts for user actions, categorized by login status?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local344",
+        "db": "f1",
+        "question": "How many times has each type of overtake occurred in Formula 1?",
+        "external_knowledge": "f1_overtake.md"
+    },
+    {
+        "instance_id": "local344_1",
+        "db": "f1",
+        "question": "How many overtakes of each type occurred during the first five laps of the race?",
+        "external_knowledge": "f1_overtake.md"
+    },
+    {
+        "instance_id": "local335",
+        "db": "f1",
+        "question": "Which five constructors have had the most seasons in the 21st century where their drivers scored the fewest points in a Formula 1 season?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local309",
+        "db": "f1",
+        "question": "For each year, which driver and which constructor scored the most points? I want the full name of each driver.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local309_2",
+        "db": "f1",
+        "question": "Which three years had the lowest combined points between the top driver and the top constructor in the same year?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local309_3",
+        "db": "f1",
+        "question": "Which constructors had the top 3 combined points from their best driver and team, and in which years did they achieve them?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local353",
+        "db": "f1",
+        "question": "What are the five most frequent types of laps, and their respective frequencies in race 1?",
+        "external_knowledge": "lap_type.md"
+    },
+    {
+        "instance_id": "local354",
+        "db": "f1",
+        "question": "Can you tell me the driver IDs of those who participated in multiple races during a season in the 1950s where none of their races were the first or last of the season?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local355",
+        "db": "f1",
+        "question": "What is the average round number of the first and last missed rounds for drivers who missed fewer than 3 rounds and had different constructors immediately before and after their missed rounds?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local356",
+        "db": "f1",
+        "question": "Can you tell me the full names of drivers who have been overtaken more times than they have performed overtakes?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "sf001",
+        "db": "GLOBAL_WEATHER__CLIMATE_DATA_FOR_BI.STANDARD_TILE",
+        "question": "Assuming today is April 1, 2024, I would like to know the daily snowfall amounts greater than 6 inches for each U.S. postal code during the week ending after the first two full weeks of the previous year. Show the postal code, date, and snowfall amount.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "sf003",
+        "db": "GLOBAL_GOVERNMENT.CYBERSYN",
+        "question": "From 2015 to 2020, which zip code in Census Zip Code Tabulation Areas had the second-highest annual population growth rate, given a minimum estimate of 25,000 people over a 5-year period? Include the zip code, state, and growth rate.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "sf002",
+        "db": "FINANCE__ECONOMICS.CYBERSYN",
+        "question": "As of December 31, 2022, which top 10 active large banks, each with assets over $10 billion, had the highest percentage of uninsured assets based on quarterly estimates? ",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "sf044",
+        "db": "FINANCE__ECONOMICS.CYBERSYN",
+        "question": "What is the percentage change in post-market close prices for the Magnificent 7 tech companies from January 1 to June 30, 2024?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "sf006",
+        "db": "FINANCE__ECONOMICS.CYBERSYN",
+        "question": "What is the percentage change in the number of active financial branch entities in each state from before March 1, 2020, to the end of 2021? ",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "sf008",
+        "db": "US_REAL_ESTATE.CYBERSYN",
+        "question": "What is the percentage change in gross income inflow and purchase-only seasonally-adjusted home price index for the Phoenix-Mesa-Scottsdale, AZ Metro Area from the beginning to the end of 2023?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "sf010",
+        "db": "US_REAL_ESTATE.CYBERSYN",
+        "question": "What are the cumulative percentages of mortgages near default in California for each recorded date in 2023, including those 90 to 180 days past due, in forbearance, or in the process of foreclosure, bankruptcy, or deed in lieu?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "sf037",
+        "db": "US_REAL_ESTATE.CYBERSYN",
+        "question": "For each Home Depot store identified by its POI ID, what is the distance in miles to the nearest Lowe's Home Improvement store?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "sf012",
+        "db": "WEATHER__ENVIRONMENT.CYBERSYN",
+        "question": "What were the total amounts of building and contents damage reported under the National Flood Insurance Program in the City of New York for each year from 2010 to 2019?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "sf018",
+        "db": "BRAZE_USER_EVENT_DEMO_DATASET.PUBLIC",
+        "question": "Examine user engagement with push notifications within a specified one-hour window on June 1, 2023.",
+        "external_knowledge": "PushNotificationAnalysis.md"
+    },
+    {
+        "instance_id": "sf035",
+        "db": "BRAZE_USER_EVENT_DEMO_DATASET.PUBLIC",
+        "question": "",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "sf029",
+        "db": "AMAZON_VENDOR_ANALYTICS__SAMPLE_DATASET.PUBLIC",
+        "question": "",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "sf040",
+        "db": "US_ADDRESSES__POI.CYBERSYN",
+        "question": "",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "sf009",
+        "db": "NETHERLANDS_OPEN_MAP_DATA.NETHERLANDS",
+        "question": "A real estate development company is planning to invest in two major cities in the Netherlands\u2014Amsterdam and Rotterdam. \nThey need a detailed understanding of the current building situation in these cities, including the types of buildings, the number of buildings, and the total surface area.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "sf013",
+        "db": "NETHERLANDS_OPEN_MAP_DATA.NETHERLANDS",
+        "question": "",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "sf041",
+        "db": "YES_ENERGY__SAMPLE_DATA.YES_ENERGY_SAMPLE",
+        "question": "",
+        "external_knowledge": "ERCOT_Energy_Market_Data.md"
+    },
+    {
+        "instance_id": "sf011",
+        "db": "CENSUS_GALAXY__ZIP_CODE_TO_BLOCK_GROUP_SAMPLE.PUBLIC",
+        "question": "Can you provide the population ratio of each block group to the total population of its census tract in New York, based on the latest ACS data?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "sf014",
+        "db": "CENSUS_GALAXY__AIML_MODEL_DATA_ENRICHMENT_SAMPLE.PUBLIC",
+        "question": "Can you rank the zip codes in New York by the number of people who commute for over an hour",
         "external_knowledge": null
     }
 ]

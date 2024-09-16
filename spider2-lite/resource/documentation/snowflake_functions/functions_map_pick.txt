@@ -1,0 +1,95 @@
+  MAP_PICK  ¶
+
+Returns a new [ MAP  ](../data-types-structured) containing the specified key-
+value pairs from an existing MAP.
+
+To identify the key-value pairs to include in the new map, pass in the keys as
+arguments, or pass in an array containing the keys.
+
+If a specified key is not present in the input map, the key is ignored.
+
+##  Syntax  ¶
+
+    
+    
+    MAP_PICK( <map>, <key1> [, <key2>, ... ] )
+    
+    MAP_PICK( <map>, <array> )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ map  _ `
+
+    
+
+The input map.
+
+` _ key1  _ ,  _ key2  _ `
+
+    
+
+One or more keys that identify the key-value pairs to be included in the
+returned map.
+
+` _ array  _ `
+
+    
+
+An array of keys that identify the key-value pairs to be included in the
+returned map. You can specify a semi-structured ARRAY or a structured ARRAY.
+
+##  Returns  ¶
+
+Returns a new MAP containing some of the key-value pairs from an existing MAP.
+
+##  Examples  ¶
+
+Create a new map that contains two of the three key-value pairs from an
+existing map:
+
+    
+    
+    SELECT MAP_PICK({'a':1,'b':2,'c':3}::MAP(VARCHAR,NUMBER),'a', 'b')
+      AS new_map;
+    
+
+Copy
+
+    
+    
+    +-----------+
+    | NEW_MAP   |
+    |-----------|
+    | {         |
+    |   "a": 1, |
+    |   "b": 2  |
+    | }         |
+    +-----------+
+    
+
+In the previous example, the keys are passed as arguments to MAP_PICK. You can
+also use an array to specify the keys:
+
+    
+    
+    SELECT MAP_PICK({'a':1,'b':2,'c':3}::MAP(VARCHAR,NUMBER), ['a', 'b'])
+      AS new_map;
+    
+
+Copy
+
+    
+    
+    +-----------+
+    | NEW_MAP   |
+    |-----------|
+    | {         |
+    |   "a": 1, |
+    |   "b": 2  |
+    | }         |
+    +-----------+
+    
+

@@ -1,0 +1,59 @@
+  CURRENT_DATE  ¶
+
+Returns the current date of the system.
+
+##  Syntax  ¶
+
+    
+    
+    CURRENT_DATE()
+    
+    CURRENT_DATE
+    
+
+Copy
+
+##  Arguments  ¶
+
+None.
+
+##  Returns  ¶
+
+The function returns a value of type [ DATE  ](../data-types-
+datetime.html#label-datatypes-date) .
+
+##  Usage notes  ¶
+
+  * The setting of the [ TIMEZONE  ](../parameters.html#label-timezone) parameter affects the return value. The returned date is in the time zone for the session. 
+
+  * The display format for dates in the output is determined by the [ DATE_OUTPUT_FORMAT  ](../parameters.html#label-date-output-format) session parameter (default ` YYYY-MM-DD  ` ). 
+
+  * To comply with the ANSI standard, this function can be called without parentheses in SQL statements. 
+
+However, if you are setting a [ Snowflake Scripting variable
+](../../developer-guide/snowflake-scripting/variables) to an expression that
+calls the function (for example, ` my_var  :=  CURRENT_DATE();  ` ), you must
+include the parentheses. For more information, see [ the usage notes for
+context functions  ](../functions-context.html#label-context-function-usage-
+notes) .
+
+##  Examples  ¶
+
+Show the current date, time, and timestamp:
+
+    
+    
+    SELECT CURRENT_DATE(), CURRENT_TIME(), CURRENT_TIMESTAMP();
+    
+
+Copy
+
+    
+    
+    +----------------+----------------+-------------------------------+
+    | CURRENT_DATE() | CURRENT_TIME() | CURRENT_TIMESTAMP()           |
+    |----------------+----------------+-------------------------------|
+    | 2024-04-18     | 07:47:37       | 2024-04-18 07:47:37.084 -0700 |
+    +----------------+----------------+-------------------------------+
+    
+

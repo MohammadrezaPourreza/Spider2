@@ -1,0 +1,115 @@
+  ARRAY_DISTINCT  ¶
+
+Returns a new [ ARRAY  ](../data-types-semistructured.html#label-data-type-
+array) that contains only the distinct elements from the input ARRAY. The
+function excludes any duplicate elements that are present in the input ARRAY.
+
+The function is not guaranteed to return the elements in the ARRAY in a
+specific order.
+
+The function is NULL-safe, which means that it treats NULLs as known values
+when identifying duplicate elements.
+
+##  Syntax  ¶
+
+    
+    
+    ARRAY_DISTINCT( <array> )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ array  _ `
+
+    
+
+An array that might contain duplicate elements to be removed.
+
+##  Returns  ¶
+
+This function returns an ARRAY that contains the elements of the input array
+without any duplicate elements. For example, if the value ` 'x'  ` appears
+multiple times in the input ARRAY, only one element has the value ` 'x'  ` in
+the returned ARRAY.
+
+If the input argument is NULL, the function returns NULL.
+
+The order of the values within the returned array is unspecified.
+
+##  Usage notes  ¶
+
+  * For elements of the type [ OBJECT  ](../data-types-semistructured.html#label-data-type-object) , the objects must be identical to be considered duplicate. For details, see  Examples  (in this topic). 
+
+  * When identifying dupicate elements, the function considers NULL to be a known value (i.e. NULL is not a duplicate of any other value X besides NULL). 
+
+##  Examples  ¶
+
+The following example demonstrates how the function returns an ARRAY without
+the duplicate elements ` A  ` and ` NULL  ` from an input [ ARRAY constant
+](../data-types-semistructured.html#label-array-constant) :
+
+    
+    
+    SELECT ARRAY_DISTINCT(['A', 'A', 'B', NULL, NULL]);
+    
+    +---------------------------------------------+
+    | ARRAY_DISTINCT(['A', 'A', 'B', NULL, NULL]) |
+    |---------------------------------------------|
+    | [                                           |
+    |   "A",                                      |
+    |   "B",                                      |
+    |   undefined                                 |
+    | ]                                           |
+    +---------------------------------------------+
+    
+
+Copy
+
+The following example demonstrates how passing in NULL (instead of an ARRAY)
+returns NULL:
+
+    
+    
+    SELECT ARRAY_DISTINCT(NULL);
+    
+    +----------------------+
+    | ARRAY_DISTINCT(NULL) |
+    |----------------------|
+    | NULL                 |
+    +----------------------+
+    
+
+Copy
+
+The following example demonstrates how the function removes duplicate OBJECTs
+that are elements in the input ARRAY. The example uses [ OBJECT constants
+](../data-types-semistructured.html#label-object-constant) and ARRAY constants
+to construct the OBJECTs and ARRAY.
+
+    
+    
+    SELECT ARRAY_DISTINCT( [ {'a': 1, 'b': 2}, {'a': 1, 'b': 2}, {'a': 1, 'b': 3} ] );
+    
+    +----------------------------------------------------------------------------+
+    | ARRAY_DISTINCT( [ {'A': 1, 'B': 2}, {'A': 1, 'B': 2}, {'A': 1, 'B': 3} ] ) |
+    |----------------------------------------------------------------------------|
+    | [                                                                          |
+    |   {                                                                        |
+    |     "a": 1,                                                                |
+    |     "b": 2                                                                 |
+    |   },                                                                       |
+    |   {                                                                        |
+    |     "a": 1,                                                                |
+    |     "b": 3                                                                 |
+    |   }                                                                        |
+    | ]                                                                          |
+    +----------------------------------------------------------------------------+
+    
+
+Copy
+
+As shown in the example, the last element is not considered to be a duplicate
+because ` b  ` has a different value ( ` 3  ` , not ` 2  ` ).
+

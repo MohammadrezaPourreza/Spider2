@@ -1,0 +1,68 @@
+  MAP_CAT  ¶
+
+Returns the concatenatation of two [ MAPs  ](../data-types-structured) .
+
+##  Syntax  ¶
+
+    
+    
+    MAP_CAT( <map1> , <map2> )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ map1  _ `
+
+    
+
+The source MAP.
+
+` _ map2  _ `
+
+    
+
+The MAP to be appended to ` _ map1  _ ` .
+
+##  Returns  ¶
+
+The return type of this function is the type of ` _ map1  _ ` . ` _ map2  _ `
+is coerced into the ` _ map1  _ ` type following the coercion rules. For
+information about coercion rules, see [ Implicit casting a value (coercion)
+](../data-types-structured.html#label-structured-types-casting-implicit) .
+
+##  Usage notes  ¶
+
+  * If both ` _ map1  _ ` and ` _ map2  _ ` have a value with the same key, then the output map contains the value from ` _ map2  _ ` . 
+
+  * If either argument is NULL, the function returns NULL without reporting any error. 
+
+##  Examples  ¶
+
+Create two MAPs and concatenate them:
+
+    
+    
+    SELECT MAP_CAT(
+      {'map1key1':'map1value1','map1key2':'map1value2'}::MAP(VARCHAR,VARCHAR),
+      {'map2key1':'map2value1','map2key2':'map2value2'}::MAP(VARCHAR,VARCHAR))
+      AS concatenated_maps;
+    
+
+Copy
+
+    
+    
+    +-----------------------------+
+    | CONCATENATED_MAPS           |
+    |-----------------------------|
+    | {                           |
+    |   "map1key1": "map1value1", |
+    |   "map1key2": "map1value2", |
+    |   "map2key1": "map2value1", |
+    |   "map2key2": "map2value2"  |
+    | }                           |
+    +-----------------------------+
+    
+

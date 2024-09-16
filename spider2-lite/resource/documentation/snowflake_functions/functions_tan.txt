@@ -1,0 +1,36 @@
+  TAN  ¶
+
+Computes the tangent of its argument; the argument should be expressed in
+radians.
+
+##  Syntax  ¶
+
+    
+    
+    TAN( <real_expr> )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ real_expr  _ `
+
+    
+
+This expression should evaluate to a real number. The value should be in
+radians, not degrees.
+
+##  Examples  ¶
+
+>
+>     SELECT TAN(0), TAN(PI()/3), TAN(RADIANS(90));
+>     --------+-------------+----------------------+
+>      TAN(0) | TAN(PI()/3) |   TAN(RADIANS(90))   |
+>     --------+-------------+----------------------+
+>      0      | 1.732050808 | 1.63312393531954e+16 |
+>     --------+-------------+----------------------+
+>  
+>
+> Copy
+

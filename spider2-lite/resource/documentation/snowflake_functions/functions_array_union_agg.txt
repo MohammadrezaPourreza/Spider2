@@ -1,0 +1,95 @@
+  ARRAY_UNION_AGG  ¶
+
+Returns an [ ARRAY  ](../data-types-semistructured.html#label-data-type-array)
+that contains the union of the distinct values from the input ARRAYs in a
+column. You can use this to aggregate distinct values in ARRAYs produced by [
+ARRAY_UNIQUE_AGG  ](array_unique_agg) .
+
+See also:
+
+    
+
+[ ARRAY_UNIQUE_AGG  ](array_unique_agg) , [ Using Arrays to Compute Distinct
+Values for Hierarchical Aggregations  ](../../user-guide/querying-arrays-for-
+distinct-counts)
+
+##  Syntax  ¶
+
+    
+    
+    ARRAY_UNION_AGG( <column> )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ column  _ `
+
+    
+
+The column containing the ARRAYs with the distinct values (the ARRAYs produced
+by [ ARRAY_UNIQUE_AGG  ](array_unique_agg) ).
+
+##  Returns  ¶
+
+The function returns an ARRAY containing the distinct values from the ARRAYs
+in ` _ column  _ ` . The values in the ARRAY are in no particular order, and
+the order is not deterministic.
+
+Note that this function uses [ multiset semantics
+](https://en.wikipedia.org/wiki/Multiset) , which means that the maximum
+number of occurrences of an individual value in a single input ARRAY
+determines the number of occurrences of that value in the output ARRAY. See
+Examples  .
+
+The function ignores NULL values in ` _ column  _ ` and in the ARRAYs in ` _
+column  _ ` . If ` _ column  _ ` contains only NULL values or the table
+containing ` _ column  _ ` is empty, the function returns an empty ARRAY.
+
+##  Usage notes  ¶
+
+  * This function can be used as either of the following types of functions: 
+
+    * [ aggregate function  ](../functions-aggregation)
+
+    * [ window function  ](../functions-analytic) . 
+
+When used as a window function, this does not support [ window frames
+](../functions-analytic.html#label-what-is-a-window-frame) .
+
+  * When you pass a [ structured ARRAY  ](../data-types-structured) to the function, the function returns a structured ARRAY of the same type. 
+
+##  Examples  ¶
+
+###  Aggregation: Union of arrays  ¶
+
+The following example illustrates how the function returns the union of
+distinct values from two ARRAYs:
+
+    
+    
+    CREATE TABLE union_test(a array);
+    
+    INSERT INTO union_test
+        SELECT PARSE_JSON('[ 1, 1, 2]')
+        UNION ALL
+        SELECT PARSE_JSON('[ 1, 2, 3]');
+    
+    SELECT ARRAY_UNION_AGG(a) FROM union_test;
+    +-------------------------+
+    | ARRAY_UNION_AGG(A)      |
+    +-------------------------+
+    | [ 1, 1, 2, 3]           |
+    +-------------------------+
+    
+
+Copy
+
+The operation uses [ multiset ](https://en.wikipedia.org/wiki/Multiset)
+semantics. The value ` 1  ` appears twice in the output because it appears
+twice in one of the input arrays.
+
+See [ Using Arrays to Compute Distinct Values for Hierarchical Aggregations
+](../../user-guide/querying-arrays-for-distinct-counts) .
+

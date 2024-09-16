@@ -1,0 +1,70 @@
+  IS_APPLICATION_ROLE_IN_SESSION  ¶
+
+Verifies whether the application role is activated in the consumer’s current
+session.
+
+See also:
+
+    
+
+[ IS_ROLE_IN_SESSION  ](is_role_in_session) , [ IS_DATABASE_ROLE_IN_SESSION
+](is_database_role_in_session)
+
+##  Syntax  ¶
+
+    
+    
+    IS_APPLICATION_ROLE_IN_SESSION( '<string_literal>' )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` '  _ string_literal  _ '  `
+
+    
+
+The application role name. When the application role name is unspecified, the
+application role name is inferred by the current database session context.
+
+##  Returns  ¶
+
+  * ` TRUE  ` when the specified role name is activated in the consumer’s current session. 
+
+The function always uses the consumer’s current session and returns ` TRUE  `
+when the application role is granted to the consumer using the function.
+
+The function does not return ` TRUE  ` when the application calls the function
+because application roles are owned but not granted to the app.
+
+  * ` FALSE  ` when the specified application role name is not activated in the consumer’s current session. 
+
+##  Usage notes  ¶
+
+  * If you’re using the IS_APPLICATION_ROLE_IN_SESSION function with a [ masking policy  ](../../user-guide/security-column-intro) or a [ row access policy  ](../../user-guide/security-row-intro) , verify that your Snowflake account is Enterprise Edition or higher. 
+
+  * Only one role name can be passed as an argument 
+
+  * This function can’t be used in a materialized view definition because the function is not deterministic and Snowflake cannot determine what data to materialize. 
+
+##  Examples  ¶
+
+Verify if the specified application role is in the current session:
+
+    
+    
+    SELECT IS_APPLICATION_ROLE_IN_SESSION('ANALYST');
+    
+
+Copy
+
+    
+    
+    +-------------------------------------------+
+    | IS_APPLICATION_ROLE_IN_SESSION('ANALYST') |
+    +-------------------------------------------+
+    | FALSE                                     |
+    +-------------------------------------------+
+    
+

@@ -1,0 +1,35 @@
+  COSH  ¶
+
+Computes the hyperbolic cosine of its argument.
+
+##  Syntax  ¶
+
+    
+    
+    COSH( <real_expr> )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ real_expr  _ `
+
+    
+
+This expression should evaluate to a real number.
+
+##  Examples  ¶
+
+>
+>     SELECT COSH(1.5);
+>  
+>     -------------+
+>       COSH(1.5)  |
+>     -------------+
+>      2.352409615 |
+>     -------------+
+>  
+>
+> Copy
+

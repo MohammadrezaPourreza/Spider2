@@ -1,0 +1,26 @@
+  PI  ¶
+
+Returns the value of pi as a floating-point value.
+
+##  Syntax  ¶
+
+    
+    
+    PI()
+    
+
+Copy
+
+##  Examples  ¶
+
+>
+>     SELECT PI();
+>     -------------+
+>         PI()     |
+>     -------------+
+>      3.141592654 |
+>     -------------+
+>  
+>
+> Copy
+

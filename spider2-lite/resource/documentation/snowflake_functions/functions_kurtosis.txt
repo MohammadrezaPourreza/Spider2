@@ -1,0 +1,119 @@
+  KURTOSIS  ¶
+
+Returns the population excess kurtosis of non-NULL records. If all records
+inside a group are NULL, the function returns NULL.
+
+The following formula is used to compute the population excess kurtosis:
+
+\\[(n * (n+1))/((n-1) * (n-2) * (n-3)) * (n * m_4/(k_2)^2) - 3 * (n-1)^2 /
+((n-2) * (n-3))\\]
+
+where:
+
+  * \\(n\\)  denotes the number of non null records. 
+
+  * \\(m_4\\)  denotes the sample fourth central moment. 
+
+  * \\(k_2\\)  denotes the symmetric unbiased estimator of the variance. 
+
+##  Syntax  ¶
+
+**Aggregate function**
+
+    
+    
+    KURTOSIS( <expr> )
+    
+
+Copy
+
+**Window function**
+
+    
+    
+    KURTOSIS( <expr> ) OVER ( [ PARTITION BY <expr2> ] )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ expr  _ `
+
+    
+
+This is an expression that evaluates to a numeric data type (INTEGER, FLOAT,
+DECIMAL, etc.).
+
+` _ expr2  _ `
+
+    
+
+The expression that defines the individual groups or windows.
+
+##  Returns  ¶
+
+Returns DOUBLE if the input data type is DOUBLE/FLOAT.
+
+Returns DECIMAL if the input data type is another numeric data type.
+
+##  Usage notes  ¶
+
+  * For inputs with fewer than four records, KURTOSIS returns NULL. 
+
+  * When used as a window function, this function does not support: 
+
+    * ORDER BY sub-clause in the OVER() clause. 
+
+    * Window frames. 
+
+##  Examples  ¶
+
+Create a table and load the data:
+
+>
+>     create or replace table aggr(k int, v decimal(10,2), v2 decimal(10, 2));
+>  
+>     insert into aggr values
+>         (1, 10, null),
+>         (2, 10, 12),
+>         (2, 20, 22),
+>         (2, 25, null),
+>         (2, 30, 35);
+>  
+>
+> Copy
+
+Display the data:
+
+>
+>     select *
+>         from aggr
+>         order by k, v;
+>     +---+-------+-------+
+>     | K |     V |    V2 |
+>     |---+-------+-------|
+>     | 1 | 10.00 |  NULL |
+>     | 2 | 10.00 | 12.00 |
+>     | 2 | 20.00 | 22.00 |
+>     | 2 | 25.00 |  NULL |
+>     | 2 | 30.00 | 35.00 |
+>     +---+-------+-------+
+>  
+>
+> Copy
+
+Query the data:
+
+>
+>     select KURTOSIS(K), KURTOSIS(V), KURTOSIS(V2)
+>         from aggr;
+>     +----------------+-----------------+--------------+
+>     |    KURTOSIS(K) |     KURTOSIS(V) | KURTOSIS(V2) |
+>     |----------------+-----------------+--------------|
+>     | 5.000000000000 | -2.324218750000 |         NULL |
+>     +----------------+-----------------+--------------+
+>  
+>
+> Copy
+

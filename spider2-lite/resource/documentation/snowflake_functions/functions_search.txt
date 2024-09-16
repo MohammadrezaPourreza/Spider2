@@ -1,0 +1,1276 @@
+  SEARCH  ¶
+
+[ ![Snowflake logo in black \(no text\)](../../_images/logo-snowflake-
+black.png) ](../../_images/logo-snowflake-black.png) [ Preview Feature
+](../../release-notes/preview-features) — Open
+
+Available to all accounts.
+
+Searches character data (text) in specified columns from one or more tables,
+including fields in VARIANT, OBJECT, and ARRAY columns. A text analyzer breaks
+the text into tokens, which are discrete units of text, such as words or
+numbers. A default analyzer is applied if you do not specify one.
+
+For more information about using this function, see [ Using full-text search
+](../../user-guide/querying-with-search-functions) .
+
+##  Syntax  ¶
+
+    
+    
+    SEARCH( <search_data>, <search_string> [ , ANALYZER => '<analyzer_name>' ] )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ search_data  _ `
+
+    
+
+The data you want to search, expressed as a comma-delimited list of string
+literals, column names, or [ paths  ](../../user-guide/querying-
+semistructured.html#label-traversing-semistructured-data) to fields in VARIANT
+columns. The search data can also be a single literal string, which can be
+useful when you are testing the function.
+
+You can specify the wildcard character ( ` *  ` or ` _ table  _ .*  ` ), where
+` *  ` (by itself) expands to all qualifying columns in all of the tables that
+are in scope for the function. Qualifying columns are those that have VARCHAR
+(text), VARIANT, ARRAY, and OBJECT data types. VARIANT, ARRAY, and OBJECT data
+is converted to text for searching.
+
+You can search columns from more than one table when multiple tables are in
+scope (for example, when you are joining tables or using a set operator, such
+as UNION). To search specific columns, you might need to qualify the column
+names (for example, ` table2.colname  ` ). To search all of the columns in the
+output of a join or a UNION query, you can use the qualified or unqualified `
+*  ` wildcard as follows:
+
+    
+    
+    SELECT *
+      FROM t AS T1
+        JOIN t AS T2 USING (col1)
+      WHERE SEARCH((*), 'string');
+    
+    SELECT *
+      FROM t AS T1
+        JOIN t AS T2 USING (col1)
+      WHERE SEARCH((T2.*), 'string');
+    
+
+Copy
+
+However, note that you cannot specify ` *  ` or ` _ table  _ .*  ` more than
+once for the function. In the previous join example, you could not specify `
+SEARCH((T1.*,  T2.*),  'string')  ` . This syntax returns an error.
+
+Parentheses are required for the ` _ search_data  _ ` argument when ` *  ` , `
+_ table  _ .*  ` , or multiple items are listed. For example:
+
+    
+    
+    SEARCH((col1, col2, col3), 'string')
+    SEARCH((t1.*), 'string')
+    SEARCH((*), 'string')
+    
+
+Copy
+
+If parentheses are not used to separate multiple items, commas are parsed as
+separators between function arguments.
+
+See also  Examples of Expected Error Cases  .
+
+You can search fields in VARIANT data by specifying the column name, a colon
+or dot, and the subfields separated by dots. For example: `
+colname:fieldname.subfieldname  ` . For more information about specifying
+fields in such columns, see [ Traversing Semi-structured Data  ](../../user-
+guide/querying-semistructured.html#label-traversing-semistructured-data) .
+
+` _ search_string  _ `
+
+    
+
+A VARCHAR string that contains one or more search terms. This argument must be
+a literal string; column names are not supported. Specify one pair of single
+quotes around the entire string. Do not specify quotes around individual terms
+or phrases. For example, use:
+
+` 'blue  red  green'  `
+
+Do not use:
+
+` 'blue'  'red'  'green'  `
+
+The list of terms is disjunctive. In this case, the search would look for rows
+that contain ` blue  ` OR ` red  ` OR ` green  ` . However, when the
+NO_OP_ANALYZER is used, the query string is matched exactly as it is, with no
+tokenization and no disjunctive semantics.
+
+Searches are not case sensitive (except when the NO_OP_ANALYZER is used), so a
+search for the term ` 'ONCE'  ` against the string ` 'Once  upon  a  time'  `
+returns TRUE.
+
+The order of search terms does not matter, with respect to their presence in
+the searched data.
+
+` ANALYZER  => '  _ analyzer_name  _ '  `
+
+    
+
+Optional argument that specifies the name of the text analyzer. The name must
+be enclosed in single quotes.
+
+The analyzer breaks the search terms (and the text from the column being
+searched) into tokens. A row matches if any of the tokens extracted from the
+search string exactly matches a token extracted from any of the columns or
+fields being searched.
+
+The analyzer tokenizes a string by breaking it where it finds certain
+delimiters. These delimiters are not included in the resulting tokens, and
+empty tokens are not extracted.
+
+This parameter accepts one of the following values:
+
+  * DEFAULT_ANALYZER: Breaks text into tokens based on the following delimiters: 
+
+Character
+
+|
+
+Unicode code
+
+|
+
+Description  
+  
+---|---|---  
+  
+` `
+
+|
+
+` U+0020  `
+
+|
+
+Space  
+  
+` [  `
+
+|
+
+` U+005B  `
+
+|
+
+Left square bracket  
+  
+` ]  `
+
+|
+
+` U+005D  `
+
+|
+
+Right square bracket  
+  
+` < `
+
+|
+
+` U+003C  `
+
+|
+
+Less-than sign  
+  
+` > `
+
+|
+
+` U+003E  `
+
+|
+
+Greater-than sign  
+  
+` (  `
+
+|
+
+` U+0028  `
+
+|
+
+Left parenthesis  
+  
+` )  `
+
+|
+
+` U+0029  `
+
+|
+
+Right parenthesis  
+  
+` {  `
+
+|
+
+` U+007B  `
+
+|
+
+Left curly bracket  
+  
+` }  `
+
+|
+
+` U+007D  `
+
+|
+
+Right curly bracket  
+  
+` |  `
+
+|
+
+` U+007C  `
+
+|
+
+Vertical bar  
+  
+` !  `
+
+|
+
+` U+0021  `
+
+|
+
+Exclamation mark  
+  
+` ,  `
+
+|
+
+` U+002C  `
+
+|
+
+Comma  
+  
+` '  `
+
+|
+
+` U+0027  `
+
+|
+
+Apostrophe  
+  
+` "  `
+
+|
+
+` U+0022  `
+
+|
+
+Quotation mark  
+  
+` *  `
+
+|
+
+` U+002A  `
+
+|
+
+Asterisk  
+  
+` & `
+
+|
+
+` U+0026  `
+
+|
+
+Ampersand  
+  
+` ?  `
+
+|
+
+` U+003F  `
+
+|
+
+Question mark  
+  
+` +  `
+
+|
+
+` U+002B  `
+
+|
+
+Plus sign  
+  
+` /  `
+
+|
+
+` U+002F  `
+
+|
+
+Slash  
+  
+` :  `
+
+|
+
+` U+003A  `
+
+|
+
+Colon  
+  
+` =  `
+
+|
+
+` U+003D  `
+
+|
+
+Equal sign  
+  
+` @  `
+
+|
+
+` U+0040  `
+
+|
+
+At sign  
+  
+` .  `
+
+|
+
+` U+002E  `
+
+|
+
+Period (full stop)  
+  
+` -  `
+
+|
+
+` U+002D  `
+
+|
+
+Hyphen  
+  
+` $  `
+
+|
+
+` U+0024  `
+
+|
+
+Dollar sign  
+  
+` %  `
+
+|
+
+` U+0025  `
+
+|
+
+Percent sign  
+  
+` \  `
+
+|
+
+` U+005C  `
+
+|
+
+Backslash  
+  
+` _  `
+
+|
+
+` U+005F  `
+
+|
+
+Underscore (low line)  
+  
+` \n  `
+
+|
+
+` U+000A  `
+
+|
+
+New line (line feed)  
+  
+` \r  `
+
+|
+
+` U+000D  `
+
+|
+
+Carriage return  
+  
+` \t  `
+
+|
+
+` U+0009  `
+
+|
+
+Horizontal tab  
+  
+` ┦  `
+
+|
+
+` U+2526  `
+
+|
+
+Box drawings up heavy and left down light  
+  
+` ┠  `
+
+|
+
+` U+2520  `
+
+|
+
+Box drawings vertical heavy and right light  
+  
+  * UNICODE_ANALYZER: Tokenizes based on Unicode segmentation rules that treat spaces and certain punctuation characters as delimiters. These internal rules are designed for natural language searches (in many different languages). For example, the default analyzer treats periods in IP addresses and apostrophes in contractions as delimiters, but the Unicode analyzer does not. See  Using an analyzer to adjust search behavior  . 
+
+For more information about the Unicode Text Segmentation algorithm, see [
+https://unicode.org/reports/tr29/ ](https://unicode.org/reports/tr29/) .
+
+  * NO_OP_ANALYZER: Tokenizes neither the data nor the query string. A search term must exactly match the full text in a column or field, including case sensitivity; otherwise, the SEARCH function returns FALSE. Even if the query string looks like it contains multiple tokens (for example, ` 'sky  blue'  ` ), the column or field must equal the entire query string exactly. In this case, only ` 'sky  blue'  ` is a match; ` 'sky'  ` and ` 'blue'  ` are not matches. 
+
+For more information about the behavior of different analyzers, see  How
+search terms are tokenized  .
+
+##  Returns  ¶
+
+Returns a BOOLEAN.
+
+  * The value is TRUE if any ` _ search_string  _ ` tokens are found in ` _ search_data  _ ` . 
+
+  * Returns NULL if either of these arguments is NULL. 
+
+  * Otherwise, returns FALSE. 
+
+##  Usage notes  ¶
+
+  * The SEARCH function operates only on VARCHAR, VARIANT, ARRAY, and OBJECT data. The function returns an error if you try to search other data types. For examples, see  Examples of expected error cases  . 
+
+  * You can add a FULL_TEXT search optimization on columns that are the target of SEARCH function calls by using an ALTER TABLE command. For example: 
+    
+        ALTER TABLE lines ADD SEARCH OPTIMIZATION
+      ON FULL_TEXT(play, character, line);
+    
+
+Copy
+
+For more information, see [ enable FULL_TEXT search optimization
+](../../user-guide/search-optimization/enabling.html#label-enable-full-text-
+search) .
+
+##  How search terms are tokenized  ¶
+
+The following table shows a few examples of how input search terms are split
+into tokens, which depends on the rules applied by the analyzer that is used.
+In the table, commas denote where the tokens are split (if they are).
+
+Search Term(s)
+
+|
+
+Tokens: DEFAULT_ANALYZER
+
+|
+
+Tokens: UNICODE_ANALYZER
+
+|
+
+NO_OP_ANALYZER (not split)  
+  
+---|---|---|---  
+  
+` 10.210.158.44  `
+
+|
+
+` 10,  210,  158,  44  `
+
+|
+
+` 10.210.158.44  `
+
+|
+
+` 10.210.158.44  `  
+  
+` 192.0.2.0/24  `
+
+|
+
+` 192,  0,  2,  24  `
+
+|
+
+` 192.0.2.0,  24  `
+
+|
+
+` 192.0.2.0/24  `  
+  
+` high-tech  `
+
+|
+
+` high,  tech  `
+
+|
+
+` high,  tech  `
+
+|
+
+` high-tech  `  
+  
+` Bob's  Burgers  `
+
+|
+
+` bob,  s,  burgers  `
+
+|
+
+` bob's,  burgers  `
+
+|
+
+` Bob's  Burgers  `  
+  
+` Three  spaces  `
+
+|
+
+` three,  spaces  `
+
+|
+
+` three,  spaces  `
+
+|
+
+` Three  spaces  `  
+  
+` docs@snowflake.com  `
+
+|
+
+` docs,  snowflake,  com  `
+
+|
+
+` docs,  snowflake.com  `
+
+|
+
+` docs@snowflake.com  `  
+  
+` /opt/homebrew/README.md  `
+
+|
+
+` opt,  homebrew,  readme,  md  `
+
+|
+
+` opt,  homebrew,  readme.md  `
+
+|
+
+` /opt/homebrew/README.md  `  
+  
+##  Examples  ¶
+
+The following examples show different ways to use the SEARCH function,
+starting with simple usage and progressing to more complex use cases.
+
+###  Matching against a literal  ¶
+
+The simplest example of the SEARCH function is a test for TRUE or FALSE on a
+string literal. The first example returns TRUE because the literals for the
+first and second arguments match, given that the comparison is not case
+sensitive.
+
+    
+    
+    SELECT SEARCH('king','KING');
+    
+
+Copy
+
+    
+    
+    +-----------------------------+
+    | SEARCH('KING','KING')       |
+    |-----------------------------|
+    | True                        |
+    +-----------------------------+
+    
+
+The second example returns FALSE because the token ` 32  ` does not appear in
+the literal ` 5.1.33  ` specified for the first argument.
+
+    
+    
+    SELECT SEARCH('5.1.33','32');
+    
+
+Copy
+
+    
+    
+    +-----------------------------+
+    | SEARCH('5.1.33','32')       |
+    |-----------------------------|
+    | False                       |
+    +-----------------------------+
+    
+
+###  Matching against a column reference  ¶
+
+This example uses a column in a table as the first argument. The function
+returns TRUE because one of the search terms ( ` king  ` ) exists in the `
+character  ` column. The list of terms is disjunctive. (For information about
+the table used here and in some subsequent examples, see  Sample data for
+SEARCH  .)
+
+    
+    
+    SELECT SEARCH(character, 'king queen'),character
+      FROM lines
+      WHERE line_id=4;
+    
+
+Copy
+
+    
+    
+    +--------------------------------------+---------------+
+    | SEARCH(CHARACTER,'KING QUEEN') | CHARACTER           |
+    |--------------------------------------+---------------|
+    | True                                 | KING HENRY IV |
+    +--------------------------------------+---------------+
+    
+
+###  WHERE clause search on one column  ¶
+
+The following query uses the SEARCH function to find rows that contain the
+word “wherefore” in the ` line  ` column:
+
+    
+    
+    SELECT *
+      FROM lines
+      WHERE SEARCH(line, 'wherefore')
+      ORDER BY character LIMIT 5;
+    
+
+Copy
+
+    
+    
+    +---------+----------------------+------------+----------------+-----------+-----------------------------------------------------+
+    | LINE_ID | PLAY                 | SPEECH_NUM | ACT_SCENE_LINE | CHARACTER | LINE                                                |
+    |---------+----------------------+------------+----------------+-----------+-----------------------------------------------------|
+    |  100109 | Troilus and Cressida |         31 | 2.1.53         | ACHILLES  | Why, how now, Ajax! wherefore do you thus? How now, |
+    |   16448 | As You Like It       |          2 | 2.3.6          | ADAM      | And wherefore are you gentle, strong and valiant?   |
+    |   24055 | The Comedy of Errors |         14 | 5.1.41         | AEMELIA   | Be quiet, people. Wherefore throng you hither?      |
+    |   99330 | Troilus and Cressida |         30 | 1.1.102        | AENEAS    | How now, Prince Troilus! wherefore not afield?      |
+    |   92454 | The Tempest          |        150 | 2.1.343        | ALONSO    | Wherefore this ghastly looking?                     |
+    +---------+----------------------+------------+----------------+-----------+-----------------------------------------------------+
+    
+
+###  WHERE clause search on multiple columns  ¶
+
+The following query uses the SEARCH function to find rows that contain the
+word “king” in the ` play  ` column, the ` character  ` column, or both
+columns. Parentheses are required for the first argument.
+
+    
+    
+    SELECT play, character
+      FROM lines
+      WHERE SEARCH((play, character), 'king')
+      ORDER BY play, character LIMIT 10;
+    
+
+Copy
+
+    
+    
+    +---------------------------+-----------------+
+    | PLAY                      | CHARACTER       |
+    |---------------------------+-----------------|
+    | All's Well That Ends Well | KING            |
+    | Hamlet                    | KING CLAUDIUS   |
+    | Hamlet                    | KING CLAUDIUS   |
+    | Henry IV Part 1           | KING HENRY IV   |
+    | Henry IV Part 1           | KING HENRY IV   |
+    | King John                 | CHATILLON       |
+    | King John                 | KING JOHN       |
+    | King Lear                 | GLOUCESTER      |
+    | King Lear                 | KENT            |
+    | Richard II                | KING RICHARD II |
+    +---------------------------+-----------------+
+    
+
+###  Wildcard search on all qualifying columns in a table  ¶
+
+You can use the ` *  ` character (or ` _ table  _ .*  ` ) as the first
+argument to the SEARCH function, as shown in this example. The search operates
+on all of the qualifying columns in the table you are selecting from, which in
+this case is the ` lines  ` table.
+
+The ` lines  ` table has four columns that have data types supported by the
+search function. Note that the result consists of rows where “king” appears in
+one or more of the four searched columns. For one of these columns, `
+act_scene_line  ` , the function finds no matches, but the other three columns
+all have matches.
+
+    
+    
+    SELECT play, character, line, act_scene_line
+      FROM lines
+      WHERE SEARCH((lines.*), 'king')
+      ORDER BY act_scene_line LIMIT 10;
+    
+
+Copy
+
+    
+    
+    +-----------------+-----------------+----------------------------------------------------+----------------+
+    | PLAY            | CHARACTER       | LINE                                               | ACT_SCENE_LINE |
+    |-----------------+-----------------+----------------------------------------------------+----------------|
+    | Pericles        | LODOVICO        | This king unto him took a fere,                    | 1.0.21         |
+    | King Lear       | KENT            | I thought the king had more affected the Duke of   | 1.1.1          |
+    | Richard II      | KING RICHARD II | Old John of Gaunt, time-honour'd Lancaster,        | 1.1.1          |
+    | Henry IV        | KING HENRY IV   | So shaken as we are, so wan with care,             | 1.1.1          |
+    | King John       | KING JOHN       | Now, say, Chatillon, what would France with us?    | 1.1.1          |
+    | Henry VI Part 3 | WARWICK         | I wonder how the king escaped our hands.           | 1.1.1          |
+    | Cymbeline       | First Gentleman | Is outward sorrow, though I think the king         | 1.1.10         |
+    | King John       | CHATILLON       | To this fair island and the territories,           | 1.1.10         |
+    | King Lear       | GLOUCESTER      | so often blushed to acknowledge him, that now I am | 1.1.10         |
+    | Henry IV        | KING HENRY IV   | Which, like the meteors of a troubled heaven,      | 1.1.10         |
+    +-----------------+-----------------+----------------------------------------------------+----------------+
+    
+
+###  Wildcard search on qualifying columns in joined tables  ¶
+
+This example uses two small tables that contain information about car models.
+Table ` t1  ` has two character columns, and table ` t2  ` has three. You can
+create and load the tables as follows:
+
+    
+    
+    CREATE OR REPLACE TABLE t1 (col1 INT, col2 VARCHAR(20), col3 VARCHAR(20));
+    INSERT INTO t1 VALUES
+      (1,'Mini','Cooper'),
+      (2,'Mini','Cooper S'),
+      (3,'Mini','Countryman'),
+      (4,'Mini','Countryman S');
+    CREATE OR REPLACE TABLE t2 (col1 INT, col2 VARCHAR(20), col3 VARCHAR(20), col4 VARCHAR(20));
+    INSERT INTO t2 VALUES
+      (1,'Mini','Cooper', 'Convertible'),
+      (2,'Mini','Cooper S', 'Convertible'),
+      (3,'Mini','Countryman SE','ALL4'),
+      (4,'Mini','Countryman S','ALL4');
+    
+
+Copy
+
+The results of the following two queries differ, given the search over ` t1.*
+` and ` t2.*  ` . Only two columns from ` t1  ` qualify for the search, but
+three columns from ` t2  ` qualify.
+
+    
+    
+    SELECT * FROM t1 JOIN t2 USING(col1)
+      WHERE SEARCH((t1.*),'s all4');
+    
+
+Copy
+
+    
+    
+    +------+------+--------------+------+--------------+-------------+
+    | COL1 | COL2 | COL3         | COL2 | COL3         | COL4        |
+    |------+------+--------------+------+--------------+-------------|
+    |    2 | Mini | Cooper S     | Mini | Cooper S     | Convertible |
+    |    4 | Mini | Countryman S | Mini | Countryman S | ALL4        |
+    +------+------+--------------+------+--------------+-------------+
+    
+    
+    
+    SELECT * FROM t1 JOIN t2 USING(col1)
+      WHERE SEARCH((t2.*),'s all4');
+    
+
+Copy
+
+    
+    
+    +------+------+--------------+------+---------------+-------------+
+    | COL1 | COL2 | COL3         | COL2 | COL3          | COL4        |
+    |------+------+--------------+------+---------------+-------------|
+    |    2 | Mini | Cooper S     | Mini | Cooper S      | Convertible |
+    |    3 | Mini | Countryman   | Mini | Countryman SE | ALL4        |
+    |    4 | Mini | Countryman S | Mini | Countryman S  | ALL4        |
+    +------+------+--------------+------+---------------+-------------+
+    
+
+###  Wildcard search on the output of a UNION subquery  ¶
+
+The following example uses the same two tables as the previous example. In
+this case, the search is applied to all qualifying columns from ` t3  ` ,
+which is the table that results from the subquery. The subquery computes the
+UNION of the first three columns in ` t1  ` and ` t2  ` (five rows). The
+search returns two matching rows from the UNION result.
+
+    
+    
+    SELECT *
+      FROM (
+        SELECT col1, col2, col3 FROM t1
+        UNION
+        SELECT col1, col2, col3 FROM t2
+        ) AS T3
+      WHERE SEARCH((T3.*),'s');
+    
+
+Copy
+
+    
+    
+    +------+------+--------------+
+    | COL1 | COL2 | COL3         |
+    |------+------+--------------|
+    |    2 | Mini | Cooper S     |
+    |    4 | Mini | Countryman S |
+    +------+------+--------------+
+    
+
+###  Finding rows that qualify for multiple search strings  ¶
+
+The following example shows how to use SEARCH twice in the same query, so that
+both search strings have to return TRUE in order for a row to qualify for the
+result.
+
+    
+    
+    SELECT act_scene_line, character, line
+      FROM lines
+      WHERE SEARCH(line, 'Rosencrantz')
+        AND SEARCH(line, 'Guildenstern')
+        AND act_scene_line IS NOT NULL;
+    
+
+Copy
+
+    
+    
+    +----------------+------------------+-----------------------------------------------------------+
+    | ACT_SCENE_LINE | CHARACTER        | LINE                                                      |
+    |----------------+------------------+-----------------------------------------------------------|
+    | 2.2.1          | KING CLAUDIUS    | Welcome, dear Rosencrantz and Guildenstern!               |
+    | 2.2.35         | KING CLAUDIUS    | Thanks, Rosencrantz and gentle Guildenstern.              |
+    | 2.2.36         | QUEEN GERTRUDE   | Thanks, Guildenstern and gentle Rosencrantz:              |
+    | 2.2.241        | HAMLET           | Guildenstern? Ah, Rosencrantz! Good lads, how do ye both? |
+    | 4.6.27         | HORATIO          | where I am. Rosencrantz and Guildenstern hold their       |
+    | 5.2.60         | HORATIO          | So Guildenstern and Rosencrantz go to't.                  |
+    | 5.2.389        | First Ambassador | That Rosencrantz and Guildenstern are dead:               |
+    +----------------+------------------+-----------------------------------------------------------+
+    
+
+###  Searching VARIANT and VARCHAR data in a join  ¶
+
+The following example shows a join of two tables, ` car_rentals  ` and `
+car_sales  ` , with the search applied to columns in both tables. The `
+car_sales  ` table contains VARIANT data. The ` car_sales  ` table and its
+data are described under [ Querying Semi-structured Data  ](../../user-
+guide/querying-semistructured) . The following SQL statements create the `
+car_rentals  ` table and insert data into it:
+
+    
+    
+    CREATE OR REPLACE TABLE car_rentals(
+      vehicle_make varchar(30),
+      dealership varchar(30),
+      salesperson varchar(30));
+    
+    INSERT INTO car_rentals VALUES
+      ('Toyota', 'Tindel Toyota', 'Greg Northrup'),
+      ('Honda', 'Valley View Auto Sales', 'Frank Beasley'),
+      ('Tesla', 'Valley View Auto Sales', 'Arturo Sandoval');
+    
+
+Copy
+
+Run the query:
+
+    
+    
+    SELECT SEARCH((r.vehicle_make, r.dealership, s.src:dealership), 'Toyota Tesla')
+        AS contains_toyota_tesla, r.vehicle_make, r.dealership,s.src:dealership
+      FROM car_rentals r JOIN car_sales s
+        ON r.SALESPERSON=s.src:salesperson.name;
+    
+
+Copy
+
+    
+    
+    +-----------------------+--------------+------------------------+--------------------------+
+    | CONTAINS_TOYOTA_TESLA | VEHICLE_MAKE | DEALERSHIP             | S.SRC:DEALERSHIP         |
+    |-----------------------+--------------+------------------------+--------------------------|
+    | True                  | Toyota       | Tindel Toyota          | "Tindel Toyota"          |
+    | False                 | Honda        | Valley View Auto Sales | "Valley View Auto Sales" |
+    +-----------------------+--------------+------------------------+--------------------------+
+    
+
+In this second example, against the same data, different search terms are
+used:
+
+    
+    
+    SELECT SEARCH((r.vehicle_make, r.dealership, s.src:dealership), 'Toyota Honda')
+        AS contains_toyota_honda, r.vehicle_make, r.dealership, s.src:dealership
+      FROM car_rentals r JOIN car_sales s
+        ON r.SALESPERSON =s.src:salesperson.name;
+    
+
+Copy
+
+    
+    
+    +-----------------------+--------------+------------------------+--------------------------+
+    | CONTAINS_TOYOTA_HONDA | VEHICLE_MAKE | DEALERSHIP             | S.SRC:DEALERSHIP         |
+    |-----------------------+--------------+------------------------+--------------------------|
+    | True                  | Toyota       | Tindel Toyota          | "Tindel Toyota"          |
+    | True                  | Honda        | Valley View Auto Sales | "Valley View Auto Sales" |
+    +-----------------------+--------------+------------------------+--------------------------+
+    
+
+###  Using an analyzer to adjust search behavior  ¶
+
+The following examples show how to adjust the behavior of the SEARCH function
+by specifying a non-default analyzer: UNICODE_ANALYZER or NO_OP_ANALYZER.
+
+The first example uses the NO_OP_ANALYZER to test whether the string ` 1.2.500
+` matches the exact contents of the ` act_scene_line  ` column for any row in
+the ` lines  ` table. Two rows qualify for the search.
+
+    
+    
+    SELECT line_id, act_scene_line FROM lines
+      WHERE SEARCH(act_scene_line, '1.2.500', ANALYZER=>'NO_OP_ANALYZER');
+    
+
+Copy
+
+    
+    
+    +---------+----------------+
+    | LINE_ID | ACT_SCENE_LINE |
+    |---------+----------------|
+    |   91998 | 1.2.500        |
+    |  108464 | 1.2.500        |
+    +---------+----------------+
+    
+
+If you remove NO_OP_ANALYZER as an argument to the function for this example,
+the search returns a large number of rows. The default analyzer treats 1, 2,
+and 500 as distinct tokens; therefore, the function returns TRUE for all of
+the rows where 1, 2, or 500 exist (in any order or combination).
+
+If you change this query to include only the prefix 1.2 for the second
+argument, the default analyzer returns TRUE, but the UNICODE_ANALYZER and
+NO_OP_ANALYZER both return FALSE. The default analyzer treats periods in these
+values as delimiters, but the Unicode analyzer does not.
+
+The following two queries show another effect of using the UNICODE_ANALYZER
+instead of the default analyzer. The first query, using the UNICODE_ANALYZER,
+returns only one row. Note that the extra single quote in the second argument
+is there to escape the single quote for the apostrophe. See [ Single-quoted
+string constants  ](../data-types-text.html#label-single-quoted-string-
+constants) .
+
+    
+    
+    SELECT DISTINCT(play)
+      FROM lines
+      WHERE SEARCH(play, 'love''s', ANALYZER=>'UNICODE_ANALYZER');
+    
+
+Copy
+
+    
+    
+    +----------------------+
+    | PLAY                 |
+    |----------------------|
+    | Love's Labour's Lost |
+    +----------------------+
+    
+
+The second query, using the default analyzer, returns four rows because the
+default analyzer treats the apostrophe character as a delimiter. Any string
+that contains the letter “s” as a token qualifies for the search. In this
+example, the function returns TRUE for every string that contains an
+“apostrophe s” ( ` 's  ` ).
+
+    
+    
+    SELECT DISTINCT(play) FROM lines WHERE SEARCH(play, 'love''s');
+    
+
+Copy
+
+    
+    
+    +---------------------------+
+    | PLAY                      |
+    |---------------------------|
+    | All's Well That Ends Well |
+    | Love's Labour's Lost      |
+    | A Midsummer Night's Dream |
+    | The Winter's Tale         |
+    +---------------------------+
+    
+
+###  Examples of expected error cases  ¶
+
+The following examples show queries that return expected syntax errors.
+
+This example fails because ` 5  ` is not a supported data type for the ` _
+search_string  _ ` argument.
+
+    
+    
+    SELECT SEARCH(line, 5) FROM lines;
+    
+
+Copy
+
+    
+    
+    001045 (22023): SQL compilation error:
+    argument needs to be a string: '1'
+    
+
+This example fails because the ` line_id  ` column is not a supported data
+type for the ` _ search_data  _ ` argument.
+
+    
+    
+    SELECT SEARCH(line_id, 'sample text') FROM lines;
+    
+
+Copy
+
+    
+    
+    001173 (22023): SQL compilation error: error line 1 at position 7: Expected non-empty set of columns supporting full-text search.
+    
+
+This example fails because multiple string literals are listed for the first
+argument, without parentheses, resulting in mismatched arguments:
+
+    
+    
+    SELECT SEARCH('docs@snowflake.com', 'careers@snowflake.com', '@');
+    
+
+Copy
+
+    
+    
+    001881 (42601): SQL compilation error: Expected 1 named argument(s), found 0
+    
+
+This example fails because multiple column names are listed for the first
+argument, without parentheses, resulting in too many arguments:
+
+    
+    
+    SELECT SEARCH(play,line,'king', ANALYZER=>'UNICODE_ANALYZER') FROM lines;
+    
+
+Copy
+
+    
+    
+    000939 (22023): SQL compilation error: error line 1 at position 7
+    too many arguments for function [SEARCH(LINES.PLAY, LINES.LINE, 'king', 'UNICODE_ANALYZER')] expected 3, got 4
+    
+
+This example fails because a column name is not accepted as the search string
+argument.
+
+    
+    
+    SELECT SEARCH(line, character) FROM lines;
+    
+
+Copy
+
+    
+    
+    001015 (22023): SQL compilation error:
+    argument 2 to function SEARCH needs to be constant, found 'LINES.CHARACTER'
+    
+
+###  Sample data for SEARCH  ¶
+
+Some of the examples in this section query a table that contains text from
+Shakespeare’s plays. Each line of text is stored in a single row of the table.
+Other columns identify the name of the play, the name of the character, and so
+on. The ` lines  ` table has the following structure:
+
+    
+    
+    DESCRIBE TABLE lines;
+    
+
+Copy
+
+    
+    
+    +----------------+---------------+--------+-------+-
+    | name           | type          | kind   | null? |
+    |----------------+---------------+--------+-------+-
+    | LINE_ID        | NUMBER(38,0)  | COLUMN | Y     |
+    | PLAY           | VARCHAR(50)   | COLUMN | Y     |
+    | SPEECH_NUM     | NUMBER(38,0)  | COLUMN | Y     |
+    | ACT_SCENE_LINE | VARCHAR(10)   | COLUMN | Y     |
+    | CHARACTER      | VARCHAR(30)   | COLUMN | Y     |
+    | LINE           | VARCHAR(2000) | COLUMN | Y     |
+    +----------------+---------------+--------+-------+-
+    
+
+For example, a single line in this table looks like this:
+
+    
+    
+    SELECT * FROM lines
+      WHERE line_id=34230;
+    
+
+Copy
+
+    
+    
+    +---------+--------+------------+----------------+-----------+--------------------------------------------+
+    | LINE_ID | PLAY   | SPEECH_NUM | ACT_SCENE_LINE | CHARACTER | LINE                                       |
+    |---------+--------+------------+----------------+-----------+--------------------------------------------|
+    |   34230 | Hamlet |         19 | 3.1.64         | HAMLET    | To be, or not to be, that is the question: |
+    +---------+--------+------------+----------------+-----------+--------------------------------------------+
+    
+
+If you want to run the examples in this section, create this table by running
+the following commands:
+
+    
+    
+    CREATE OR REPLACE TABLE lines(
+      line_id INT,
+      play VARCHAR(50),
+      speech_num INT,
+      act_scene_line VARCHAR(10),
+      character VARCHAR(30),
+      line VARCHAR(2000)
+      );
+    
+    INSERT INTO lines VALUES
+      (4,'Henry IV Part 1',1,'1.1.1','KING HENRY IV','So shaken as we are, so wan with care,'),
+      (13,'Henry IV Part 1',1,'1.1.10','KING HENRY IV','Which, like the meteors of a troubled heaven,'),
+      (9526,'Henry VI Part 3',1,'1.1.1','WARWICK','I wonder how the king escaped our hands.'),
+      (12664,'All''s Well That Ends Well',1,'1.1.1','COUNTESS','In delivering my son from me, I bury a second husband.'),
+      (15742,'All''s Well That Ends Well',114,'5.3.378','KING','Your gentle hands lend us, and take our hearts.'),
+      (16448,'As You Like It',2,'2.3.6','ADAM','And wherefore are you gentle, strong and valiant?'),
+      (24055,'The Comedy of Errors',14,'5.1.41','AEMELIA','Be quiet, people. Wherefore throng you hither?'),
+      (28487,'Cymbeline',3,'1.1.10','First Gentleman','Is outward sorrow, though I think the king'),
+      (33522,'Hamlet',1,'2.2.1','KING CLAUDIUS','Welcome, dear Rosencrantz and Guildenstern!'),
+      (33556,'Hamlet',5,'2.2.35','KING CLAUDIUS','Thanks, Rosencrantz and gentle Guildenstern.'),
+      (33557,'Hamlet',6,'2.2.36','QUEEN GERTRUDE','Thanks, Guildenstern and gentle Rosencrantz:'),
+      (33776,'Hamlet',67,'2.2.241','HAMLET','Guildenstern? Ah, Rosencrantz! Good lads, how do ye both?'),
+      (34230,'Hamlet',19,'3.1.64','HAMLET','To be, or not to be, that is the question:'),
+      (35672,'Hamlet',7,'4.6.27','HORATIO','where I am. Rosencrantz and Guildenstern hold their'),
+      (36289,'Hamlet',14,'5.2.60','HORATIO','So Guildenstern and Rosencrantz go to''t.'),
+      (36640,'Hamlet',143,'5.2.389','First Ambassador','That Rosencrantz and Guildenstern are dead:'),
+      (43494,'King John',1,'1.1.1','KING JOHN','Now, say, Chatillon, what would France with us?'),
+      (43503,'King John',5,'1.1.10','CHATILLON','To this fair island and the territories,'),
+      (49031,'King Lear',1,'1.1.1','KENT','I thought the king had more affected the Duke of'),
+      (49040,'King Lear',4,'1.1.10','GLOUCESTER','so often blushed to acknowledge him, that now I am'),
+      (52797,'Love''s Labour''s Lost',1,'1.1.1','FERDINAND','Let fame, that all hunt after in their lives,'),
+      (55778,'Love''s Labour''s Lost',405,'5.2.971','ADRIANO DE ARMADO','Apollo. You that way: we this way.'),
+      (67000,'A Midsummer Night''s Dream',1,'1.1.1','THESEUS','Now, fair Hippolyta, our nuptial hour'),
+      (69296,'A Midsummer Night''s Dream',104,'5.1.428','PUCK','And Robin shall restore amends.'),
+      (75787,'Pericles',178,'1.0.21','LODOVICO','This king unto him took a fere,'),
+      (78407,'Richard II',1,'1.1.1','KING RICHARD II','Old John of Gaunt, time-honour''d Lancaster,'),
+      (91998,'The Tempest',108,'1.2.500','FERDINAND','Were I but where ''tis spoken.'),
+      (92454,'The Tempest',150,'2.1.343','ALONSO','Wherefore this ghastly looking?'),
+      (99330,'Troilus and Cressida',30,'1.1.102','AENEAS','How now, Prince Troilus! wherefore not afield?'),
+      (100109,'Troilus and Cressida',31,'2.1.53','ACHILLES','Why, how now, Ajax! wherefore do you thus? How now,'),
+      (108464,'The Winter''s Tale',106,'1.2.500','CAMILLO','As or by oath remove or counsel shake')
+      ;
+    
+
+Copy
+

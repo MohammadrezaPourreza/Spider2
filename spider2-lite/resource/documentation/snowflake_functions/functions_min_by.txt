@@ -1,0 +1,182 @@
+  MIN_BY  ¶
+
+Finds the row(s) containing the minimum value for a column and returns the
+value of another column in that row.
+
+For example, if a table contains the columns ` employee_id  ` and ` salary  `
+, ` MIN_BY(employee_id,  salary)  ` returns the value of the ` employee_id  `
+column for the row that has the lowest value in the ` salary  ` column.
+
+If multiple rows contain the specified minimum value, the function is non-
+deterministic.
+
+To return values for multiple rows, specify the optional ` _
+maximum_number_of_values_to_return  _ ` argument. With this additional
+argument:
+
+  * The function returns an [ ARRAY  ](../data-types-semistructured.html#label-data-type-array) containing the values of a column for the rows with the lowest values of a specified column. 
+
+  * The values in the ARRAY are sorted by their corresponding values in the column containing the minimum values. 
+
+  * If multiple rows contain these lowest values, the function is non-deterministic. 
+
+For example, ` MIN_BY(employee_id,  salary,  5)  ` returns an ARRAY of values
+of the ` employee_id  ` column for the five rows containing the lowest values
+in the ` salary  ` column. The IDs in the ARRAY are sorted by the
+corresponding values in the ` salary  ` column.
+
+See also  :
+
+    
+
+[ MIN  ](min)
+
+##  Syntax  ¶
+
+    
+    
+    MIN_BY( <col_to_return>, <col_containing_mininum> [ , <maximum_number_of_values_to_return> ] )
+    
+
+Copy
+
+##  Arguments  ¶
+
+**Required:**
+
+` _ col_to_return  _ `
+
+    
+
+Column containing the value to return.
+
+` _ col_containing_mininum  _ `
+
+    
+
+Column containing the minimum value.
+
+**Optional:**
+
+` _ maximum_number_of_values_to_return  _ `
+
+    
+
+Constant integer specifying the maximum number of values to return. You must
+specify a positive number. The maximum number that you can specify is ` 1000
+` .
+
+##  Returns  ¶
+
+  * If ` _ maximum_number_of_values_to_return  _ ` is not specified, the function returns a value of the same type as ` _ col_to_return  _ ` . 
+
+  * If ` _ maximum_number_of_values_to_return  _ ` is specified, the function returns an ARRAY containing values of the same type as ` _ col_to_return  _ ` . The values in the ARRAY are sorted by their corresponding ` _ col_containing_mininum  _ ` values. 
+
+For example, ` MIN_BY(employee_id,  salary,  5)  ` returns the IDs of the
+employees with the lowest five salaries, sorted by ` salary  ` (in ascending
+order).
+
+##  Usage notes  ¶
+
+  * The function ignores NULL values in ` _ col_containing_mininum  _ ` . 
+
+  * If all values in ` _ col_containing_mininum  _ ` are NULL, the function returns NULL (regardless of whether the optional ` _ maximum_number_of_values_to_return  _ ` argument is specified). 
+
+##  Examples  ¶
+
+The following examples demonstrate how to use the MIN_BY function.
+
+To run these examples, execute the following statements to set up the table
+and data for the examples:
+
+    
+    
+    CREATE OR REPLACE TABLE employees(employee_id NUMBER, department_id NUMBER, salary NUMBER);
+    
+    INSERT INTO employees VALUES
+      (1001, 10, 10000),
+      (1020, 10, 9000),
+      (1030, 10, 8000),
+      (900, 20, 15000),
+      (2000, 20, NULL),
+      (2010, 20, 15000),
+      (2020, 20, 8000);
+    
+
+Copy
+
+Execute the following statement to view the contents of this table:
+
+    
+    
+    SELECT * FROM employees;
+    
+
+Copy
+
+    
+    
+    +-------------+---------------+--------+
+    | EMPLOYEE_ID | DEPARTMENT_ID | SALARY |
+    |-------------+---------------+--------|
+    |        1001 |            10 |  10000 |
+    |        1020 |            10 |   9000 |
+    |        1030 |            10 |   8000 |
+    |         900 |            20 |  15000 |
+    |        2000 |            20 |   NULL |
+    |        2010 |            20 |  15000 |
+    |        2020 |            20 |   8000 |
+    +-------------+---------------+--------+
+    
+
+The following example returns the ID of the employee with the lowest salary:
+
+    
+    
+    SELECT MIN_BY(employee_id, salary) FROM employees;
+    
+
+Copy
+
+    
+    
+    +-----------------------------+
+    | MIN_BY(EMPLOYEE_ID, SALARY) |
+    |-----------------------------|
+    |                        1030 |
+    +-----------------------------+
+    
+
+Note the following:
+
+  * Because more than one row contains the minimum value for the ` salary  ` column, the function is non-deterministic and might return the employee ID for a different row in subsequent executions. 
+
+  * The function ignores the NULL value in the ` salary  ` column when determining the rows with the minimum values. 
+
+The following example returns an ARRAY containing the IDs of the employees
+with the three lowest salaries:
+
+    
+    
+    SELECT MIN_BY(employee_id, salary, 3) FROM employees;
+    
+    +--------------------------------+
+    | MIN_BY(EMPLOYEE_ID, SALARY, 3) |
+    |--------------------------------|
+    | [                              |
+    |   1030,                        |
+    |   2020,                        |
+    |   1020                         |
+    | ]                              |
+    +--------------------------------+
+    
+
+Copy
+
+As shown in the example, the values in the ARRAY are sorted by their
+corresponding values in the ` salary  ` column. So, MIN_BY returns the IDs of
+employees sorted by their salary in ascending order.
+
+If more than one of these rows contain the same value in the ` salary  `
+column, the order of the returned values for that salary is non-deterministic.
+

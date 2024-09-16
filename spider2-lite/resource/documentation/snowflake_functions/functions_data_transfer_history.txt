@@ -1,0 +1,188 @@
+  DATA_TRANSFER_HISTORY  ¶
+
+This table function can be used to query the history of data transferred from
+Snowflake tables into a different cloud storage provider’s network (i.e. from
+Snowflake on AWS, Google Cloud Platform, or Microsoft Azure into the other
+cloud provider’s network) and/or geographical region within a specified date
+range. The function returns the history for your entire Snowflake account.
+
+Note
+
+This function returns data transfer activity within the last 14 days.
+
+##  Syntax  ¶
+
+    
+    
+    DATA_TRANSFER_HISTORY(
+          [ DATE_RANGE_START => <constant_expr> ]
+          [, DATE_RANGE_END => <constant_expr> ] )
+    
+
+Copy
+
+##  Arguments  ¶
+
+All the arguments are optional.
+
+` DATE_RANGE_START  => _ constant_expr  _ ` ,  .  ` DATE_RANGE_END  => _
+constant_expr  _ `
+
+    
+
+The date/time range, within the last 2 weeks, for which to retrieve the data
+transfer history:
+
+  * If an end date is not specified, then [ CURRENT_DATE  ](current_date) is used as the end of the range. 
+
+  * If a start date is not specified, then the range starts 10 minutes prior to the start of ` DATE_RANGE_END  ` (i.e. the default is to show the previous 10 minutes of data transfer history). For example, if ` DATE_RANGE_END  ` is [ CURRENT_DATE  ](current_date) , then the default ` DATE_RANGE_START  ` is 11:50 PM on the  previous  day. 
+
+History is displayed in increments of 5 minutes, 1 hour, or 24 hours
+(depending on the length of the specified range).
+
+If the range falls outside the last 15 days, an error is returned.
+
+##  Usage notes  ¶
+
+  * Returns results only for the ACCOUNTADMIN role or any role that has been explicitly granted the MONITOR USAGE global privilege. 
+
+  * When calling an Information Schema table function, the session must have an INFORMATION_SCHEMA schema in use  or  the function name must be fully-qualified. For more details, see [ Snowflake Information Schema  ](../info-schema) . 
+
+##  Output  ¶
+
+The function returns the following columns:
+
+Column Name
+
+|
+
+Data Type
+
+|
+
+Description  
+  
+---|---|---  
+  
+START_TIME
+
+|
+
+TIMESTAMP_LTZ
+
+|
+
+Start of the specified time range in which the data transfer took place.  
+  
+END_TIME
+
+|
+
+TIMESTAMP_LTZ
+
+|
+
+End of the specified time range in which the data transfer took place.  
+  
+SOURCE_CLOUD
+
+|
+
+TEXT
+
+|
+
+Name of the cloud provider where the data transfer originated: Amazon Web
+Services, Google Cloud Platform, or Microsoft Azure.  
+  
+SOURCE_REGION
+
+|
+
+TEXT
+
+|
+
+Region where the data transfer originated.  
+  
+TARGET_CLOUD
+
+|
+
+TEXT
+
+|
+
+Name of the cloud provider where the data was sent: AWS, Google Cloud
+Platform, or Microsoft Azure.  
+  
+TARGET_REGION
+
+|
+
+TEXT
+
+|
+
+Region where the data was sent.  
+  
+BYTES_TRANSFERRED
+
+|
+
+NUMBER
+
+|
+
+Number of bytes transferred during the START_TIME and END_TIME window.  
+  
+TRANSFER_TYPE
+
+|
+
+VARCHAR
+
+|
+
+Type of operation that caused transfer. [ COPY  ](../sql/copy-into-location) ,
+[ EXTERNAL_ACCESS  ](../../developer-guide/external-network-access/external-
+network-access-overview) , [ EXTERNAL_FUNCTION  ](../external-functions) , [
+REPLICATION  ](../../user-guide/account-replication-intro) .  
+  
+##  Examples  ¶
+
+Retrieve the data transfer history for a 30 minute range, in 5 minute periods,
+for your account:
+
+>
+>     select *
+>       from table(mydb.information_schema.data_transfer_history(
+>         date_range_start=>to_timestamp_tz('2017-10-24 12:00:00.000 -0700'),
+>         date_range_end=>to_timestamp_tz('2017-10-24 12:30:00.000 -0700')));
+>  
+>
+> Copy
+
+Retrieve the data transfer history for the last 12 hours, in 1 hour periods,
+for your account:
+
+>
+>     select *
+>       from table(information_schema.data_transfer_history(
+>         date_range_start=>dateadd('hour',-12,current_timestamp())));
+>  
+>
+> Copy
+
+Retrieve the data transfer history for the last 14 days, in 1 day periods, for
+your account:
+
+>
+>     select *
+>       from table(information_schema.data_transfer_history(
+>         date_range_start=>dateadd('day',-14,current_date()),
+>         date_range_end=>current_date()));
+>  
+>
+> Copy
+

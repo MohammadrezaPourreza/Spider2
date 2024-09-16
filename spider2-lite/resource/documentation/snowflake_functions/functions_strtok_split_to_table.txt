@@ -1,0 +1,144 @@
+  STRTOK_SPLIT_TO_TABLE  ¶
+
+Tokenizes a string with the given set of delimiters and flattens the results
+into rows.
+
+See also:
+
+    
+
+[ STRTOK  ](strtok) , [ STRTOK_TO_ARRAY  ](strtok_to_array)
+
+##  Syntax  ¶
+
+    
+    
+    STRTOK_SPLIT_TO_TABLE(<string> [,<delimiter_list>])
+    
+
+Copy
+
+##  Arguments  ¶
+
+**Required:**
+
+` _ string  _ `
+
+    
+
+Text to be tokenized.
+
+**Optional:**
+
+` _ delimiter_list  _ `
+
+    
+
+Set of delimiters. Optional. Default value is a single space character.
+
+##  Returns  ¶
+
+This returns a table.
+
+The returned rows consist of a fixed set of columns:
+
+>
+>     +-----+-------+-------+
+>     | SEQ | INDEX | VALUE |
+>     |-----+-------+-------|
+>  
+>
+> Copy
+
+SEQ  :
+
+    
+
+A unique sequence number associated with the input record; the sequence is not
+guaranteed to be gap-free or ordered in any particular way.
+
+INDEX  :
+
+    
+
+The index of the element. One based.
+
+VALUE  :
+
+    
+
+The value of the element of the flattened array.
+
+Note
+
+The columns of the original (correlated) table that was used as the source of
+data for this function are also accessible. If a single row from the original
+table resulted in multiple rows in the flattened view, the values in this
+input row are replicated to match the number of rows produced by
+STRTOK_SPLIT_TO_TABLE.
+
+##  Examples  ¶
+
+Here is a simple example on constant input.
+
+>
+>     SELECT table1.value
+>         FROM table(strtok_split_to_table('a.b', '.')) AS table1
+>         ORDER BY table1.value;
+>     +-------+
+>     | VALUE |
+>     |-------|
+>     | a     |
+>     | b     |
+>     +-------+
+>  
+>
+> Copy
+
+The following two examples use the table and data created below:
+
+>
+>     CREATE OR REPLACE TABLE splittable (v VARCHAR);
+>     INSERT INTO splittable (v) VALUES ('a b'), ('cde'), ('f|g'), ('');
+>  
+>
+> Copy
+>
+> This example shows usage of the function as a correlated table:
+>  
+>  
+>     SELECT *
+>         FROM splittable, LATERAL STRTOK_SPLIT_TO_TABLE(splittable.v, ' ')
+>         ORDER BY SEQ, INDEX;
+>     +-----+-----+-------+-------+
+>     | V   | SEQ | INDEX | VALUE |
+>     |-----+-----+-------+-------|
+>     | a b |   1 |     1 | a     |
+>     | a b |   1 |     2 | b     |
+>     | cde |   2 |     1 | cde   |
+>     | f|g |   3 |     1 | f|g   |
+>     +-----+-----+-------+-------+
+>  
+>
+> Copy
+>
+> This example is the same as the preceding, except that it specifies multiple
+> delimiters:
+>  
+>  
+>     SELECT *
+>         FROM splittable, LATERAL STRTOK_SPLIT_TO_TABLE(splittable.v, ' |')
+>         ORDER BY SEQ, INDEX;
+>     +-----+-----+-------+-------+
+>     | V   | SEQ | INDEX | VALUE |
+>     |-----+-----+-------+-------|
+>     | a b |   1 |     1 | a     |
+>     | a b |   1 |     2 | b     |
+>     | cde |   2 |     1 | cde   |
+>     | f|g |   3 |     1 | f     |
+>     | f|g |   3 |     2 | g     |
+>     +-----+-----+-------+-------+
+>  
+>
+> Copy
+

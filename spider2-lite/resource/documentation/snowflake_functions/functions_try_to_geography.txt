@@ -1,0 +1,101 @@
+  TRY_TO_GEOGRAPHY  ¶
+
+Parses an input and returns a value of type [ GEOGRAPHY  ](../data-types-
+geospatial) .
+
+This function is identical to [ TO_GEOGRAPHY  ](to_geography) except that it
+returns NULL when TO_GEOGRAPHY would return an error.
+
+See also:
+
+    
+
+[ TO_GEOGRAPHY  ](to_geography)
+
+##  Syntax  ¶
+
+Use one of the following:
+
+    
+    
+    TRY_TO_GEOGRAPHY( <varchar_expression> [ , <allow_invalid> ] )
+    
+    TRY_TO_GEOGRAPHY( <binary_expression> [ , <allow_invalid> ] )
+    
+    TRY_TO_GEOGRAPHY( <variant_expression> [ , <allow_invalid> ] )
+    
+
+Copy
+
+##  Arguments  ¶
+
+**Required:**
+
+` _ varchar_expression  _ `
+
+    
+
+The argument must be a string expression that represents a valid geometric
+object in one of the following formats:
+
+  * WKT (well-known text). 
+
+  * WKB (well-known binary) in hexadecimal format (without a leading ` 0x  ` ). 
+
+  * EWKT (extended well-known text). 
+
+  * EWKB (extended well-known binary) in hexadecimal format (without a leading ` 0x  ` ). 
+
+  * GeoJSON. 
+
+` _ binary_expression  _ `
+
+    
+
+The argument must be a binary expression in WKB or EWKB format.
+
+` _ variant_expression  _ `
+
+    
+
+The argument must be an OBJECT in GeoJSON format.
+
+**Optional:**
+
+` _ allow_invalid  _ `
+
+    
+
+If TRUE, specifies that the function should return a GEOGRAPHY or GEOMETRY
+object, even when the input shape is invalid and cannot be repaired. For
+details, refer to [ Specifying how invalid geospatial shapes are handled
+](../data-types-geospatial.html#label-geospatial-invalid-shape-handling-intro)
+.
+
+##  Returns  ¶
+
+The function returns a value of type GEOGRAPHY.
+
+##  Usage notes  ¶
+
+  * Returns NULL if the input cannot be parsed as the appropriate supported format (WKT, WKB, EWKT, EWKB, GeoJSON). 
+
+  * Returns NULL if the input format is EWKT or EWKB and the SRID  is not  4326\. See the [ note on EWKT and EWKB handling  ](../data-types-geospatial.html#label-a-note-on-ewkt-ewkb-handling) . 
+
+  * For the coordinates in WKT, EWKT, and GeoJSON, longitude appears before latitude (e.g. ` POINT(  _ lon  _ _ lat  _ )  ` ). 
+
+##  Examples  ¶
+
+This shows a simple use of the TRY_TO_GEOGRAPHY function with VARCHAR data:
+
+>
+>     select TRY_TO_GEOGRAPHY('Not a valid input for this data type.');
+>     +-----------------------------------------------------------+
+>     | TRY_TO_GEOGRAPHY('NOT A VALID INPUT FOR THIS DATA TYPE.') |
+>     |-----------------------------------------------------------|
+>     | NULL                                                      |
+>     +-----------------------------------------------------------+
+>  
+>
+> Copy
+

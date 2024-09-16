@@ -1,0 +1,233 @@
+  REST_EVENT_HISTORY  ¶
+
+Returns a list of SCIM REST API requests made to Snowflake over a specified
+time interval.
+
+##  Syntax  ¶
+
+    
+    
+    REST_EVENT_HISTORY(
+          REST_SERVICE_TYPE => 'scim'
+          [, TIME_RANGE_START => <constant_expr> ]
+          [, TIME_RANGE_END => <constant_expr> ]
+          [, RESULT_LIMIT => <integer> ] )
+    
+
+Copy
+
+##  Arguments  ¶
+
+**Required:**
+
+` _ REST_SERVICE_TYPE  _ => 'scim'  `
+
+    
+
+The type of REST API service. Currently, Snowflake only supports ` SCIM  ` .
+
+**Optional:**
+
+` _ TIME_RANGE_START  _ => <constant_expr> ` ,  .  ` _ TIME_RANGE_END  _ =>
+<constant_expr> `
+
+    
+
+Time range (in TIMESTAMP_LTZ format), within the last 7 days, in which the
+login event occurred.
+
+  * If ` _ TIME_RANGE_START  _ ` is not specified, all logs from the last seven days are returned. 
+
+  * If ` _ TIME_RANGE_END  _ ` is not specified, all logs are returned. 
+
+If the time range does not fall within the last 7 days, an error is returned.
+
+For more information on functions that you can use, see [ Date & time
+functions  ](../functions-date-time) .
+
+` _ RESULT_LIMIT  _ => <integer> `
+
+    
+
+A number specifying the maximum number of rows returned by the function.
+
+If the number of matching rows is greater than this limit, the queries with
+the most recent end time (or those that are still executing) are returned, up
+to the specified limit.
+
+Range: ` 1  ` to ` 10000  `
+
+Default: ` 100  ` .
+
+##  Usage notes  ¶
+
+  * Currently, the REST_EVENT_HISTORY table function can only be used with [ SCIM  ](../../user-guide/scim-intro) . 
+
+  * Only account administrators (i.e. users with the ACCOUNTADMIN role) can obtain query results. 
+
+##  Output  ¶
+
+The function returns the following columns:
+
+Column Name
+
+|
+
+Data Type
+
+|
+
+Description  
+  
+---|---|---  
+  
+EVENT_TIMESTAMP
+
+|
+
+TIMESTAMP_LTZ
+
+|
+
+Time of the event occurrence.  
+  
+EVENT_ID
+
+|
+
+NUMBER
+
+|
+
+The unique identifier for the request.  
+  
+EVENT_TYPE
+
+|
+
+TEXT
+
+|
+
+The REST API event category. Currently, ` SCIM  ` is the only possible value.  
+  
+ENDPOINT
+
+|
+
+TEXT
+
+|
+
+The endpoint in the API request (e.g. ` scim/v2/Users/<id> ` ).  
+  
+METHOD
+
+|
+
+TEXT
+
+|
+
+The HTTP method used in the request.  
+  
+STATUS
+
+|
+
+TEXT
+
+|
+
+The HTTP status result of the request.  
+  
+ERROR_CODE
+
+|
+
+TEXT
+
+|
+
+Error code, if the request was not successful.  
+  
+DETAILS
+
+|
+
+TEXT
+
+|
+
+A description of the result of the API request in JSON format.  
+  
+CLIENT_IP
+
+|
+
+TEXT
+
+|
+
+The IP address where the request originated from.  
+  
+ACTOR_NAME
+
+|
+
+TEXT
+
+|
+
+The name of the actor making the request.  
+  
+ACTOR_DOMAIN
+
+|
+
+TEXT
+
+|
+
+The domain (i.e. security integration) in which the request was made.  
+  
+RESOURCE_NAME
+
+|
+
+TEXT
+
+|
+
+The name of the object making the request.  
+  
+RESOURCE_DOMAIN
+
+|
+
+TEXT
+
+|
+
+The object type (e.g. user) making the request.  
+  
+##  Examples  ¶
+
+Return the SCIM REST API requests made in the last five minutes, up to 200
+requests.
+
+>
+>     use role accountadmin;
+>     use database my_db;
+>     use schema information_schema;
+>     select *
+>       from table(rest_event_history(
+>           rest_service_type => 'scim',
+>           time_range_start => dateadd('minutes',-5,current_timestamp()),
+>           time_range_end => current_timestamp(),
+>           200))
+>       order by event_timestamp;
+>  
+>
+> Copy
+

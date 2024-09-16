@@ -1,0 +1,122 @@
+  ARRAY_REMOVE_AT  ¶
+
+Given a source [ ARRAY  ](../data-types-semistructured.html#label-data-type-
+array) , returns an ARRAY with the element at the specified position removed.
+
+For example, ` ARRAY_REMOVE_AT([2,  5,  7],  0)  ` returns an ARRAY with the
+element at position 0 removed ( ` [5,  7]  ` ).
+
+##  Syntax  ¶
+
+    
+    
+    ARRAY_REMOVE_AT( <array> , <position> )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ array  _ `
+
+    
+
+The source array.
+
+` _ position  _ `
+
+    
+
+The (zero-based) position of the element to be removed. The function removes
+the element at this position.
+
+A negative position is interpreted as an index from the back of the array
+(e.g. ` -1  ` removes the last element in the array).
+
+##  Returns  ¶
+
+An ARRAY with the element at the specified position removed.
+
+If ` _ position  _ ` is NULL, the function returns NULL.
+
+##  Usage notes  ¶
+
+  * If the absolute value of ` _ position  _ ` exceeds the length of ` _ array  _ ` , the function returns ` _ array  _ ` without any elements removed. 
+
+##  Examples  ¶
+
+The following example returns an ARRAY with elements with the first element
+removed.
+
+    
+    
+    SELECT ARRAY_REMOVE_AT(
+      [2, 5, 7],
+      0);
+    
+
+Copy
+
+    
+    
+    +-------------------------------+
+    | ARRAY_REMOVE_AT([2, 5, 7], 0) |
+    |-------------------------------|
+    | [                             |
+    |   5,                          |
+    |   7                           |
+    | ]                             |
+    +-------------------------------+
+    
+
+The following example returns an ARRAY with elements with the last element
+removed.
+
+    
+    
+    SELECT ARRAY_REMOVE_AT(
+      [2, 5, 7],
+      -1);
+    
+
+Copy
+
+    
+    
+    +--------------------------------+
+    | ARRAY_REMOVE_AT([2, 5, 7], -1) |
+    |--------------------------------|
+    | [                              |
+    |   2,                           |
+    |   5                            |
+    | ]                              |
+    +--------------------------------+
+    
+
+In the following example, ` _ position  _ ` is greater than the length of the
+ARRAY, so the function returns the ARRAY without making any changes.
+
+    
+    
+    SELECT ARRAY_REMOVE_AT(
+      [2, 5, 7],
+      10);
+    
+
+Copy
+
+    
+    
+    +------------------+
+    | ARRAY_REMOVE_AT( |
+    |   [2, 5, 7],     |
+    |   10)            |
+    |------------------|
+    | [                |
+    |   2,             |
+    |   5,             |
+    |   7              |
+    | ]                |
+    +------------------+
+    
+

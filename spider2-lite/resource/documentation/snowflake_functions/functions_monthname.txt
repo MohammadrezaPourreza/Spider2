@@ -1,0 +1,65 @@
+  MONTHNAME  ¶
+
+Extracts the three-letter month name from the specified date or timestamp.
+
+##  Syntax  ¶
+
+    
+    
+    MONTHNAME( <date_or_timestamp_expr> )
+    
+
+Copy
+
+##  Examples  ¶
+
+    
+    
+    SELECT MONTHNAME(TO_DATE('2015-05-01')) AS MONTH;
+    
+    -------+
+     MONTH |
+    -------+
+     May   |
+    -------+
+    
+
+Copy
+
+    
+    
+    SELECT MONTHNAME(TO_TIMESTAMP('2015-04-03 10:00')) AS MONTH;
+    
+    -------+
+     MONTH |
+    -------+
+     Apr   |
+    -------+
+    
+
+Copy
+
+    
+    
+    SELECT d, MONTHNAME(d) FROM dates;
+    
+    ------------+--------------+
+         D      | MONTHNAME(D) |
+    ------------+--------------+
+     2015-01-01 | Jan          |
+     2015-02-01 | Feb          |
+     2015-03-01 | Mar          |
+     2015-04-01 | Apr          |
+     2015-05-01 | May          |
+     2015-06-01 | Jun          |
+     2015-07-01 | Jul          |
+     2015-08-01 | Aug          |
+     2015-09-01 | Sep          |
+     2015-10-01 | Oct          |
+     2015-11-01 | Nov          |
+     2015-12-01 | Dec          |
+    ------------+--------------+
+    
+
+Copy
+

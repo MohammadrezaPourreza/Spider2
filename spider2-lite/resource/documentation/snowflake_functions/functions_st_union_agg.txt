@@ -1,0 +1,50 @@
+  ST_UNION_AGG  ¶
+
+Given a GEOGRAPHY column, returns a GEOGRAPHY object that represents the
+combined set of points that are in at least one of the shapes represented by
+the objects in the column (that is, the union of the shapes).
+
+See also:
+
+    
+
+[ ST_UNION  ](st_union) , [ ST_INTERSECTION_AGG  ](st_intersection_agg)
+
+##  Syntax  ¶
+
+    
+    
+    ST_UNION_AGG( <geography_column> )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ geography_column  _ `
+
+    
+
+A GEOGRAPHY column.
+
+##  Returns  ¶
+
+The function returns a value of type GEOGRAPHY.
+
+##  Examples  ¶
+
+The following example uses a table that contains GEOGRAPHY objects that
+represent counties in different states. For each state, the example returns
+the shape that consists of the union of the areas of the counties in that
+state.
+
+    
+    
+    SELECT state_name,
+      ST_UNION_AGG(county) as union_of_counties
+      FROM counties_by_state
+      GROUP BY state_name;
+    
+
+Copy
+

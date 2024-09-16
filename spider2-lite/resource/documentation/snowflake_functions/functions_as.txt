@@ -1,0 +1,149 @@
+  AS_ _ <object_type> _ ¶
+
+This family of functions can be used to perform strict casting of VARIANT
+values to other data types:
+
+>   * [ AS_ARRAY  ](as_array)
+>
+>   * [ AS_BINARY  ](as_binary)
+>
+>   * [ AS_CHAR , AS_VARCHAR  ](as_char-varchar)
+>
+>   * [ AS_DATE  ](as_date)
+>
+>   * [ AS_DECIMAL , AS_NUMBER  ](as_decimal-number)
+>
+>   * [ AS_DOUBLE , AS_REAL  ](as_double-real)
+>
+>   * [ AS_INTEGER  ](as_integer)
+>
+>   * [ AS_OBJECT  ](as_object)
+>
+>   * [ AS_TIME  ](as_time)
+>
+>   * [ AS_TIMESTAMP_*  ](as_timestamp)
+>
+>
+
+See also:
+
+    
+
+[ IS_<object_type> ](is)
+
+##  General usage notes  ¶
+
+  * If the type of value in the VARIANT argument does not match the output value, then NULL is returned. For example, if AS_DATE() is passed a VARIANT value that doesn’t contain a ` DATE  ` , then NULL is returned. 
+
+  * If the input is NULL, the output is NULL. 
+
+##  Examples  ¶
+
+Compute the average of all numeric values from a variant type column in the `
+vartab  ` table:
+
+> First, create the table and load data into it.
+>
+
+>>
+
+>>     CREATE OR REPLACE TABLE vartab (n NUMBER(2), v VARIANT);
+
+>>  
+>>     INSERT INTO vartab
+
+>>       SELECT column1 AS n, PARSE_JSON(column2) AS v
+
+>>         FROM VALUES (1, 'null'),
+
+>>                     (2, null),
+
+>>                     (3, 'true'),
+
+>>                     (4, '-17'),
+
+>>                     (5, '123.12'),
+
+>>                     (6, '1.912e2'),
+
+>>                     (7, '"Om ara pa ca na dhih"  '),
+
+>>                     (8, '[-1, 12, 289, 2188, false,]'),
+
+>>                     (9, '{ "x" : "abc", "y" : false, "z": 10} ')
+
+>>            AS vals;
+
+>>  
+>>
+
+>> Copy
+
+>
+> Second, show the data types of the values (some of which are numeric and
+> some of which are not):
+>
+
+>>
+
+>>     select n, as_real(v), typeof(v)
+
+>>         from vartab
+
+>>         order by n;
+
+>>     +---+------------+------------+
+
+>>     | N | AS_REAL(V) | TYPEOF(V)  |
+
+>>     |---+------------+------------|
+
+>>     | 1 |       NULL | NULL_VALUE |
+
+>>     | 2 |       NULL | NULL       |
+
+>>     | 3 |       NULL | BOOLEAN    |
+
+>>     | 4 |     -17    | INTEGER    |
+
+>>     | 5 |     123.12 | DECIMAL    |
+
+>>     | 6 |     191.2  | DOUBLE     |
+
+>>     | 7 |       NULL | VARCHAR    |
+
+>>     | 8 |       NULL | ARRAY      |
+
+>>     | 9 |       NULL | OBJECT     |
+
+>>     +---+------------+------------+
+
+>>  
+>>
+
+>> Copy
+
+>
+> Third, compute the average of all numeric values from the ` VARIANT  `
+> column:
+>
+
+>>
+
+>>     select avg(as_real(v)) from vartab;
+
+>>     +-----------------+
+
+>>     | AVG(AS_REAL(V)) |
+
+>>     |-----------------|
+
+>>     |    99.106666667 |
+
+>>     +-----------------+
+
+>>  
+>>
+
+>> Copy
+

@@ -1,0 +1,67 @@
+  SYSTEM$BEHAVIOR_CHANGE_BUNDLE_STATUS  ¶
+
+Returns the status of the specified [ behavior change release bundle
+](../../release-notes/behavior-change-policy.html#label-behavior-change-
+bundles) for the current account.
+
+See also:
+
+    
+
+[ SYSTEM$ENABLE_BEHAVIOR_CHANGE_BUNDLE
+](system_enable_behavior_change_bundle) , [
+SYSTEM$DISABLE_BEHAVIOR_CHANGE_BUNDLE
+](system_disable_behavior_change_bundle) , [
+SYSTEM$SHOW_ACTIVE_BEHAVIOR_CHANGE_BUNDLES
+](system_show_active_behavior_change_bundles)
+
+##  Syntax  ¶
+
+    
+    
+    SYSTEM$BEHAVIOR_CHANGE_BUNDLE_STATUS( '<bundle_name>' )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ bundle_name  _ `
+
+    
+
+Name of the behavior change bundle, specified as a string. To obtain the name
+for a bundle, see [ Behavior Change Log  ](../../release-notes/behavior-
+changes) .
+
+##  Returns  ¶
+
+Returns one of the following VARCHAR values:
+
+  * ` ENABLED  ` (if the specified bundle is enabled for the current account) 
+
+  * ` DISABLED  ` (if the specified bundle is disabled for the current account) 
+
+  * ` RELEASED  ` (if the specified bundle is [ generally enabled  ](../../release-notes/behavior-change-policy.html#label-behavior-change-bundles-generally-enabled) for the current account and thus permanently enabled) 
+
+##  Examples  ¶
+
+The following example returns the status of the ` 2020_08  ` behavior change
+bundle for the current account.
+
+    
+    
+    SELECT SYSTEM$BEHAVIOR_CHANGE_BUNDLE_STATUS('2020_08');
+    
+
+Copy
+
+    
+    
+    +-------------------------------------------------+
+    | SYSTEM$BEHAVIOR_CHANGE_BUNDLE_STATUS('2020_08') |
+    |-------------------------------------------------|
+    | DISABLED                                        |
+    +-------------------------------------------------+
+    
+

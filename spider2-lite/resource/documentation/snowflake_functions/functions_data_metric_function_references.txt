@@ -1,0 +1,369 @@
+  DATA_METRIC_FUNCTION_REFERENCES  ¶
+
+[ ![Snowflake logo in black \(no text\)](../../_images/logo-snowflake-
+black.png) ](../../_images/logo-snowflake-black.png) [ Enterprise Edition
+Feature  ](../../user-guide/intro-editions)
+
+Data Quality and data metric functions (DMFs) require Enterprise Edition. To
+inquire about upgrading, please contact [ Snowflake Support
+](https://docs.snowflake.com/user-guide/contacting-support) .
+
+Returns a row for each object that has the specified data metric function
+assigned to the object  or  returns a row for each data metric function
+assigned to the specified object.
+
+See also:
+
+    
+
+[ DATA_METRIC_FUNCTION_REFERENCES view  ](../account-
+usage/data_metric_function_references) (Account Usage view)
+
+##  Syntax  ¶
+
+    
+    
+    DATA_METRIC_FUNCTION_REFERENCES(
+      METRIC_NAME => '<string>' )
+    
+    DATA_METRIC_FUNCTION_REFERENCES(
+      REF_ENTITY_NAME => '<string>' ,
+      REF_ENTITY_DOMAIN => '<string>'
+      )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` METRIC_NAME  => '  _ string  _ '  `
+
+    
+
+Specifies the name of the data metric function.
+
+  * The entire data metric name must be enclosed in single quotes. 
+
+  * If the data metric name is case-sensitive or includes any special characters or spaces, double quotes are required to process the case/characters. The double quotes must be enclosed within the single quotes, such as ` '"<metric_name>"'  ` . 
+
+` REF_ENTITY_NAME  => '  _ string  _ '  `
+
+    
+
+The name of the object, such as ` table_name  ` , ` view_name  ` , or `
+external_table_name  ` , on which the data metric function is added.
+
+  * The entire object name must be enclosed in single quotes. 
+
+  * If the object name is case-sensitive or includes any special characters or spaces, double quotes are required to process the case/characters. The double quotes must be enclosed within the single quotes, such as ` '"<table_name>"'  ` . 
+
+` REF_ENTITY_DOMAIN  => '  _ string  _ '  `
+
+    
+
+The object type, such as table or materialized view, on which the data metric
+function is added.
+
+Use ` 'TABLE'  ` for all [ supported table types  ](../../user-guide/data-
+quality-intro.html#label-data-quality-supported-tables) .
+
+##  Returns  ¶
+
+The function returns the following columns:
+
+Column
+
+|
+
+Data type
+
+|
+
+Description  
+  
+---|---|---  
+  
+` metric_database_name  `
+
+|
+
+VARCHAR
+
+|
+
+The database that stores the data metric function.  
+  
+` metric_schema_name  `
+
+|
+
+VARCHAR
+
+|
+
+The schema that stores the data metric function.  
+  
+` metric_name  `
+
+|
+
+VARCHAR
+
+|
+
+The name of the data metric function.  
+  
+` argument_signature  `
+
+|
+
+VARCHAR
+
+|
+
+The type signature of the metrics arguments.  
+  
+` data_type  `
+
+|
+
+VARCHAR
+
+|
+
+The return data type of the data metric function.  
+  
+` ref_database_name  `
+
+|
+
+VARCHAR
+
+|
+
+The database name that contains the object on which the data metric function
+is added.  
+  
+` ref_schema_name  `
+
+|
+
+VARCHAR
+
+|
+
+The schema name that contains the object on which the data metric function is
+added.  
+  
+` ref_entity_name  `
+
+|
+
+VARCHAR
+
+|
+
+The name of the table or view on which the data metric function is set.  
+  
+` ref_entity_domain  `
+
+|
+
+VARCHAR
+
+|
+
+The object type (table, view) on which the data metric function is set.  
+  
+` ref_arguments  `
+
+|
+
+ARRAY
+
+|
+
+Identifies the reference arguments used to evaluate the rule.  
+  
+` ref_id  `
+
+|
+
+VARCHAR
+
+|
+
+A unique identifier for the association of the data metric function to the
+table or view.  
+  
+` schedule  `
+
+|
+
+VARCHAR
+
+|
+
+The schedule to run the data metric function on the table or view. The value
+for the schedule is always the most recent and effective schedule.  
+  
+` schedule_status  `
+
+|
+
+VARCHAR
+
+|
+
+The status of the metrics association. One of the following:
+
+` STARTED  `
+
+    
+
+The data metric association on the table or view is scheduled to run.
+
+` STARTED_AND_PENDING_SCHEDULE_UPDATE  `
+
+    
+
+A change to the data metric schedule occurred and the new schedule is not yet
+effective. Allow Snowflake to update the schedule and synchronize the schedule
+with the data metric function. This value is temporary until the updates are
+complete.
+
+If you unset the schedule with an ALTER TABLE or ALTER VIEW command, this
+value remains until a new schedule is set.
+
+` SUSPENDED  `
+
+    
+
+The data metric association on the table or view is not scheduled to run. This
+value also occurs when the role in use that calls the function does  not  have
+the OWNERSHIP privilege on the table.
+
+When querying the Account Usage view, the following values are visible by
+default; however, when calling the table function you must use a role with the
+OWNERSHIP privilege on the table to see these values:
+
+> ` SUSPENDED_TABLE_DOES_NOT_EXIST_OR_NOT_AUTHORIZED  `
+>  
+>
+> One of the following:
+>
+>   * The table is dropped.
+>
+>   * The schema or database that contains the table is dropped
+>
+>   * The schema or database that contains the table cannot be resolved by the
+> table owner role.
+>
+> “Resolved” means the role that calls the function does not have the
+> appropriate privileges on the schema or database that contains the table.
+>
+>
+
+> ` SUSPENDED_DATA_METRIC_FUNCTION_DOES_NOT_EXIST_OR_NOT_AUTHORIZED  `
+>  
+>
+> One of the following:
+>
+>   * The DMF is dropped.
+>
+>   * The schema or database that contains the DMF is dropped.
+>
+>   * The schema or database that contains the DMF cannot be resolved by the
+> table owner role.
+>
+>
+
+> ` SUSPENDED_TABLE_COLUMN_DOES_NOT_EXIST_OR_NOT_AUTHORIZED  `
+>  
+>
+> One of the following:
+>
+>   * The target table column is dropped.
+>
+>   * The schema or database that contains the column is dropped.
+>
+>   * The schema or database that contains the column cannot be resolved by
+> the table owner role.
+>
+>
+
+> ` SUSPENDED_INSUFFICIENT_PRIVILEGE_TO_EXECUTE_DATA_METRIC_FUNCTION  `
+>  
+>
+> The table owner role does not have the EXECUTE DATA METRIC FUNCTION
+> privilege.
+>
+> ` SUSPENDED_ACTIVE_EVENT_TABLE_DOES_NOT_EXIST_OR_NOT_AUTHORIZED  `
+>  
+>
+> The event table is not set at the account level.  
+  
+* * *
+
+Results are returned based on the privileges granted to the role executing the
+query.
+
+A [ role  ](../../user-guide/security-access-control-overview.html#label-
+access-control-overview-roles) used to execute this SQL command must have the
+following [ privileges  ](../../user-guide/security-access-control-
+overview.html#label-access-control-overview-privileges) at a minimum:
+
+  * Any supported privilege on the data metric function. 
+
+    * For system DMFs, the role can be granted the DATA_METRIC_USER database role. 
+
+  * The SELECT privilege on the table or view. 
+
+##  Usage notes  ¶
+
+  * When calling an Information Schema table function, the session must have an INFORMATION_SCHEMA schema in use  or  the function must use the fully-qualified object name. For more details, see [ Snowflake Information Schema  ](../info-schema) . 
+
+  * Choose one syntax variation to execute a query. Mixing arguments results in errors and query failure. 
+
+The argument values for ` REF_ENTITY_NAME  ` and ` REF_ENTITY_DOMAIN  ` must
+be included together otherwise the query fails.
+
+  * Snowflake returns errors if the specified object name does not exist or if the query operator is not authorized to view any data metric function on the object. Snowflake can return a result set of data metric associations if the operator is allowed to view a subset of the data metric associations. 
+
+  * Unsupported object types listed as the ` REF_ENTITY_DOMAIN  ` , such as ` 'stream'  ` , return errors. 
+
+##  Examples  ¶
+
+Return a row for each object (table or view) that has the DMF named `
+count_positive_numbers  ` set on that table or view:
+
+>
+>     USE DATABASE governance;
+>     USE SCHEMA INFORMATION_SCHEMA;
+>     SELECT *
+>       FROM TABLE(
+>         INFORMATION_SCHEMA.DATA_METRIC_FUNCTION_REFERENCES(
+>           METRIC_NAME => 'governance.dmfs.count_positive_numbers'
+>         )
+>       );
+>  
+>
+> Copy
+
+Return a row for each DMF assigned to the table named ` hr.tables.empl_info  `
+:
+
+>
+>     USE DATABASE governance;
+>     USE SCHEMA INFORMATION_SCHEMA;
+>     SELECT *
+>       FROM TABLE(
+>         INFORMATION_SCHEMA.DATA_METRIC_FUNCTION_REFERENCES(
+>           REF_ENTITY_NAME => 'hr.tables.empl_info',
+>           REF_ENTITY_DOMAIN => 'table'
+>         )
+>       );
+>  
+>
+> Copy
+

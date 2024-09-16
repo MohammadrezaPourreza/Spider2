@@ -1,0 +1,91 @@
+  TO_ARRAY  ¶
+
+Converts the input expression to an [ ARRAY  ](../data-types-
+semistructured.html#label-data-type-array) :
+
+  * If the input is an ARRAY, or VARIANT containing an array value, the result is unchanged. 
+
+  * For NULL or a JSON **null** input, returns NULL. 
+
+  * For any other value, the result is a single-element array containing this value. 
+
+##  Syntax  ¶
+
+    
+    
+    TO_ARRAY( <expr> )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ expr  _ `
+
+    
+
+An expression of any data type.
+
+##  Usage notes  ¶
+
+  * To create an array containing more than one value, you can use [ ARRAY_CONSTRUCT  ](array_construct) . 
+
+##  Examples  ¶
+
+This example shows how to use ` TO_ARRAY()  ` :
+
+> Create a simple table, and insert data by calling the ` TO_ARRAY  `
+> function:
+>
+
+>>
+
+>>     CREATE TABLE array_demo_2 (ID INTEGER, array1 ARRAY, array2 ARRAY);
+
+>>  
+>>
+
+>> Copy
+
+>>  
+>>  
+>>     INSERT INTO array_demo_2 (ID, array1, array2)
+
+>>         SELECT 1, TO_ARRAY(1), TO_ARRAY(3);
+
+>>  
+>>
+
+>> Copy
+
+>
+> Execute a query showing the single-item arrays created during the insert,
+> and also showing the result of calling ` ARRAY_CAT  ` to concatenate the two
+> arrays:
+>
+
+>>
+
+>>     SELECT array1, array2, ARRAY_CAT(array1, array2) FROM array_demo_2;
+
+>>     +--------+--------+---------------------------+
+
+>>     | ARRAY1 | ARRAY2 | ARRAY_CAT(ARRAY1, ARRAY2) |
+
+>>     |--------+--------+---------------------------|
+
+>>     | [      | [      | [                         |
+
+>>     |   1    |   3    |   1,                      |
+
+>>     | ]      | ]      |   3                       |
+
+>>     |        |        | ]                         |
+
+>>     +--------+--------+---------------------------+
+
+>>  
+>>
+
+>> Copy
+

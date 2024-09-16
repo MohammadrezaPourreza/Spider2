@@ -1,0 +1,162 @@
+  SYSTEM$REVOKE_PRIVATELINK  ¶
+
+Disables private connectivity to the Snowflake service for the current
+account.
+
+See also:
+
+    
+
+[ SYSTEM$AUTHORIZE_PRIVATELINK  ](system_authorize_privatelink) , [
+SYSTEM$GET_PRIVATELINK  ](system_get_privatelink) , [
+SYSTEM$GET_PRIVATELINK_AUTHORIZED_ENDPOINTS
+](system_get_privatelink_authorized_endpoints)
+
+##  Syntax  ¶
+
+**AWS:**
+
+>
+>     SYSTEM$REVOKE_PRIVATELINK( '<aws_id>' , '<federated_token>' )
+>  
+>
+> Copy
+
+**Azure:**
+
+>
+>     SYSTEM$REVOKE_PRIVATELINK( '<private-endpoint-resource-id>' ,
+> '<federated_token>' )
+>  
+>
+> Copy
+
+##  Arguments  ¶
+
+` '  _ aws_id  _ '  `
+
+    
+
+The 12-digit identifier that uniquely identifies your Amazon Web Services
+(AWS) account, as a string.
+
+` '  _ private-endpoint-resource-id  _ '  `
+
+    
+
+The identifier that uniquely identifies the private endpoint in Microsoft
+Azure (Azure) as a string.
+
+` '  _ federated_token  _ '  `
+
+    
+
+The federated token value that contains access credentials for a federated
+user as a string.
+
+To obtain this value, execute the appropriate command for the cloud platform
+that hosts your Snowflake account. Use the command-line tool provided by the
+platform:
+
+  * For Snowflake on AWS: 
+    
+        aws sts get-federation-token --name sam
+    
+
+Copy
+
+  * For Snowflake on Azure: 
+    
+        az account get-access-token --subscription <SubscriptionID>
+    
+
+Copy
+
+Where:
+
+    * ` SubscriptionID  `
+    
+
+The unique identifier for your subscription. For example:
+
+> ` 13c...  `
+
+To obtain this value, execute the following Azure CLI command in your command
+line environment:
+
+> >         az account list --output table
+>  
+>
+> Copy
+>
+> Note the output value in the ` SubscriptionID  ` column, which is truncated
+> in this example:
+>
+
+>> >>         Name     CloudName   SubscriptionId                        State
+IsDefault
+
+>>         -------  ----------  ------------------------------------  -------
+----------
+
+>>         MyCloud  AzureCloud  13c...                                Enabled
+True
+
+>>  
+>>
+
+>> Copy
+
+##  Usage notes  ¶
+
+  * Only account administrators (i.e. users with the ACCOUNTADMIN role) can execute this function. 
+
+  * This function can be used with Snowflake accounts on AWS or Azure; Google Cloud Platform (GCP) is not currently supported. 
+
+  * Call the [ SYSTEM$GET_PRIVATELINK  ](system_get_privatelink) function to verify whether your Snowflake account is authorized to use private connectivity to the Snowflake service. 
+
+  * Call the [ SYSTEM$AUTHORIZE_PRIVATELINK  ](system_authorize_privatelink) function to enable your Snowflake account to use private connectivity to the Snowflake service. 
+
+##  Examples  ¶
+
+Disable AWS PrivateLink for your Snowflake account on AWS. Note that the
+values are truncated in this example.
+
+>
+>     use role accountadmin;
+>  
+>     select SYSTEM$REVOKE_PRIVATELINK(
+>         '185...',
+>         '{
+>           "Credentials": {
+>               "AccessKeyId": "ASI...",
+>               "SecretAccessKey": "enw...",
+>               "SessionToken": "Fwo...",
+>               "Expiration": "2021-01-07T19:06:23+00:00"
+>           },
+>           "FederatedUser": {
+>               "FederatedUserId": "185...:sam",
+>               "Arn": "arn:aws:sts::185...:federated-user/sam"
+>           },
+>           "PackedPolicySize": 0
+>       }'
+>       );
+>  
+>
+> Copy
+
+Disable Azure Private Link for your Snowflake account on Azure. Note that the
+values are truncated in this example.
+
+>
+>     use role accountadmin;
+>  
+>     select SYSTEM$REVOKE_PRIVATELINK(
+>
+> '/subscriptions/26d.../resourcegroups/sf-1/providers/microsoft.network/privateendpoints/test-
+> self-service',
+>       'eyJ...');
+>  
+>
+> Copy
+

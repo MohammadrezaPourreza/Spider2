@@ -1,0 +1,45 @@
+  SYSTEM$GET_TASK_GRAPH_CONFIG  ¶
+
+Returns the value of the configuration string for the task currently executing
+when invoked from the statement or stored procedure defined by the task.
+
+##  Syntax  ¶
+
+    
+    
+    SYSTEM$GET_TASK_GRAPH_CONFIG([configuration_path])
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ configuration_path  _ `
+
+    
+
+Path to the configuration value to return.
+
+Optional argument specifying the path of the value to be retrieved. Uses the
+same syntax as Snowflake queries for semi-structured data. Refer to [ GET_PATH
+](get_path) for more information.
+
+##  Examples  ¶
+
+    
+    
+    -- Create a task which defines and then uses configuration
+    CREATE OR REPLACE TASK root_task_with_config
+    WAREHOUSE=mywarehouse
+    SCHEDULE='10 m'
+    CONFIG=$${"output_dir": "/temp/test_directory/", "learning_rate": 0.1}$$
+    AS
+    BEGIN
+      LET OUTPUT_DIR STRING := SYSTEM$GET_TASK_GRAPH_CONFIG('output_directory')::string;
+      LET LEARNING_RATE DECIMAL := SYSTEM$GET_TASK_GRAPH_CONFIG('learning_rate:v1')::DECIMAL;
+          ...
+    END;
+    
+
+Copy
+

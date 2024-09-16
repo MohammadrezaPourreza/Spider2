@@ -1,0 +1,48 @@
+  CURRENT_ACCOUNT_NAME  ¶
+
+Returns the name of the current account.
+
+The preferred [ account identifier  ](../../user-guide/admin-account-
+identifier.html#label-account-name) for the account consists of this account
+name along with the organization of the account ( ` _ orgname  _ -  _
+account_name  _ ` ).
+
+##  Syntax  ¶
+
+    
+    
+    CURRENT_ACCOUNT_NAME()
+    
+
+Copy
+
+##  Arguments  ¶
+
+None.
+
+##  Returns  ¶
+
+Returns the name of the current account.
+
+The data type of the returned value is ` VARCHAR  ` .
+
+##  Example  ¶
+
+This shows how to call the CURRENT_ACCOUNT_NAME function:
+
+>
+>     SELECT CURRENT_ACCOUNT_NAME();
+>  
+>
+> Copy
+>
+> Output:
+>  
+>  
+>     +-----------------------------+
+>     | CURRENT_ACCOUNT_NAME()      |
+>     |-----------------------------|
+>     | my_account1                 |
+>     +-----------------------------+
+>  
+

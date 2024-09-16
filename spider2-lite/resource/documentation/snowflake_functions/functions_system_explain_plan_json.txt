@@ -1,0 +1,137 @@
+  SYSTEM$EXPLAIN_PLAN_JSON  ¶
+
+Given the text of a SQL statement, this function generates the EXPLAIN plan in
+JSON.
+
+See also:
+
+    
+
+[ SYSTEM$EXPLAIN_JSON_TO_TEXT  ](system_explain_json_to_text) , [ EXPLAIN_JSON
+](explain_json)
+
+##  Syntax  ¶
+
+    
+    
+    SYSTEM$EXPLAIN_PLAN_JSON( { <sql_statement_expression> | <sql_query_id_expression> } )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ sql_statement_expression  _ `
+
+    
+
+A string, or an expression that evaluates to a string, containing the SQL
+statement for which you want the EXPLAIN plan. If a literal string is used, it
+should be surrounded by single quote characters ` '  ` .
+
+` _ sql_query_id_expression  _ `
+
+    
+
+A string, or an expression that evaluates to a string, containing the query ID
+for which you want the EXPLAIN plan. If a literal string is used, it should be
+surrounded by single quote characters ` '  ` .
+
+Snowflake retains historical data for query IDs executed within the previous
+14 days. If you specify the query ID for a query executed more than 14 days in
+the past, an error is returned. For more information, see [ Monitor query
+activity with Query History  ](../../user-guide/ui-snowsight-activity) .
+
+##  Returns  ¶
+
+The function returns a VARCHAR containing the EXPLAIN output in JSON-
+compatible format.
+
+##  Usage notes  ¶
+
+  * If a string literal is passed as input, the delimiter around the string can be either a single quote ` '  ` or a double dollar sign ` $$  ` . If the string literal contains single quotes (and does not contain double dollar signs), then delimiting the string with double dollar signs avoids the need to escape the embedded single quote characters inside the string. 
+
+  * To post-process the output of this command, you can: 
+
+    * Use the [ RESULT_SCAN  ](result_scan) function, which treats the output as a table that can be queried. 
+
+    * Insert the JSON-formatted output into a table for analysis later. If you store the output in JSON format, you can use the function [ SYSTEM$EXPLAIN_JSON_TO_TEXT  ](system_explain_json_to_text) or [ EXPLAIN_JSON  ](explain_json) to convert the JSON to a more human readable format (either tabular or formatted text). 
+
+##  Examples  ¶
+
+These examples use the tables shown below:
+
+>
+>     CREATE TABLE Z1 (ID INTEGER);
+>     CREATE TABLE Z2 (ID INTEGER);
+>     CREATE TABLE Z3 (ID INTEGER);
+>  
+>
+> Copy
+
+This example uses a literal string containing n SQL statement as the input
+parameter:
+
+>
+>     SELECT SYSTEM$EXPLAIN_PLAN_JSON(
+>         'SELECT Z1.ID, Z2.ID FROM Z1, Z2 WHERE Z2.ID = Z1.ID'
+>         ) AS explain_plan;
+>
+> +---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+>     | EXPLAIN_PLAN
+> |
+>
+> |---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+>     |
+> {"GlobalStats":{"partitionsTotal":2,"partitionsAssigned":2,"bytesAssigned":1024},"Operations":[[{"id":0,"operation":"Result","expressions":["Z1.ID","Z2.ID"]},{"id":1,"parentOperators":[0],"operation":"InnerJoin","expressions":["joinKey:
+> (Z2.ID =
+> Z1.ID)"]},{"id":2,"parentOperators":[1],"operation":"TableScan","objects":["TESTDB.TEMPORARY_DOC_TEST.Z2"],"expressions":["ID"],"partitionsAssigned":1,"partitionsTotal":1,"bytesAssigned":512},{"id":3,"parentOperators":[1],"operation":"JoinFilter","expressions":["joinKey:
+> (Z2.ID =
+> Z1.ID)"]},{"id":4,"parentOperators":[3],"operation":"TableScan","objects":["TESTDB.TEMPORARY_DOC_TEST.Z1"],"expressions":["ID"],"partitionsAssigned":1,"partitionsTotal":1,"bytesAssigned":512}]]}
+> |
+>
+> +---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+>  
+>
+> Copy
+
+Use ` $$  ` to delimit queries that contain single quotes:
+
+>
+>     SELECT SYSTEM$EXPLAIN_PLAN_JSON(
+>         $$ SELECT symptom, IFNULL(diagnosis, '(not yet diagnosed)') FROM
+> medical $$
+>         );
+>  
+>
+> Copy
+
+The code below shows how to look at the EXPLAIN plan for a query that you
+already executed:
+
+> Run the query:
+>
+
+>>
+
+>>     SELECT Z1.ID, Z2.ID FROM Z1, Z2 WHERE Z2.ID = Z1.ID;
+
+>>  
+>>
+
+>> Copy
+
+>
+> Run EXPLAIN on the query, calling ` LAST_QUERY_ID()  ` to look up the query
+> ID:
+>
+
+>>
+
+>>     SELECT SYSTEM$EXPLAIN_PLAN_JSON(LAST_QUERY_ID()) AS explain_plan;
+
+>>  
+>>
+
+>> Copy
+

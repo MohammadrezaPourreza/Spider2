@@ -1,0 +1,137 @@
+  TO_BINARY  ¶
+
+Converts the input expression to a binary value. For NULL input, the output is
+NULL.
+
+See also:
+
+  * [ TRY_TO_BINARY  ](try_to_binary) . 
+
+  * [ Binary input and output  ](../binary-input-output) . 
+
+##  Syntax  ¶
+
+    
+    
+    TO_BINARY( <string_expr> [, '<format>'] )
+    TO_BINARY( <variant_expr> )
+    
+
+Copy
+
+##  Returns  ¶
+
+The return type is BINARY.
+
+##  Arguments  ¶
+
+**Required:**
+
+` _ string_expr  _ `
+
+    
+
+A string expression.
+
+**Optional:**
+
+` _ format  _ `
+
+    
+
+The binary format for conversion: HEX, BASE64, or UTF-8 (see [ Binary input
+and output  ](../binary-input-output) ). The default is the value of the
+BINARY_INPUT_FORMAT session parameter. If this parameter is not set, the
+default is HEX.
+
+##  Returns  ¶
+
+Returns a value of type BINARY.
+
+##  Examples  ¶
+
+These examples show the output when ` TO_BINARY  ` is called.
+
+This example shows how to convert a ` VARCHAR  ` to ` BINARY  ` and then get
+it back in its original form ( ` VARCHAR  ` ).
+
+> Create and fill a table:
+>
+
+>>
+
+>>     CREATE TABLE binary_test (v VARCHAR, b BINARY);
+
+>>     INSERT INTO binary_test(v) VALUES ('SNOW');
+
+>>  
+>>
+
+>> Copy
+
+>
+> Convert the ` VARCHAR  ` to ` BINARY  ` :
+>
+
+>>
+
+>>     UPDATE binary_test SET b = TO_BINARY(HEX_ENCODE(v), 'HEX');
+
+>>  
+>>
+
+>> Copy
+
+>
+> Run a query and show the output:
+>
+
+>>
+
+>>     SELECT v, HEX_DECODE_STRING(TO_VARCHAR(b, 'HEX')) FROM binary_test;
+
+>>     +------+-----------------------------------------+
+
+>>     | V    | HEX_DECODE_STRING(TO_VARCHAR(B, 'HEX')) |
+
+>>     |------+-----------------------------------------|
+
+>>     | SNOW | SNOW                                    |
+
+>>     +------+-----------------------------------------+
+
+>>  
+>>
+
+>> Copy
+
+This example shows how to convert a string of UTF-8 characters into ` BINARY
+` . Note that by default SNOWSQL shows ` BINARY  ` values as a string of
+hexadecimal digits, not in UTF-8 and not in the internal ` BINARY  ` format.
+
+>
+>     SELECT TO_BINARY('SNOW', 'utf-8');
+>     +----------------------------+
+>     | TO_BINARY('SNOW', 'UTF-8') |
+>     |----------------------------|
+>     | 534E4F57                   |
+>     +----------------------------+
+>  
+>
+> Copy
+
+This example is the same as the preceding example, except that this example
+explicitly converts the output to hexadecimal digits so that it is more
+obvious that the output is a string containing hexadecimal digits:
+
+>
+>     SELECT TO_VARCHAR(TO_BINARY('SNOW', 'utf-8'), 'HEX');
+>     +-----------------------------------------------+
+>     | TO_VARCHAR(TO_BINARY('SNOW', 'UTF-8'), 'HEX') |
+>     |-----------------------------------------------|
+>     | 534E4F57                                      |
+>     +-----------------------------------------------+
+>  
+>
+> Copy
+

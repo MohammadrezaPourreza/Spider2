@@ -1,0 +1,46 @@
+  CURRENT_TRANSACTION  ¶
+
+Returns the transaction id of an open transaction in the current session.
+
+See also:
+
+    
+
+[ LAST_TRANSACTION  ](last_transaction) , [ DESCRIBE TRANSACTION
+](../sql/desc-transaction)
+
+##  Syntax  ¶
+
+    
+    
+    CURRENT_TRANSACTION()
+    
+
+Copy
+
+##  Arguments  ¶
+
+None.
+
+##  Examples  ¶
+
+This shows the transaction ID of the current transaction:
+
+>
+>     SELECT CURRENT_TRANSACTION();
+>  
+>
+> Copy
+>
+> Output:
+>  
+>  
+>     +-----------------------+
+>     | CURRENT_TRANSACTION() |
+>     |-----------------------|
+>     | 1661899308790000000   |
+>     +-----------------------+
+>  
+>
+> Copy
+

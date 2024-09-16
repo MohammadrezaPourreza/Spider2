@@ -1,0 +1,194 @@
+  SYSTEM$DATABASE_REFRESH_PROGRESS , SYSTEM$DATABASE_REFRESH_PROGRESS_BY_JOB
+— _Deprecated_ ¶
+
+[ ![Snowflake logo in black \(no text\)](../../_images/logo-snowflake-
+black.png) ](../../_images/logo-snowflake-black.png) [ Deprecated Feature
+](https://docs.snowflake.com/en/release-notes/deprecated-features)
+
+These functions have been deprecated. Use [ DATABASE_REFRESH_PROGRESS ,
+DATABASE_REFRESH_PROGRESS_BY_JOB  ](database_refresh_progress) instead.
+
+The SYSTEM$DATABASE_REFRESH_PROGRESS family of functions can be used to query
+the status of a database refresh along various dimensions:
+
+  * SYSTEM$DATABASE_REFRESH_PROGRESS returns a JSON object indicating the current refresh status for a secondary database by name. 
+
+  * SYSTEM$DATABASE_REFRESH_PROGRESS_BY_JOB returns a JSON object indicating the current refresh status for a secondary database by refresh query. 
+
+Note
+
+These functions return database refresh activity within the last 14 days.
+
+##  Syntax  ¶
+
+    
+    
+    SYSTEM$DATABASE_REFRESH_PROGRESS( '<secondary_db_name>' )
+    
+    SYSTEM$DATABASE_REFRESH_PROGRESS_BY_JOB( '<query_id>' )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ secondary_db_name  _ `
+
+    
+
+Name of the secondary database. This argument is optional if the secondary
+database is the active database in the current session.
+
+Note that the entire name must be enclosed in single quotes.
+
+` _ query_id  _ `
+
+    
+
+ID of the database refresh query. The query ID can be obtained from the
+History  [ ![History tab](../../_images/ui-navigation-history-icon.svg)
+](../../_images/ui-navigation-history-icon.svg) page in the web interface.
+
+##  Output  ¶
+
+The function returns the following elements in a JSON object:
+
+Column Name
+
+|
+
+Data Type
+
+|
+
+Description  
+  
+---|---|---  
+  
+phaseName
+
+|
+
+TEXT
+
+|
+
+Name of the replication phases completed (or in progress) so far. For the list
+of phases, see the usage notes.  
+  
+resultName
+
+|
+
+TEXT
+
+|
+
+Status of the replication phase.  
+  
+startTimeUTC
+
+|
+
+NUMBER
+
+|
+
+Time when the replication phase began. Format is epoch time.  
+  
+endTimeUTC
+
+|
+
+NUMBER
+
+|
+
+Time when the phase finished, if applicable. Format is epoch time.  
+  
+details
+
+|
+
+VARIANT
+
+|
+
+A separate JSON object that shows the total number of bytes in the data
+refresh as well as the number of bytes copied so far in the phase. If the
+refresh statement previously failed or was cancelled and was initiated again,
+the object indicates the number of bytes skipped in the second attempt. The `
+details  ` object is included in the ` Copying  Primary  Data  ` and ` Copying
+Replica  Data  ` phase information.  
+  
+##  Usage notes  ¶
+
+  * Only returns results for account administrators (users with the ACCOUNTADMIN role). 
+
+  * Following is the list of phases in the order processed: 
+
+    1. SECONDARY_UPLOADING_INVENTORY 
+
+    2. PRIMARY_UPLOADING_METADATA 
+
+    3. PRIMARY_UPLOADING_DATA 
+
+    4. SECONDARY_DOWNLOADING_METADATA 
+
+    5. SECONDARY_DOWNLOADING_DATA 
+
+    6. COMPLETED / FAILED / CANCELED 
+
+##  Examples  ¶
+
+The following example retrieves the current refresh status for the specified
+secondary database. The results are returned in a JSON object:
+
+>
+>     SELECT SYSTEM$DATABASE_REFRESH_PROGRESS('mydb');
+>  
+>
+> Copy
+
+The following example retrieves the same details as in the previous example,
+but the results are separated into relational columns and the timestamps are
+cast as TIMESTAMP_LTZ:
+
+>
+>     SELECT value:phaseName::string AS "Phase",
+>       value:resultName::string AS "Result",
+>       TO_TIMESTAMP_LTZ(value:startTimeUTC::numeric,3) AS "startTime",
+>       TO_TIMESTAMP_LTZ(value:endTimeUTC::numeric,3) AS "endTime",
+>       value:details AS "details"
+>       FROM table(flatten(INPUT=>
+> PARSE_JSON(SYSTEM$DATABASE_REFRESH_PROGRESS('mydb1'))));
+>  
+>
+> Copy
+
+The following example retrieves the status for the specified database refresh
+query. The results are returned in a JSON object:
+
+>
+>     SELECT
+> SYSTEM$DATABASE_REFRESH_PROGRESS_BY_JOB('4cbd7187-51f6-446c-9814-92d7f57d939b');
+>  
+>
+> Copy
+
+The following example retrieves the same details as in the previous example,
+but the results are separated into relational columns and the timestamps are
+cast as TIMESTAMP_LTZ:
+
+>
+>     SELECT value:phaseName::string AS "Phase",
+>       value:resultName::string AS "Result",
+>       TO_TIMESTAMP_LTZ(value:startTimeUTC::numeric,3) AS "startTime",
+>       TO_TIMESTAMP_LTZ(value:endTimeUTC::numeric,3) AS "endTime",
+>       value:details AS "details"
+>       FROM TABLE(FLATTEN(input=>
+> PARSE_JSON(SYSTEM$DATABASE_REFRESH_PROGRESS_BY_JOB('4cbd7187-51f6-446c-9814-92d7f57d939b'))));
+>  
+>
+> Copy
+

@@ -1,0 +1,41 @@
+  SYSTEM$ABORT_SESSION  ¶
+
+Aborts the specified session.
+
+##  Syntax  ¶
+
+    
+    
+    SYSTEM$ABORT_SESSION( <session_id> )
+    
+
+Copy
+
+##  Arguments  ¶
+
+` _ session_id  _ `
+
+    
+
+Identifier for the session to abort. To obtain the ID for a session, log into
+the web interface as an account administrator (user with the ACCOUNTADMIN
+role) and go to:
+
+> Account  [ ![Account tab](../../_images/ui-navigation-account-icon.svg)
+> ](../../_images/ui-navigation-account-icon.svg) »  Sessions
+
+##  Examples  ¶
+
+    
+    
+    SELECT SYSTEM$ABORT_SESSION(1065153868222);
+    
+    +-------------------------------------+
+    | SYSTEM$ABORT_SESSION(1065153868222) |
+    |-------------------------------------|
+    | session [1065153868222] terminated. |
+    +-------------------------------------+
+    
+
+Copy
+

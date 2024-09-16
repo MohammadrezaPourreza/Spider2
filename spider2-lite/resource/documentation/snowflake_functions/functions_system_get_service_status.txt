@@ -1,0 +1,170 @@
+  SYSTEM$GET_SERVICE_STATUS — _Deprecated_ ¶
+
+[ ![Snowflake logo in black \(no text\)](../../_images/logo-snowflake-
+black.png) ](../../_images/logo-snowflake-black.png) [ Deprecated Feature
+](https://docs.snowflake.com/en/release-notes/deprecated-features)
+
+This function has been deprecated. Use the [ SHOW SERVICE CONTAINERS IN
+SERVICE  ](../sql/show-service-containers-in-service) command instead.
+
+[ ![Snowflake logo in black \(no text\)](../../_images/logo-snowflake-
+black.png) ](../../_images/logo-snowflake-black.png) New feature
+
+This feature is generally available to Snowflake accounts in AWS. [ Preview
+support  ](../../release-notes/preview-features) is available to accounts in
+Azure.
+
+Currently, AWS PrivateLink and Azure PrivateLink are not supported.
+
+Retrieves the status of a [ Snowpark Container Services service
+](../../developer-guide/snowpark-container-services/working-with-services) .
+
+See also:
+
+    
+
+[ Monitoring a service  ](../../developer-guide/snowpark-container-
+services/working-with-services.html#label-snowpark-containers-working-with-
+services-monitor-service)
+
+##  Syntax  ¶
+
+    
+    
+    SYSTEM$GET_SERVICE_STATUS( [ <db_name>.<schema_name>. ]<service_name> [ , <timeout_secs> ]  )
+    
+
+Copy
+
+##  Arguments  ¶
+
+**Required:**
+
+` _ service_name  _ `
+
+    
+
+Service name. If you omit the ` _ db_name  _ ` and ` _ schema_name  _ ` , the
+function uses the current database and schema.
+
+**Optional:**
+
+` _ timeout_secs  _ `
+
+    
+
+Number of seconds to wait for the service to reach a steady state (for
+example, READY) before returning the status. If the service does not reach a
+steady state within the specified time, Snowflake returns the current state.
+
+If not specified, Snowflake returns the current state immediately.
+
+Default: 0 seconds
+
+##  Returns  ¶
+
+Returns status information in a JSON array with one JSON object for each
+container in each service instance. The JSON fields are:
+
+  * ` status  ` . Service container status. Currently supported status values include: PENDING, READY, FAILED and UNKNOWN. 
+
+  * ` message  ` . Provides details about the specific status. For example, when the status is PENDING, this field describes why. 
+
+  * ` containerName  ` . Container name. 
+
+  * ` instanceId  ` . Service instance ID. 
+
+  * ` serviceName  ` . Service name. 
+
+  * ` image  ` . URL of the image that is running. 
+
+  * ` restartCount  ` . Number of times Snowflake restarted the container. A higher restart count can indicate an unhealthy service. For example, if your service code crashes, the container can exit. Snowflake then tries to restart the container. In this case, to investigate, you can access the container log using these options: 
+
+    * Use the [ SYSTEM$GET_SERVICE_LOGS  ](system_get_service_logs) function for live logs (the container is running). 
+
+    * Use Event tables for persistent logs (useful when the container is no longer running). 
+
+  * ` startTime  ` . Time when the container started. 
+
+##  Usage notes  ¶
+
+  * The current role must have the MONITOR privilege on the service to get the status information. 
+
+##  Examples  ¶
+
+The following function retrieves status information for the “echo_service”
+service. The function specifies a 5-second timeout:
+
+    
+    
+    SELECT SYSTEM$GET_SERVICE_STATUS('echo_service', 5);
+    
+
+Copy
+
+Example outputs:
+
+  * **Running one service instance that has one container.** The function returns the container information as shown: 
+    
+        [
+     {
+        "status":"READY",
+        "message":"Running",
+        "containerName":"echo",
+        "instanceId":"0",
+        "serviceName":"ECHO_SERVICE",
+        "image":"<account>.registry.snowflakecomputing.com/tutorial_db/data_schema/tutorial_repository/my_echo_service_image:tutorial",
+        "restartCount":0,
+        "startTime":"2023-01-01T00:00:00Z"
+     }
+    ]
+    
+
+Copy
+
+` instanceId  ` is the service instance ID. If you have two instances of this
+service running, the array includes two objects in the output, providing
+container status for two separate service instances (the ` instanceId  ` will
+be 0 and 1).
+
+  * **Running one service instance that has three containers (as defined in the service specification).** The function returns an array with three objects (one for each container): 
+    
+        [
+      {
+      "status":"READY",
+      "message":"Running",
+      "containerName":"echo-1",
+      "instanceId":"0",
+      "serviceName":"ECHO_SERVICE",
+      "image":"<account>.registry.snowflakecomputing.com/tutorial_db/data_schema/tutorial_repository/my_echo_service_image_x:tutorial",
+      "restartCount":0,
+      "startTime":"2023-01-01T00:00:00Z"
+      },
+      {
+      "status":"READY",
+      "message":"Running",
+      "containerName":"echo-2",
+      "instanceId":"0",
+      "serviceName":"ECHO_SERVICE",
+      "image":"<account>.registry.snowflakecomputing.com/tutorial_db/data_schema/tutorial_repository/my_echo_service_image_y:tutorial",
+      "restartCount":0,
+      "startTime":"2023-01-01T00:00:00Z"
+      },
+      {
+      "status":"READY",
+      "message":"Running",
+      "containerName":"echo-3",
+      "instanceId":"0",
+      "serviceName":"ECHO_SERVICE",
+      "image":"<account>.registry.snowflakecomputing.com/tutorial_db/data_schema/tutorial_repository/my_echo_service_image_z:tutorial",
+      "restartCount":0,
+      "startTime":"2023-01-01T00:00:00Z"
+      }
+    ]
+    
+
+Copy
+
+Because all these containers belong to the same service instance, the `
+instanceId  ` will be 0 for all containers.
+
