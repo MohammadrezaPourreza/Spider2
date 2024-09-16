@@ -138,73 +138,94 @@ def walk_metadata(dev):
         else:  
             db_ids.add(item['db'])
   
-    db_base_path = "../../resource/databases/bigquery/"
+    # TODO: currently supporting only bigquery, local_metadata and snowflake
+    db_base_paths = ["../../resource/databases/bigquery/", "../../resource/databases/local_metadata/", "../../resource/databases/snowflake/"]
     json_glob_path = "**/*.json"
 
     db_stats_list = []
-    for db_path in glob.glob(os.path.join(db_base_path, "*"), recursive=False):
+    for base_path in db_base_paths:
+        for db_path in glob.glob(os.path.join(base_path, "*"), recursive=False):
 
-        proj_db_name = os.path.basename(os.path.normpath(db_path)) 
-        assert '.' in proj_db_name
-        project_name, db_name = proj_db_name.split('.')
-        if f"{project_name}.{db_name}" not in db_ids:
-            continue 
+            proj_db_name = os.path.basename(os.path.normpath(db_path)) 
 
-        table_count = 0
-        total_column_count = 0
+            if 'bigquery' in base_path:
+                assert '.' in proj_db_name
+                project_name, db_name = proj_db_name.split('.')
+                if f"{project_name}.{db_name}" not in db_ids:
+                    continue 
+            elif 'local_metadata' in base_path:
+                db_name = proj_db_name
+                if db_name not in db_ids:
+                    continue
+            elif 'snowflake' in base_path:
+                continue  # TODO
+            else:
+                raise ValueError(f"Unknown database type: {base_path}")
 
-        table_names_original = []
-        column_names_original = []
-        column_types = []
-        descriptions = []
-        sample_rows = {}
+            table_count = 0
+            total_column_count = 0
 
-        for json_file in glob.glob(os.path.join(db_path, json_glob_path), recursive=True):
-            with open(json_file, 'r', encoding='utf-8') as file:
-                try:
-                    data = json.load(file)
+            table_names_original = []
+            column_names_original = []
+            column_types = []
+            descriptions = []
+            sample_rows = {}
 
-                    table_count += 1
-                    table_name = data.get("table_name", "")
-                    table_names_original.append(table_name)
+            for json_file in glob.glob(os.path.join(db_path, json_glob_path), recursive=True):
+                with open(json_file, 'r', encoding='utf-8') as file:
+                    try:
+                        data = json.load(file)
 
-                    columns = data.get("column_names", [])
-                    column_types_in_table = data.get("column_types", [])
-                    descriptions_in_table = data.get("description", [])
+                        table_count += 1
+                        table_name = data.get("table_name", "")
+                        table_names_original.append(table_name)
 
-                    total_column_count += len(columns)
+                        columns = data.get("column_names", [])
+                        column_types_in_table = data.get("column_types", [])
+                        descriptions_in_table = data.get("description", [])
 
-                    for col_index, col_name in enumerate(columns):
-                        column_names_original.append([table_count - 1, col_name])
+                        total_column_count += len(columns)
 
-                    column_types.extend(column_types_in_table)
+                        for col_index, col_name in enumerate(columns):
+                            column_names_original.append([table_count - 1, col_name])
 
-                    for desc in descriptions_in_table:
-                        descriptions.append([table_count - 1, desc])
+                        column_types.extend(column_types_in_table)
 
-                    if "sample_rows" in data:
-                        sample_rows[table_name] = data["sample_rows"]
+                        for desc in descriptions_in_table:
+                            descriptions.append([table_count - 1, desc])
 
-                except json.JSONDecodeError:
-                    print(f"Error reading {json_file}")
+                        if "sample_rows" in data:
+                            sample_rows[table_name] = data["sample_rows"]
 
-        avg_column_per_table = total_column_count / table_count if table_count > 0 else 0
+                    except json.JSONDecodeError:
+                        print(f"Error reading {json_file}")
 
-        db_stats_list.append({
-            "db_id": f"{project_name}.{db_name}",
-            "db_stats": {
-                "No. of tables": table_count,
-                "No. of columns": total_column_count,
-                "Avg. No. of columns per table": avg_column_per_table
-            },
-            "table_names_original": table_names_original,
-            "column_names_original": column_names_original,
-            "column_types": column_types,
-            "column_descriptions": descriptions,
-            "sample_rows": sample_rows,
-            "primary_keys": [], 
-            "foreign_keys": []  
-        })
+            avg_column_per_table = total_column_count / table_count if table_count > 0 else 0
+
+            if 'bigquery' in base_path:
+                db_id = f"{project_name}.{db_name}"     
+            elif 'local_metadata' in base_path:
+                db_id = db_name
+            elif 'snowflake' in base_path:
+                raise NotImplementedError
+            else:
+                raise ValueError(f"Unknown database type: {base_path}")
+
+            db_stats_list.append({
+                "db_id": db_id,
+                "db_stats": {
+                    "No. of tables": table_count,
+                    "No. of columns": total_column_count,
+                    "Avg. No. of columns per table": avg_column_per_table
+                },
+                "table_names_original": table_names_original,
+                "column_names_original": column_names_original,
+                "column_types": column_types,
+                "column_descriptions": descriptions,
+                "sample_rows": sample_rows,
+                "primary_keys": [], 
+                "foreign_keys": []  
+            })
 
 
     db_stats(db_stats_list)
