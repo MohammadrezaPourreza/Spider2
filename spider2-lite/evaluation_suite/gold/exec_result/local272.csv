@@ -1,0 +1,5 @@
+product_id, aisle, position, quantity_to_be_picked
+4280, C, 1, 36
+4280, D, 18, 24
+6520, A, 29, 14
+6520, C, 13, 12

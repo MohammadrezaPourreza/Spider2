@@ -7,6 +7,7 @@ import numpy as np
 from datetime import date
 import argparse
 import sys
+import copy
 
 proj_dir = osp.dirname(osp.dirname(osp.abspath(__file__)))
 sys.path = [osp.join(proj_dir, '../')] + sys.path
@@ -123,12 +124,13 @@ def preprocess_dev_json(args):
         item['text'] = item['question']
         item['db_id'] = item['db']
         del item['db']
+        if '\n' in item['db_id']:
+            item['db_id'] = item['db_id'].split('\n')
+
         item['table_labels'] = None
         item['column_labels'] = None
         item['matched_contents'] = {}
         item['source'] = 'spider2'
-
-
 
     data = get_special_function_summary(data)
 
@@ -147,15 +149,36 @@ def combine_table_dev_json(args):
     tables_dict = {table['db_id']: table for table in tables_data}
 
     keeped_data = []
-    for item in dev_data:
-        # print(item['instance_id'])
-        db_ids = item['db_id'].split('\n') 
-        for db_id in db_ids:
-            if db_id in tables_dict:
-                for key, value in tables_dict[db_id].items():
-                    if key not in item:
-                        item[key] = value
-                keeped_data.append(item)
+    for i in range(len(dev_data)):
+        new_item = dev_data[i]
+        # print('------------instance_id:', new_item['instance_id'])
+        if isinstance(new_item['db_id'], list):  # multi-db
+            # print(f'for instance_id: {new_item["instance_id"]}, db_ids: {new_item["db_id"]}')
+            if not all([db_id in tables_dict for db_id in new_item['db_id']]):
+                continue
+
+            for db_id in new_item['db_id']:
+                # print('keys:', tables_dict[db_id].keys())
+                # print('table num of db:', len(tables_dict[db_id]['schema']['schema_items']))
+                
+                if 'schema' not in new_item:
+                    new_item['schema'] = copy.deepcopy(tables_dict[db_id]['schema'])  # caution: must use deepcopy
+                    # print('initial:', len(new_item['schema']['schema_items']))
+                else:
+                    new_item['schema']['schema_items'] += tables_dict[db_id]['schema']['schema_items']
+                    new_item['schema']['foreign_keys'] += tables_dict[db_id]['schema']['foreign_keys']
+                    # print('added to:', len(new_item['schema']['schema_items']))
+                    
+        else:  # single-db
+            # print(f'for instance_id: {new_item["instance_id"]}, db_ids: {new_item["db_id"]}')
+            assert isinstance(new_item['db_id'], str)
+            if new_item['db_id'] not in tables_dict:
+                continue
+            new_item['schema'] = tables_dict[new_item['db_id']]['schema']
+        # print('id(new_item):', id(new_item))
+        keeped_data.append(copy.deepcopy(new_item))
+
+
         
     with open(osp.join(proj_dir, f'preprocessed_data/{args.dev}/sft_{args.dev}_preprocessed.json'), 'w') as new_dev_file:
         json.dump(keeped_data, new_dev_file, indent=4)

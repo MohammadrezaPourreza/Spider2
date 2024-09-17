@@ -1,3 +1,4 @@
+# import debugpy; debugpy.connect(("127.0.0.1", 5696))
 import numpy as np
 import json
 import os
@@ -69,13 +70,18 @@ def process_dev_json(args):
     data = get_special_function_summary(data)
 
     # option
-    avaiable_dbs = [table['db_id'] for table in table_json]
+    available_dbs = [table['db_id'] for table in table_json]
     new_data = []
     for entry in data:
-        FLAG1 = '\n' not in entry['db_id']
-        FLAG2 = entry['db_id'] in avaiable_dbs
+        if '\n' not in entry['db_id']:  
+            FLAG = entry['db_id'] in available_dbs
+        else:
+            entry['db_id'] = entry['db_id'].split('\n')  # we should conduct split here
+            FLAG = all([db in available_dbs for db in entry['db_id']])
         
-        if FLAG1 and FLAG2:
+        FLAG2 = entry['instance_id'] != 'bq276'  # TODO hack: erroreous instance
+
+        if FLAG and FLAG2:
             new_data.append(entry)
 
 

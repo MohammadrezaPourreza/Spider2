@@ -1,4 +1,4 @@
-
+# import debugpy; debugpy.connect(("127.0.0.1", 5688))
 """
 Generate questions for LLMs and save it as a task
 """
@@ -71,6 +71,7 @@ if __name__ == '__main__':
     parser.add_argument("--use_column_desc", action="store_false", default=True)
     parser.add_argument("--use_sample_rows", action="store_false", default=True)
     parser.add_argument("--use_external_knowledge", action="store_false", default=True)
+    parser.add_argument("--use_few_shot", action="store_true", default=False)
     parser.add_argument("--use_special_function", action="store_true", default=False)
     parser.add_argument("--use_plan", action="store_true", default=False)
 

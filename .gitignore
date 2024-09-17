@@ -86,12 +86,19 @@ spider2-lite/baselines/yyx_tmp/
 **/yyx_run.sh
 **/0825*.json
 **/subset*.json
+**/local*.json
+**/multi_db_40.json
 **/yyx*.sh
+**/yyx*.py
 
 **/subset*.json
 **/run_check.sh
 **/snowflake_credential.json
 **/bigquery_credential.json
+**/sitecustomize.py
+
+# local DB
+spider2-lite/resource/databases/spider2-localdb
 
 
 # Ignore any folder named 'credentials'

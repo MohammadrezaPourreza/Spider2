@@ -196,10 +196,10 @@ class BasicDataset(object):
         for data in datas:
             db_id = data["db_id"]
             data["tables"] = self.get_tables(db_id)
-            if data["query"].strip()[:6] != 'SELECT':
-                data["query_skeleton"] = data["query"]
-            else:
-                data["query_skeleton"] = sql2skeleton(data["query"], db_id_to_table_json[db_id])
+            # if data["query"].strip()[:6] != 'SELECT':
+            #     data["query_skeleton"] = data["query"]
+            data["query_skeleton"] = data["query"]  # TODO: hack
+
             # data["path_db"] = self.get_path_db(db_id)
         if linking_infos:
             db_id_to_table_json = dict()

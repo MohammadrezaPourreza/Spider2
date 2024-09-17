@@ -15,8 +15,15 @@ def prepare_text2sql_prefix_sequence(data, args):
     def check_length(current_prompt, new):
         return len(current_prompt) + len(data["text"]) + len(new) < 1048570
 
+    if args.use_few_shot:
+        with open(osp.join(proj_dir, '../utils/3-shot.txt'), 'r', encoding='utf-8') as file:
+            content = file.read()
+        demo = content + "\n"
+    else:
+        demo = ''
+
     if args.use_external_knowledge and data['external_knowledge'] is not None:
-        with open(osp.join(proj_dir, '../resource/documentation/external_knowledge', data['external_knowledge']), "r", encoding="utf-8") as file:
+        with open(osp.join(proj_dir, '../../resource/documentation/external_knowledge', data['external_knowledge']), "r", encoding="utf-8") as file:
             content = file.read()
         knowledge = 'external knowledge:' + content + "\n"
     else: 
@@ -35,6 +42,10 @@ def prepare_text2sql_prefix_sequence(data, args):
         plan = ''
         
     prefix_seq = data["schema_sequence"] + "\n"
+    if check_length(prefix_seq, demo):
+        prefix_seq += demo
+    else:
+        print("Demo too long, skip. length: ", len(demo))
     if check_length(prefix_seq, data["content_sequence"] + "\n"):
         prefix_seq += data["content_sequence"] + "\n"
     else:

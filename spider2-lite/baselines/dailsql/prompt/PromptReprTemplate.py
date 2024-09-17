@@ -12,7 +12,9 @@ class BasicPrompt(object):
         pass
 
     def format_target(self, example: dict, args):
-        return self.format_question(example, args) + "\nSELECT "
+        # return self.format_question(example, args) + "\nSELECT "
+        # crucial: In spider2, not every SQL startswith "SELECT". they might startswith "WITH".
+        return self.format_question(example, args) + "\n"
 
     def format_question(self, example: dict):
         raise NotImplementedError()
@@ -35,23 +37,35 @@ class SQLPrompt(BasicPrompt):
     plan_info = "/* A plan that is useful for guiding the generation of components of a complete SQL query: */\n" \
                       "{}"
     
-    template_question = {
-        'gpt-4': "/* Answer the following: {} */",
-        'gpt-4o': "/* Answer the following without any explanation and don't use ```sql```: {} */",
-    }
-     
+    # TODO NEXT: specify different SQL dialect (bq, sqlite, snowflake) here.
+    # TODO DASAP 硬编码 
+    # template_question = "/* Answer the following with a Google BigQuery SQL statement without any explanation and don't use ```sql```: {} */"
+    # template_question = "/* Answer the following with a Sqlite SQL statement without any explanation and don't use ```sql```: {} */"
+    template_question = "/* Answer the following with a {} SQL statement without any explanation and don't use ```sql```: {} */"
+    template_question_optimized = "/* Generate a {} SQL statement to answer the following question, ensuring that the syntax and functions are appropriate for {}. No explanation is required and don't use ```sql```: {} */"
+        
     def format_question(self, example: dict, args):
         tables_json = json.load(open(osp.join(proj_dir, f'preprocessed_data/{args.dev}/tables_preprocessed.json'), 'r', encoding='utf-8'))
         sqls = get_sql_for_database_from_tables_json(example["db_id"], tables_json, use_column_desc=args.use_column_desc)
 
         prompt_info = self.template_info.format("\n\n".join(sqls))
         prompt_extra_info = self.get_extra_info(example["db_id"])
-        prompt_question = self.template_question[args.model].format(example["question"])
+
+        if example['instance_id'].startswith('local'):
+            dialect = 'SQLite'
+        elif example['instance_id'].startswith('bq'):
+            dialect = 'Goole BigQuery'
+        elif example['instance_id'].startswith('sf'):
+            dialect = 'Snowflake'
+        else:
+            raise NotImplementedError
+        prompt_question = self.template_question_optimized.format(dialect, dialect, example["question"])
 
         def check_length(prompt_components, new):
             return len("\n\n".join(prompt_components)) + len(prompt_question) + len(new) < 1048576
 
         prompt_components = [prompt_info]
+
         if args.use_sample_rows:
             sample_rows = get_sample_rows_for_database_from_tables_json(example["db_id"], tables_json)  
             new = self.sample_rows_info.format(sample_rows)
@@ -60,7 +74,7 @@ class SQLPrompt(BasicPrompt):
             else:
                 print("Sample rows info too long, skip. length: ", len(new))
         if args.use_external_knowledge and example['external_knowledge'] is not None:
-            with open(osp.join(proj_dir, '../resource/documentation/external_knowledge', example['external_knowledge']), "r", encoding="utf-8") as file:
+            with open(osp.join(proj_dir, '../../resource/documentation/external_knowledge', example['external_knowledge']), "r", encoding="utf-8") as file:
                 content = file.read()
             new = self.external_knowledge_info.format(content)
             if check_length(prompt_components, new):
@@ -83,7 +97,14 @@ class SQLPrompt(BasicPrompt):
             else:
                 print("Plan too long, skip. length: ", len(new))
 
-            
+        if args.use_few_shot:  # put few-shot examples at the end. for fair comparison 
+            with open(osp.join(proj_dir, '../utils/3-shot.txt'), 'r', encoding='utf-8') as file:
+                new = file.read()
+            if check_length(prompt_components, new):
+                prompt_components.append(new)
+            else:
+                print("Few-shot examples too long, skip. length: ", len(new))
+
         if not (prompt_extra_info is None or prompt_extra_info == ""):
             new = prompt_extra_info
             if check_length(prompt_components, new):

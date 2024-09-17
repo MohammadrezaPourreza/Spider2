@@ -1,3 +1,4 @@
+# import debugpy; debugpy.connect(("127.0.0.1", 5688))
 import argparse
 import os
 import json
@@ -35,7 +36,7 @@ if __name__ == '__main__':
     parser.add_argument("--n", type=int, default=5, help="Size of self-consistent set")  
     parser.add_argument("--db_dir", type=str, default=None)
 
-    parser.add_argument('--max_tokens', type=int, default=200)
+    parser.add_argument('--max_tokens', type=int, default=1000)  # since spider2 is challenging
 
     parser.add_argument("--is_sql_debug", action="store_true", default=False)
     args = parser.parse_args()
@@ -94,8 +95,10 @@ if __name__ == '__main__':
                 instance_id = batch["instance_id"][j]
                 sql = " ".join(sql.replace("\n", " ").split())
                 sql = process_duplication(sql)
-                if not sql.startswith("SELECT"):
-                    sql = "SELECT " + sql
+                
+                # crucial: In spider2, not every SQL startswith "SELECT". they might startswith "WITH".
+                # if not sql.startswith("SELECT"):
+                #     sql = "SELECT " + sql
                 
                 # output to .json
                 results_json.append({
@@ -112,8 +115,9 @@ if __name__ == '__main__':
                 for sql in sqls:
                     sql = " ".join(sql.replace("\n", " ").split())
                     sql = process_duplication(sql)
-                    if not sql.startswith("SELECT"):
-                        sql = "SELECT " + sql
+                    # crucial: In spider2, not every SQL startswith "SELECT". they might startswith "WITH".
+                    # if not sql.startswith("SELECT"):
+                    #     sql = "SELECT " + sql
                     processed_sqls.append(sql)
                 result = {
                     'db_id': db_id,
