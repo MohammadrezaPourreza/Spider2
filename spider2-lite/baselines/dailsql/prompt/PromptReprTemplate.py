@@ -12,7 +12,9 @@ class BasicPrompt(object):
         pass
 
     def format_target(self, example: dict, args):
-        return self.format_question(example, args) + "\nSELECT "
+        # return self.format_question(example, args) + "\nSELECT "
+        # crucial: In spider2, not every SQL startswith "SELECT". they might startswith "WITH".
+        return self.format_question(example, args) + "\n"
 
     def format_question(self, example: dict):
         raise NotImplementedError()
@@ -37,7 +39,8 @@ class SQLPrompt(BasicPrompt):
     
     template_question = {
         'gpt-4': "/* Answer the following: {} */",
-        'gpt-4o': "/* Answer the following without any explanation and don't use ```sql```: {} */",
+        # TODO NEXT: specify different SQL dialect (bq, sqlite, snowflake) here.
+        'gpt-4o': "/* Answer the following by a SQL statement without any explanation and don't use ```sql```: {} */",
     }
      
     def format_question(self, example: dict, args):
