@@ -7,6 +7,14 @@ get_doc.py
 get_bigquery_schema.py
 .vscode/*
 
+spider2/resource/databases/local/*.sqlite
+
+methods/spider-agent-air/logs/*
+methods/spider-agent-air/output/*
+!methods/spider-agent-air/logs/README.md
+!methods/spider-agent-air/output/README.md
+
+
 methods/spider-agent/logs/*
 methods/spider-agent/output/*
 !methods/spider-agent/logs/README.md
