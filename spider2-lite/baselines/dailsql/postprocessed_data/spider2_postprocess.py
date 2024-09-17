@@ -60,10 +60,14 @@ def main(root_path, dev_json, table_json):
                 with open(sql_file_path, 'r', encoding='utf-8') as sql_file:
                     sql_content = sql_file.read()
 
-                if file_name.startswith("local"):  # localDB
+                if file_name.startswith("local"):  # 
                     new_sql_content = sql_content
-                else:  # cloudDB
+                elif file_name.startswith("bq"):  # bq
                     new_sql_content = replace_table_names(sql_content, selected_tables_to_dbid)
+                elif file_name.startswith("sf"):  # snowflake
+                    raise NotImplementedError
+                else:
+                    raise ValueError(f"Unknown database type: {file_name}")
 
                 new_sql_file_path = os.path.join(new_root_path, file_name)
                 with open(new_sql_file_path, 'w', encoding='utf-8') as sql_file:
