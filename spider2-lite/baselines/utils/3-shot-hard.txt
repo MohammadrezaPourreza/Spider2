@@ -1,5 +1,5 @@
-/* Some example questions and corresponding SQL queries are provided based: */
-/* Answer the following : Calculate the conversion rate from product list pages to product detail pages for all sessions at January 2nd, 2021. */
+/* Some example questions and corresponding SQL queries are provided as follows: */
+/* Question: Calculate the conversion rate from product list pages to product detail pages for all sessions at January 2nd, 2021. */
 -- pulling user page views from GA4 events
 WITH base_table AS (
 -- pulls relevant columns from relevant dates to decrease the size of data scanned
@@ -123,7 +123,7 @@ SELECT
 FROM
   TotalTransitions, TotalPLPViews;
 
-/* Answer the following : For US B2 patents granted in the first seven days of January 2018, tell me the publication number of each patent and the number of backward citations it has received in the SEA category. */
+/* Question: For US B2 patents granted in the first seven days of January 2018, tell me the publication number of each patent and the number of backward citations it has received in the SEA category. */
 WITH patents_sample AS (               -- name of our table
 SELECT 
   t1.publication_number, 
@@ -168,7 +168,7 @@ GROUP BY
 ORDER BY
   t1.publication_number
 
-/* Answer the following : What are the monthly statistics for new StackOverflow users created in 2021, including the percentage of new users who asked questions and the percentage of those who asked questions and then answered questions within their first 30 days? */
+/* Question: What are the monthly statistics for new StackOverflow users created in 2021, including the percentage of new users who asked questions and the percentage of those who asked questions and then answered questions within their first 30 days? */
 DECLARE yr, conversion_window INT64;
 SET (yr, conversion_window) = (2021, 30);
 

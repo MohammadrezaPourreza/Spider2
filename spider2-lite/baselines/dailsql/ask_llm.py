@@ -36,7 +36,7 @@ if __name__ == '__main__':
     parser.add_argument("--n", type=int, default=5, help="Size of self-consistent set")  
     parser.add_argument("--db_dir", type=str, default=None)
 
-    parser.add_argument('--max_tokens', type=int, default=200)
+    parser.add_argument('--max_tokens', type=int, default=1000)  # since spider2 is challenging
 
     parser.add_argument("--is_sql_debug", action="store_true", default=False)
     args = parser.parse_args()

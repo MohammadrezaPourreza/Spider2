@@ -1,3 +1,4 @@
+# import debugpy; debugpy.connect(('127.0.0.1', 5688))
 import os
 import json
 import re

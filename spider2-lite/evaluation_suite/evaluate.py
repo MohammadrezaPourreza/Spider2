@@ -1,4 +1,4 @@
-# import debugpy; debugpy.connect(('127.0.0.1', 5696))
+# import debugpy; debugpy.connect(('127.0.0.1', 5688))
 import json
 import re
 import pandas as pd
@@ -123,18 +123,24 @@ def get_bigquery_sql_result(sql_query, is_save, save_dir=None, file_name="result
         return False, str(e)
     return True, None
       
+
 def get_sqlite_result(db_path, query, save_dir=None, file_name="result.csv"):
     conn = sqlite3.connect(db_path)
     try:
+        # conn = sqlite3.connect(db_path)
+        # cursor = conn.cursor()
+        # cursor.execute(query) 
+        # result = cursor.fetchall()
+        
+        df = pd.read_sql_query(query, conn)
         df = pd.read_sql_query(query, conn)
         df.to_csv(os.path.join(save_dir, file_name), index=False)
     except Exception as e:
         print(f"An error occurred: {e}")
-        return False
+        return False, str(e)
     finally:
         conn.close()
-    return True
-      
+    return True, None
 
 
 def evaluate_spider2sql(args):
@@ -211,13 +217,22 @@ def evaluate_spider2sql(args):
                                 error_info = 'Result Error'
 
             elif "local" in id:
-                exe_flag = get_sqlite_result(f"../databases/{spider2sql_metadata.get(id)['db']}.db", pred_sql_query, "temp", f"{id}_pred.csv" )
+                exe_flag, dbms_error_info = get_sqlite_result(f"../resource/databases/spider2-localdb/{spider2sql_metadata.get(id)['db']}.sqlite", pred_sql_query, "temp", f"{id}_pred.csv" )
                 if exe_flag == False:
                     score = 0
+                    error_info = dbms_error_info
                 else:
                     pred_pd = pd.read_csv(os.path.join("temp", f"{id}_pred.csv"))
                     gold_pd = pd.read_csv(os.path.join(gold_result_dir, f"{id}.csv"))
-                    score = compare_pandas_table(pred_pd, gold_pd, eval_standard_dict.get(id)['condition_cols'], eval_standard_dict.get(id)['ignore_order'])
+                    try:
+                        score = compare_pandas_table(pred_pd, gold_pd, eval_standard_dict.get(id)['condition_cols'], eval_standard_dict.get(id)['ignore_order'])
+                    except Exception as e:
+                        print(f"An error occurred: {e}")
+                        score = 0
+                        error_info = 'Python Script Error:' + str(e)
+                    if score == 0 and error_info is None:
+                        error_info = 'Result Error'
+                        
         elif mode == "exec_result":
 
             pred_pd = pd.read_csv(os.path.join(args.result_dir, f"{id}.csv"))

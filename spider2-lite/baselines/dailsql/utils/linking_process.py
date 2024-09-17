@@ -86,7 +86,7 @@ def preprocess_schema_uncached(schema,
         r.table_names.append(table_toks)
         if bert:
             r.normalized_table_names.append(Bertokens(table_toks))
-    try:  # TODO NEXT bug fixing  # can we skip this process?
+    try:  # TODO bug fixing  # can we skip this process?
         last_table = schema.tables[-1]
     except:
         print(1)

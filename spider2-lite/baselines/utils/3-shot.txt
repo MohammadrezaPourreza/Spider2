@@ -1,5 +1,5 @@
-/* Some example questions and corresponding SQL queries are provided based: */
-/* Answer the following : I want to know the preferences of customers who purchased the Google Navy Speckled Tee in December 2020. What other product was purchased with the highest total quantity alongside this item?\nCan you tell me what other product are most frequently bought together with the Google Navy Speckled Tee by customers in December 2020? */
+/* Some example questions and corresponding SQL queries are provided as follows: */
+/* Question: I want to know the preferences of customers who purchased the Google Navy Speckled Tee in December 2020. What other product was purchased with the highest total quantity alongside this item?\nCan you tell me what other product are most frequently bought together with the Google Navy Speckled Tee by customers in December 2020? */
 /* SQL query: */
 WITH
   Params AS (
@@ -39,7 +39,7 @@ GROUP BY 1
 ORDER BY item_quantity DESC
 LIMIT 1;
 
-/* Answer the following : How many US patent applications about IoT applications were filed each month from 2008 to 2022? */
+/* Question: How many US patent applications about IoT applications were filed each month from 2008 to 2022? */
 /* SQL query: */
 WITH
   Patent_Matches AS (
@@ -81,7 +81,7 @@ GROUP BY
 ORDER BY
   Patent_Date_YearMonth;
 
-/* Answer the following : How does average reputation and badge count vary among Stack Overflow users based on their tenure, measured in years? */
+/* Question: How does average reputation and badge count vary among Stack Overflow users based on their tenure, measured in years? */
 /* SQL query: */
 SELECT User_Tenure,
        COUNT(1) AS Num_Users,

@@ -1,8 +1,0 @@
-[
-    {
-        "instance_id": "local002",
-        "db": "E_commerce",
-        "question": "Can you calculate the 5-day symmetric moving average of predicted toy sales for December 5, 6, and 7, 2018, using daily sales data from January 1, 2017, to August 29, 2018, with a simple linear regression model? Provide the total of the moving averages for those three days.",
-        "external_knowledge": null
-    }
-]
