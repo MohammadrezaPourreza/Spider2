@@ -22,7 +22,7 @@ FROM (
                 -- #setting up the table with players
                 SELECT venueId
                     ,pitcherId
-                    ,pitcherFirstName || '  ' || pitcherLastName _pitcher
+                    ,pitcherFirstName || ' ' || pitcherLastName _pitcher
                     ,max(pitchSpeed) _speed
                 FROM (
                     -- #full table comprising all seasons

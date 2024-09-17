@@ -1,5 +1,6 @@
 SELECT
-  aq.city
+  aq.city,
+  (epa.arithmetic_mean - aq.value)
 FROM
   `bigquery-public-data.openaq.global_air_quality` AS aq
 JOIN
@@ -15,4 +16,4 @@ WHERE
 ORDER BY
   (epa.arithmetic_mean - aq.value) DESC
 LIMIT
-  1
+  2
