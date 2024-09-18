@@ -1,0 +1,389 @@
+{
+    "table_name": "oracle_requests",
+    "table_fullname": "public-data-finance.crypto_band.oracle_requests",
+    "column_names": [
+        "block_height",
+        "block_timestamp",
+        "block_timestamp_truncated",
+        "oracle_request_id",
+        "request",
+        "reports",
+        "result",
+        "decoded_result",
+        "oracle_script"
+    ],
+    "column_types": [
+        "INT64",
+        "STRING",
+        "TIMESTAMP",
+        "INT64",
+        "STRUCT<oracle_script_id INT64, calldata STRING, requested_validators ARRAY<STRING>, min_count INT64, request_height INT64, request_time TIMESTAMP, raw_requests ARRAY<STRUCT<external_id INT64, data_source_id INT64, calldata STRING>>>",
+        "ARRAY<STRUCT<raw_reports ARRAY<STRUCT<exit_code INT64, data BYTES, external_id INT64>>, in_before_resolve BOOL, validator STRING>>",
+        "STRUCT<request_packet_data STRUCT<oracle_script_id INT64, calldata STRING, ask_count INT64, min_count INT64>, response_packet_data STRUCT<request_id INT64, ans_count INT64, request_time INT64, resolve_time INT64, resolve_status INT64, result STRING>>",
+        "STRUCT<calldata STRING, result STRING>",
+        "STRUCT<owner STRING, name STRING, description STRING, filename STRING, schema STRING, source_code_url STRING>"
+    ],
+    "nested_column_names": [
+        "block_height",
+        "block_timestamp",
+        "block_timestamp_truncated",
+        "oracle_request_id",
+        "request",
+        "request.oracle_script_id",
+        "request.calldata",
+        "request.requested_validators",
+        "request.min_count",
+        "request.request_height",
+        "request.request_time",
+        "request.raw_requests",
+        "request.raw_requests.external_id",
+        "request.raw_requests.data_source_id",
+        "request.raw_requests.calldata",
+        "reports",
+        "reports.raw_reports",
+        "reports.raw_reports.exit_code",
+        "reports.raw_reports.data",
+        "reports.raw_reports.external_id",
+        "reports.in_before_resolve",
+        "reports.validator",
+        "result",
+        "result.request_packet_data",
+        "result.request_packet_data.oracle_script_id",
+        "result.request_packet_data.calldata",
+        "result.request_packet_data.ask_count",
+        "result.request_packet_data.min_count",
+        "result.response_packet_data",
+        "result.response_packet_data.request_id",
+        "result.response_packet_data.ans_count",
+        "result.response_packet_data.request_time",
+        "result.response_packet_data.resolve_time",
+        "result.response_packet_data.resolve_status",
+        "result.response_packet_data.result",
+        "decoded_result",
+        "decoded_result.calldata",
+        "decoded_result.result",
+        "oracle_script",
+        "oracle_script.owner",
+        "oracle_script.name",
+        "oracle_script.description",
+        "oracle_script.filename",
+        "oracle_script.schema",
+        "oracle_script.source_code_url"
+    ],
+    "nested_column_types": [
+        "INT64",
+        "STRING",
+        "TIMESTAMP",
+        "INT64",
+        "STRUCT<oracle_script_id INT64, calldata STRING, requested_validators ARRAY<STRING>, min_count INT64, request_height INT64, request_time TIMESTAMP, raw_requests ARRAY<STRUCT<external_id INT64, data_source_id INT64, calldata STRING>>>",
+        "INT64",
+        "STRING",
+        "ARRAY<STRING>",
+        "INT64",
+        "INT64",
+        "TIMESTAMP",
+        "ARRAY<STRUCT<external_id INT64, data_source_id INT64, calldata STRING>>",
+        "INT64",
+        "INT64",
+        "STRING",
+        "ARRAY<STRUCT<raw_reports ARRAY<STRUCT<exit_code INT64, data BYTES, external_id INT64>>, in_before_resolve BOOL, validator STRING>>",
+        "ARRAY<STRUCT<exit_code INT64, data BYTES, external_id INT64>>",
+        "INT64",
+        "BYTES",
+        "INT64",
+        "BOOL",
+        "STRING",
+        "STRUCT<request_packet_data STRUCT<oracle_script_id INT64, calldata STRING, ask_count INT64, min_count INT64>, response_packet_data STRUCT<request_id INT64, ans_count INT64, request_time INT64, resolve_time INT64, resolve_status INT64, result STRING>>",
+        "STRUCT<oracle_script_id INT64, calldata STRING, ask_count INT64, min_count INT64>",
+        "INT64",
+        "STRING",
+        "INT64",
+        "INT64",
+        "STRUCT<request_id INT64, ans_count INT64, request_time INT64, resolve_time INT64, resolve_status INT64, result STRING>",
+        "INT64",
+        "INT64",
+        "INT64",
+        "INT64",
+        "INT64",
+        "STRING",
+        "STRUCT<calldata STRING, result STRING>",
+        "STRING",
+        "STRING",
+        "STRUCT<owner STRING, name STRING, description STRING, filename STRING, schema STRING, source_code_url STRING>",
+        "STRING",
+        "STRING",
+        "STRING",
+        "STRING",
+        "STRING",
+        "STRING"
+    ],
+    "description": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+    ],
+    "sample_rows": [
+        {
+            "block_height": 2033662,
+            "block_timestamp": "2020-12-27T00:04:22.934970057Z",
+            "block_timestamp_truncated": "2020-12-27 00:04:22.934970+00:00",
+            "oracle_request_id": 416907,
+            "request": {
+                "oracle_script_id": 6,
+                "calldata": "AAAAAQAAAANPSUwAAAAAO5rKAA==",
+                "requested_validators": "['bandvaloper14kn0kk33szpwus9nh8n87fjel8djx0y0wz502z'\n 'bandvaloper1m88fha4982ev7smptzu8a7wvt8wkxdvfewh2md'\n 'bandvaloper1f6htx23e4xfu0dkpa2ck2kk63la2ej947cq0w4'\n 'bandvaloper128dkddh98pfwdxg07t36fxedczthg0p2mdcs42'\n 'bandvaloper1c9ye54e3pzwm3e0zpdlel6pnavrj9qqvn4hl7n'\n 'bandvaloper1wja9nds8klxcjurvxerdsun4t52zfjvqpj6y54'\n 'bandvaloper1lksevk5362eterq75haf7wxx6jdpgdzyd9ms9h'\n 'bandvaloper14m538kv607xpcvpef6zrk2uhavpr8katfq2s8z'\n 'bandvaloper17d3uhcjlh4jyqcep82jfsrg8avsngklxxan5tg'\n 'bandvaloper1r00x80djyu6wkxpceegmvn5w9nx65prgqhxkzq'\n 'bandvaloper15urq2dtp9qce4fyc85m6upwm9xul3049fz627w'\n 'bandvaloper1595hec3hxlag3a2p97t2geruhv58zmyzr4euux'\n 'bandvaloper1nqmeykpnqdccxf2kfqnwszy748ll3qlzu0heyt'\n 'bandvaloper1q894x7p4ugl3q5l47e8ksll5k5lmx74fxqez5y'\n 'bandvaloper1ycs4g7xu8wmf7n4vwwtfsvhtfm7tekvwk34rxz'\n 'bandvaloper1dr64r506ln5n3aqqgkccf56uwdd9d9jvlh9l4p']",
+                "min_count": 10,
+                "request_height": 2033661,
+                "request_time": "2020-12-27 00:04:19.097681+00:00",
+                "raw_requests": "[{'external_id': None, 'data_source_id': 12, 'calldata': 'T0lM'}]"
+            },
+            "reports": "[{'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper1q894x7p4ugl3q5l47e8ksll5k5lmx74fxqez5y'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper1r00x80djyu6wkxpceegmvn5w9nx65prgqhxkzq'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper1ycs4g7xu8wmf7n4vwwtfsvhtfm7tekvwk34rxz'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': None, 'validator': 'bandvaloper1f6htx23e4xfu0dkpa2ck2kk63la2ej947cq0w4'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper128dkddh98pfwdxg07t36fxedczthg0p2mdcs42'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper1dr64r506ln5n3aqqgkccf56uwdd9d9jvlh9l4p'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': None, 'validator': 'bandvaloper1wja9nds8klxcjurvxerdsun4t52zfjvqpj6y54'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper1nqmeykpnqdccxf2kfqnwszy748ll3qlzu0heyt'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': None, 'validator': 'bandvaloper1595hec3hxlag3a2p97t2geruhv58zmyzr4euux'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': None, 'validator': 'bandvaloper15urq2dtp9qce4fyc85m6upwm9xul3049fz627w'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': None, 'validator': 'bandvaloper14kn0kk33szpwus9nh8n87fjel8djx0y0wz502z'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': None, 'validator': 'bandvaloper14m538kv607xpcvpef6zrk2uhavpr8katfq2s8z'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper1c9ye54e3pzwm3e0zpdlel6pnavrj9qqvn4hl7n'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper1m88fha4982ev7smptzu8a7wvt8wkxdvfewh2md'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper17d3uhcjlh4jyqcep82jfsrg8avsngklxxan5tg'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper1lksevk5362eterq75haf7wxx6jdpgdzyd9ms9h'}]",
+            "result": {
+                "request_packet_data": {
+                    "oracle_script_id": 6,
+                    "calldata": "AAAAAQAAAANPSUwAAAAAO5rKAA==",
+                    "ask_count": 16,
+                    "min_count": 10
+                },
+                "response_packet_data": {
+                    "request_id": 416907,
+                    "ans_count": 10,
+                    "request_time": 1609027459,
+                    "resolve_time": 1609027462,
+                    "resolve_status": 1,
+                    "result": "AAAAAQAAAAv0GjsA"
+                }
+            },
+            "decoded_result": {
+                "calldata": "{\"symbols\":[\"OIL\"],\"multiplier\":1000000000}",
+                "result": "{\"rates\":[51340000000]}"
+            },
+            "oracle_script": {
+                "owner": "band18typnygqtl8nsquu7jxvdmcnj3sku7z8wgdsas",
+                "name": "Oil Price",
+                "description": "Query the latest Oil Price",
+                "filename": "a3405e3b59e069f600623b6da51b52f03ed90d61d86da39fe17d583e72649554",
+                "schema": "{symbols:[string],multiplier:u64}/{rates:[u64]}",
+                "source_code_url": "https://ipfs.io/ipfs/QmV7wbbUfDkvwHyBiVZ49y9641K74FjxRzx9vAJatpnKhq"
+            }
+        },
+        {
+            "block_height": 2034439,
+            "block_timestamp": "2020-12-27T00:45:52.683363023Z",
+            "block_timestamp_truncated": "2020-12-27 00:45:52.683363+00:00",
+            "oracle_request_id": 417241,
+            "request": {
+                "oracle_script_id": 6,
+                "calldata": "AAAAAQAAAANPSUwAAAAAO5rKAA==",
+                "requested_validators": "['bandvaloper1q894x7p4ugl3q5l47e8ksll5k5lmx74fxqez5y'\n 'bandvaloper1f6htx23e4xfu0dkpa2ck2kk63la2ej947cq0w4'\n 'bandvaloper1zm5p8gg3ugjcdwz9yrxaf6fdptxa4gw04rplr9'\n 'bandvaloper1m88fha4982ev7smptzu8a7wvt8wkxdvfewh2md'\n 'bandvaloper1wja9nds8klxcjurvxerdsun4t52zfjvqpj6y54'\n 'bandvaloper14kn0kk33szpwus9nh8n87fjel8djx0y0wz502z'\n 'bandvaloper1qgvcttnjx3enjqg9pnhclt6d4z7qdknavg4q9c'\n 'bandvaloper128dkddh98pfwdxg07t36fxedczthg0p2mdcs42'\n 'bandvaloper15urq2dtp9qce4fyc85m6upwm9xul3049fz627w'\n 'bandvaloper1r00x80djyu6wkxpceegmvn5w9nx65prgqhxkzq'\n 'bandvaloper1dr64r506ln5n3aqqgkccf56uwdd9d9jvlh9l4p'\n 'bandvaloper14m538kv607xpcvpef6zrk2uhavpr8katfq2s8z'\n 'bandvaloper1kek6uj3ux6f8k6mq0pewh5s7v7m0empy6zymyf'\n 'bandvaloper17d3uhcjlh4jyqcep82jfsrg8avsngklxxan5tg'\n 'bandvaloper1ycs4g7xu8wmf7n4vwwtfsvhtfm7tekvwk34rxz'\n 'bandvaloper1hln9scsl9yqup8nxyum06rmggql5m5zqwxmt3p']",
+                "min_count": 10,
+                "request_height": 2034438,
+                "request_time": "2020-12-27 00:45:50.131885+00:00",
+                "raw_requests": "[{'external_id': None, 'data_source_id': 12, 'calldata': 'T0lM'}]"
+            },
+            "reports": "[{'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper1q894x7p4ugl3q5l47e8ksll5k5lmx74fxqez5y'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper1qgvcttnjx3enjqg9pnhclt6d4z7qdknavg4q9c'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper1zm5p8gg3ugjcdwz9yrxaf6fdptxa4gw04rplr9'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper1r00x80djyu6wkxpceegmvn5w9nx65prgqhxkzq'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper1ycs4g7xu8wmf7n4vwwtfsvhtfm7tekvwk34rxz'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': None, 'validator': 'bandvaloper1f6htx23e4xfu0dkpa2ck2kk63la2ej947cq0w4'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper128dkddh98pfwdxg07t36fxedczthg0p2mdcs42'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper1dr64r506ln5n3aqqgkccf56uwdd9d9jvlh9l4p'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': None, 'validator': 'bandvaloper1wja9nds8klxcjurvxerdsun4t52zfjvqpj6y54'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': None, 'validator': 'bandvaloper15urq2dtp9qce4fyc85m6upwm9xul3049fz627w'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': None, 'validator': 'bandvaloper14kn0kk33szpwus9nh8n87fjel8djx0y0wz502z'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper14m538kv607xpcvpef6zrk2uhavpr8katfq2s8z'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper1kek6uj3ux6f8k6mq0pewh5s7v7m0empy6zymyf'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': None, 'validator': 'bandvaloper1hln9scsl9yqup8nxyum06rmggql5m5zqwxmt3p'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper1m88fha4982ev7smptzu8a7wvt8wkxdvfewh2md'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': None, 'validator': 'bandvaloper17d3uhcjlh4jyqcep82jfsrg8avsngklxxan5tg'}]",
+            "result": {
+                "request_packet_data": {
+                    "oracle_script_id": 6,
+                    "calldata": "AAAAAQAAAANPSUwAAAAAO5rKAA==",
+                    "ask_count": 16,
+                    "min_count": 10
+                },
+                "response_packet_data": {
+                    "request_id": 417241,
+                    "ans_count": 10,
+                    "request_time": 1609029950,
+                    "resolve_time": 1609029952,
+                    "resolve_status": 1,
+                    "result": "AAAAAQAAAAv0GjsA"
+                }
+            },
+            "decoded_result": {
+                "calldata": "{\"symbols\":[\"OIL\"],\"multiplier\":1000000000}",
+                "result": "{\"rates\":[51340000000]}"
+            },
+            "oracle_script": {
+                "owner": "band18typnygqtl8nsquu7jxvdmcnj3sku7z8wgdsas",
+                "name": "Oil Price",
+                "description": "Query the latest Oil Price",
+                "filename": "a3405e3b59e069f600623b6da51b52f03ed90d61d86da39fe17d583e72649554",
+                "schema": "{symbols:[string],multiplier:u64}/{rates:[u64]}",
+                "source_code_url": "https://ipfs.io/ipfs/QmV7wbbUfDkvwHyBiVZ49y9641K74FjxRzx9vAJatpnKhq"
+            }
+        },
+        {
+            "block_height": 2034636,
+            "block_timestamp": "2020-12-27T00:56:12.659519426Z",
+            "block_timestamp_truncated": "2020-12-27 00:56:12.659519+00:00",
+            "oracle_request_id": 417326,
+            "request": {
+                "oracle_script_id": 6,
+                "calldata": "AAAAAQAAAANPSUwAAAAAO5rKAA==",
+                "requested_validators": "['bandvaloper1dr64r506ln5n3aqqgkccf56uwdd9d9jvlh9l4p'\n 'bandvaloper1f6htx23e4xfu0dkpa2ck2kk63la2ej947cq0w4'\n 'bandvaloper1ycs4g7xu8wmf7n4vwwtfsvhtfm7tekvwk34rxz'\n 'bandvaloper1qgvcttnjx3enjqg9pnhclt6d4z7qdknavg4q9c'\n 'bandvaloper128dkddh98pfwdxg07t36fxedczthg0p2mdcs42'\n 'bandvaloper1r00x80djyu6wkxpceegmvn5w9nx65prgqhxkzq'\n 'bandvaloper1lksevk5362eterq75haf7wxx6jdpgdzyd9ms9h'\n 'bandvaloper1m88fha4982ev7smptzu8a7wvt8wkxdvfewh2md'\n 'bandvaloper1jyze35artdzs5nhvalt6jnatzhg5z88rfpmv27'\n 'bandvaloper1zm5p8gg3ugjcdwz9yrxaf6fdptxa4gw04rplr9'\n 'bandvaloper1q894x7p4ugl3q5l47e8ksll5k5lmx74fxqez5y'\n 'bandvaloper14kn0kk33szpwus9nh8n87fjel8djx0y0wz502z'\n 'bandvaloper17d3uhcjlh4jyqcep82jfsrg8avsngklxxan5tg'\n 'bandvaloper15urq2dtp9qce4fyc85m6upwm9xul3049fz627w'\n 'bandvaloper1kek6uj3ux6f8k6mq0pewh5s7v7m0empy6zymyf'\n 'bandvaloper1wja9nds8klxcjurvxerdsun4t52zfjvqpj6y54']",
+                "min_count": 10,
+                "request_height": 2034635,
+                "request_time": "2020-12-27 00:56:10.111774+00:00",
+                "raw_requests": "[{'external_id': None, 'data_source_id': 12, 'calldata': 'T0lM'}]"
+            },
+            "reports": "[{'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper1q894x7p4ugl3q5l47e8ksll5k5lmx74fxqez5y'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper1qgvcttnjx3enjqg9pnhclt6d4z7qdknavg4q9c'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper1zm5p8gg3ugjcdwz9yrxaf6fdptxa4gw04rplr9'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper1r00x80djyu6wkxpceegmvn5w9nx65prgqhxkzq'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper1ycs4g7xu8wmf7n4vwwtfsvhtfm7tekvwk34rxz'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': None, 'validator': 'bandvaloper1f6htx23e4xfu0dkpa2ck2kk63la2ej947cq0w4'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper128dkddh98pfwdxg07t36fxedczthg0p2mdcs42'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper1dr64r506ln5n3aqqgkccf56uwdd9d9jvlh9l4p'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': None, 'validator': 'bandvaloper1wja9nds8klxcjurvxerdsun4t52zfjvqpj6y54'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': None, 'validator': 'bandvaloper1jyze35artdzs5nhvalt6jnatzhg5z88rfpmv27'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': None, 'validator': 'bandvaloper15urq2dtp9qce4fyc85m6upwm9xul3049fz627w'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': None, 'validator': 'bandvaloper14kn0kk33szpwus9nh8n87fjel8djx0y0wz502z'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper1kek6uj3ux6f8k6mq0pewh5s7v7m0empy6zymyf'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper1m88fha4982ev7smptzu8a7wvt8wkxdvfewh2md'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper17d3uhcjlh4jyqcep82jfsrg8avsngklxxan5tg'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': None, 'validator': 'bandvaloper1lksevk5362eterq75haf7wxx6jdpgdzyd9ms9h'}]",
+            "result": {
+                "request_packet_data": {
+                    "oracle_script_id": 6,
+                    "calldata": "AAAAAQAAAANPSUwAAAAAO5rKAA==",
+                    "ask_count": 16,
+                    "min_count": 10
+                },
+                "response_packet_data": {
+                    "request_id": 417326,
+                    "ans_count": 10,
+                    "request_time": 1609030570,
+                    "resolve_time": 1609030572,
+                    "resolve_status": 1,
+                    "result": "AAAAAQAAAAv0GjsA"
+                }
+            },
+            "decoded_result": {
+                "calldata": "{\"symbols\":[\"OIL\"],\"multiplier\":1000000000}",
+                "result": "{\"rates\":[51340000000]}"
+            },
+            "oracle_script": {
+                "owner": "band18typnygqtl8nsquu7jxvdmcnj3sku7z8wgdsas",
+                "name": "Oil Price",
+                "description": "Query the latest Oil Price",
+                "filename": "a3405e3b59e069f600623b6da51b52f03ed90d61d86da39fe17d583e72649554",
+                "schema": "{symbols:[string],multiplier:u64}/{rates:[u64]}",
+                "source_code_url": "https://ipfs.io/ipfs/QmV7wbbUfDkvwHyBiVZ49y9641K74FjxRzx9vAJatpnKhq"
+            }
+        },
+        {
+            "block_height": 2035798,
+            "block_timestamp": "2020-12-27T01:58:12.879343599Z",
+            "block_timestamp_truncated": "2020-12-27 01:58:12.879343+00:00",
+            "oracle_request_id": 417830,
+            "request": {
+                "oracle_script_id": 6,
+                "calldata": "AAAAAQAAAANPSUwAAAAAO5rKAA==",
+                "requested_validators": "['bandvaloper1nqmeykpnqdccxf2kfqnwszy748ll3qlzu0heyt'\n 'bandvaloper1c9ye54e3pzwm3e0zpdlel6pnavrj9qqvn4hl7n'\n 'bandvaloper1r00x80djyu6wkxpceegmvn5w9nx65prgqhxkzq'\n 'bandvaloper14m538kv607xpcvpef6zrk2uhavpr8katfq2s8z'\n 'bandvaloper1wja9nds8klxcjurvxerdsun4t52zfjvqpj6y54'\n 'bandvaloper1ycs4g7xu8wmf7n4vwwtfsvhtfm7tekvwk34rxz'\n 'bandvaloper1f6htx23e4xfu0dkpa2ck2kk63la2ej947cq0w4'\n 'bandvaloper14kn0kk33szpwus9nh8n87fjel8djx0y0wz502z'\n 'bandvaloper1q894x7p4ugl3q5l47e8ksll5k5lmx74fxqez5y'\n 'bandvaloper128dkddh98pfwdxg07t36fxedczthg0p2mdcs42'\n 'bandvaloper1m88fha4982ev7smptzu8a7wvt8wkxdvfewh2md'\n 'bandvaloper1595hec3hxlag3a2p97t2geruhv58zmyzr4euux'\n 'bandvaloper1nzfwx85yjjar55fft72vj72lg6pfgzfz6dsrgm'\n 'bandvaloper1zm5p8gg3ugjcdwz9yrxaf6fdptxa4gw04rplr9'\n 'bandvaloper1hln9scsl9yqup8nxyum06rmggql5m5zqwxmt3p'\n 'bandvaloper1dr64r506ln5n3aqqgkccf56uwdd9d9jvlh9l4p']",
+                "min_count": 10,
+                "request_height": 2035797,
+                "request_time": "2020-12-27 01:58:09.121200+00:00",
+                "raw_requests": "[{'external_id': None, 'data_source_id': 12, 'calldata': 'T0lM'}]"
+            },
+            "reports": "[{'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper1q894x7p4ugl3q5l47e8ksll5k5lmx74fxqez5y'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper1zm5p8gg3ugjcdwz9yrxaf6fdptxa4gw04rplr9'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper1r00x80djyu6wkxpceegmvn5w9nx65prgqhxkzq'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper1ycs4g7xu8wmf7n4vwwtfsvhtfm7tekvwk34rxz'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': None, 'validator': 'bandvaloper1f6htx23e4xfu0dkpa2ck2kk63la2ej947cq0w4'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper128dkddh98pfwdxg07t36fxedczthg0p2mdcs42'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper1dr64r506ln5n3aqqgkccf56uwdd9d9jvlh9l4p'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': None, 'validator': 'bandvaloper1wja9nds8klxcjurvxerdsun4t52zfjvqpj6y54'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': None, 'validator': 'bandvaloper1nqmeykpnqdccxf2kfqnwszy748ll3qlzu0heyt'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': None, 'validator': 'bandvaloper1nzfwx85yjjar55fft72vj72lg6pfgzfz6dsrgm'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper1595hec3hxlag3a2p97t2geruhv58zmyzr4euux'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': None, 'validator': 'bandvaloper14kn0kk33szpwus9nh8n87fjel8djx0y0wz502z'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper14m538kv607xpcvpef6zrk2uhavpr8katfq2s8z'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': None, 'validator': 'bandvaloper1hln9scsl9yqup8nxyum06rmggql5m5zqwxmt3p'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper1c9ye54e3pzwm3e0zpdlel6pnavrj9qqvn4hl7n'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper1m88fha4982ev7smptzu8a7wvt8wkxdvfewh2md'}]",
+            "result": {
+                "request_packet_data": {
+                    "oracle_script_id": 6,
+                    "calldata": "AAAAAQAAAANPSUwAAAAAO5rKAA==",
+                    "ask_count": 16,
+                    "min_count": 10
+                },
+                "response_packet_data": {
+                    "request_id": 417830,
+                    "ans_count": 10,
+                    "request_time": 1609034289,
+                    "resolve_time": 1609034292,
+                    "resolve_status": 1,
+                    "result": "AAAAAQAAAAv0GjsA"
+                }
+            },
+            "decoded_result": {
+                "calldata": "{\"symbols\":[\"OIL\"],\"multiplier\":1000000000}",
+                "result": "{\"rates\":[51340000000]}"
+            },
+            "oracle_script": {
+                "owner": "band18typnygqtl8nsquu7jxvdmcnj3sku7z8wgdsas",
+                "name": "Oil Price",
+                "description": "Query the latest Oil Price",
+                "filename": "a3405e3b59e069f600623b6da51b52f03ed90d61d86da39fe17d583e72649554",
+                "schema": "{symbols:[string],multiplier:u64}/{rates:[u64]}",
+                "source_code_url": "https://ipfs.io/ipfs/QmV7wbbUfDkvwHyBiVZ49y9641K74FjxRzx9vAJatpnKhq"
+            }
+        },
+        {
+            "block_height": 2036479,
+            "block_timestamp": "2020-12-27T02:34:23.231297891Z",
+            "block_timestamp_truncated": "2020-12-27 02:34:23.231297+00:00",
+            "oracle_request_id": 418122,
+            "request": {
+                "oracle_script_id": 6,
+                "calldata": "AAAAAQAAAANPSUwAAAAAO5rKAA==",
+                "requested_validators": "['bandvaloper1r00x80djyu6wkxpceegmvn5w9nx65prgqhxkzq'\n 'bandvaloper1zm5p8gg3ugjcdwz9yrxaf6fdptxa4gw04rplr9'\n 'bandvaloper1v7teuxaulwukplu90f0ra60vs2xpqystg89g95'\n 'bandvaloper1wja9nds8klxcjurvxerdsun4t52zfjvqpj6y54'\n 'bandvaloper14m538kv607xpcvpef6zrk2uhavpr8katfq2s8z'\n 'bandvaloper1f6htx23e4xfu0dkpa2ck2kk63la2ej947cq0w4'\n 'bandvaloper17d3uhcjlh4jyqcep82jfsrg8avsngklxxan5tg'\n 'bandvaloper15urq2dtp9qce4fyc85m6upwm9xul3049fz627w'\n 'bandvaloper1q894x7p4ugl3q5l47e8ksll5k5lmx74fxqez5y'\n 'bandvaloper1595hec3hxlag3a2p97t2geruhv58zmyzr4euux'\n 'bandvaloper1ycs4g7xu8wmf7n4vwwtfsvhtfm7tekvwk34rxz'\n 'bandvaloper128dkddh98pfwdxg07t36fxedczthg0p2mdcs42'\n 'bandvaloper1kek6uj3ux6f8k6mq0pewh5s7v7m0empy6zymyf'\n 'bandvaloper1nqmeykpnqdccxf2kfqnwszy748ll3qlzu0heyt'\n 'bandvaloper1m88fha4982ev7smptzu8a7wvt8wkxdvfewh2md'\n 'bandvaloper1c9ye54e3pzwm3e0zpdlel6pnavrj9qqvn4hl7n']",
+                "min_count": 10,
+                "request_height": 2036478,
+                "request_time": "2020-12-27 02:34:20.019799+00:00",
+                "raw_requests": "[{'external_id': None, 'data_source_id': 12, 'calldata': 'T0lM'}]"
+            },
+            "reports": "[{'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper1q894x7p4ugl3q5l47e8ksll5k5lmx74fxqez5y'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper1zm5p8gg3ugjcdwz9yrxaf6fdptxa4gw04rplr9'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper1r00x80djyu6wkxpceegmvn5w9nx65prgqhxkzq'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper1ycs4g7xu8wmf7n4vwwtfsvhtfm7tekvwk34rxz'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': None, 'validator': 'bandvaloper1f6htx23e4xfu0dkpa2ck2kk63la2ej947cq0w4'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper128dkddh98pfwdxg07t36fxedczthg0p2mdcs42'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper1v7teuxaulwukplu90f0ra60vs2xpqystg89g95'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': None, 'validator': 'bandvaloper1wja9nds8klxcjurvxerdsun4t52zfjvqpj6y54'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': None, 'validator': 'bandvaloper1nqmeykpnqdccxf2kfqnwszy748ll3qlzu0heyt'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': None, 'validator': 'bandvaloper1595hec3hxlag3a2p97t2geruhv58zmyzr4euux'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': None, 'validator': 'bandvaloper15urq2dtp9qce4fyc85m6upwm9xul3049fz627w'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': None, 'validator': 'bandvaloper14m538kv607xpcvpef6zrk2uhavpr8katfq2s8z'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper1kek6uj3ux6f8k6mq0pewh5s7v7m0empy6zymyf'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper1c9ye54e3pzwm3e0zpdlel6pnavrj9qqvn4hl7n'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper1m88fha4982ev7smptzu8a7wvt8wkxdvfewh2md'}\n {'raw_reports': array([{'exit_code': None, 'data': b'51.34\\n', 'external_id': None}],\n       dtype=object), 'in_before_resolve': True, 'validator': 'bandvaloper17d3uhcjlh4jyqcep82jfsrg8avsngklxxan5tg'}]",
+            "result": {
+                "request_packet_data": {
+                    "oracle_script_id": 6,
+                    "calldata": "AAAAAQAAAANPSUwAAAAAO5rKAA==",
+                    "ask_count": 16,
+                    "min_count": 10
+                },
+                "response_packet_data": {
+                    "request_id": 418122,
+                    "ans_count": 10,
+                    "request_time": 1609036460,
+                    "resolve_time": 1609036463,
+                    "resolve_status": 1,
+                    "result": "AAAAAQAAAAv0GjsA"
+                }
+            },
+            "decoded_result": {
+                "calldata": "{\"symbols\":[\"OIL\"],\"multiplier\":1000000000}",
+                "result": "{\"rates\":[51340000000]}"
+            },
+            "oracle_script": {
+                "owner": "band18typnygqtl8nsquu7jxvdmcnj3sku7z8wgdsas",
+                "name": "Oil Price",
+                "description": "Query the latest Oil Price",
+                "filename": "a3405e3b59e069f600623b6da51b52f03ed90d61d86da39fe17d583e72649554",
+                "schema": "{symbols:[string],multiplier:u64}/{rates:[u64]}",
+                "source_code_url": "https://ipfs.io/ipfs/QmV7wbbUfDkvwHyBiVZ49y9641K74FjxRzx9vAJatpnKhq"
+            }
+        }
+    ]
+}

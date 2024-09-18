@@ -1,0 +1,92 @@
+{
+    "table_name": "block_events",
+    "table_fullname": "public-data-finance.crypto_band.block_events",
+    "column_names": [
+        "block_height",
+        "block_timestamp",
+        "block_timestamp_truncated",
+        "event_type",
+        "block_event_type",
+        "attributes"
+    ],
+    "column_types": [
+        "INT64",
+        "STRING",
+        "TIMESTAMP",
+        "STRING",
+        "STRING",
+        "ARRAY<STRUCT<key STRING, value STRING>>"
+    ],
+    "nested_column_names": [
+        "block_height",
+        "block_timestamp",
+        "block_timestamp_truncated",
+        "event_type",
+        "block_event_type",
+        "attributes",
+        "attributes.key",
+        "attributes.value"
+    ],
+    "nested_column_types": [
+        "INT64",
+        "STRING",
+        "TIMESTAMP",
+        "STRING",
+        "STRING",
+        "ARRAY<STRUCT<key STRING, value STRING>>",
+        "STRING",
+        "STRING"
+    ],
+    "description": [
+        null,
+        null,
+        null,
+        "",
+        "",
+        null,
+        null,
+        null
+    ],
+    "sample_rows": [
+        {
+            "block_height": 3164751,
+            "block_timestamp": "2021-02-06T08:00:02.840980392Z",
+            "block_timestamp_truncated": "2021-02-06 08:00:02.840980+00:00",
+            "event_type": "resolve",
+            "block_event_type": "end",
+            "attributes": "[]"
+        },
+        {
+            "block_height": 3164751,
+            "block_timestamp": "2021-02-06T08:00:02.840980392Z",
+            "block_timestamp_truncated": "2021-02-06 08:00:02.840980+00:00",
+            "event_type": "resolve",
+            "block_event_type": "end",
+            "attributes": "[]"
+        },
+        {
+            "block_height": 3164762,
+            "block_timestamp": "2021-02-06T08:00:36.752320644Z",
+            "block_timestamp_truncated": "2021-02-06 08:00:36.752320+00:00",
+            "event_type": "resolve",
+            "block_event_type": "end",
+            "attributes": "[]"
+        },
+        {
+            "block_height": 3164761,
+            "block_timestamp": "2021-02-06T08:00:33.590384974Z",
+            "block_timestamp_truncated": "2021-02-06 08:00:33.590384+00:00",
+            "event_type": "resolve",
+            "block_event_type": "end",
+            "attributes": "[]"
+        },
+        {
+            "block_height": 3164757,
+            "block_timestamp": "2021-02-06T08:00:21.350044948Z",
+            "block_timestamp_truncated": "2021-02-06 08:00:21.350044+00:00",
+            "event_type": "resolve",
+            "block_event_type": "end",
+            "attributes": "[]"
+        }
+    ]
+}

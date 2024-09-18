@@ -1,0 +1,118 @@
+{
+    "table_name": "logs",
+    "table_fullname": "public-data-finance.crypto_band.logs",
+    "column_names": [
+        "block_height",
+        "block_timestamp",
+        "block_timestamp_truncated",
+        "txhash",
+        "log_index",
+        "msg_index",
+        "log",
+        "events"
+    ],
+    "column_types": [
+        "INT64",
+        "TIMESTAMP",
+        "TIMESTAMP",
+        "STRING",
+        "INT64",
+        "INT64",
+        "STRING",
+        "ARRAY<STRUCT<type STRING, attributes ARRAY<STRUCT<key STRING, value STRING>>>>"
+    ],
+    "nested_column_names": [
+        "block_height",
+        "block_timestamp",
+        "block_timestamp_truncated",
+        "txhash",
+        "log_index",
+        "msg_index",
+        "log",
+        "events",
+        "events.type",
+        "events.attributes",
+        "events.attributes.key",
+        "events.attributes.value"
+    ],
+    "nested_column_types": [
+        "INT64",
+        "TIMESTAMP",
+        "TIMESTAMP",
+        "STRING",
+        "INT64",
+        "INT64",
+        "STRING",
+        "ARRAY<STRUCT<type STRING, attributes ARRAY<STRUCT<key STRING, value STRING>>>>",
+        "STRING",
+        "ARRAY<STRUCT<key STRING, value STRING>>",
+        "STRING",
+        "STRING"
+    ],
+    "description": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+    ],
+    "sample_rows": [
+        {
+            "block_height": 6225920,
+            "block_timestamp": "2021-05-29 08:00:33.379910+00:00",
+            "block_timestamp_truncated": "2021-05-29 08:00:33.379910+00:00",
+            "txhash": "452B5217619824BB82409EAE2033143E622C378C68876450FC4CC5E16813F3E4",
+            "log_index": 0,
+            "msg_index": 0,
+            "log": "",
+            "events": "[{'type': 'message', 'attributes': array([{'key': 'action', 'value': 'report'}], dtype=object)}\n {'type': 'report', 'attributes': array([{'key': 'id', 'value': '5720603'},\n        {'key': 'validator', 'value': 'bandvaloper128dkddh98pfwdxg07t36fxedczthg0p2mdcs42'}],\n       dtype=object)}                                                                        ]"
+        },
+        {
+            "block_height": 6225920,
+            "block_timestamp": "2021-05-29 08:00:33.379910+00:00",
+            "block_timestamp_truncated": "2021-05-29 08:00:33.379910+00:00",
+            "txhash": "15D86469445C9C7B342110F70F811A0E510D6BF3621CFE75F198E1875B7CBBA4",
+            "log_index": 0,
+            "msg_index": 0,
+            "log": "",
+            "events": "[{'type': 'message', 'attributes': array([{'key': 'action', 'value': 'report'}], dtype=object)}\n {'type': 'report', 'attributes': array([{'key': 'id', 'value': '5720605'},\n        {'key': 'validator', 'value': 'bandvaloper1zm5p8gg3ugjcdwz9yrxaf6fdptxa4gw04rplr9'}],\n       dtype=object)}                                                                        ]"
+        },
+        {
+            "block_height": 6225920,
+            "block_timestamp": "2021-05-29 08:00:33.379910+00:00",
+            "block_timestamp_truncated": "2021-05-29 08:00:33.379910+00:00",
+            "txhash": "7F1ADDA5FCB50693101C842A683E2D8837E29947CA7E1BCA3A6F4CC019EC0A5C",
+            "log_index": 0,
+            "msg_index": 0,
+            "log": "",
+            "events": "[{'type': 'message', 'attributes': array([{'key': 'action', 'value': 'report'}], dtype=object)}\n {'type': 'report', 'attributes': array([{'key': 'id', 'value': '5720599'},\n        {'key': 'validator', 'value': 'bandvaloper14kn0kk33szpwus9nh8n87fjel8djx0y0wz502z'}],\n       dtype=object)}                                                                        ]"
+        },
+        {
+            "block_height": 6225920,
+            "block_timestamp": "2021-05-29 08:00:33.379910+00:00",
+            "block_timestamp_truncated": "2021-05-29 08:00:33.379910+00:00",
+            "txhash": "C9C8E899EE91DA19E827A77C0D4972F82F672F92C359EC56AC8E83AD03CEDE2C",
+            "log_index": 0,
+            "msg_index": 0,
+            "log": "",
+            "events": "[{'type': 'message', 'attributes': array([{'key': 'action', 'value': 'report'}], dtype=object)}\n {'type': 'report', 'attributes': array([{'key': 'id', 'value': '5720603'},\n        {'key': 'validator', 'value': 'bandvaloper1ycs4g7xu8wmf7n4vwwtfsvhtfm7tekvwk34rxz'}],\n       dtype=object)}                                                                        ]"
+        },
+        {
+            "block_height": 6225920,
+            "block_timestamp": "2021-05-29 08:00:33.379910+00:00",
+            "block_timestamp_truncated": "2021-05-29 08:00:33.379910+00:00",
+            "txhash": "66F5EF77FAD7DA241211E0CEA87D09C628058E6C1175F70FFB611D248051381A",
+            "log_index": 0,
+            "msg_index": 0,
+            "log": "",
+            "events": "[{'type': 'message', 'attributes': array([{'key': 'action', 'value': 'report'}], dtype=object)}\n {'type': 'report', 'attributes': array([{'key': 'id', 'value': '5720601'},\n        {'key': 'validator', 'value': 'bandvaloper14kn0kk33szpwus9nh8n87fjel8djx0y0wz502z'}],\n       dtype=object)}                                                                        ]"
+        }
+    ]
+}
