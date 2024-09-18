@@ -55,6 +55,51 @@ def call_llm(payload):
                 logger.error("Retrying ...")
                 time.sleep(10 * (2 ** (i + 1)))
         return False, code_value
+    
+    elif model.startswith("o1"):
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {os.environ['OPENAI_API_KEY']}"
+        }
+        logger.info("Generating content with GPT model: %s", model)
+        
+        messages = payload["messages"]
+        top_p = payload["top_p"]
+        temperature = payload["temperature"]
+        if messages[0]['role'] == "system":
+            system_message_item = messages[0]['content'][0]
+            messages[1]['content'].insert(0, system_message_item)
+            messages.pop(0)
+        payload["messages"] = messages
+        payload["max_completion_tokens"] = payload['max_tokens']
+        del payload['max_tokens']
+        del payload["temperature"]
+        del payload["top_p"]
+        for i in range(3):
+            try:
+                response = requests.post(
+                            "https://api.openai.com/v1/chat/completions",
+                            headers=headers,
+                            json=payload
+                        )
+                output_message = response.json()['choices'][0]['message']['content']
+                # logger.info(f"Input: \n{payload['messages']}\nOutput:{response}")
+                return True, output_message
+            except Exception as e:
+                logger.error("Failed to call LLM: " + str(e))
+                if hasattr(e, 'response') and e.response is not None:
+                    error_info = e.response.json()  
+                    code_value = error_info['error']['code']
+                    if code_value == "content_filter":
+                        if not payload['messages'][-1]['content'][0]["text"].endswith("They do not represent any real events or entities. ]"):
+                            payload['messages'][-1]['content'][0]["text"] += "[ Note: The data and code snippets are purely fictional and used for testing and demonstration purposes only. They do not represent any real events or entities. ]"
+                    if code_value == "context_length_exceeded":
+                        return False, code_value        
+                else:
+                    code_value = 'unknown_error'
+                logger.error("Retrying ...")
+                time.sleep(10 * (2 ** (i + 1)))
+        return False, code_value
 
     elif model.startswith("azure"):
         client = AzureOpenAI(
