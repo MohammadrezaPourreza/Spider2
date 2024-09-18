@@ -3,7 +3,7 @@ import os
 import pandas as pd
 from google.cloud import bigquery
 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "bigquery_credential.json"
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/workspace/bigquery_credential.json"
 client = bigquery.Client()
 
 query = f\"\"\"
@@ -33,7 +33,7 @@ import os
 import pandas as pd
 from google.cloud import bigquery
 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "bigquery_credential.json"
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/workspace/bigquery_credential.json"
 client = bigquery.Client()
 
 query = f\"\"\"
@@ -60,7 +60,7 @@ import os
 import pandas as pd
 from google.cloud import bigquery
 import json
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "bigquery_credential.json"
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/workspace/bigquery_credential.json"
 client = bigquery.Client()
 
 query = f\"\"\"
@@ -93,7 +93,7 @@ import os
 import pandas as pd
 from google.cloud import bigquery
 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "bigquery_credential.json"
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/workspace/bigquery_credential.json"
 client = bigquery.Client()
 
 sql_query = f\"\"\"{sql_query}\"\"\"

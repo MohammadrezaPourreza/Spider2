@@ -5,6 +5,7 @@ import logging
 import os
 import random
 import sys
+import glob
 
 from tqdm import tqdm
 
@@ -121,7 +122,6 @@ def test(
     assert os.path.exists(args.test_path) and args.test_path.endswith(".jsonl"), f"Invalid test_path, must be a valid jsonl file: {args.test_path}"
     with open(args.test_path, "r") as f:
         task_configs = [json.loads(line) for line in f]
-    
 
         
     if args.example_name != "":
@@ -186,9 +186,18 @@ def test(
         with open(os.path.join(output_dir, "spider/result.json"), "w") as f:
             json.dump(spider_result, f, indent=2)
         
+        # Delete sqlite files
+        sqlite_files = glob.glob(os.path.join(output_dir, '*.sqlite'))
+        for file_path in sqlite_files:
+            try:
+                os.remove(file_path)
+                print(f"Deleted: {file_path}")
+            except Exception as e:
+                print(f"Error deleting {file_path}: {e}")
+        
+        
         logger.info("Finished %s", instance_id)
         env.close()
-
 
 
 

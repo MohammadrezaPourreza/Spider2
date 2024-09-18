@@ -17,7 +17,8 @@ BigQuery-Query / Snowflake-Query: Requires querying the BigQuery / Snowflake dat
 # Bigquery-Query
 If you find that the task is requiring a query to the BigQuery database,
 1. You MUST Check query.py first, then consult README.md for guidance.
-2. Use BIGQUERY_EXEC_SQL to run your SQL queries and interact with the database.
+2. Then you should explore the `DB_schema` folder, which contains the schema information of the databases. `DDL.csv` contains the DDL of one database, each JSON file contains the schema and sample rows of one table. Check DDL.csv first, then selectively view some json files.
+2. Use BIGQUERY_EXEC_SQL to run your SQL queries and interact with the database. Do not use this action to query schema information; the schema information is all stored in the DB_schema folder. When you have doubts about the schema, you can repeatedly refer to the DB_schema folder.
 3. Be prepared to write multiple SQL queries to find the correct answer. Once it makes sense, consider it resolved.
 4. Focus on SQL queries rather than frequently using Bash commands like grep and cat, though they can be used when necessary.
 5. If you encounter an SQL error, reconsider the database information and your previous queries, then adjust your SQL accordingly. Don't output same SQL queries repeatedly!!!!
