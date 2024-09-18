@@ -23,7 +23,7 @@ logger = logging.getLogger("api-llms")
 def call_llm(payload):
     model = payload["model"]
     stop = ["Observation:","\n\n\n\n","\n \n \n"]
-    if model.startswith("gpt"):
+    if model.startswith("gpt") or model.startswith("o1"):
         headers = {
             "Content-Type": "application/json",
             "Authorization": f"Bearer {os.environ['OPENAI_API_KEY']}"
