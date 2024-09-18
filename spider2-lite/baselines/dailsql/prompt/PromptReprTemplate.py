@@ -37,10 +37,7 @@ class SQLPrompt(BasicPrompt):
     plan_info = "/* A plan that is useful for guiding the generation of components of a complete SQL query: */\n" \
                       "{}"
     
-    # TODO NEXT: specify different SQL dialect (bq, sqlite, snowflake) here.
-    # TODO DASAP 硬编码 
-    # template_question = "/* Answer the following with a Google BigQuery SQL statement without any explanation and don't use ```sql```: {} */"
-    # template_question = "/* Answer the following with a Sqlite SQL statement without any explanation and don't use ```sql```: {} */"
+    # specify different SQL dialect (bq, sqlite, snowflake) here.
     template_question = "/* Answer the following with a {} SQL statement without any explanation and don't use ```sql```: {} */"
     template_question_optimized = "/* Generate a {} SQL statement to answer the following question, ensuring that the syntax and functions are appropriate for {}. No explanation is required and don't use ```sql```: {} */"
         

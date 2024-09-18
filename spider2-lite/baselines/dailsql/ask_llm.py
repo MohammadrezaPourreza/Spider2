@@ -1,4 +1,4 @@
-# import debugpy; debugpy.connect(("127.0.0.1", 5688))
+# import debugpy; debugpy.connect(("127.0.0.1", 5684))
 import argparse
 import os
 import json
@@ -10,7 +10,7 @@ from llm.chatgpt import init_chatgpt, ask_llm
 from utils.enums import LLM
 from torch.utils.data import DataLoader
 
-from utils.post_process import process_duplication, get_sqls, get_sqls_without_exec
+from utils.post_process import process_duplication, get_sqls
 
 
 
@@ -33,11 +33,12 @@ if __name__ == '__main__':
     parser.add_argument("--temperature", type=float, default=0)
     parser.add_argument("--mini_index_path", type=str, default="")
     parser.add_argument("--batch_size", type=int, default=1)
-    parser.add_argument("--n", type=int, default=5, help="Size of self-consistent set")  
-    parser.add_argument("--db_dir", type=str, default=None)
+    parser.add_argument("--n", type=int, default=1, help="Size of self-consistent set")  
+    parser.add_argument("--db_dir", type=str, default="../../resource/databases/spider2-localdb")
 
     parser.add_argument('--max_tokens', type=int, default=1000)  # since spider2 is challenging
 
+    parser.add_argument('--post_mode', type=str, choices=['pass@n', 'consistency@n', 'consistency-from-generated-pass@n', None], default=None)
     parser.add_argument("--is_sql_debug", action="store_true", default=False)
     args = parser.parse_args()
 
@@ -75,13 +76,34 @@ if __name__ == '__main__':
     question_loader = DataLoader(questions, batch_size=args.batch_size, shuffle=False, drop_last=False)
 
     token_cnt = 0
-    results_json = []
 
     for i, batch in enumerate(tqdm(question_loader)):
         if i < args.start_index:
             continue
         if i >= args.end_index:
             break
+
+        if args.post_mode == 'consistency-from-generated-pass@n':  # load the saved sql from the output of pass@n, as the input of self-consistency
+            cur_db_ids = db_ids[i * args.batch_size: i * args.batch_size + len(batch)]
+            results = []
+            for db_id, instance_id in zip(cur_db_ids, batch["instance_id"]):
+                result = {
+                    'db_id': db_id,
+                    'p_sqls': [],
+                    'instance_id': instance_id
+                }
+                for n in range(args.n):
+                    sql_file_path = os.path.join(submit_folder, f"{instance_id}@{n}.sql")
+                    with open(sql_file_path, "r") as sql_file:
+                        sql_content = sql_file.read().strip()
+                        result['p_sqls'].append(sql_content)
+
+                final_sql = get_sqls(result, args.n, args.db_dir, instance_id)
+                with open(os.path.join(submit_folder, f"{instance_id}.sql"), "w") as submit_file:
+                    submit_file.write(final_sql)
+            continue  # skip the following code
+
+
         try:
             res = ask_llm(args.model, batch["prompt"], args.temperature, args.n, args.max_tokens)
         except openai.error.InvalidRequestError:
@@ -100,15 +122,12 @@ if __name__ == '__main__':
                 # if not sql.startswith("SELECT"):
                 #     sql = "SELECT " + sql
                 
-                # output to .json
-                results_json.append({
-                    "instance_id": instance_id,
-                    "sql": sql
-                })
                 # output to .sql
                 with open(os.path.join(submit_folder, f"{instance_id}.sql"), "w") as submit_file:
                     submit_file.write(sql)
         else:
+            assert args.post_mode is not None
+            results = []
             cur_db_ids = db_ids[i * args.batch_size: i * args.batch_size + len(batch)]
             for sqls, db_id, instance_id in zip(res["response"], cur_db_ids, batch["instance_id"]):
                 processed_sqls = []
@@ -124,16 +143,20 @@ if __name__ == '__main__':
                     'p_sqls': processed_sqls,
                     'instance_id': instance_id
                 }
-                final_sqls = get_sqls_without_exec([result], args.n, args.db_dir)
-
-                for sql in final_sqls:
-                    # output to .json
-                    results_json.append({
-                        "instance_id": instance_id,
-                        "sql": sql
-                    })
+                
+                if args.post_mode == 'pass@n':
+                    for i in range(args.n):
+                        file_name = f"{instance_id}@{i}.sql"
+                        file_path = os.path.join(submit_folder, file_name)
+                        with open(file_path, "w") as submit_file:
+                            submit_file.write(processed_sqls[i])
+                elif args.post_mode == 'consistency@n':  # exec_result based consistency. work for local and bq
+                    final_sql = get_sqls(result, args.n, args.db_dir, instance_id) 
                     # output to .sql
                     with open(os.path.join(submit_folder, f"{instance_id}.sql"), "w") as submit_file:
-                        submit_file.write(sql)
+                        submit_file.write(final_sql)
+                else:
+                    raise NotImplementedError
 
+                
 

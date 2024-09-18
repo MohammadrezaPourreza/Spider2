@@ -1,6 +1,8 @@
 import asyncio
 import json
 import os
+import os.path as osp
+import sys
 import random
 import re
 import sqlite3
@@ -10,6 +12,12 @@ from itertools import product
 from typing import Tuple, Any, List, Set
 import sqlparse
 import tqdm
+from google.cloud import bigquery
+
+proj_dir = osp.dirname(osp.dirname(osp.abspath(__file__)))
+sys.path = [osp.join(proj_dir, '../')] + sys.path
+
+from utils.post_utils import spider2_postprocess_single_sql
 
 
 # process the case of duplicated output of ChatGPT and GPT4 for SQL Representation with QA or SQLONLY Organization
@@ -144,7 +152,22 @@ def get_cursor_from_path(sqlite_path: str):
     return cursor
 
 
-async def exec_on_db_(sqlite_path: str, query: str) -> Tuple[str, Any]:
+async def exec_on_bigquery_(query: str, instance_id: str) -> Tuple[str, Any]:
+
+    post_query = spider2_postprocess_single_sql(query, instance_id)
+
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "../../evaluation_suite/credentials/bigquery_credential.json"
+    client = bigquery.Client()
+    try:
+        query_job = client.query(post_query)
+        result = query_job.result().to_dataframe()  # type(result): pd.DataFrame
+        result = list(result.itertuples(index=False, name=None))  # align with the format of local-DB: [(xx,xx,xx), (xx,xx,xx)]
+        return "result", result
+    except Exception as e:
+        return "exception", e
+
+
+async def exec_on_db_(query: str, sqlite_path: str) -> Tuple[str, Any]:
     query = replace_cur_year(query)
     cursor = get_cursor_from_path(sqlite_path)
     try:
@@ -160,10 +183,15 @@ async def exec_on_db_(sqlite_path: str, query: str) -> Tuple[str, Any]:
 
 
 async def exec_on_db(
-        sqlite_path: str, query: str, process_id: str = "", timeout: int = TIMEOUT
+        query: str, sqlite_path: str, instance_id: str, process_id: str = "", timeout: int = TIMEOUT
 ) -> Tuple[str, Any]:
     try:
-        return await asyncio.wait_for(exec_on_db_(sqlite_path, query), timeout)
+        if instance_id.startswith('bq'):
+            return await asyncio.wait_for(exec_on_bigquery_(query, instance_id), timeout)
+        elif instance_id.startswith('local'):
+            return await asyncio.wait_for(exec_on_db_(query, sqlite_path), timeout)
+        else:
+            raise NotImplementedError
     except asyncio.TimeoutError:
         return ('exception', TimeoutError)
     except Exception as e:
@@ -181,8 +209,10 @@ def remove_distinct(s):
     return "".join([t for t in toks if t.lower() != "distinct"])
 
 def get_exec_output(
-        db: str,
         sql: str,
+        db: str,
+        instance_id: str,
+
         plug_value: bool = False,
         keep_distinct: bool = False,
         progress_bar_for_each_datapoint: bool = False,
@@ -205,76 +235,53 @@ def get_exec_output(
     else:
         ranger = db_paths
     for db_path in ranger:
-        flag, sql_denotation = asyncio.run(exec_on_db(db_path, sql))
+        flag, sql_denotation = asyncio.run(exec_on_db(sql, db_path, instance_id))
         # print(sql_denotation)
         return flag, sql_denotation
 
 
-def get_sqls(results, select_number, db_dir):
-    db_ids = []
-    all_p_sqls = []
-    for item in results:
-        p_sqls = []
-        db_ids.append(item['db_id'])
-        for i, x in enumerate(item['p_sqls']):
-            p_sqls.append(x)
-            if i+1 == select_number:
+def get_sqls(result, select_number, db_dir, instance_id):
+    p_sqls = []
+    db_id = result['db_id']
+
+    # Collect p_sqls up to select_number
+    for i, x in enumerate(result['p_sqls']):
+        p_sqls.append(x)
+        if i + 1 == select_number:
+            break
+
+    # Processing the collected p_sqls
+    db_path = db_dir + f"/{db_id}.sqlite"  # hard-coded path for the database
+    cluster_sql_list = []
+    map_sql2denotation = {}
+
+    for sql in p_sqls:
+        flag, denotation = get_exec_output(
+            sql,
+            db_path,
+            instance_id
+        )
+        if flag == "exception":
+            continue
+        map_sql2denotation[sql] = denotation
+        denotation_match = False
+
+        for id, cluster in enumerate(cluster_sql_list):
+            center_sql = cluster[0]
+            if result_eq(map_sql2denotation[center_sql], denotation, False):  # exec_result based consistency
+                cluster_sql_list[id].append(sql)
+                denotation_match = True
                 break
-        all_p_sqls.append(p_sqls)
-    chosen_p_sqls = []
-    for i, db_id in enumerate(tqdm.tqdm(db_ids)):
-        p_sqls = all_p_sqls[i]
-        db_path = db_dir + f"/{results[0]['db_id']}.db"  # hard-code
-        cluster_sql_list = []
-        map_sql2denotation = {}
-        for sql in p_sqls:
-            flag, denotation = get_exec_output(  
-                db_path,
-                sql,
-            )
-            if flag == "exception":
-                continue
-            map_sql2denotation[sql] = denotation
-            denotation_match = False
+        if not denotation_match:
+            cluster_sql_list.append([sql])
 
-            for id, cluster in enumerate(cluster_sql_list):
-                center_sql = cluster[0]
-                if result_eq(map_sql2denotation[center_sql], denotation, False):
-                    cluster_sql_list[id].append(sql)
-                    denotation_match = True
-                    break
-            if not denotation_match:
-                cluster_sql_list.append([sql])
-        cluster_sql_list.sort(key=lambda x: len(x), reverse=True)
-        if not cluster_sql_list:
-            chosen_p_sqls.append(p_sqls[0])
-        else:
-            chosen_p_sqls.append(cluster_sql_list[0][0])
+    cluster_sql_list.sort(key=lambda x: len(x), reverse=True)  # majority-vote
 
-    print("save chosen sqls and results...")
+    # print("save chosen sqls and results...")
 
-    return chosen_p_sqls
+    if not cluster_sql_list:
+        return p_sqls[0]
+    else:
+        return cluster_sql_list[0][0]
 
 
-def get_sqls_without_exec(results, select_number, db_dir):
-    assert select_number == 1, "select_number must be 1"
-    db_ids = []
-    all_p_sqls = []
-    
-    for item in results: 
-        p_sqls = []
-        db_ids.append(item['db_id'])
-        for i, x in enumerate(item['p_sqls']):
-            p_sqls.append(x)
-            if i + 1 == select_number:
-                break
-        all_p_sqls.append(p_sqls)
-    
-    chosen_p_sqls = []
-    
-    for i, db_id in enumerate(tqdm.tqdm(db_ids)):
-        p_sqls = all_p_sqls[i]
-        chosen_p_sqls.append(p_sqls[0]) 
-    print("save chosen sqls and results...")
-    
-    return chosen_p_sqls

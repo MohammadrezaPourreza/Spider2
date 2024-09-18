@@ -62,16 +62,13 @@ def ask_llm(model: str, batch: list, temperature: float, n:int, max_tokens):
             break
 
         try:
-            if model in LLM.TASK_COMPLETIONS:
-                # TODO: self-consistency in this mode
-                assert n == 1
-                response = ask_completion(model, batch, temperature, max_tokens)
-            elif model in LLM.TASK_CHAT:
-                # batch size must be 1
-                assert len(batch) == 1, "batch must be 1 in this mode"
-                messages = [{"role": "user", "content": batch[0]}]
-                response = ask_chat(model, messages, temperature, n, max_tokens)
-                response['response'] = [response['response']]
+            assert model in LLM.TASK_CHAT, "LLM.TASK_COMPLETIONS is too old. not supported."
+                
+            # batch size must be 1
+            assert len(batch) == 1, "batch must be 1 in this mode"
+            messages = [{"role": "user", "content": batch[0]}]
+            response = ask_chat(model, messages, temperature, n, max_tokens)  # TODO check args.n for
+            response['response'] = [response['response']]
             break
         except openai.error.RateLimitError as e:
             n_repeat += 1
