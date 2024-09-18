@@ -1,6 +1,2 @@
-Name,Version,URL,NDependencies
-ves-cli,2.0.2,git+https://github.com/ves-team/ves-cli.git,5939
-reant-ui,0.1.0,git+https://github.com/rigo999/Reant.git,5567
-fluent-rn-website,0.3.5,git+https://github.com/microsoft/fluent-site.git,5388
-grabthar-release,1.0.80,git://github.com/krakenjs/grabthar-release.git,5342
-gt-gatsby-wagtail,1.0.10,git+https://github.com/mubarakmaddy/gatsby-source-wagtail.git,5130
+output
+git+https://github.com/ves-team/ves-cli.git
