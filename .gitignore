@@ -8,6 +8,7 @@ get_bigquery_schema.py
 .vscode/*
 
 spider2/resource/databases/local/*.sqlite
+spider2/examples/**/DB_schema/
 
 methods/spider-agent-air/logs/*
 methods/spider-agent-air/output/*
