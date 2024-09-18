@@ -30,8 +30,7 @@ def call_llm(payload):
         }
         logger.info("Generating content with GPT model: %s", model)
         
-        import pdb; pdb.set_trace()
-        
+
         for i in range(3):
             try:
                 response = requests.post(
