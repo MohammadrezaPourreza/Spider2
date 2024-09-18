@@ -186,7 +186,7 @@ async def exec_on_db(
         query: str, sqlite_path: str, instance_id: str, process_id: str = "", timeout: int = TIMEOUT
 ) -> Tuple[str, Any]:
     try:
-        if instance_id.startswith('bq'):
+        if instance_id.startswith('bq') or instance_id.startswith('ga'):
             return await asyncio.wait_for(exec_on_bigquery_(query, instance_id), timeout)
         elif instance_id.startswith('local'):
             return await asyncio.wait_for(exec_on_db_(query, sqlite_path), timeout)

@@ -50,7 +50,7 @@ class SQLPrompt(BasicPrompt):
 
         if example['instance_id'].startswith('local'):
             dialect = 'SQLite'
-        elif example['instance_id'].startswith('bq'):
+        elif example['instance_id'].startswith('bq') or example['instance_id'].startswith('ga'):
             dialect = 'Goole BigQuery'
         elif example['instance_id'].startswith('sf'):
             dialect = 'Snowflake'
