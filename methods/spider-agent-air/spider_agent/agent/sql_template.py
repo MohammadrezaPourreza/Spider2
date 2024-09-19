@@ -115,6 +115,52 @@ except Exception as e:
 """
 
 
+SF_EXEC_SQL_QUERY_TEMPLATE = """
+import os
+import json
+import pandas as pd
+import snowflake.connector
+
+# Load Snowflake credentials
+snowflake_credential = json.load(open("/workspace/snowflake_credential.json"))
+
+# Connect to Snowflake
+conn = snowflake.connector.connect(
+    **snowflake_credential
+)
+cursor = conn.cursor()
+
+# Define the SQL query
+sql_query = f\"\"\"{sql_query}\"\"\"
+
+# Execute the SQL query
+cursor.execute(sql_query)
+
+try:
+    # Fetch the results
+    results = cursor.fetchall()
+    columns = [desc[0] for desc in cursor.description]
+    df = pd.DataFrame(results, columns=columns)
+
+    # Check if the result is empty
+    if df.empty:
+        print("No data found for the specified query.")
+    else:
+        # Save or print the results based on the is_save flag
+        if {is_save}:
+            df.to_csv("{save_path}", index=False)
+            print(f"Results saved to {save_path}")
+        else:
+            print(df)
+except Exception as e:
+    print("Error occurred while fetching data: ", e)
+finally:
+    cursor.close()
+    conn.close()
+"""
+
+
+
 LOCAL_SQL_TEMPLATE = """
 import pandas as pd
 import os

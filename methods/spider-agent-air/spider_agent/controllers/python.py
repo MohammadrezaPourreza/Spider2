@@ -8,7 +8,7 @@ import os
 import ast
 import tempfile
 import platform
-from spider_agent.agent.sql_template import LOCAL_SQL_TEMPLATE, BQ_GET_TABLES_TEMPLATE, BQ_GET_TABLE_INFO_TEMPLATE, BQ_SAMPLE_ROWS_TEMPLATE, BQ_EXEC_SQL_QUERY_TEMPLATE
+from spider_agent.agent.sql_template import LOCAL_SQL_TEMPLATE, BQ_GET_TABLES_TEMPLATE, BQ_GET_TABLE_INFO_TEMPLATE, BQ_SAMPLE_ROWS_TEMPLATE, BQ_EXEC_SQL_QUERY_TEMPLATE, SF_EXEC_SQL_QUERY_TEMPLATE
 logger = logging.getLogger("spider_agent.pycontroller")
 
 
@@ -128,6 +128,20 @@ class PythonController:
         save_path = getattr(action, 'save_path', "")
 
         script_content = BQ_EXEC_SQL_QUERY_TEMPLATE.format(
+            sql_query=sql_query, is_save=is_save, save_path=save_path)
+
+        temp_file_path = "temp_sql_script.py" 
+        observation = self.execute_python_file(temp_file_path, script_content)
+        self.execute_command(f"rm {temp_file_path}")
+        if observation.startswith(f'File "{temp_file_path}"'):
+            observation = observation.split("\n", 1)[1]
+        return observation
+    
+    def execute_sf_exec_sql_query(self, action):
+        sql_query, is_save = action.sql_query, action.is_save
+        save_path = getattr(action, 'save_path', "")
+
+        script_content = SF_EXEC_SQL_QUERY_TEMPLATE.format(
             sql_query=sql_query, is_save=is_save, save_path=save_path)
 
         temp_file_path = "temp_sql_script.py" 

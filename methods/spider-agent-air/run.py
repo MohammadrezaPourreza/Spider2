@@ -75,6 +75,8 @@ def config() -> argparse.Namespace:
     parser.add_argument("--plan", action="store_true")
     parser.add_argument("--bq_only", action="store_true")
     parser.add_argument("--local_only", action="store_true")
+    parser.add_argument("--dbt_only", action="store_true")
+    parser.add_argument("--sf_only", action="store_true")
     
     
     args = parser.parse_args()
@@ -146,6 +148,10 @@ def test(
             if not task_config["instance_id"].startswith("local"): continue
         if args.bq_only:
             if not task_config["instance_id"].startswith("bq") and not task_config["instance_id"].startswith("ga"): continue
+        if args.dbt_only:
+            if task_config["instance_id"].startswith("local") or task_config["instance_id"].startswith("bq") or task_config["instance_id"].startswith("ga") or task_config["instance_id"].startswith("sf"): continue
+        if args.sf_only:
+            if not task_config["instance_id"].startswith("sf"): continue
             
         if not args.overwriting and os.path.exists(result_json_path):
             logger.info("Skipping %s", instance_id)

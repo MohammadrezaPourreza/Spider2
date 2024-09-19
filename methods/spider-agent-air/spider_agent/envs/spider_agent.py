@@ -15,7 +15,7 @@ from spider_agent.controllers.python import PythonController
 from spider_agent.controllers.setup import SetupController
 from spider_agent.envs.utils import *
 from spider_agent import configs
-from spider_agent.agent.action import Action, Bash, Terminate, CreateFile, EditFile, LOCAL_DB_SQL, BIGQUERY_EXEC_SQL, BQ_GET_TABLES, BQ_GET_TABLE_INFO, BQ_SAMPLE_ROWS
+from spider_agent.agent.action import Action, Bash, Terminate, CreateFile, EditFile, LOCAL_DB_SQL, BIGQUERY_EXEC_SQL, BQ_GET_TABLES, BQ_GET_TABLE_INFO, BQ_SAMPLE_ROWS, SNOWFLAKE_EXEC_SQL
 import signal
 
 logger = logging.getLogger("spider_agent.env")
@@ -204,6 +204,8 @@ class Spider_Agent_Env(gym.Env):
                     observation = self.controller.execute_bq_sample_rows(action)
                 elif isinstance(action, BIGQUERY_EXEC_SQL):
                     observation = self.controller.execute_bq_exec_sql_query(action)
+                elif isinstance(action, SNOWFLAKE_EXEC_SQL):
+                    observation = self.controller.execute_sf_exec_sql_query(action)
                 elif isinstance(action, LOCAL_DB_SQL):
                     observation = self.execute_sql_action(action)
                 elif isinstance(action, CreateFile):

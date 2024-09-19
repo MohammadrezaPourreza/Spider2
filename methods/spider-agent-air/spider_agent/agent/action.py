@@ -213,22 +213,6 @@ The `save_path` CSV must be under the `/workspace` directory.
 
     @classmethod
     def parse_action_from_text(cls, text: str) -> Optional['BIGQUERY_EXEC_SQL']:
-        # pattern = r'BIGQUERY_EXEC_SQL\(sql_query=(\"\"\"(.*?)\"\"\"|\"(.*?)\"), is_save=(True|False)(, save_path=\"(.*?)\")?\)'
-        # matches = re.findall(pattern, text, flags=re.DOTALL)
-        # if matches:
-        #     for match in matches:
-
-        #         sql_query_multiline, sql_query_single, is_save, save_path = match[1], match[2], match[3], match[5]
-
-        #         sql_query = sql_query_multiline if sql_query_multiline else sql_query_single
-        #         sql_query = sql_query.strip().strip('"').strip("'")
-        #         if save_path is None:
-        #             save_path = ""
-        #         else:
-        #             save_path = save_path.strip().strip('"').strip("'")
-        #         is_save = is_save.strip().lower() == 'true'
-        #         return cls(sql_query=sql_query, is_save=is_save, save_path=save_path)
-        # return None
         pattern = r'BIGQUERY_EXEC_SQL\(sql_query=(?P<quote>\"\"\"|\"|\'|\"\"|\'\')(.*?)(?P=quote), is_save=(True|False)(, save_path=(?P<quote2>\"|\'|\"\"|\'\')(.*?)(?P=quote2))?\)'
         
         match = re.search(pattern, text, flags=re.DOTALL)
@@ -245,6 +229,46 @@ The `save_path` CSV must be under the `/workspace` directory.
     def __repr__(self) -> str:
         save_info = f', save_path="{self.save_path}"' if self.is_save else ""
         return f'BIGQUERY_EXEC_SQL(sql_query="{self.sql_query}", is_save={self.is_save}{save_info})'
+
+
+
+@dataclass
+class SNOWFLAKE_EXEC_SQL(Action):
+    action_type: str = field(default="execute_snowflake_SQL", init=False, repr=False, metadata={"help": 'type of action, c.f., "exec_sf_sql"'})
+    sql_query: str = field(metadata={"help": 'SQL query to execute'})
+    is_save: bool = field(metadata={"help": 'whether to save result to CSV'})
+    save_path: str = field(default=None, metadata={"help": 'path where the output CSV file is saved if is_save is True'})
+
+    @classmethod
+    def get_action_description(cls) -> str:
+        return """
+## SNOWFLAKE_EXEC_SQL Action
+* Signature: SNOWFLAKE_EXEC_SQL(sql_query="SELECT * FROM your_table", is_save=True, save_path="/workspace/output_file.csv")
+* Description: Executes a SQL query on Snowflake. If `is_save` is True, the results are saved to a specified CSV file; otherwise, results are printed.
+If you estimate that the number of returned rows is small, you can set is_save=False, to directly view the results. If you estimate that the number of returned rows is large, be sure to set is_save = True.
+The `save_path` CSV must be under the `/workspace` directory.
+* Examples:
+  - Example1: SNOWFLAKE_EXEC_SQL(sql_query="SELECT count(*) FROM sales", is_save=False)
+  - Example2: SNOWFLAKE_EXEC_SQL(sql_query="SELECT user_id, sum(purchases) FROM transactions GROUP BY user_id", is_save=True, save_path="/workspace/result.csv")
+"""
+
+    @classmethod
+    def parse_action_from_text(cls, text: str) -> Optional['SNOWFLAKE_EXEC_SQL']:
+        pattern = r'SNOWFLAKE_EXEC_SQL\(sql_query=(?P<quote>\"\"\"|\"|\'|\"\"|\'\')(.*?)(?P=quote), is_save=(True|False)(, save_path=(?P<quote2>\"|\'|\"\"|\'\')(.*?)(?P=quote2))?\)'
+        
+        match = re.search(pattern, text, flags=re.DOTALL)
+        if match:
+            sql_query = match.group(2).strip()  # Capturing the SQL query part
+            is_save = match.group(3).strip().lower() == 'true'  # Determining is_save
+            save_path = match.group(6) if match.group(6) else ""  # Optional save_path handling
+            
+            return cls(sql_query=sql_query, is_save=is_save, save_path=save_path)
+        return None
+
+    def __repr__(self) -> str:
+        save_info = f', save_path="{self.save_path}"' if self.is_save else ""
+        return f'SNOWFLAKE_EXEC_SQL(sql_query="{self.sql_query}", is_save={self.is_save}{save_info})'
+
 
     
     
