@@ -13,6 +13,7 @@ from google.cloud import bigquery
 import shutil
 import sqlite3
 from tqdm import tqdm
+import snowflake.connector
 
 def load_jsonl_to_dict(jsonl_file):
     data_dict = {}
@@ -105,24 +106,50 @@ def get_bigquery_sql_result(sql_query, is_save, save_dir=None, file_name="result
 
 
     try:
-      query_job = client.query(sql_query)
-      results = query_job.result().to_dataframe() 
-      if results.empty:
-        print("No data found for the specified query.")
-        results.to_csv(os.path.join(save_dir, file_name), index=False)
-        return None, None
-      else:
-        if is_save:
+        query_job = client.query(sql_query)
+        results = query_job.result().to_dataframe() 
+        if results.empty:
+            print("No data found for the specified query.")
             results.to_csv(os.path.join(save_dir, file_name), index=False)
             return None, None
         else:
-            value = results.iat[0, 0]
-            return value, None
+            if is_save:
+                results.to_csv(os.path.join(save_dir, file_name), index=False)
+                return None, None
+            else:
+                value = results.iat[0, 0]
+                return value, None
     except Exception as e:
         print("Error occurred while fetching data: ", e)  
         return False, str(e)
     return True, None
-      
+
+
+def get_snowflake_sql_result(sql_query, is_save, save_dir=None, file_name="result.csv"):
+    """
+    is_save = True, output a 'result.csv'
+    if_save = False, output a string
+    """
+    snowflake_credential = json.load(open('snowflake_credential.json'))
+    conn = snowflake.connector.connect(
+        **snowflake_credential
+    )
+    cursor = conn.cursor()
+    try:
+        cursor.execute(sql_query)
+        results = cursor.fetchall()
+        columns = [desc[0] for desc in cursor.description]
+        df = pd.DataFrame(results, columns=columns)
+        if df.empty:
+            print("No data found for the specified query.")
+        else:
+            if is_save:
+                df.to_csv(os.path.join(save_dir, file_name), index=False)
+                return None, None
+    except Exception as e:
+        print("Error occurred while fetching data: ", e)  
+        return False, str(e)
+
 
 def get_sqlite_result(db_path, query, save_dir=None, file_name="result.csv"):
     conn = sqlite3.connect(db_path)
@@ -233,7 +260,45 @@ def evaluate_spider2sql(args):
                         error_info = 'Python Script Error:' + str(e)
                     if score == 0 and error_info is None:
                         error_info = 'Result Error'
+            elif id.startswith("sf"):
+                exe_flag, dbms_error_info = get_snowflake_sql_result(pred_sql_query, True, "temp", f"{id}_pred.csv")  
+                if exe_flag == False: 
+                    score = 0
+                    error_info = dbms_error_info
+                else:                    
+                    pred_pd = pd.read_csv(os.path.join("temp", f"{id}_pred.csv"))  
+                    if '_' in id:
+                        pattern = re.compile(rf'^{re.escape(id)}(_[a-z])?\.csv$')
+                    else:
+                        pattern = re.compile(rf'^{re.escape(id)}(_[a-z])?\.csv$')
                         
+                    if 'temporal' in eval_standard_dict[id] and eval_standard_dict[id]['temporal']:
+                        gold_sql_query = open(os.path.join(gold_sql_dir, f"{id}.sql")).read()
+                        exe_flag, dbms_error_info = get_snowflake_sql_result(gold_sql_query, True, "temp", f"{id}_gold.csv")
+                        if exe_flag == False: 
+                            score = 0
+                            error_info = dbms_error_info
+                        else:
+                            gold_pd = pd.read_csv(os.path.join("temp", f"{id}_gold.csv"))
+                            score = compare_pandas_table(pred_pd, gold_pd, eval_standard_dict.get(id)['condition_cols'], eval_standard_dict.get(id)['ignore_order'])
+                    else:
+                        all_files = os.listdir(gold_result_dir)
+                        csv_files = [file for file in all_files if pattern.match(file)]
+                        if len(csv_files) == 1:
+                            gold_pd = pd.read_csv(os.path.join(gold_result_dir, f"{id}.csv"))
+                            try:
+                                score = compare_pandas_table(pred_pd, gold_pd, eval_standard_dict.get(id)['condition_cols'], eval_standard_dict.get(id)['ignore_order'])
+                            except Exception as e:
+                                print(f"An error occurred: {e}")
+                                score = 0
+                                error_info = 'Python Script Error:' + str(e)
+                            if score == 0 and error_info is None:
+                                error_info = 'Result Error'     
+                        elif len(csv_files) > 1:
+                            gold_pds = [pd.read_csv(os.path.join(gold_result_dir, file)) for file in csv_files]
+                            score = compare_multi_pandas_table(pred_pd, gold_pds, eval_standard_dict.get(id)['condition_cols'], eval_standard_dict.get(id)['ignore_order'])
+                            if score == 0 and error_info is None:
+                                error_info = 'Result Error'                        
         elif mode == "exec_result":
 
             pred_pd = pd.read_csv(os.path.join(args.result_dir, f"{id}.csv"))
