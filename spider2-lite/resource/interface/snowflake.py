@@ -4,17 +4,11 @@ import snowflake.connector
 import json
 
 
-def load_json(filename):
-    with open(filename, 'r') as file:
-        data = json.load(file)
-    return data
 
-
-def query_data(sql_query, database_name, is_save):
-    snowflake_credential = load_json('snowflake_credential.json')
+def query_data(sql_query, is_save):
+    snowflake_credential = json.load(open('snowflake_credential.json'))
     conn = snowflake.connector.connect(
-        **snowflake_credential,
-        database=database_name
+        **snowflake_credential
     )
     cursor = conn.cursor()
     cursor.execute(sql_query)
@@ -43,10 +37,9 @@ if __name__ == "__main__":
             HOUR(TIME_INIT_UTC) AS HOUR, 
             TOT_PRECIPITATION_IN 
         FROM 
-            STANDARD_TILE.FORECAST_DAY 
+            GLOBAL_WEATHER__CLIMATE_DATA_FOR_BI.STANDARD_TILE.FORECAST_DAY 
         WHERE 
             POSTAL_CODE = '32333' 
             AND DAY = 7;
     """
-    database_name = 'GLOBAL_WEATHER__CLIMATE_DATA_FOR_BI'
-    query_data(sql_query, database_name, is_save=False)
+    query_data(sql_query, is_save=False)
