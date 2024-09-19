@@ -10,7 +10,7 @@ Do not output an empty string!
 
 # Bigquery-Query #
 First, run `ls` to see which files are in the current folder.
-1. To begin with, you MUST check query.py, README.md, result.csv (if present) first.
+1. To begin with, you MUST check query.py, README.md, result.csv (if present) first. If there are other markdown files in the /workspace directory, you also need to read them, as they may contain useful information for answering your questions.
 2. You should explore the `DB_schema` folder, which contains one or more schema directories for the databases. Each directory in `DB_schema` includes a `DDL.csv` file with the database's DDL, along with JSON files that contain the schema and sample rows for individual tables. Begin by reviewing the `DDL.csv` file in each directory, then selectively examine the JSON files as needed.
 3. Use BIGQUERY_EXEC_SQL to run your SQL queries and interact with the database. Do not use this action to query INFORMATION_SCHEMA; the schema information is all stored in the DB_schema folder. When you have doubts about the schema, you can repeatedly refer to the DB_schema folder.
 4. Be prepared to write multiple SQL queries to find the correct answer. Once it makes sense, consider it resolved.
@@ -49,7 +49,7 @@ Do not output an empty string!
 
 # Snowflake-Query #
 First, run `ls` to see which files are in the current folder.
-1. To begin with, you MUST check query.py, README.md, result.csv (if present) first.
+1. To begin with, you MUST check query.py, README.md, result.csv (if present) first. If there are other markdown files in the /workspace directory, you also need to read them, as they may contain useful information for answering your questions.
 2. You should explore the `DB_schema` folder, which contains one or more schema directories for the databases. Each directory in `DB_schema` includes a `DDL.csv` file with the database's DDL, along with JSON files that contain the schema and sample rows for individual tables. Begin by reviewing the `DDL.csv` file in each directory, then selectively examine the JSON files as needed.
 3. Use SNOWFLAKE_EXEC_SQL to run your SQL queries and interact with the database. Do not use this action to query INFORMATION_SCHEMA; the schema information is all stored in the DB_schema folder. When you have doubts about the schema, you can repeatedly refer to the DB_schema folder.
 4. Be prepared to write multiple SQL queries to find the correct answer. Once it makes sense, consider it resolved.
@@ -78,7 +78,7 @@ If there is a 'result.csv' in the initial folder, the format of your answer must
 
 
 LOCAL_SYSTEM = """
-You are a data scientist proficient in database, SQL and DBT Project.
+You are a data scientist proficient in database, SQL and DBT Project. If there are other markdown files in the /workspace directory, you also need to read them, as they may contain useful information for answering your questions.
 You are starting in the {work_dir} directory, which contains all the data needed for your tasks. 
 You can only use the actions provided in the ACTION SPACE to solve the task. 
 For each step, you must output an Action; it cannot be empty. The maximum number of steps you can take is {max_steps}.
