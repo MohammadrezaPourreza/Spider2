@@ -135,7 +135,7 @@ def detect_db_type(file_path):
         except:
             return 'sqlite'
 
-def execute_sql(file_path, command, output_path):
+def execute_sql(file_path, command, output_path_path):
     db_type = detect_db_type(file_path)
     
     # Make sure the file path is correct
@@ -157,9 +157,9 @@ def execute_sql(file_path, command, output_path):
         df = pd.read_sql_query(command, conn)
         
         # Check if the output should be saved to a CSV file or printed directly
-        if output_path.lower().endswith(".csv"):
-            df.to_csv(output_path, index=False)
-            print(f"Output saved to: {{output_path}}")
+        if output_path_path.lower().endswith(".csv"):
+            df.to_csv(output_path_path, index=False)
+            print(f"Output saved to: {{output_path_path}}")
         else:
             print(df)
     except Exception as e:
@@ -169,9 +169,9 @@ def execute_sql(file_path, command, output_path):
         conn.close()
 
 # Example usage
-file_path = "{{file_path}}"    # Path to your database file
-command = "{{sql_command}}"    # SQL command to be executed
-output_path = "{{output_path}}"# Path to save the output as a CSV or "directly"
+file_path = "{file_path}"    # Path to your database file
+command = f\"\"\"{sql_command}\"\"\"    # SQL command to be executed
+output_path = "{output_path}"# Path to save the output as a CSV or "directly"
 
 execute_sql(file_path, command, output_path)
 """

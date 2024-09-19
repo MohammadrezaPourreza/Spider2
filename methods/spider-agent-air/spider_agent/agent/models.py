@@ -54,7 +54,7 @@ def call_llm(payload):
                 else:
                     code_value = 'unknown_error'
                 logger.error("Retrying ...")
-                time.sleep(10 * (2 ** (i + 1)))
+                time.sleep(4 * (2 ** (i + 1)))
         return False, code_value
     
     elif model.startswith("o1"):
@@ -82,7 +82,7 @@ def call_llm(payload):
                 o1_messages.append(o1_message)
 
         payload["messages"] = o1_messages
-        payload["max_completion_tokens"] = payload['max_tokens']
+        payload["max_completion_tokens"] = 10000
         del payload['max_tokens']
         del payload["temperature"]
         del payload["top_p"]

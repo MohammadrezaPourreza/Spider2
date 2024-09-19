@@ -173,11 +173,11 @@ class LOCAL_DB_SQL(Action):
     def get_action_description(cls) -> str:
         return """
 ## SQL Action
-* Signature: LOCAL_DB_SQL(file_path="database.db", command="sql_command", output="path/to/output_file.csv" or "direct")
+* Signature: LOCAL_DB_SQL(file_path="database.sqlite", command="sql_command", output="path/to/output_file.csv" or "direct")
 * Description: Executes an SQL command on the specified database file(SQLITE or Duckdb). If `output` is set to a file path, the results are saved to this CSV file; if set to 'direct', results are displayed directly.
 * Examples:
-  - Example1: LOCAL_DB_SQL(file_path="data.db", command="SELECT name FROM sqlite_master WHERE type='table'", output="directly")
-  - Example2: LOCAL_DB_SQL(file_path="data.duckdb", command="SELECT * FROM users", output="users_output.csv")
+  - Example1: LOCAL_DB_SQL(file_path="data.sqlite", command="SELECT name FROM sqlite_master WHERE type='table'", output="directly")
+  - Example2: LOCAL_DB_SQL(file_path="data.sqlite", command="SELECT * FROM users", output="users_output.csv")
 """
     @classmethod
     def parse_action_from_text(cls, text: str) -> Optional[Action]:
@@ -213,22 +213,33 @@ The `save_path` CSV must be under the `/workspace` directory.
 
     @classmethod
     def parse_action_from_text(cls, text: str) -> Optional['BIGQUERY_EXEC_SQL']:
-        pattern = r'BIGQUERY_EXEC_SQL\(sql_query=(\"\"\"(.*?)\"\"\"|\"(.*?)\"), is_save=(True|False)(, save_path=\"(.*?)\")?\)'
-        matches = re.findall(pattern, text, flags=re.DOTALL)
-        if matches:
-            for match in matches:
+        # pattern = r'BIGQUERY_EXEC_SQL\(sql_query=(\"\"\"(.*?)\"\"\"|\"(.*?)\"), is_save=(True|False)(, save_path=\"(.*?)\")?\)'
+        # matches = re.findall(pattern, text, flags=re.DOTALL)
+        # if matches:
+        #     for match in matches:
 
-                sql_query_multiline, sql_query_single, is_save, save_path = match[1], match[2], match[3], match[5]
+        #         sql_query_multiline, sql_query_single, is_save, save_path = match[1], match[2], match[3], match[5]
 
-                sql_query = sql_query_multiline if sql_query_multiline else sql_query_single
-                sql_query = sql_query.strip().strip('"').strip("'")
-                if save_path is None:
-                    save_path = ""
-                else:
-                    save_path = save_path.strip().strip('"').strip("'")
-                is_save = is_save.strip().lower() == 'true'
-                return cls(sql_query=sql_query, is_save=is_save, save_path=save_path)
+        #         sql_query = sql_query_multiline if sql_query_multiline else sql_query_single
+        #         sql_query = sql_query.strip().strip('"').strip("'")
+        #         if save_path is None:
+        #             save_path = ""
+        #         else:
+        #             save_path = save_path.strip().strip('"').strip("'")
+        #         is_save = is_save.strip().lower() == 'true'
+        #         return cls(sql_query=sql_query, is_save=is_save, save_path=save_path)
+        # return None
+        pattern = r'BIGQUERY_EXEC_SQL\(sql_query=(?P<quote>\"\"\"|\"|\'|\"\"|\'\')(.*?)(?P=quote), is_save=(True|False)(, save_path=(?P<quote2>\"|\'|\"\"|\'\')(.*?)(?P=quote2))?\)'
+        
+        match = re.search(pattern, text, flags=re.DOTALL)
+        if match:
+            sql_query = match.group(2).strip()  # Capturing the SQL query part
+            is_save = match.group(3).strip().lower() == 'true'  # Determining is_save
+            save_path = match.group(6) if match.group(6) else ""  # Optional save_path handling
+            
+            return cls(sql_query=sql_query, is_save=is_save, save_path=save_path)
         return None
+
 
 
     def __repr__(self) -> str:

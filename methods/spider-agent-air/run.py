@@ -73,6 +73,8 @@ def config() -> argparse.Namespace:
     # output related
     parser.add_argument("--output_dir", type=str, default="output")
     parser.add_argument("--plan", action="store_true")
+    parser.add_argument("--bq_only", action="store_true")
+    parser.add_argument("--local_only", action="store_true")
     
     
     args = parser.parse_args()
@@ -139,6 +141,12 @@ def test(
         instance_id = experiment_id +"/"+ task_config["instance_id"]
         output_dir = os.path.join(args.output_dir, instance_id)
         result_json_path =os.path.join(output_dir, "spider/result.json")
+
+        if args.local_only:
+            if not task_config["instance_id"].startswith("local"): continue
+        if args.bq_only:
+            if not task_config["instance_id"].startswith("bq") and not task_config["instance_id"].startswith("ga"): continue
+            
         if not args.overwriting and os.path.exists(result_json_path):
             logger.info("Skipping %s", instance_id)
             continue

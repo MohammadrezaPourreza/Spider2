@@ -113,14 +113,31 @@ class PythonController:
         return self.execute_command(create_command)
     
     def execute_sql_code(self,file_path, code, output: str) -> str:
-        script_content = LOCAL_SQL_TEMPLATE.format(file_path=file_path, code=code, output=output)
-        temp_file_path = "/tmp/temp_sql_script.py"
-        script_content = script_content.replace('"', '\\"').replace('`', '\\`').replace('$', '\\$')
-        command = f'echo """{script_content}""" > {temp_file_path} && python3 {temp_file_path}'
-        observation = self.execute_command(command)
-        if observation.startswith('File "/tmp/temp_sql_script.py"'):
+        if code.startswith('""') and code.endswith('""'):
+            code = code[2:-2]
+        script_content = LOCAL_SQL_TEMPLATE.format(file_path=file_path, sql_command=code, output_path=output)
+        temp_file_path = "temp_sql_script.py"
+        observation = self.execute_python_file(temp_file_path, script_content)
+        self.execute_command(f"rm {temp_file_path}")
+        if observation.startswith(f'File "{temp_file_path}"'):
             observation = observation.split("\n", 1)[1]
         return observation
+    
+    def execute_bq_exec_sql_query(self, action):
+        sql_query, is_save = action.sql_query, action.is_save
+        save_path = getattr(action, 'save_path', "")
+
+        script_content = BQ_EXEC_SQL_QUERY_TEMPLATE.format(
+            sql_query=sql_query, is_save=is_save, save_path=save_path)
+
+        temp_file_path = "temp_sql_script.py" 
+        observation = self.execute_python_file(temp_file_path, script_content)
+        self.execute_command(f"rm {temp_file_path}")
+        if observation.startswith(f'File "{temp_file_path}"'):
+            observation = observation.split("\n", 1)[1]
+        return observation
+    
+    
     
     def execute_bq_get_tables(self, action):
         database_name, dataset_name, save_path = action.database_name, action.dataset_name, action.save_path 
@@ -154,18 +171,6 @@ class PythonController:
             observation = observation.split("\n", 1)[1]
         return observation
 
-    def execute_bq_exec_sql_query(self, action):
-        sql_query, is_save = action.sql_query, action.is_save
-        save_path = getattr(action, 'save_path', "")
-
-        script_content = BQ_EXEC_SQL_QUERY_TEMPLATE.format(
-            sql_query=sql_query, is_save=is_save, save_path=save_path)
-        temp_file_path = "temp_sql_script.py" 
-        observation = self.execute_python_file(temp_file_path, script_content)
-        self.execute_command(f"rm {temp_file_path}")
-        if observation.startswith(f'File "{temp_file_path}"'):
-            observation = observation.split("\n", 1)[1]
-        return observation
     
     
     

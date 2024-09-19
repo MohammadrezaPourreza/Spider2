@@ -8,7 +8,7 @@ import uuid
 from http import HTTPStatus
 from io import BytesIO
 from typing import Dict, List
-from spider_agent.agent.prompts import SYS_PROMPT_IN_OUR_CODE, SYS_PROMPT_WITH_PLAN_IN_OUR_CODE
+from spider_agent.agent.prompts import BIGQUERY_SYSTEM, LOCAL_SYSTEM, DBT_SYSTEM, REFERENCE_PLAN_SYSTEM
 from spider_agent.agent.action import Action, Bash, Terminate, CreateFile, EditFile, LOCAL_DB_SQL, BIGQUERY_EXEC_SQL, BQ_GET_TABLES, BQ_GET_TABLE_INFO, BQ_SAMPLE_ROWS
 from spider_agent.envs.spider_agent import Spider_Agent_Env
 from spider_agent.agent.models import call_llm
@@ -50,7 +50,6 @@ class PromptAgent:
         self.history_messages = []
         self.env = None
         self.codes = []
-        self._AVAILABLE_ACTION_CLASSES = [Bash, Terminate, CreateFile, EditFile, BIGQUERY_EXEC_SQL]
         self.work_dir = "/workspace"
         self.use_plan = use_plan
         
@@ -65,11 +64,24 @@ class PromptAgent:
         self.instruction = self.env.task_config['instruction']
         if 'plan' in self.env.task_config:
             self.reference_plan = self.env.task_config['plan']
-        action_space = "".join([action_cls.get_action_description() for action_cls in self._AVAILABLE_ACTION_CLASSES])
+
+        if self.env.task_config['type'] == 'Bigquery':
+            self._AVAILABLE_ACTION_CLASSES = [Bash, Terminate, BIGQUERY_EXEC_SQL, CreateFile, EditFile]
+            action_space = "".join([action_cls.get_action_description() for action_cls in self._AVAILABLE_ACTION_CLASSES])
+            self.system_message = BIGQUERY_SYSTEM.format(work_dir=self.work_dir, action_space=action_space, task=self.instruction, max_steps=self.max_steps)
+        elif self.env.task_config['type'] == 'Local':
+            self._AVAILABLE_ACTION_CLASSES = [Bash, Terminate, CreateFile, EditFile, LOCAL_DB_SQL]
+            action_space = "".join([action_cls.get_action_description() for action_cls in self._AVAILABLE_ACTION_CLASSES])
+            self.system_message = LOCAL_SYSTEM.format(work_dir=self.work_dir, action_space=action_space, task=self.instruction, max_steps=self.max_steps)
+        elif self.env.task_config['type'] == 'DBT':
+            self._AVAILABLE_ACTION_CLASSES = [Bash, Terminate, CreateFile, EditFile, LOCAL_DB_SQL]
+            action_space = "".join([action_cls.get_action_description() for action_cls in self._AVAILABLE_ACTION_CLASSES])
+            self.system_message = DBT_SYSTEM.format(work_dir=self.work_dir, action_space=action_space, task=self.instruction, max_steps=self.max_steps)
+        
         if self.use_plan:
-            self.system_message = SYS_PROMPT_WITH_PLAN_IN_OUR_CODE.format(work_dir=self.work_dir, action_space=action_space, task=self.instruction, max_steps=self.max_steps, plan=self.reference_plan)
-        else:
-            self.system_message = SYS_PROMPT_IN_OUR_CODE.format(work_dir=self.work_dir, action_space=action_space, task=self.instruction, max_steps=self.max_steps)
+            self.system_message += REFERENCE_PLAN_SYSTEM.format(plan=self.reference_plan)
+        
+        
         self.history_messages.append({
             "role": "system",
             "content": [
@@ -221,8 +233,6 @@ class PromptAgent:
                 obs = "Failed to parse action from your response, make sure you provide a valid action."
             else:
                 logger.info("Step %d: %s", step_idx + 1, action)
-                obs, done = self.env.step(action)
-
                 if last_action is not None and last_action == action:
                     if repeat_action:
                         return False, "ERROR: Repeated action"
