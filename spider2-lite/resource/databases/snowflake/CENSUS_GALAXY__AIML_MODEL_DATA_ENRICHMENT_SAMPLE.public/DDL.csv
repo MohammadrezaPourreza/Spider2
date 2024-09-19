@@ -1,20 +1,20 @@
 table_name,description,DDL
-Xref_TractToZip_Residential,,"CREATE TABLE public.Xref_TractToZip_Residential (
+CENSUS_GALAXY__AIML_MODEL_DATA_ENRICHMENT_SAMPLE.public.Xref_TractToZip_Residential,,"CREATE TABLE CENSUS_GALAXY__AIML_MODEL_DATA_ENRICHMENT_SAMPLE.public.public.Xref_TractToZip_Residential (
     FromStateCountyTractID TEXT,
     ToZipCode TEXT,
     ResidentialMappingRatioTZ NUMBER
 );"
-Xref_ZipToTract_Residential,,"CREATE TABLE public.Xref_ZipToTract_Residential (
+CENSUS_GALAXY__AIML_MODEL_DATA_ENRICHMENT_SAMPLE.public.Xref_ZipToTract_Residential,,"CREATE TABLE CENSUS_GALAXY__AIML_MODEL_DATA_ENRICHMENT_SAMPLE.public.public.Xref_ZipToTract_Residential (
     FromZipCode TEXT,
     ToStateCountyTractID TEXT,
     ResidentialMappingRatioZT NUMBER
 );"
-Fact_CensusValues_ACS2021,,"CREATE TABLE public.Fact_CensusValues_ACS2021 (
+CENSUS_GALAXY__AIML_MODEL_DATA_ENRICHMENT_SAMPLE.public.Fact_CensusValues_ACS2021,,"CREATE TABLE CENSUS_GALAXY__AIML_MODEL_DATA_ENRICHMENT_SAMPLE.public.public.Fact_CensusValues_ACS2021 (
     CensusValue FLOAT,
     BlockGroupID TEXT,
     MetricID TEXT
 );"
-Dim_CensusMetrics,,"CREATE TABLE public.Dim_CensusMetrics (
+CENSUS_GALAXY__AIML_MODEL_DATA_ENRICHMENT_SAMPLE.public.Dim_CensusMetrics,,"CREATE TABLE CENSUS_GALAXY__AIML_MODEL_DATA_ENRICHMENT_SAMPLE.public.public.Dim_CensusMetrics (
     MetricCategory TEXT,
     Type TEXT,
     Descriptor2 TEXT,
@@ -26,12 +26,12 @@ Dim_CensusMetrics,,"CREATE TABLE public.Dim_CensusMetrics (
     MetricGroup TEXT,
     UnitMeasureType TEXT
 );"
-Fact_CensusValues_ACS2021_ByZip,,"CREATE TABLE public.Fact_CensusValues_ACS2021_ByZip (
+CENSUS_GALAXY__AIML_MODEL_DATA_ENRICHMENT_SAMPLE.public.Fact_CensusValues_ACS2021_ByZip,,"CREATE TABLE CENSUS_GALAXY__AIML_MODEL_DATA_ENRICHMENT_SAMPLE.public.public.Fact_CensusValues_ACS2021_ByZip (
     CensusValueByZip NUMBER,
     MetricID TEXT,
     ZipCode TEXT
 );"
-LU_GeographyExpanded,,"CREATE TABLE public.LU_GeographyExpanded (
+CENSUS_GALAXY__AIML_MODEL_DATA_ENRICHMENT_SAMPLE.public.LU_GeographyExpanded,,"CREATE TABLE CENSUS_GALAXY__AIML_MODEL_DATA_ENRICHMENT_SAMPLE.public.public.LU_GeographyExpanded (
     ZipCode TEXT,
     ZipCodeCentroidPoint TEXT,
     ZipCodePolygon TEXT,
@@ -43,7 +43,7 @@ LU_GeographyExpanded,,"CREATE TABLE public.LU_GeographyExpanded (
     ZipCodeCentroidLat TEXT,
     PreferredStateName TEXT
 );"
-Dim_CensusGeography,,"CREATE TABLE public.Dim_CensusGeography (
+CENSUS_GALAXY__AIML_MODEL_DATA_ENRICHMENT_SAMPLE.public.Dim_CensusGeography,,"CREATE TABLE CENSUS_GALAXY__AIML_MODEL_DATA_ENRICHMENT_SAMPLE.public.public.Dim_CensusGeography (
     StateAbbrev TEXT,
     BlockGroupCode TEXT,
     BlockGroupPolygon TEXT,
@@ -64,7 +64,7 @@ Dim_CensusGeography,,"CREATE TABLE public.Dim_CensusGeography (
     BlockGroupID TEXT,
     CountyFIPS TEXT
 );"
-Fact_StateBenchmark_ACS2021,,"CREATE TABLE public.Fact_StateBenchmark_ACS2021 (
+CENSUS_GALAXY__AIML_MODEL_DATA_ENRICHMENT_SAMPLE.public.Fact_StateBenchmark_ACS2021,,"CREATE TABLE CENSUS_GALAXY__AIML_MODEL_DATA_ENRICHMENT_SAMPLE.public.public.Fact_StateBenchmark_ACS2021 (
     MetricID TEXT,
     TotalStatePopulation NUMBER,
     StateBenchmarkValue FLOAT,
