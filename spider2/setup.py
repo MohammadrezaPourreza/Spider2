@@ -1,7 +1,7 @@
 import os
 import json
 import shutil
-
+import zipfile
 import argparse
 
 jsonl_path = 'examples/spider2.jsonl'
@@ -33,7 +33,6 @@ def setup_bigquery():
 
 
 def setup_snowflake():
-
     credential_path = 'snowflake_credential.json'
     instance_ids = []
     with open(jsonl_path, 'r') as file:
@@ -46,9 +45,13 @@ def setup_snowflake():
     for instance_id in instance_ids:
         folder_path = f'examples/{instance_id}'
         target_credential_path = os.path.join(folder_path, 'snowflake_credential.json')
+
         if os.path.exists(target_credential_path):
             os.remove(target_credential_path)
+
         shutil.copy(credential_path, target_credential_path)
+        print(f"Copied Snowflake credential for instance {instance_id}.")
+    
     print("Finished Snowflake setup...")
 
 def setup_local():
@@ -83,10 +86,76 @@ def setup_local():
     
 
 def setup_dbt():
+    ###############################################
+    prefixes = ('bq', 'ga', 'local', 'sf')
+
+    def delete_duckdb_files(folder_path):
+        for root, dirs, files in os.walk(folder_path):
+            for file in files:
+                if file.endswith('.duckdb'):
+                    file_path = os.path.join(root, file)
+                    os.remove(file_path)
+                    print(f'Deleted {file_path}')
+
+    examples_path = './examples'
+    for folder in os.listdir(examples_path):
+        folder_path = os.path.join(examples_path, folder)
+        if os.path.isdir(folder_path) and not folder.startswith(prefixes):
+            delete_duckdb_files(folder_path)
+
+    gold_path = './evaluation_suite/gold'
+    for folder in os.listdir(gold_path):
+        folder_path = os.path.join(gold_path, folder)
+        if os.path.isdir(folder_path) and not folder.startswith(prefixes):
+            delete_duckdb_files(folder_path)
+    ################################################    
+    
+    
+    
+    def process_zip_file(zip_path, target_base_path, extraction_dir):
+        with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+            zip_ref.extractall(extraction_dir)
+        
+        for folder in os.listdir(extraction_dir):
+            folder_path = os.path.join(extraction_dir, folder)
+            
+            if folder == "__MACOSX":
+                continue
+            
+            if os.path.isdir(folder_path):
+                folder_id = folder
+                
+                for root, dirs, files in os.walk(folder_path):
+                    for file in files:
+                        if file.endswith('.duckdb'):
+                            target_folder = os.path.join(target_base_path, folder_id)
+                            if not os.path.exists(target_folder):
+                                os.makedirs(target_folder)
+                            
+                            source_file = os.path.join(root, file)
+                            destination_file = os.path.join(target_folder, file)
+                            
+                            shutil.move(source_file, destination_file)
+                            print(f'Moved {source_file} to {destination_file}')
+        
+        shutil.rmtree(extraction_dir)
+        print(f'Deleted extraction directory: {extraction_dir}')
+
+    temp_spider2_dir = './temp_spider2'
+    temp_dbt_gold_dir = './temp_dbt_gold'
+
+    spider2_zip_path = 'spider2-dbt-setup-db.zip'
+    examples_target_path = './examples'
+    process_zip_file(spider2_zip_path, examples_target_path, temp_spider2_dir)
+
+    dbt_gold_zip_path = 'dbt_gold.zip'
+    gold_target_path = './evaluation_suite/gold'
+    process_zip_file(dbt_gold_zip_path, gold_target_path, temp_dbt_gold_dir)
+
     print("Finished dbt setup...")
     
     
-def setup_add_schema():
+def setup_add_schema(args):
     instance_ids = []
     with open(jsonl_path, 'r') as file:
         for line in file:
@@ -100,7 +169,11 @@ def setup_add_schema():
     schema_root = '../spider2-lite/resource/databases/'
             
     for instance_id in instance_ids:
-        if 'bq' not in instance_id and 'ga' not in instance_id and 'local' not in instance_id: continue
+        if not instance_id.startswith(('bq', 'ga', 'sf')): continue
+        if args.bigquery:
+            if not instance_id.startswith(('bq', 'ga')): continue
+        if args.snowflake:
+            if not instance_id.startswith('sf'): continue
         
         example_folder = f'examples/{instance_id}'
         assert os.path.exists(example_folder)
@@ -149,5 +222,5 @@ if __name__ == '__main__':
         setup_dbt()
         
     if args.add_schema:
-        setup_add_schema()
+        setup_add_schema(args)
 
