@@ -96,7 +96,7 @@ def run_evaluation(result_dir, gold_dir):
                     
         if score == 1:
             print(data)   
-            import pdb; pdb.set_trace()   
+            # import pdb; pdb.set_trace()   
                         
         output_dict['score'] = score
         output_list.append(output_dict)
