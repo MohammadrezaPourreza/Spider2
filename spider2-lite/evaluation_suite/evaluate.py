@@ -167,11 +167,12 @@ def evaluate_spider2sql(args):
                        
     gold_ids = list(eval_standard_dict.keys())
     eval_ids = list(set(gold_ids).intersection(pred_ids))
+    eval_ids = sorted(eval_ids)  # sorted, for reproduce result
     output_results = []
     
     
     for id in tqdm(eval_ids):
-
+        print(f">>>Evaluating {id}...")
         error_info = None
         if mode == "sql":
             pred_sql_query = open(os.path.join(pred_result_dir, f"{id}.sql")).read()

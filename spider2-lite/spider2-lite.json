@@ -51,6 +51,7 @@
         "instance_id": "bq029",
         "db": "patents-public-data.patents\npatents-public-data.cpc",
         "question": "Get the number of patent publications and the average number of inventors per patent in the US every five years from 1945 to 2020?",
+        "temporal": "Yes",
         "external_knowledge": null
     },
     {
@@ -64,6 +65,7 @@
         "instance_id": "bq026_1",
         "db": "patents-public-data.patents\npatents-public-data.cpc",
         "question": "In which year did the assignee with the most applications in the patent category 'A61K39' file the most?",
+        "temporal": "Yes",
         "external_knowledge": null
     },
     {
@@ -77,78 +79,91 @@
         "instance_id": "bq033",
         "db": "patents-public-data.patents\npatents-public-data.cpc",
         "question": "How many US patent applications about IoT applications were filed each month from 2008 to 2022?",
+        "temporal": "Yes",
         "external_knowledge": null
     },
     {
         "instance_id": "bq209",
         "db": "patents-public-data.patents\npatents-public-data.cpc",
         "question": "Could you find out which US utility patent granted in January 2010, with a published application, has the most forward citations over the ten years following its application date?",
+        "temporal": "Yes",
         "external_knowledge": null
     },
     {
         "instance_id": "bq027",
         "db": "patents-public-data.patents\npatents-public-data.cpc",
         "question": "For US B2 patents granted in the first seven days of January 2018, tell me the publication number of each patent and the number of backward citations it has received in the SEA category.",
+        "temporal": "Yes",
         "external_knowledge": null
     },
     {
         "instance_id": "bq210",
         "db": "patents-public-data.patents\npatents-public-data.cpc",
         "question": "How many US B2 patents granted between 2015 and 2018 contain claims that do not include the word 'claim'?",
+        "temporal": "Yes",
         "external_knowledge": null
     },
     {
         "instance_id": "bq211",
         "db": "patents-public-data.patents\npatents-public-data.cpc",
         "question": "Among the US utility B2 patents granted in January 2008, how many of them belong to families that have a total of over 300 distinct applications?",
+        "temporal": "Yes",
         "external_knowledge": null
     },
     {
         "instance_id": "bq213",
         "db": "patents-public-data.patents\npatents-public-data.cpc",
         "question": "What is the most common 4-digit IPC code among US B2 utility patents granted in the first seven days of June 2018?",
+        "temporal": "Yes",
         "external_knowledge": "patents_info.md"
     },
     {
         "instance_id": "bq213_1",
         "db": "patents-public-data.patents\npatents-public-data.cpc",
         "question": "For US B2 utility patents granted in April 2015, identify the most frequent 4-digit IPC code for each patent. Then, list the publication numbers and IPC4 codes of patents where this code appears 20 or more times.",
+        "temporal": "Yes",
         "external_knowledge": "patents_info.md"
     },
     {
         "instance_id": "bq214",
         "db": "patents-public-data.patents\npatents-public-data.cpc",
         "question": "For the 'B2' publication granted in January 2017 in the US that received the most forward citations within a month of its filing date, determine the publication number of the most similar patent from the same filing year.",
+        "temporal": "Yes",
         "external_knowledge": "patents_info.md"
     },
     {
         "instance_id": "bq214_1",
         "db": "patents-public-data.patents\npatents-public-data.cpc",
         "question": "d30b2fcf-037c-4e90-9471-9d4a0a9f5e7b",
+        "temporal": "Yes",
         "external_knowledge": "patents_info.md"
     },
     {
         "instance_id": "bq215",
         "db": "patents-public-data.patents\npatents-public-data.cpc",
         "question": "What is the publication number of US patent granted at January 2018, with the highest originality score based on the diversity of 4-digits IPC codes from its backward citations?",
+        "temporal": "Yes",
         "external_knowledge": "patents_info.md"
     },
     {
         "instance_id": "bq221",
         "db": "patents-public-data.patents\npatents-public-data.cpc",
         "question": "Identify the CPC technology areas with the highest exponential moving average of patent filings each year (smoothing factor 0.2), and provide the full title and the best year for each CPC group at level 5.",
+        "temporal": "Yes",
         "external_knowledge": null
     },
     {
         "instance_id": "bq222",
         "db": "patents-public-data.patents",
         "question": "Find the CPC technology areas in Germany with the highest exponential moving average of patent filings each year (smoothing factor 0.1) for patents granted in December 2016. Show me the full title, CPC group and the best year for each CPC group at level 4.",
+        "temporal": "Yes",
         "external_knowledge": null
     },
     {
         "instance_id": "bq223",
         "db": "patents-public-data.patents\npatents-public-data.cpc",
         "question": "Which assignee and primary CPC subclass full title most frequently cite patents assigned to 'AAAA'?",
+        "temporal": "Yes",
         "external_knowledge": null
     },
     {
@@ -162,6 +177,7 @@
         "instance_id": "bq246",
         "db": "patents-public-data.patentsview",
         "question": "Can you figure out the number of forward citations within 3 years from the application date for the patent that has the most backward citations within 3 years from application among all U.S. patents?",
+        "temporal": "Yes",
         "external_knowledge": null
     },
     {
@@ -287,6 +303,12 @@
         "external_knowledge": null
     },
     {
+        "instance_id": "bq359",
+        "db": "bigquery-public-data.github_repos",
+        "question": "List the repository names and commit counts for the top five GitHub repositories with Python as the primary language and the highest number of commits.",
+        "external_knowledge": null
+    },
+    {
         "instance_id": "bq251",
         "db": "bigquery-public-data.github_repos\nspider2-public-data.pypi",
         "question": "Could you find the GitHub URL of the Python package that has the highest number of downloads on PyPi and was updated most recently? Please ensure that only the main repository URL is provided, excluding specific subsections like issues, blobs, pull requests, or tree views.",
@@ -351,6 +373,7 @@
         "instance_id": "bq071",
         "db": "bigquery-public-data.noaa_hurricanes\nbigquery-public-data.geo_us_boundaries",
         "question": "What are the top 10 zip codes of the areas in the United States that have been affected by the most named hurricanes?",
+        "temporal": "Yes",
         "external_knowledge": null
     },
     {
@@ -398,7 +421,7 @@
     },
     {
         "instance_id": "bq050",
-        "db": "bigquery-public-data.geo_us_boundaries\nbigquery-public-data.noaa_gsod\nbigquery-public-data.new_york_citibike\nspider2-public-data.cyclistic.zip_codes",
+        "db": "bigquery-public-data.geo_us_boundaries\nbigquery-public-data.noaa_gsod\nbigquery-public-data.new_york_citibike\nspider2-public-data.cyclistic",
         "question": "Help me look at the total number of bike trips, average trip duration (in minutes), average daily temperature, wind speed, and precipitation when trip starts (rounded to 1 decimal), as well as the month with the most trips (e.g., `4`), categorized by different starting and ending neighborhoods in New York City for the year 2014.",
         "external_knowledge": null
     },
@@ -493,6 +516,18 @@
         "external_knowledge": null
     },
     {
+        "instance_id": "bq057",
+        "db": "spider2-public-data.crypto_bitcoin",
+        "question": "Which month (e.g., 3) in 2021 witnessed the highest percent of Bitcoin volume that took place in CoinJoin transactions? Also give me the percentage of CoinJoins transactions, the average input and output UTXOs ratio, and the proportion of CoinJoin transaction volume for that month (all 1 decimal).",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq068",
+        "db": "bigquery-public-data.crypto_bitcoin_cash",
+        "question": "What are the maximum and minimum balances across all addresses for different address types on Bitcoin Cash during January 2019?",
+        "external_knowledge": null
+    },
+    {
         "instance_id": "bq092",
         "db": "bigquery-public-data.crypto_dash",
         "question": "Tell me the highest and lowest net changes among all addresses and types on Bitcoin Cash as of January, 2019?",
@@ -518,8 +553,38 @@
     },
     {
         "instance_id": "bq065",
-        "db": "public-data-finance.crypto_band.oracle_requests",
+        "db": "public-data-finance.crypto_band",
         "question": "Provide the most recent 10 results of symbols and their corresponding rates, adjusted for the multiplier, from oracle requests with the script ID 3.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq038",
+        "db": "bigquery-public-data.new_york",
+        "question": "Can you list the top 10 stations with the highest proportion of group rides? The group rides are trips that start and end at the same station within a 2-minute window.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq040",
+        "db": "bigquery-public-data.new_york_taxi_trips",
+        "question": "For NYC yellow taxi trips between January 1-7, 2016, excluding pickups from 'EWR' and 'Staten Island', calculate the proportion of trips by tip category for each pickup borough. Show the borough, tip category, and proportion, ensuring trips where the dropoff occurs after the pickup, the passenger count is greater than 0, and trip distance, tip, tolls, MTA tax, fare, and total amount are non-negative.",
+        "external_knowledge": "taxi_tip_rate.md"
+    },
+    {
+        "instance_id": "bq040_1",
+        "db": "bigquery-public-data.new_york_taxi_trips",
+        "question": "For NYC yellow taxi trips between January 1-7, 2016, could you tell me the percentage of no tips in each borough. Ensure trips where the dropoff occurs after the pickup, the passenger count is greater than 0, and trip distance, tip, tolls, MTA tax, fare, and total amount are non-negative.",
+        "external_knowledge": "taxi_tip_rate.md"
+    },
+    {
+        "instance_id": "bq039",
+        "db": "bigquery-public-data.new_york_taxi_trips",
+        "question": "Which are the top 10 taxi trips in New York City from July 1 to July 7, 2016, with more than 5 passengers, a trip distance of at least 10 miles, and a positive fare, ranked by total fare amount? Display the pickup and dropoff zones, trip duration, driving speed in miles per hour, and tip rate.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq054",
+        "db": "bigquery-public-data.new_york",
+        "question": "Can you provide the top 10 tree species in New York, based on the growth in their population from 1995 to 2015, including the counts of trees, the counts of alive and dead trees for both years, and the respective growth values?",
         "external_knowledge": null
     },
     {
@@ -658,6 +723,12 @@
         "external_knowledge": null
     },
     {
+        "instance_id": "bq272",
+        "db": "bigquery-public-data.thelook_ecommerce",
+        "question": "Please provide me with the names of the top three most profitable products for each month between January 2019 and September 2022, excluding any products that were either canceled or returned.",
+        "external_knowledge": null
+    },
+    {
         "instance_id": "bq273",
         "db": "bigquery-public-data.thelook_ecommerce",
         "question": "Could you provide me with the top 5 months where there was the highest increase in profit compared to the previous month for completed orders made by users who came from Facebook, between January 1, 2022, and June 30, 2023?",
@@ -695,6 +766,18 @@
         "external_knowledge": null
     },
     {
+        "instance_id": "bq086",
+        "db": "bigquery-public-data.covid19_open_data\nbigquery-public-data.world_bank_intl_debt\nbigquery-public-data.world_bank_wdi\nbigquery-public-data.world_bank_intl_education\nbigquery-public-data.world_bank_health_population\nbigquery-public-data.world_bank_global_population",
+        "question": "What percentage of each country\u2019s population was confirmed to have COVID-19 as of June 30, 2020?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq089",
+        "db": "bigquery-public-data.covid19_vaccination_access\nbigquery-public-data.census_bureau_acs",
+        "question": "What is the number of vaccine sites per 1000 people for counties in California?",
+        "external_knowledge": null
+    },
+    {
         "instance_id": "bq088",
         "db": "bigquery-public-data.covid19_symptom_search",
         "question": "Can you provide the average levels of anxiety and depression symptoms in the United States for the years 2019 and 2020, and calculate the percentage increase in these symptoms from 2019 to 2020?",
@@ -722,6 +805,12 @@
         "instance_id": "bq061",
         "db": "bigquery-public-data.census_bureau_acs\nbigquery-public-data.geo_census_tracts",
         "question": "Which census tract has witnessed the largest increase in median income between 2015 and 2018 in California? Tell me the tract code.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "bq064",
+        "db": "bigquery-public-data.geo_census_tracts\nbigquery-public-data.geo_us_boundaries\nbigquery-public-data.census_bureau_acs",
+        "question": "Could you calculate the population and average individual income (both rounded to 1 decimal) for each zip code based on U.S. census tract data in 2017? Only include those zip codes within a 5-mile radius of a specific geographic point (47.685833\u00b0N, -122.191667\u00b0W) in Washington and sort the results according to income in descending order.",
         "external_knowledge": null
     },
     {
@@ -831,6 +920,12 @@
         "db": "bigquery-public-data.sunroof_solar",
         "question": "Please provide me with details about the state that has the highest number of buildings suitable for solar installations according to Google Maps data, including the state name, percent of buildings in Google Maps covered by Project Sunroof, total solar energy generation potential and potential carbon dioxide abatement.",
         "external_knowledge": null
+    },
+    {
+        "instance_id": "bq067",
+        "db": "bigquery-public-data.nhtsa_traffic_fatalities",
+        "question": "I want to build a ML model which can predict whether there will be more than one fatality in a crash invloving 2 or more people. Construct a labelled (0 or 1) dataset for me, and the predictors include the state, vehicle type, the number of drunk drivers, day of the week, hour of the day and another two engineered features, whether the accident happened in the work zone and the average absolute difference between travel speed and speed limit. Please use numeric value for each predictor and categorize the speed difference into levels 0 to 4 based on 20MPH increments (lower bound inclusive while upper exclusive).",
+        "external_knowledge": "nhtsa_traffic_fatalities.md"
     },
     {
         "instance_id": "bq352",
@@ -1197,7 +1292,7 @@
     {
         "instance_id": "bq371",
         "db": "spider2-public-data.wide_world_importers",
-        "question": "What is the difference between the maximum and minimum average invoice values across all quarters for the year 2013?",
+        "question": "What is the difference between the maximum and minimum average invoice values across the quarters in the year 2013?",
         "external_knowledge": null
     },
     {
@@ -1423,6 +1518,18 @@
         "external_knowledge": null
     },
     {
+        "instance_id": "local351",
+        "db": "meta_kaggle",
+        "question": "Please find the top giver-and-recipient pairs with the most Kaggle forum upvotes. Display their usernames and the respective number of upvotes they gave to each other.",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local352",
+        "db": "meta_kaggle",
+        "question": "Who is the user with upvotes closest to the average in 2019, and if there's a tie, I want the user with the alphabetically first username.",
+        "external_knowledge": null
+    },
+    {
         "instance_id": "local026",
         "db": "IPL",
         "question": "Please help me find the top 3 bowlers who conceded the maximum runs in a single over, along with the corresponding matches.",
@@ -1432,6 +1539,12 @@
         "instance_id": "local026_1",
         "db": "IPL",
         "question": "Which bowler has the lowest bowling average per wicket taken?",
+        "external_knowledge": null
+    },
+    {
+        "instance_id": "local026_2",
+        "db": "IPL",
+        "question": "Could you show me the average total score of strikers who have scored more than 50 runs in at least one match?",
         "external_knowledge": null
     },
     {
