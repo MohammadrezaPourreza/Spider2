@@ -11,14 +11,32 @@ from prompt.prompt_builder import prompt_factory
 from utils.data_builder import Spider2CForDailSQL_Dataset
 from utils.enums import REPR_TYPE, EXAMPLE_TYPE, SELECTOR_TYPE, LLM
 from utils.utils import cost_estimate
-
+import multiprocessing as mp
+from multiprocessing import Pool
 from tqdm import tqdm
 
 proj_dir = osp.dirname(osp.abspath(__file__))
 
-
-
 sys.path.append("./")
+
+
+
+def process_question(question_json, args, cross_domain):
+    question_format = prompt.format(target=question_json,
+                                    max_seq_len=args.max_seq_len,
+                                    max_ans_len=args.max_ans_len,
+                                    scope_factor=args.scope_factor,
+                                    cross_domain=cross_domain, 
+                                    args=args)
+    question_format['instance_id'] = question_json['instance_id'] 
+    return question_format, question_format["prompt_tokens"]
+
+def collect_result(result):
+    global questions, token_cnt, pbar
+    question_format, prompt_tokens = result
+    questions.append(question_format)
+    token_cnt += prompt_tokens
+    pbar.update(1)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -75,6 +93,9 @@ if __name__ == '__main__':
     parser.add_argument("--use_special_function", action="store_true", default=False)
     parser.add_argument("--use_plan", action="store_true", default=False)
 
+    parser.add_argument("--comment", type=str, default="")
+    parser.add_argument("--processes", type=int, default=120)
+
 
     args = parser.parse_args()
 
@@ -87,27 +108,27 @@ if __name__ == '__main__':
     # select the prompt 
     prompt = prompt_factory(args.prompt_repr, args.k_shot, args.example_type, args.selector_type)(data=data, tokenizer=args.tokenizer)
 
-    # format all questions
+    global questions, token_cnt, pbar
     questions = list()
     token_cnt = 0
-
+    
     # choose split
     func_name = f"get_{args.split}_json"
     cross_domain = args.split == "train"
-    
-    for question_json in tqdm(getattr(data, func_name)()):
-        
-        question_format = prompt.format(target=question_json,
-                                        max_seq_len=args.max_seq_len,
-                                        max_ans_len=args.max_ans_len,
-                                        scope_factor=args.scope_factor,
-                                        cross_domain=cross_domain, 
-                                        args=args)
-        
-        question_format['instance_id'] = question_json['instance_id']  
-        questions.append(question_format)
-        token_cnt += question_format["prompt_tokens"]
 
+    question_loader = getattr(data, func_name)()
+
+    with Pool(processes=args.processes) as pool:
+        with tqdm(total=len(question_loader)) as pbar:
+            for question_json in question_loader:
+                pool.apply_async(
+                    process_question, 
+                    args=(question_json, args, cross_domain),
+                    callback=collect_result
+                )
+            pool.close()
+            pool.join() 
+    
     # cost estimated
     token_cnt = float(token_cnt) / len(questions)
     print(f"Total {len(questions)} questions, {token_cnt} tokens per prompt, {token_cnt / len(questions)} tokens per question")
@@ -139,7 +160,7 @@ if __name__ == '__main__':
     }
     # print(questions[0]['prompt'])  # for debug
     
-    path_generate = f"postprocessed_data/{args.dev}_CTX-{args.max_ans_len}"
+    path_generate = f"postprocessed_data/{args.comment}_{args.dev}_CTX-{args.max_ans_len}"
     os.makedirs(path_generate, exist_ok=True)
     json.dump(task, open(os.path.join(path_generate, "questions.json"), "w"), indent=4)
     
