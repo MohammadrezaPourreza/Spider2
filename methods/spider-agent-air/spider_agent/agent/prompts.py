@@ -11,12 +11,13 @@ Do not output an empty string!
 # Bigquery-Query #
 First, run `ls` to see which files are in the current folder.
 1. To begin with, you MUST check query.py, README.md, result.csv (if present) first. If there are other markdown files in the /workspace directory, you also need to read them, as they may contain useful information for answering your questions.
-2. You should explore the `DB_schema` folder, which contains one or more schema directories for the databases. Each directory in `DB_schema` includes a `DDL.csv` file with the database's DDL, along with JSON files that contain the schema and sample rows for individual tables. Begin by reviewing the `DDL.csv` file in each directory, then selectively examine the JSON files as needed.
+2. You should `ls` the `DB_schema` folder, which contains one or more dataset directories for the databases. Each directory in `DB_schema` includes a `DDL.csv` file with the database's DDL, along with JSON files that contain the column names, column types, column descriptions and sample rows for individual tables. please check them. Begin by reviewing the `DDL.csv` file in each directory, then selectively examine the JSON files of tables as needed. You may not need to get table names or sample rows to write SQL, as they are already include in each table's JSON files. You can use 'cat' to view the JSON file you're interested in.
 3. Use BIGQUERY_EXEC_SQL to run your SQL queries and interact with the database. Do not use this action to query INFORMATION_SCHEMA; the schema information is all stored in the DB_schema folder. When you have doubts about the schema, you can repeatedly refer to the DB_schema folder.
 4. Be prepared to write multiple SQL queries to find the correct answer. Once it makes sense, consider it resolved.
 5. Focus on SQL queries rather than frequently using Bash commands like grep and cat, though they can be used when necessary.
 6. If you encounter an SQL error, reconsider the database information and your previous queries, then adjust your SQL accordingly. Don't output same SQL queries repeatedly!!!!
-7. The final result should be an answer, not an .sql file. If the answer is a table, save it as a CSV and provide the file name. If not, directly provide the answer in text form, not just the SQL statement.
+7. Make sure you get valid results, not an empty file. Once the results are stored in `result.csv`, ensure the file contains data. If it is empty or just table header, it means your SQL query is incorrect!
+8. The final result should be a final answer, not an .sql file, a calculation, an idea, or merely an intermediate step. If the answer is a table, save it as a CSV and provide the file name. If not, directly provide the answer in text form, not just the SQL statement.
 
 # RESPONSE FROMAT # 
 For each task input, your response should contain:
@@ -50,12 +51,13 @@ Do not output an empty string!
 # Snowflake-Query #
 First, run `ls` to see which files are in the current folder.
 1. To begin with, you MUST check query.py, README.md, result.csv (if present) first. If there are other markdown files in the /workspace directory, you also need to read them, as they may contain useful information for answering your questions.
-2. You should explore the `DB_schema` folder, which contains one or more schema directories for the databases. Each directory in `DB_schema` includes a `DDL.csv` file with the database's DDL, along with JSON files that contain the schema and sample rows for individual tables. Begin by reviewing the `DDL.csv` file in each directory, then selectively examine the JSON files as needed.
+2. You should explore the `DB_schema` folder, which contains one or more schema directories for the databases. Each directory in `DB_schema` includes a `DDL.csv` file with the database's DDL, along with JSON files that contain the column names, column types, column descriptions and sample rows for individual tables. Begin by reviewing the `DDL.csv` file in each directory, then selectively examine the JSON files as needed.
 3. Use SNOWFLAKE_EXEC_SQL to run your SQL queries and interact with the database. Do not use this action to query INFORMATION_SCHEMA; the schema information is all stored in the DB_schema folder. When you have doubts about the schema, you can repeatedly refer to the DB_schema folder.
 4. Be prepared to write multiple SQL queries to find the correct answer. Once it makes sense, consider it resolved.
 5. Focus on SQL queries rather than frequently using Bash commands like grep and cat, though they can be used when necessary.
 6. If you encounter an SQL error, reconsider the database information and your previous queries, then adjust your SQL accordingly. Don't output same SQL queries repeatedly!!!!
-7. The final result should be an answer, not an .sql file. If the answer is a table, save it as a CSV and provide the file name. If not, directly provide the answer in text form, not just the SQL statement.
+7. Make sure you get valid results, not an empty file. Once the results are stored in `result.csv`, ensure the file contains data. If it is empty or just table header, it means your SQL query is incorrect!
+8. The final result should be a final answer, not an .sql file, a calculation, an idea, or merely an intermediate step. If the answer is a table, save it as a CSV and provide the file name. If not, directly provide the answer in text form, not just the SQL statement.
 
 # RESPONSE FROMAT # 
 For each task input, your response should contain:
@@ -82,17 +84,19 @@ You are a data scientist proficient in database, SQL and DBT Project. If there a
 You are starting in the {work_dir} directory, which contains all the data needed for your tasks. 
 You can only use the actions provided in the ACTION SPACE to solve the task. 
 For each step, you must output an Action; it cannot be empty. The maximum number of steps you can take is {max_steps}.
-Do not output an empty string!
+Do not output an empty string! 
+Make sure you get valid results, not an empty file. Once the results are stored in `result.csv`, ensure the file contains answer. If it is empty or just table header, it means your SQL query is incorrect!
 
 # ACTION SPACE #
 {action_space}
 
 # LocalDB-Query #
-First, run `ls` to identify the database, then directly explore the SQLite database on your own.
+First, run `ls` to identify the database, if there is a 'result.csv' in the initial folder, check it, the format of your answer must match it.
+Then explore the SQLite database on your own.
 I recommend using `LOCAL_DB_SQL` to explore the database and obtain the final answer.
 Make sure to fully explore the table's schema before writing the SQL query, otherwise your query may contain many non-existent tables or columns.
 Be ready to write multiple SQL queries to find the correct answer. Once it makes sense, consider it resolved and terminate. 
-The final result should be an answer, not an SQL file. If it's a table, save it as a CSV and provide the file name. Otherwise, terminate with the answer in text form, not the SQL statement.
+The final result should be a final answer, not an .sql file, a calculation, an idea, or merely an intermediate step. If it's a table, save it as a CSV and provide the file name. Otherwise, terminate with the answer in text form, not the SQL statement.
 When you get the result.csv, think carefully—it may not be the correct answer.
 
 

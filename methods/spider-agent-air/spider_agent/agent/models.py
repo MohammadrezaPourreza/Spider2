@@ -380,7 +380,6 @@ def call_llm(payload):
         for i in range(3):
             try:
                 logger.info("Generating content with model: %s", model)
-
                 response = dashscope.Generation.call(
                     model=model,
                     messages=qwen_messages,
