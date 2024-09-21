@@ -154,7 +154,7 @@ def setup_dbt():
 
     print("Finished dbt setup...")
     
-    
+error_dbs = []
 def setup_add_schema(args):
     instance_ids = []
     with open(jsonl_path, 'r') as file:
@@ -170,10 +170,6 @@ def setup_add_schema(args):
             
     for instance_id in instance_ids:
         if not instance_id.startswith(('bq', 'ga', 'sf')): continue
-        if args.bigquery:
-            if not instance_id.startswith(('bq', 'ga')): continue
-        if args.snowflake:
-            if not instance_id.startswith('sf'): continue
         
         example_folder = f'examples/{instance_id}'
         assert os.path.exists(example_folder)
@@ -184,17 +180,22 @@ def setup_add_schema(args):
             os.makedirs(dest_folder)
 
         databases = local_map[instance_id].split('\n')
+
         if instance_id.startswith('bq') or instance_id.startswith('ga'):
             for db in databases:
                 src_folder = os.path.join(schema_root, 'bigquery', db)
-                shutil.copytree(src_folder, os.path.join(dest_folder, os.path.basename(src_folder)))
+                try:
+                    shutil.copytree(src_folder, os.path.join(dest_folder, os.path.basename(src_folder)))
+                except:
+                    error_dbs.append(db)
+                    continue
                 print(f"successfully copied {db} to {dest_folder}")
         elif instance_id.startswith('sf'):
             for db in databases:
                 src_folder = os.path.join(schema_root, 'snowflake', db)
                 shutil.copytree(src_folder, os.path.join(dest_folder, os.path.basename(src_folder)))
                 print(f"successfully copied {db} to {dest_folder}")
-        
+    print(f"ERROR_DB\n{list(set(error_dbs))}")
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Setup for Spider 2.0")
@@ -220,7 +221,7 @@ if __name__ == '__main__':
         setup_snowflake()
         setup_local()
         setup_dbt()
-        
+
     if args.add_schema:
         setup_add_schema(args)
 
