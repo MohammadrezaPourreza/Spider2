@@ -1,2 +1,1 @@
 1. please query `bigquery-public-data.open_targets_genetics` database to solve this problem.
-bigquery-public-data.open_targets_genetics
