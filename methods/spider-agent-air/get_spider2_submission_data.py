@@ -65,8 +65,11 @@ def postprocess(args):
             continue
         
         result_folder_root_path = os.path.join(output_dir, instance_id)
-        
         answer_or_path = instance_result_data['result']
+        
+        if answer_or_path.startswith('/workspace'):
+            answer_or_path = answer_or_path.replace('/workspace/','')
+
         
         if answer_or_path == '':
             results_metadata.append({'instance_id': instance_id, 'answer_or_path': '', 'answer_type': 'answer'})
