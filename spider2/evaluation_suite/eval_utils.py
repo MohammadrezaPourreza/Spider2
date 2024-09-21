@@ -213,7 +213,7 @@ def duckdb_match(result: str, gold: str, condition_tabs=None, condition_cols: Li
     
     if condition_tabs is None:
         condition_tabs = get_duckdb_table_names(gold)
-    
+
     gold_tables = [get_duckdb_pandas_table(gold, table_name) for table_name in condition_tabs]
     try:
         pred_tables = [get_duckdb_pandas_table(result, table_name) for table_name in condition_tabs]
