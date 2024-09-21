@@ -16,7 +16,7 @@ class BasicDataset(object):
         self.test_gold = os.path.join(self.path_data, self.test_gold)
         self.train_json = os.path.join(self.path_data, self.train_json)
         self.train_gold = os.path.join(self.path_data, self.train_gold)
-        self.table_json = os.path.join(self.path_data, self.table_json)
+        # self.table_json = os.path.join(self.path_data, self.table_json)
         self.path_test_schema_linking = os.path.join(self.path_data, f"preprocessed_data/{args.dev}/enc/test_schema-linking.jsonl")
         self.path_train_schema_linking = os.path.join(self.path_data, f"preprocessed_data/{args.dev}/enc/train_schema-linking.jsonl")
         if self.mini_test_index_json:
@@ -38,9 +38,7 @@ class BasicDataset(object):
             self.databases = dict()
             # for db_id in os.listdir(self.path_db):
             #     self.databases[db_id] = self.get_tables(db_id)
-            with open(self.table_json) as f:
-                tables = json.load(f)
-            for tj in tqdm(tables, desc="Loading tables.json"):
+            for tj in tqdm(self.table_json, desc="Loading tables.json"):
                 db_id = tj["db_id"]
                 self.databases[db_id] = self.get_tables(db_id)
         return self.databases
@@ -59,7 +57,7 @@ class BasicDataset(object):
         return path_sql
         
     def get_table_json(self):
-        return json.load(open(self.table_json, "r"))
+        return self.table_json
 
     def get_path_db(self, db_id):
         return os.path.join(self.path_db, db_id, f"{db_id}.sqlite")
@@ -239,7 +237,7 @@ class Spider2CForDailSQL_Dataset(BasicDataset):
         self.test_gold = ""  
         self.train_json = "dummy.json"
         self.train_gold = ""  
-        self.table_json = f"preprocessed_data/{args.dev}/tables_preprocessed.json"
+        self.table_json = json.load(open(osp.join(proj_dir, f"preprocessed_data/{args.dev}/tables_preprocessed.json"), 'r', encoding='utf-8'))
         self.mini_test_index_json = None        
 
         super(Spider2CForDailSQL_Dataset, self).__init__(
@@ -251,7 +249,6 @@ class Spider2CForDailSQL_Dataset(BasicDataset):
         return os.path.join(self.path_db, f"{db_id}.db")
 
     def get_tables(self, db_id):
-        tables_json = json.load(open(osp.join(proj_dir, self.table_json), 'r', encoding='utf-8'))
         ret = []
         if isinstance(db_id, str):
             dbs = [db_id]
@@ -259,7 +256,7 @@ class Spider2CForDailSQL_Dataset(BasicDataset):
             dbs = db_id
         for db in dbs:
             if db not in self.databases:
-                tables = get_tables_from_tables_json(db, tables_json)  
+                tables = get_tables_from_tables_json(db, self.table_json)  
                 self.databases[db] = tables
             ret.extend(self.databases[db])
         return ret
