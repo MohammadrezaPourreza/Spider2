@@ -71,11 +71,24 @@ def get_id_doc():
                     continue 
             except:
                 continue
+            
 
             instance_id = values[i][column_names.index('id')]
             doc = values[i][column_names.index('External Document')]
             toks = values[i][column_names.index('#Toks')]
-            id_dict[instance_id] = {"doc": doc, "toks": toks}
+            
+            is_multiple = 0
+            if '\n' in values[i][column_names.index('DB')]:
+                is_multiple = 1
+                
+            path = os.path.join("../../spider2-lite/evaluation_suite/gold_lfy/sql", f"{instance_id}.sql")    
+            sql_content = open(path, 'r').read()
+            
+            is_nested = 0
+            if 'UNNEST' in sql_content:
+                is_nested = 1
+            
+            id_dict[instance_id] = {"doc": doc, "toks": toks, "multiple": is_multiple, "nested": is_nested}
             
     return id_dict
     
@@ -116,6 +129,9 @@ def run_evaluation(result_dir, gold_dir):
     # Find common instance_ids and merge data
     common_instance_ids = set(gold_dict.keys()).intersection(result_dict.keys())
     evaluation_data = [{**gold_dict[id], **result_dict[id]} for id in common_instance_ids]
+    
+    
+    # import pdb; pdb.set_trace()
     
     print(len(evaluation_data))
     
@@ -228,7 +244,7 @@ def run_evaluation(result_dir, gold_dir):
         total = statistics[key]['total_count']  
         count_with_score_1 = statistics[key]['count_with_score_1']  
         percentage = (count_with_score_1 / total * 100) if total > 0 else 0  # Avoid division by zero  
-        output_lines.append(f"{key}: Success Number: {count_with_score_1}, Total count: {total}, Percentage: {percentage:.2f}%")  
+        output_lines.append(f"{key}: Success Number: {count_with_score_1}, Total count: {total}, Success Rate: {percentage:.2f}%")  
 
     print("\n".join(output_lines))  
 
@@ -237,6 +253,18 @@ def run_evaluation(result_dir, gold_dir):
         'doc_present': {'count_with_score_1': 0, 'total_count': 0},  
         'doc_absent': {'count_with_score_1': 0, 'total_count': 0}  
     }  
+    
+    nested_statistics = {  
+        'nested_present': {'count_with_score_1': 0, 'total_count': 0},  
+        'nested_absent': {'count_with_score_1': 0, 'total_count': 0}  
+    }  
+    
+    multiple_statistics = {  
+        'multiple_present': {'count_with_score_1': 0, 'total_count': 0},  
+        'multiple_absent': {'count_with_score_1': 0, 'total_count': 0}  
+    }  
+
+
 
     # Initialize toks classifications  
     toks_classification = {  
@@ -244,16 +272,25 @@ def run_evaluation(result_dir, gold_dir):
         'toks_80_to_160': {'count_with_score_1': 0, 'total_count': 0},  
         'toks_more_160': {'count_with_score_1': 0, 'total_count': 0},  
     }  
-
+    
+    answer_statistics = {  
+        'answer_string': {'count_with_score_1': 0, 'total_count': 0},  
+        'answer_table': {'count_with_score_1': 0, 'total_count': 0}   
+    }  
+    
+    total_number = len(output_list)
     # Iterate through output_list to classify based on score and doc presence  
     for item in output_list:  
         instance_id = item['instance_id']  
         score = item['score']  
-            
+        
         if instance_id in id_dict:  
             attributes = id_dict[instance_id]  
             doc = attributes['doc']  
             toks = int(attributes['toks'])  # Convert toks to integer for comparisons  
+            nested = attributes['nested']  
+            multiple = attributes['multiple']  
+            
             
             # Classification based on doc presence  
             if doc:  
@@ -277,21 +314,63 @@ def run_evaluation(result_dir, gold_dir):
             else:  # toks >= 160  
                 toks_classification['toks_more_160']['total_count'] += 1  
                 if score == 1:  
-                    toks_classification['toks_more_160']['count_with_score_1'] += 1  
+                    toks_classification['toks_more_160']['count_with_score_1'] += 1   
+            
+            # Nested statistics  
+            if nested:  
+                nested_statistics['nested_present']['total_count'] += 1  
+                if score == 1:  
+                    nested_statistics['nested_present']['count_with_score_1'] += 1  
+            else:  
+                nested_statistics['nested_absent']['total_count'] += 1  
+                if score == 1:  
+                    nested_statistics['nested_absent']['count_with_score_1'] += 1  
+            
+            # Multiple statistics  
+            if multiple:  
+                multiple_statistics['multiple_present']['total_count'] += 1  
+                if score == 1:  
+                    multiple_statistics['multiple_present']['count_with_score_1'] += 1  
+            else:  
+                multiple_statistics['multiple_absent']['total_count'] += 1  
+                if score == 1:  
+                    multiple_statistics['multiple_absent']['count_with_score_1'] += 1 
+            
+            # if answer_format:
+            #     answer_statistics['multiple_present']['total_count'] += 1  
+            #     if score == 1:  
+            #         answer_statistics['multiple_present']['count_with_score_1'] += 1  
+            # else:  
+            #     answer_statistics['multiple_absent']['total_count'] += 1  
+            #     if score == 1:  
+            #         answer_statistics['multiple_absent']['count_with_score_1'] += 1   
 
-    print("##############################################################")
-    
+            if item['answer_or_path'].endswith('.csv'):
+                answer_statistics['answer_table']['total_count'] += 1  
+                if score == 1:  
+                    answer_statistics['answer_table']['count_with_score_1'] += 1  
+            else:
+                answer_statistics['answer_string']['total_count'] += 1  
+                if score == 1:  
+                    answer_statistics['answer_string']['count_with_score_1'] += 1
+
+             
+             
+
+    print("##############################################################")  
+
     # Calculate percentages and output the results for statistics  
     output_lines = []  
     for key in statistics:  
         total = statistics[key]['total_count']  
         count_with_score_1 = statistics[key]['count_with_score_1']  
         percentage = (count_with_score_1 / total * 100) if total > 0 else 0  # Avoid division by zero  
-        output_lines.append(f"{key}: Success Number: {count_with_score_1}, Total count: {total}, Percentage: {percentage:.2f}%")  
+        output_lines.append(f"{key}: Success Number: {count_with_score_1}, Total count: {total}, Percentage: {total/total_number*100:.2f}%, Success Rate: {percentage:.2f}%")  
 
     print("\n".join(output_lines))   
-    
-    print("##############################################################")
+    print(f"Total Statistics Count: {sum(statistics[key]['total_count'] for key in statistics)}")  # Print total count for statistics  
+
+    print("##############################################################")  
 
     # Calculate percentages and output the results for toks classification  
     output_lines = []  
@@ -299,15 +378,68 @@ def run_evaluation(result_dir, gold_dir):
         total = toks_classification[key]['total_count']  
         count_with_score_1 = toks_classification[key]['count_with_score_1']  
         percentage = (count_with_score_1 / total * 100) if total > 0 else 0  # Avoid division by zero  
-        output_lines.append(f"{key}: Success Number: {count_with_score_1}, Total count: {total}, Percentage: {percentage:.2f}%")  
+        output_lines.append(f"{key}: Success Number: {count_with_score_1}, Total count: {total}, Percentage: {total/total_number*100:.2f}%, Success Rate: {percentage:.2f}%")  
 
     print("\n".join(output_lines))   
+    print(f"Total Toks Classification Count: {sum(toks_classification[key]['total_count'] for key in toks_classification)}")  # Print total count for toks classification  
+
+    print("##############################################################")  
+
+    # Calculate percentages and output the results for nested statistics  
+    output_lines = []  
+    for key in nested_statistics:  
+        total = nested_statistics[key]['total_count']  
+        count_with_score_1 = nested_statistics[key]['count_with_score_1']  
+        percentage = (count_with_score_1 / total * 100) if total > 0 else 0  # Avoid division by zero  
+        output_lines.append(f"{key}: Success Number: {count_with_score_1}, Total count: {total}, Percentage: {total/total_number*100:.2f}%, Success Rate: {percentage:.2f}%")  
+
+    print("\n".join(output_lines))   
+    print(f"Total Nested Statistics Count: {sum(nested_statistics[key]['total_count'] for key in nested_statistics)}")  # Print total count for nested statistics  
+
+    print("##############################################################")  
+
+    # Calculate percentages and output the results for multiple statistics  
+    output_lines = []  
+    for key in multiple_statistics:  
+        total = multiple_statistics[key]['total_count']  
+        count_with_score_1 = multiple_statistics[key]['count_with_score_1']  
+        percentage = (count_with_score_1 / total * 100) if total > 0 else 0  # Avoid division by zero  
+        output_lines.append(f"{key}: Success Number: {count_with_score_1}, Total count: {total}, Percentage: {total/total_number*100:.2f}%, Success Rate: {percentage:.2f}%")  
+
+    print("\n".join(output_lines))   
+    print(f"Total Multiple Statistics Count: {sum(multiple_statistics[key]['total_count'] for key in multiple_statistics)}")  # Print total count for multiple statistics  
+
+    print("##############################################################")  
+
+    # Calculate percentages and output the results for answer statistics  
+    output_lines = []  
+    for key in answer_statistics:  
+        total = answer_statistics[key]['total_count']  
+        count_with_score_1 = answer_statistics[key]['count_with_score_1']  
+        percentage = (count_with_score_1 / total * 100) if total > 0 else 0  # Avoid division by zero  
+        output_lines.append(f"{key}: Success Number: {count_with_score_1}, Total count: {total}, Percentage: {total/total_number*100:.2f}%, Success Rate: {percentage:.2f}%")  
+
+    print("\n".join(output_lines))   
+    print(f"Total Answer Statistics Count: {sum(answer_statistics[key]['total_count'] for key in answer_statistics)}")  # Print total count for answer statistics
         
+        
+
+
+    score = 0
+    for item in output_list:
+        if item['score'] == 1:
+            score += 1
+            # print(item['instance_id'])
+    print(score / len(output_list), score, len(output_list))
+    print(len(gold_dict.keys()))
     
-        
-
-
-
+    output_dict_jixuan = {}
+    
+    for item in output_list:
+        output_dict_jixuan[item['instance_id']] = item['score']
+    
+    json.dump(output_dict_jixuan, open("output_dict.json", 'w'))
+    
 
 
     
