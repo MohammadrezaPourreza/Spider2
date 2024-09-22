@@ -2,6 +2,8 @@ from utils.utils import get_sql_for_database, get_sql_for_database_from_tables_j
 import json
 import os
 import os.path as osp
+import tiktoken
+
 
 proj_dir = osp.dirname(osp.dirname(osp.abspath(__file__)))
 
@@ -59,9 +61,17 @@ class SQLPrompt(BasicPrompt):
         prompt_question = self.template_question_optimized.format(dialect, dialect, example["question"])
 
         def check_length(prompt_components, new):
-            return len("\n\n".join(prompt_components)) + len(prompt_question) + len(new) < 1048576
+            result = "\n\n".join(prompt_components) + prompt_question + new  # type: str
+            return len(result) < 1048576 - 1000 and len(tiktoken.get_encoding("cl100k_base").encode(result)) < 128000 - 1000
 
         prompt_components = [prompt_info]
+        original_len = len(prompt_info)
+        i = 1
+        while not check_length(prompt_components, ""):  # 强制截断prompt_components
+            print('>>>database schema is too long. hard truncate.')
+            # 每个循环减少1/20的字符，最多执行20次
+            prompt_components = [prompt_info[:int(original_len * (1 - i / 20))]]
+            i += 1
 
         if args.use_sample_rows:
             sample_rows = get_sample_rows_for_database_from_tables_json(example["db_id"], tables_json)  

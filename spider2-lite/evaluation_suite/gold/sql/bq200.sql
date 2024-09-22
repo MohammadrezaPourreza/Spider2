@@ -22,7 +22,7 @@ FROM (
                 -- #setting up the table with players
                 SELECT venueId
                     ,pitcherId
-                    ,pitcherFirstName || ' ' || pitcherLastName _pitcher
+                    ,pitcherFirstName || ' ' || pitcherLastName AS _pitcher
                     ,max(pitchSpeed) _speed
                 FROM (
                     -- #full table comprising all seasons
@@ -45,7 +45,7 @@ FROM (
                 WHERE pitchSpeed != 0
                 GROUP BY venueId
                     ,pitcherId
-                    ,pitcherFirstName || '  ' || pitcherLastName
+                    ,pitcherFirstName || ' ' || pitcherLastName
                 ) _grp
             -- #joining table with player-team links
             LEFT JOIN (

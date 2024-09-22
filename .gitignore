@@ -47,6 +47,7 @@ spider2-lite/resource/databases/local/*.sqlite
 !spider2/evaluation_suite/bigquery_credential.json
 !spider2/evaluation_suite/evaluate.py
 !spider2/evaluation_suite/gold/
+!spider2/evaluation_suite/gold_temp/
 !spider2/evaluation_suite/eval_utils.py
 !spider2/evaluation_suite/example_submission_folder/
 !spider2/evaluation_suite/credentials.zip
@@ -92,6 +93,7 @@ spider2-lite/baselines/yyx_tmp/
 **/multi_db_40.json
 **/yyx*.sh
 **/yyx*.py
+**/yyx*.json
 
 **/subset*.json
 **/run_check.sh
