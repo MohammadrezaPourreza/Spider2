@@ -48,6 +48,7 @@ spider2-lite/resource/databases/local/*.sqlite
 !spider2/evaluation_suite/evaluate.py
 !spider2/evaluation_suite/gold/
 !spider2/evaluation_suite/gold_temp/
+!spider2/evaluation_suite/gpt-4o-test2/
 !spider2/evaluation_suite/eval_utils.py
 !spider2/evaluation_suite/example_submission_folder/
 !spider2/evaluation_suite/credentials.zip
