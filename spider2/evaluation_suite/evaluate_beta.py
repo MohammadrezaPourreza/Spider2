@@ -81,7 +81,7 @@ def get_id_doc():
             if '\n' in values[i][column_names.index('DB')]:
                 is_multiple = 1
                 
-            path = os.path.join("../../spider2-lite/evaluation_suite/gold_lfy/sql", f"{instance_id}.sql")    
+            path = os.path.join("../../spider2-lite/evaluation_suite/gold/sql", f"{instance_id}.sql")    
             sql_content = open(path, 'r').read()
             
             is_nested = 0
