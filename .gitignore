@@ -46,6 +46,7 @@ spider2-lite/resource/databases/local/*.sqlite
 !spider2/evaluation_suite/README.md
 !spider2/evaluation_suite/bigquery_credential.json
 !spider2/evaluation_suite/evaluate.py
+!spider2/evaluation_suite/evaluate_beta.py
 !spider2/evaluation_suite/gold/
 !spider2/evaluation_suite/gold_temp/
 !spider2/evaluation_suite/gpt-4o-test2/
