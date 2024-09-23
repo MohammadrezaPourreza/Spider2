@@ -52,7 +52,7 @@ def config() -> argparse.Namespace:
         description="Run end-to-end evaluation on the benchmark"
     )
     
-    parser.add_argument("--max_steps", type=int, default=30)
+    parser.add_argument("--max_steps", type=int, default=20)
     
     parser.add_argument("--max_memory_length", type=int, default=30)
     parser.add_argument("--suffix", '-s', type=str, default="gpt-4-try1")
@@ -152,7 +152,7 @@ def test(
             if task_config["instance_id"].startswith("local") or task_config["instance_id"].startswith("bq") or task_config["instance_id"].startswith("ga") or task_config["instance_id"].startswith("sf"): continue
         if args.sf_only:
             if not task_config["instance_id"].startswith("sf"): continue
-            
+
         if not args.overwriting and os.path.exists(result_json_path):
             logger.info("Skipping %s", instance_id)
             continue
