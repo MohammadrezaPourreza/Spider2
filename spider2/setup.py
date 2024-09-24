@@ -144,7 +144,7 @@ def setup_dbt():
     temp_spider2_dir = './temp_spider2'
     temp_dbt_gold_dir = './temp_dbt_gold'
 
-    spider2_zip_path = 'spider2-dbt-setup-db.zip'
+    spider2_zip_path = 'DBT_start_db.zip'
     examples_target_path = './examples'
     process_zip_file(spider2_zip_path, examples_target_path, temp_spider2_dir)
 
