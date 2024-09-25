@@ -1,4 +1,3 @@
-
 SELECT
   incidents AS highest_monthly_thefts
 FROM (

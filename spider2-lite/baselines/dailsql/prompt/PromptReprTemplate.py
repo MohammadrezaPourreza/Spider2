@@ -67,9 +67,8 @@ class SQLPrompt(BasicPrompt):
         prompt_components = [prompt_info]
         original_len = len(prompt_info)
         i = 1
-        while not check_length(prompt_components, ""):  # 强制截断prompt_components
+        while not check_length(prompt_components, ""): 
             print('>>>database schema is too long. hard truncate.')
-            # 每个循环减少1/20的字符，最多执行20次
             prompt_components = [prompt_info[:int(original_len * (1 - i / 20))]]
             i += 1
 

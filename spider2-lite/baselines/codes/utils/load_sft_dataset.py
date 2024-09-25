@@ -12,13 +12,14 @@ proj_dir = osp.dirname(osp.dirname(osp.abspath(__file__)))
 
 def prepare_text2sql_prefix_sequence(data, args):
 
-    def check_length(current_prompt, new):
-        return len(current_prompt) + len(data["text"]) + len(new) < 1048570
+    # DECRECATED, hard trunc outside
+    # def check_length(current_prompt, new):
+    #     return len(current_prompt) + len(data["text"]) + len(new) < 1048570
 
     if args.use_few_shot:
-        with open(osp.join(proj_dir, '../utils/3-shot.txt'), 'r', encoding='utf-8') as file:
+        with open(osp.join(proj_dir, '../utils/3-shot-for-codes.txt'), 'r', encoding='utf-8') as file:
             content = file.read()
-        demo = content + "\n"
+        demo = content + "\n\n"
     else:
         demo = ''
 
@@ -41,28 +42,15 @@ def prepare_text2sql_prefix_sequence(data, args):
     else:
         plan = ''
         
-    prefix_seq = data["schema_sequence"] + "\n"
-    if check_length(prefix_seq, demo):
-        prefix_seq += demo
-    else:
-        print("Demo too long, skip. length: ", len(demo))
-    if check_length(prefix_seq, data["content_sequence"] + "\n"):
-        prefix_seq += data["content_sequence"] + "\n"
-    else:
-        print("Matched content too long, skip. length: ", len(data["content_sequence"]))
-    if check_length(prefix_seq, knowledge):
-        prefix_seq += knowledge
-    else:
-        print("External knowledge too long, skip. length: ", len(knowledge))
-    if check_length(prefix_seq, special_function):
-        prefix_seq += special_function
-    else:
-        print("Special functions info too long, skip. length: ", len(special_function))
-    if check_length(prefix_seq, plan):
-        prefix_seq += plan
-    else:
-        print("Plan too long, skip. length: ", len(plan))
-    prefix_seq += data["text"] + "\n"
+    # caution: reverse trunc outside
+    prefix_seq = \
+        special_function + \
+        plan + \
+        demo + \
+        knowledge + \
+        data["content_sequence"] + "\n" + \
+        data["schema_sequence"] + "\n" + \
+        data["text"] + "\n"
     
     return prefix_seq  
 
@@ -99,7 +87,7 @@ def prepare_inputs(prefix_seq, tokenizer, max_prefix_length):
     input_ids = [tokenizer.bos_token_id] + tokenizer(prefix_seq , truncation = False)["input_ids"]
 
     if len(input_ids) > max_prefix_length:
-        print("the current input sequence exceeds the max_tokens, we will truncate it.")
+        print("\n\n--------------\n>>>the current input sequence exceeds the max_tokens, we will truncate it!!!\n--------------\n\n")
         input_ids = [tokenizer.bos_token_id] + input_ids[-(max_prefix_length-1):]
     
     attention_mask = [1] * len(input_ids)
@@ -139,14 +127,15 @@ class SFTSQLGenerationDataset(Dataset):
     def __getitem__(self, index):
         data = self.dataset[index]
         prefix_seq = prepare_text2sql_prefix_sequence(data, self.args)  
-        if index < 2:
-            print(prefix_seq)
+        # if index < 2:
+        #    print(prefix_seq)
 
         if self.mode == "train":
             target_seq = data["sql"]
             return prepare_inputs_and_labels(prefix_seq, target_seq, self.tokenizer, self.max_tokens)
         elif self.mode == "eval":
             return prepare_inputs(prefix_seq, self.tokenizer, self.max_tokens)  
+            # return prepare_inputs(prefix_seq, self.tokenizer, self.max_tokens), prefix_seq
 
     def __len__(self):
         return len(self.dataset)

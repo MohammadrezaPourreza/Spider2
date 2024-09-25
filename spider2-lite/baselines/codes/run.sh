@@ -11,7 +11,7 @@ python preprocessed_data/spider2_preprocess.py --dev $DEV
 # step2. run CodeS  
 python -u text2sql_zero_shot.py \
     --llm_path $LLM --sic_path ./sic_ckpts/sic_bird \
-    --table_num 6 --column_num 10 --max_tokens 4096 --max_new_tokens 500 \
+    --table_num 6 --column_num 10 --max_tokens 8000 --max_new_tokens 1000 \
     --dev $DEV --dataset_path preprocessed_data/${DEV}/sft_${DEV}_preprocessed.json \
 
 # step3. postprocess
