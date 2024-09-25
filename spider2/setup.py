@@ -56,6 +56,15 @@ def setup_snowflake():
 
 def setup_local(database_type):
 
+
+    zip_file_path = './local_sqlite.zip'
+    extract_to_path = './resource/databases/local'
+
+    os.makedirs(extract_to_path, exist_ok=True)
+
+    with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
+        zip_ref.extractall(extract_to_path)
+
     
     with open('./resource/databases/local/local-map.jsonl', 'r') as infile:
         for line in infile:
