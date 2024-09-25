@@ -131,9 +131,9 @@ def run_evaluation(result_dir, gold_dir):
     evaluation_data = [{**gold_dict[id], **result_dict[id]} for id in common_instance_ids]
     
     
-    # import pdb; pdb.set_trace()
+
     
-    print(len(evaluation_data))
+    # print(len(evaluation_data))
     
     total = 0
     output_list = []
