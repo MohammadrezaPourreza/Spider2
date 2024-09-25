@@ -54,7 +54,9 @@ def setup_snowflake():
     
     print("Finished Snowflake setup...")
 
-def setup_local():
+def setup_local(database_type):
+
+    
     with open('./resource/databases/local/local-map.jsonl', 'r') as infile:
         for line in infile:
             local_map = json.loads(line)
@@ -73,14 +75,18 @@ def setup_local():
             print(f"Coundn't setup example {instance_id}.")
             continue
         folder_path = f'examples/{instance_id}'
-        db_path = os.path.join('./resource/databases/local', f"{db_name}.sqlite") 
-        target_db_path = os.path.join(folder_path, f"{db_name}.sqlite")
+        if database_type == 'local':
+            db_path = os.path.join(f'./resource/databases/local', f"{db_name}.sqlite")
+            target_db_path = os.path.join(folder_path, f"{db_name}.sqlite")
+        else:
+            db_path = os.path.join(f'./resource/databases/{database_type}', f"{db_name}.{database_type}") 
+            target_db_path = os.path.join(folder_path, f"{db_name}.{database_type}")
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
         if os.path.exists(target_db_path):
             os.remove(target_db_path)
         shutil.copy(db_path, target_db_path)
-        print(f"successfully copied {db_name}.sqlite to {folder_path}")
+        print(f"successfully copied {db_name}.{database_type} to {folder_path}")
     
     print("Finished local setup...")
     
@@ -202,6 +208,7 @@ if __name__ == '__main__':
     parser.add_argument("--bigquery", action="store_true", help="Setup BigQuery")
     parser.add_argument("--snowflake", action="store_true", help="Setup Snowflake")
     parser.add_argument("--local", action="store_true", help="Setup local environment")
+    parser.add_argument("--duckdb", action="store_true", help="Setup local environment")
     parser.add_argument("--dbt", action="store_true", help="Setup dbt")
     parser.add_argument("--add_schema", action="store_true", help="Add schema")
 
@@ -212,14 +219,16 @@ if __name__ == '__main__':
     if args.snowflake:
         setup_snowflake()
     if args.local:
-        setup_local()
+        setup_local("local")
+    elif args.duckdb:
+        setup_local("duckdb")
     if args.dbt:
         setup_dbt()
 
     if not (args.bigquery or args.snowflake or args.local or args.dbt):
         setup_bigquery()
         setup_snowflake()
-        setup_local()
+        setup_local("local")
         setup_dbt()
 
     if args.add_schema:
