@@ -366,15 +366,6 @@ def run_evaluation(result_dir, gold_dir):
                 answer_statistics['answer_string']['total_count'] += 1  
                 if score == 1:  
                     answer_statistics['answer_string']['count_with_score_1'] += 1
-
-            if not any(instance_id.startswith(item) for item in ('bq', 'ga', 'sf', 'local')):
-                dbt_statistics['is_dbt']['total_count'] += 1  
-                if score == 1:  
-                    dbt_statistics['is_dbt']['count_with_score_1'] += 1
-            else:
-                dbt_statistics['not_dbt']['total_count'] += 1  
-                if score == 1:  
-                    dbt_statistics['not_dbt']['count_with_score_1'] += 1
              
 
     print("##############################################################")  
