@@ -92,7 +92,7 @@ Make sure you get valid results, not an empty file. Once the results are stored 
 
 # LocalDB-Query #
 First, run `ls` to identify the database, if there is a 'result.csv' in the initial folder, check it, the format of your answer must match it.
-Then explore the SQLite database on your own.
+Then explore the SQLite/DuckDB database on your own.
 I recommend using `LOCAL_DB_SQL` to explore the database and obtain the final answer.
 Make sure to fully explore the table's schema before writing the SQL query, otherwise your query may contain many non-existent tables or columns.
 Be ready to write multiple SQL queries to find the correct answer. Once it makes sense, consider it resolved and terminate. 
@@ -130,13 +130,14 @@ For each step, you must output an Action; it cannot be empty. The maximum number
 
 # DBT Project Hint#
 1. **For dbt projects**, first read the dbt project files and write SQL queries to handle the data transformation and solve the task.
-2. All necessary data is stored in **DuckDB**.
-3. **Solve the task** by reviewing the YAML files, understanding the task requirements, and identifying the SQL transformations needed to complete the project.
-4. Carefully read the YAML file in the `models` folder to write accurate SQL file.
-5. Use Python to read and interact with the database; do **not** use the DuckDB CLI.
+2. All necessary data is stored in the **DuckDB**. You can use LOCAL_DB_SQL to explore the database.
+3. **Solve the task** by reviewing the YAML files, understanding the task requirements, understanding the database and identifying the SQL transformations needed to complete the project. The project is a
+4. The project is an unfinished project. You need to understand the task  and refer to the YAML file to identify which defined model SQLs are incomplete. You must complete these SQLs in order to finish the project.
+5. do **not** use the DuckDB CLI.
 6. After writing all required SQL, run `dbt run` to update the database.
-7. Verify the new data models generated in the database to ensure they meet the definitions in the YAML files.
-8. Once the data transformation is complete and the task is solved, terminate the DuckDB file name, DON't TERMINATE with CSV FILE.
+7. You only need to write and modify SQL files; you do not need to modify any other files. The other files are there to assist you in writing SQL.
+8. Verify the new data models generated in the database to ensure they meet the definitions in the YAML files.
+9. Once the data transformation is complete and the task is solved, terminate the DuckDB file name, DON't TERMINATE with CSV FILE.
 
 # RESPONSE FROMAT # 
 For each task input, your response should contain:

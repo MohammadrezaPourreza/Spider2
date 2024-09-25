@@ -85,6 +85,7 @@ class PromptAgent:
         if self.use_plan:
             self.system_message += REFERENCE_PLAN_SYSTEM.format(plan=self.reference_plan)
         
+
         
         self.history_messages.append({
             "role": "system",
