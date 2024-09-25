@@ -186,8 +186,11 @@ def run_evaluation(result_dir, gold_dir):
                         score = 0
                 elif eval_metadata['func'] == 'duckdb_match':
                     eval_metadata['parameters']['gold'] = os.path.join(gold_dir, data['instance_id'], eval_metadata['parameters']['gold'])
-                    score = duckdb_match(os.path.join(result_dir,data['instance_id'], data['answer_or_path']), **eval_metadata['parameters'])    
-                    
+                    try:
+                        score = duckdb_match(os.path.join(result_dir,data['instance_id'], data['answer_or_path']), **eval_metadata['parameters'])    
+                    except:
+                        score = 0
+
         if score == 1:
             print(data)   
             # import pdb; pdb.set_trace()   
@@ -207,7 +210,8 @@ def run_evaluation(result_dir, gold_dir):
         'bq_ga': {'count_with_score_1': 0, 'total_count': 0},  
         'sf': {'count_with_score_1': 0, 'total_count': 0},  
         'local': {'count_with_score_1': 0, 'total_count': 0},  
-        'bq_ga_sf': {'count_with_score_1': 0, 'total_count': 0}  
+        'bq_ga_sf': {'count_with_score_1': 0, 'total_count': 0},
+        'dbt': {'count_with_score_1': 0, 'total_count': 0}
     }  
     print("##############################################################")
     # Iterate through the output_list to gather statistics  
@@ -237,6 +241,10 @@ def run_evaluation(result_dir, gold_dir):
             statistics['local']['total_count'] += 1  
             if score == 1:  
                 statistics['local']['count_with_score_1'] += 1  
+        elif not any(instance_id.startswith(item) for item in ('bq', 'ga', 'sf', 'local')):
+            statistics['dbt']['total_count'] += 1  
+            if score == 1:  
+                statistics['dbt']['count_with_score_1'] += 1
 
     # Calculate percentages and output the results for statistics  
     output_lines = []  
@@ -276,6 +284,11 @@ def run_evaluation(result_dir, gold_dir):
     answer_statistics = {  
         'answer_string': {'count_with_score_1': 0, 'total_count': 0},  
         'answer_table': {'count_with_score_1': 0, 'total_count': 0}   
+    }  
+
+    dbt_statistics = {  
+        'is_dbt': {'count_with_score_1': 0, 'total_count': 0},  
+        'not_dbt': {'count_with_score_1': 0, 'total_count': 0}   
     }  
     
     total_number = len(output_list)
@@ -354,7 +367,14 @@ def run_evaluation(result_dir, gold_dir):
                 if score == 1:  
                     answer_statistics['answer_string']['count_with_score_1'] += 1
 
-             
+            if not any(instance_id.startswith(item) for item in ('bq', 'ga', 'sf', 'local')):
+                dbt_statistics['is_dbt']['total_count'] += 1  
+                if score == 1:  
+                    dbt_statistics['is_dbt']['count_with_score_1'] += 1
+            else:
+                dbt_statistics['not_dbt']['total_count'] += 1  
+                if score == 1:  
+                    dbt_statistics['not_dbt']['count_with_score_1'] += 1
              
 
     print("##############################################################")  
@@ -422,7 +442,16 @@ def run_evaluation(result_dir, gold_dir):
     print("\n".join(output_lines))   
     print(f"Total Answer Statistics Count: {sum(answer_statistics[key]['total_count'] for key in answer_statistics)}")  # Print total count for answer statistics
         
-        
+    
+    print("##############################################################")  
+    output_lines = []
+    for key in dbt_statistics:
+        total = dbt_statistics[key]['total_count']
+        count_with_score_1 = dbt_statistics[key]['count_with_score_1']
+        percentage = (count_with_score_1 / total * 100) if total > 0 else 0
+        output_lines.append(f"{key}: Success Number: {count_with_score_1}, Total count: {total}, Percentage: {total/total_number*100:.2f}%, Success Rate: {percentage:.2f}%")
+    
+    print("\n".join(output_lines))
 
 
     score = 0
