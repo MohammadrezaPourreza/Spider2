@@ -2,7 +2,7 @@
 import argparse
 import os
 import json
-
+import tiktoken
 import openai
 from tqdm import tqdm
 from torch.utils.data import DataLoader
@@ -16,6 +16,21 @@ from utils.post_process import process_duplication, get_sqls
 def process_batch(batch, submit_folder, db_ids, args, i, 
     openai_api_key, openai_group_id, model):
     """Function to process each batch in parallel."""
+
+    # cost recorded
+    os.makedirs(os.path.join(submit_folder, "../cost"), exist_ok=True)
+    with open(os.path.join(submit_folder, "../cost", f"{batch['instance_id'][0]}.json"), "w") as submit_file:
+        prompt = batch["prompt"][0]
+        prompt_tokens = len(tiktoken.get_encoding("cl100k_base").encode(prompt))
+        json.dump(
+            {
+                "prompt": prompt,
+                "prompt_tokens": prompt_tokens, 
+                "cost": prompt_tokens * 5e-6  # USD
+            },
+            submit_file)
+
+    # return  # count cost only
 
     # init openai api
     init_chatgpt(args.openai_api_key, args.openai_group_id, args.model)
@@ -105,7 +120,9 @@ if __name__ == '__main__':
     parser.add_argument('--post_mode', type=str, choices=['pass@n', 'consistency@n', 'consistency-from-generated-pass@n', None], default=None)
     parser.add_argument("--is_sql_debug", action="store_true", default=False)
     parser.add_argument("--processes", type=int, default=120)  # New argument for specifying the number of processes
+    parser.add_argument("--override", action="store_true")
     args = parser.parse_args()
+
 
     if args.is_sql_debug:
         QUESTION_FILE = "debug_questions.json"
@@ -122,8 +139,11 @@ if __name__ == '__main__':
     submit_folder = os.path.join(args.question, f'{DEBUG_PREFIX}RESULTS_MODEL-{args.model}-SQL')
     os.makedirs(submit_folder, exist_ok=True)
 
-    pred_ids = [file.split(".")[0].split("@")[0] for file in os.listdir(submit_folder) if file.endswith(".sql")]
-    pred_ids = set(pred_ids)
+    if args.override:
+        pred_ids = set()
+    else:
+        pred_ids = [file.split(".")[0].split("@")[0] for file in os.listdir(submit_folder) if file.endswith(".sql")]
+        pred_ids = set(pred_ids)
     questions_json = json.load(open(os.path.join(args.question, QUESTION_FILE), "r"))
     questions = [{"prompt": item["prompt"], "instance_id": item["instance_id"]} for item in questions_json["questions"] \
         if item["instance_id"] not in pred_ids]

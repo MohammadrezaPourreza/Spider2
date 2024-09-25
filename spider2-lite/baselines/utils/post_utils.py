@@ -6,14 +6,26 @@ def load_json(file_path):
         return json.load(file)
 
 def replace_table_names(sql_content, selected_tables_to_dbid):
-    # logic checked at 0902
+    # logic checked at 0923
     table_names = list(selected_tables_to_dbid.keys())  
     table_names = sorted(table_names, key=len, reverse=True)
     for table_name in table_names:
-        pattern = re.compile(r'\b' + re.escape(table_name) + r'\b(?!\.)')  
+        pattern = re.compile(r'(?<!\.)\b' + re.escape(table_name) + r'\b(?!\.)')  
         new_table_name = f"{selected_tables_to_dbid[table_name]}.{table_name}"
         sql_content = pattern.sub(new_table_name, sql_content)
     return sql_content
+
+
+def postprocess_sql_by_dialect(sql_content, selected_tables_to_dbid, file_name):
+    if file_name.startswith('local'):
+        new_sql_content = sql_content
+    elif file_name.startswith('bq') or file_name.startswith('ga'):  # bq
+        new_sql_content = replace_table_names(sql_content, selected_tables_to_dbid)
+    elif file_name.startswith('sf'):  # snowflake
+        raise NotImplementedError
+    else:
+        raise ValueError(f"Unknown database type: {file_name}")
+    return new_sql_content
 
 
 def spider2_postprocess_single_sql(
@@ -48,7 +60,6 @@ def spider2_postprocess_single_sql(
                 else:
                     selected_tables_to_dbid[vv] = k
 
-    # Apply the replace_table_names logic
     new_sql_content = replace_table_names(sql_content, selected_tables_to_dbid)
 
     # Return the modified SQL content

@@ -3,30 +3,16 @@ import json
 import re
 import os.path as osp
 import argparse
+import sys
 
 proj_dir = osp.dirname(osp.dirname(osp.abspath(__file__)))
+sys.path = [osp.join(proj_dir, '../')] + sys.path
+from utils.post_utils import postprocess_sql_by_dialect
 
 def load_json(file_path):
     with open(file_path, 'r', encoding='utf-8') as file:
         return json.load(file)
 
-# def replace_table_names(sql_content, db_id, table_names):
-#     table_names = sorted(table_names, key=len, reverse=True)
-#     for table_name in table_names:
-#         pattern = re.compile(r'\b' + re.escape(table_name) + r'\b(?!\.)')  
-#         new_table_name = f"{db_id}.{table_name}"
-#         sql_content = pattern.sub(new_table_name, sql_content)
-#     return sql_content
-
-def replace_table_names(sql_content, selected_tables_to_dbid):
-    # logic checked at 0902
-    table_names = list(selected_tables_to_dbid.keys())  
-    table_names = sorted(table_names, key=len, reverse=True)
-    for table_name in table_names:
-        pattern = re.compile(r'\b' + re.escape(table_name) + r'\b(?!\.)')  
-        new_table_name = f"{selected_tables_to_dbid[table_name]}.{table_name}"
-        sql_content = pattern.sub(new_table_name, sql_content)
-    return sql_content
 
 def main(root_path, dev_json, table_json):
 
@@ -45,7 +31,7 @@ def main(root_path, dev_json, table_json):
     for root, _, files in os.walk(root_path):
         for file_name in files:
             if file_name.endswith('.sql'):
-                instance_id = file_name.split('.')[0]
+                instance_id = file_name.split('.')[0].split('@')[0]
 
                 assert instance_id in instance_id_to_db_id, "check the dev.json"
 
@@ -64,11 +50,8 @@ def main(root_path, dev_json, table_json):
                 with open(sql_file_path, 'r', encoding='utf-8') as sql_file:
                     sql_content = sql_file.read()
 
-                if file_name.startswith("local"):  # localDB
-                    new_sql_content = sql_content
-                else:  # cloudDB
-                    new_sql_content = replace_table_names(sql_content, selected_tables_to_dbid)
-
+                new_sql_content = postprocess_sql_by_dialect(sql_content, selected_tables_to_dbid, file_name)  # core
+                
                 new_sql_file_path = os.path.join(new_root_path, file_name)
                 with open(new_sql_file_path, 'w', encoding='utf-8') as sql_file:
                     sql_file.write(new_sql_content)

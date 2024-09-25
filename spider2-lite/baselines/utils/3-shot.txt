@@ -1,44 +1,4 @@
 /* Some example questions and corresponding SQL queries are provided as follows: */
-/* Question: I want to know the preferences of customers who purchased the Google Navy Speckled Tee in December 2020. What other product was purchased with the highest total quantity alongside this item?\nCan you tell me what other product are most frequently bought together with the Google Navy Speckled Tee by customers in December 2020? */
-/* SQL query: */
-WITH
-  Params AS (
-    SELECT 'Google Navy Speckled Tee' AS selected_product
-  ),
-  PurchaseEvents AS (
-    SELECT
-      user_pseudo_id,
-      items
-    FROM
-      `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
-    WHERE
-      _TABLE_SUFFIX BETWEEN '20201201' AND '20201231'
-      AND event_name = 'purchase'
-  ),
-  ProductABuyers AS (
-    SELECT DISTINCT
-      user_pseudo_id
-    FROM
-      Params,
-      PurchaseEvents,
-      UNNEST(items) AS items
-    WHERE
-      items.item_name = selected_product
-  )
-SELECT
-  items.item_name AS item_name,
-  SUM(items.quantity) AS item_quantity
-FROM
-  Params,
-  PurchaseEvents,
-  UNNEST(items) AS items
-WHERE
-  user_pseudo_id IN (SELECT user_pseudo_id FROM ProductABuyers)
-  AND items.item_name != selected_product
-GROUP BY 1
-ORDER BY item_quantity DESC
-LIMIT 1;
-
 /* Question: How many US patent applications about IoT applications were filed each month from 2008 to 2022? */
 /* SQL query: */
 WITH
@@ -49,7 +9,7 @@ WITH
       ANY_VALUE(abstract_info.text) AS Patent_Title,
       ANY_VALUE(abstract_info.language) AS Patent_Title_Language
     FROM
-      `patents-public-data.patents.publications` AS patentsdb,
+      publications AS patentsdb,
       UNNEST(abstract_localized) AS abstract_info
     WHERE
       LOWER(abstract_info.text) LIKE '%internet of things%'
@@ -68,7 +28,6 @@ WITH
         DATE '2022-12-31'
       )) AS day
   )
-
 SELECT
   SAFE_CAST(FORMAT_DATE('%Y-%m', Date_Series_Table.day) AS STRING) AS Patent_Date_YearMonth,
   COUNT(Patent_Matches.Patent_Application_Number) AS Number_of_Patent_Applications
@@ -81,6 +40,31 @@ GROUP BY
 ORDER BY
   Patent_Date_YearMonth;
 
+/* Question: Which month generally has the greatest number of motor vehicle thefts in 2016? */
+/* SQL query: */
+SELECT
+  incidents AS highest_monthly_thefts
+FROM (
+  SELECT
+    year,
+    EXTRACT(MONTH FROM date) AS month,
+    COUNT(1) AS incidents,
+    RANK() OVER (PARTITION BY year ORDER BY COUNT(1) DESC) AS ranking
+  FROM
+    crime
+  WHERE
+    primary_type = 'MOTOR VEHICLE THEFT'
+    AND year = 2016
+  GROUP BY
+    year,
+    month
+)
+WHERE
+  ranking = 1
+ORDER BY
+  year DESC
+LIMIT 1;
+
 /* Question: How does average reputation and badge count vary among Stack Overflow users based on their tenure, measured in years? */
 /* SQL query: */
 SELECT User_Tenure,
@@ -92,8 +76,8 @@ FROM (
          ROUND(TIMESTAMP_DIFF(CURRENT_TIMESTAMP(), ANY_VALUE(users.creation_date), DAY)/365) AS user_tenure,
          ANY_VALUE(users.reputation) AS reputation,
          SUM(IF(badges.user_id IS NULL, 0, 1)) AS num_badges
-  FROM `bigquery-public-data.stackoverflow.users` users
-  LEFT JOIN `bigquery-public-data.stackoverflow.badges` badges
+  FROM users
+  LEFT JOIN badges
   ON users.id = badges.user_id
   GROUP BY user
 )

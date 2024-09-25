@@ -1,3 +1,4 @@
+# import debugpy; debugpy.connect(("127.0.0.1", 5688))
 import argparse
 import os
 import torch
@@ -11,7 +12,7 @@ from torch.utils.data import DataLoader
 from tqdm import tqdm
 
 
-def post_process(sql, schema_items):
+def post_process(sql, schema_items, instance_id):
     sql = sql.replace("\n", " ")
     for table in schema_items:
         for column_name in table["column_names"]:
@@ -20,6 +21,11 @@ def post_process(sql, schema_items):
 
     while "``" in sql:
         sql = sql.replace("``", "`")
+
+    if len(sql.split(';')) == 1:
+        print('>>> warning: SQL without semicolon:', instance_id)
+
+    sql = sql.split(';')[0]  # 0923: for bad instruction following, output so many useless things after the first SQL
 
     return sql
 
@@ -60,10 +66,13 @@ if __name__ == "__main__":
 
     parser.add_argument('--dev', default='spider2_dev', type=str, help='the name of dev file')
     parser.add_argument("--comment", type=str, default='')
-
+    parser.add_argument("--gpu_id", type=int, default=0)
+    parser.add_argument("--override", action='store_true', default=False)
     args = parser.parse_args()
-
     print(args)
+    os.environ["CUDA_VISIBLE_DEVICES"] = str(args.gpu_id)
+
+
     max_tokens = args.max_tokens
     max_new_tokens = args.max_new_tokens
 
@@ -72,7 +81,8 @@ if __name__ == "__main__":
     eval_set = SFTSQLGenerationDataset(
         args.dataset_path,
         tokenizer,
-        max_tokens - max_new_tokens,
+        # max_tokens,
+        max_tokens - max_new_tokens,  # make sure no error. for instance: 8192 - 1000
         "eval",
         args.table_num,
         args.column_num,
@@ -80,18 +90,44 @@ if __name__ == "__main__":
         args
     ) 
 
-    # TODO: current, we only support batch size = 1
+    # note: current, we only support batch size = 1
     dataloader = DataLoader(eval_set, batch_size = 1)
     model = AutoModelForCausalLM.from_pretrained(args.llm_path, device_map = "auto", torch_dtype = torch.float16)
-    
     model.eval()
     start_time = time.time()
     predicted_sqls = []
-    for raw_data, batch_data in tqdm(zip(raw_dataset, dataloader)):
+
+    submit_folder = os.path.join("postprocessed_data", f"{args.comment}-{args.dev}", f"{args.dev}-pred-sqls")
+    os.makedirs(submit_folder, exist_ok=True)
+    existing_instance_ids = {f.split('.')[0].split('@')[0] for f in os.listdir(submit_folder) if f.endswith('.sql')}
+
+    processed_number = 0
+    for idx, (raw_data, batch_data) in enumerate(tqdm(zip(raw_dataset, dataloader))):
+        instance_id = raw_data.get("instance_id", f"instance_{idx}")
+        if not args.override and instance_id in existing_instance_ids:
+            continue 
+
+
+        processed_number += 1
+
+        # write prompt to file
+        instance_folder = os.path.join(submit_folder, '../prompts')
+        os.makedirs(instance_folder, exist_ok=True)
+        prompt_file_path = os.path.join(instance_folder, f"{instance_id}.txt")
+        with open(prompt_file_path, 'w', encoding='utf-8') as file:
+            file.write(
+                # the truncated prompt
+                ''.join(tokenizer.batch_decode(batch_data['input_ids'][0], skip_special_tokens=True))
+            )
+        with open(prompt_file_path.replace('.txt', '.json'), 'w', encoding='utf-8') as file:
+            json.dump({
+                'input_length': len(batch_data['input_ids'][0])
+            }, file)
+
         for key in batch_data:
             batch_data[key] = batch_data[key].to(model.device)
         generated_sqls = text2sql_func(model, batch_data, tokenizer, max_new_tokens)
-        generated_sqls = [post_process(generated_sql, raw_data["schema"]["schema_items"]) for generated_sql in generated_sqls]
+        generated_sqls = [post_process(generated_sql, raw_data["schema"]["schema_items"], instance_id) for generated_sql in generated_sqls]
 
         '''
         final_generated_sql = None
@@ -109,27 +145,28 @@ if __name__ == "__main__":
         '''
 
         final_generated_sql = generated_sqls[0] if generated_sqls[0].strip() != "" else "SQL placeholder"
-    
-
         print(final_generated_sql)
-        predicted_sqls.append(final_generated_sql)
+        # predicted_sqls.append(final_generated_sql)
+
+        # save SQL
+        sql_file_path = os.path.join(submit_folder, f"{instance_id}@0.sql")
+        with open(sql_file_path, "w", encoding='utf-8') as submit_file:
+            submit_file.write(final_generated_sql)
+
     end_time = time.time()
     print("LLM name: {} | Total time: {}s | Example number: {} | Average time: {}s".format(
         args.llm_path, 
         end_time - start_time,
-        len(raw_dataset),
+        processed_number,
         (end_time - start_time) / len(raw_dataset)
         )
     )
 
-    submit_folder = os.path.join("postprocessed_data", f"{args.comment}-{args.dev}/{args.dev}-pred-sqls")
-    os.makedirs(submit_folder, exist_ok=True)
+    # for idx, (data, predicted_sql) in enumerate(zip(raw_dataset, predicted_sqls)):
+    #     instance_id = data.get("instance_id", f"instance_{idx}")
+    #     sql_file_path = os.path.join(submit_folder, f"{instance_id}.sql")
+    #     with open(sql_file_path, "w", encoding='utf-8') as submit_file:
+    #         submit_file.write(predicted_sql)
 
-    for idx, (data, predicted_sql) in enumerate(zip(raw_dataset, predicted_sqls)):
-        instance_id = data.get("instance_id", f"instance_{idx}")
-        sql_file_path = os.path.join(submit_folder, f"{instance_id}.sql")
-        with open(sql_file_path, "w", encoding='utf-8') as submit_file:
-            submit_file.write(predicted_sql)
-
-    print(f"SQL files saved in {submit_folder}")
+    # print(f"SQL files saved in {submit_folder}")
 

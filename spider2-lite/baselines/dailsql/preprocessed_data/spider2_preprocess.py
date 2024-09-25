@@ -1,4 +1,4 @@
-# import debugpy; debugpy.connect(("127.0.0.1", 5696))
+# import debugpy; debugpy.connect(("127.0.0.1", 5688))
 import numpy as np
 import json
 import os
@@ -19,6 +19,43 @@ import glob
 import json
 import os
 import matplotlib.pyplot as plt
+import re
+
+
+def plot_statistics(new_data):
+
+    candidate_columns = [entry['No. of candidate columns'] for entry in new_data if entry['No. of candidate columns'] < 10000]  # TODO: hack < 10000
+    gold_tables = [entry['No. of gold tables'] for entry in new_data]
+
+    plt.figure(figsize=(10, 5))
+    plt.hist(candidate_columns, bins=50, edgecolor='black')
+    plt.title('Histogram of No. of Candidate Columns')
+    plt.xlabel('Number of Candidate Columns')
+    plt.ylabel('Frequency')
+    plt.grid(True)
+    plt.savefig('No. of Candidate Columns.png')
+    # plt.show()
+
+    plt.figure(figsize=(10, 5))
+    plt.hist(gold_tables, bins=range(min(gold_tables), max(gold_tables) + 1), edgecolor='black', align='left')
+    plt.title('Histogram of No. of Gold Tables')
+    plt.xlabel('Number of Gold Tables')
+    plt.ylabel('Frequency')
+    plt.grid(True)
+    plt.savefig('No. of Gold Tables.png')
+    # plt.show()
+
+def replace_table_names(sql_content, selected_tables_to_dbid):
+    # logic checked at 0902
+    table_names = list(selected_tables_to_dbid.keys())  
+    table_names = sorted(table_names, key=len, reverse=True)
+    total_substitutions = 0 
+    for table_name in table_names:
+        pattern = re.compile(r'\b' + re.escape(table_name) + r'\b(?!\.)')  
+        new_table_name = f"{selected_tables_to_dbid[table_name]}.{table_name}"
+        sql_content, num_subs = pattern.subn(new_table_name, sql_content)
+        total_substitutions += num_subs
+    return sql_content, total_substitutions
 
 
 def process_table_json(args):
@@ -35,6 +72,9 @@ def process_table_json(args):
 
     # with open("tables_toy.json", "w", encoding="utf-8") as json_file:
     #     json.dump([db_stats_list[5]], json_file, indent=4, ensure_ascii=False)
+
+
+
 
 
 def process_dev_json(args):
@@ -71,6 +111,9 @@ def process_dev_json(args):
 
     # option
     available_dbs = [table['db_id'] for table in table_json]
+    dbid_to_ncols = {table['db_id']: table['db_stats']['No. of columns'] for table in table_json}
+    dbid_to_table_names = {table['db_id']: table['table_names_original'] for table in table_json}
+
     new_data = []
     for entry in data:
         if '\n' not in entry['db_id']:  
@@ -82,8 +125,28 @@ def process_dev_json(args):
         FLAG2 = entry['instance_id'] != 'bq276'  # TODO hack: erroreous instance
 
         if FLAG and FLAG2:
+            # 0922 statistics   
+            db_ids = entry['db_id'] if isinstance(entry['db_id'], list) else [entry['db_id']]
+            entry['No. of candidate columns'] = sum([dbid_to_ncols[db] for db in db_ids])
+            
+            selected_tables_to_dbid = {}
+            for db in db_ids:
+                table_names = dbid_to_table_names[db]
+                for table_name in table_names:
+                    selected_tables_to_dbid[table_name] = db
+            
+            _, total_substitutions = replace_table_names(entry['query'], selected_tables_to_dbid)
+            entry['No. of gold tables'] = total_substitutions 
+
+            if total_substitutions == 0:
+                if 'table_suffix' in entry['query'].lower() or '*`' in entry['query'].lower():
+                    entry['No. of gold tables'] = 20
+                else:
+                    print('>>>!!!!', entry['instance_id'])
+
             new_data.append(entry)
 
+    plot_statistics(new_data)
 
     with open(osp.join(proj_dir, f'preprocessed_data/{args.dev}/{args.dev}_preprocessed.json'), 'w', encoding='utf-8') as file:
         json.dump(new_data, file, ensure_ascii=False, indent=4)
