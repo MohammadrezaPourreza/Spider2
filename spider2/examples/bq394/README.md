@@ -1,1 +1,0 @@
-1. please query `bigquery-public-data.noaa_icoads` database to solve this problem.

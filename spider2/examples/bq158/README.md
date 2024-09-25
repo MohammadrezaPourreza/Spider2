@@ -1,1 +1,0 @@
-1. please query `pancancer-atlas.Filtered` database to solve this problem.
