@@ -52,7 +52,7 @@ def config() -> argparse.Namespace:
         description="Run end-to-end evaluation on the benchmark"
     )
     
-    parser.add_argument("--max_steps", type=int, default=30)
+    parser.add_argument("--max_steps", type=int, default=20)
     
     parser.add_argument("--max_memory_length", type=int, default=30)
     parser.add_argument("--suffix", '-s', type=str, default="gpt-4-try1")
@@ -121,7 +121,7 @@ def test(
         max_steps=args.max_steps,
         use_plan=args.plan
     )
-    
+    valid_ids = []
     ## load task configs
     assert os.path.exists(args.test_path) and args.test_path.endswith(".jsonl"), f"Invalid test_path, must be a valid jsonl file: {args.test_path}"
     with open(args.test_path, "r") as f:
@@ -144,15 +144,30 @@ def test(
         output_dir = os.path.join(args.output_dir, instance_id)
         result_json_path =os.path.join(output_dir, "spider/result.json")
 
-        if args.local_only:
-            if not task_config["instance_id"].startswith("local"): continue
-        if args.bq_only:
-            if not task_config["instance_id"].startswith("bq") and not task_config["instance_id"].startswith("ga"): continue
-        if args.dbt_only:
-            if task_config["instance_id"].startswith("local") or task_config["instance_id"].startswith("bq") or task_config["instance_id"].startswith("ga") or task_config["instance_id"].startswith("sf"): continue
-        if args.sf_only:
-            if not task_config["instance_id"].startswith("sf"): continue
-            
+
+        task_type = None
+        if task_config["instance_id"].startswith("bq") or task_config["instance_id"].startswith("ga"):
+            task_type = 'bq'
+        elif task_config["instance_id"].startswith("local"):
+            task_type = 'local'
+        elif task_config["instance_id"].startswith("sf"):
+            task_type = 'sf'
+        else:
+            task_type = 'dbt'
+
+        valid_types = set()
+        if args.local_only: valid_types.add('local')
+        if args.bq_only: valid_types.add('bq')
+        if args.sf_only: valid_types.add('sf')
+        if args.dbt_only: valid_types.add('dbt')
+        
+        if  (args.local_only or args.bq_only or args.sf_only or args.dbt_only):
+            if task_type not in valid_types: continue
+        else:
+            pass
+
+        valid_ids.append(task_config["instance_id"])
+        
         if not args.overwriting and os.path.exists(result_json_path):
             logger.info("Skipping %s", instance_id)
             continue
@@ -199,21 +214,23 @@ def test(
                            "result": result_output,"result_files": result_files, **trajectory}
         with open(os.path.join(output_dir, "spider/result.json"), "w") as f:
             json.dump(spider_result, f, indent=2)
+            
+            
         
         # Delete sqlite files
-        sqlite_files = glob.glob(os.path.join(output_dir, '*.sqlite'))
-        for file_path in sqlite_files:
-            try:
-                os.remove(file_path)
-                print(f"Deleted: {file_path}")
-            except Exception as e:
-                print(f"Error deleting {file_path}: {e}")
+        if task_type == 'local':
+            sqlite_files = glob.glob(os.path.join(output_dir, '*.sqlite')) + glob.glob(os.path.join(output_dir, '*.duckdb'))
+
+            for file_path in sqlite_files:
+                try:
+                    os.remove(file_path)
+                    print(f"Deleted: {file_path}")
+                except Exception as e:
+                    print(f"Error deleting {file_path}: {e}")
         
         
         logger.info("Finished %s", instance_id)
         env.close()
-
-
 
 if __name__ == '__main__':
     args = config()

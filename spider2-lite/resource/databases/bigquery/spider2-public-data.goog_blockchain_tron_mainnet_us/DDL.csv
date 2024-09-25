@@ -1,0 +1,37 @@
+table_name,ddl
+blocks,"CREATE TABLE `spider2-public-data.goog_blockchain_tron_mainnet_us.blocks`
+(
+  block_hash STRING,
+  block_number INT64,
+  block_timestamp TIMESTAMP,
+  parent_hash STRING,
+  size INT64,
+  extra_data STRING,
+  gas_limit INT64,
+  gas_used INT64,
+  base_fee_per_gas INT64,
+  mix_hash STRING,
+  nonce BIGNUMERIC,
+  difficulty STRUCT<string_value STRING, bignumeric_value BIGNUMERIC>,
+  total_difficulty STRUCT<string_value STRING, bignumeric_value BIGNUMERIC>,
+  miner STRING,
+  uncles_sha3 STRING,
+  uncles ARRAY<STRING>,
+  transactions_root STRING,
+  receipts_root STRING,
+  state_root STRING,
+  logs_bloom STRING
+);"
+logs,"CREATE TABLE `spider2-public-data.goog_blockchain_tron_mainnet_us.logs`
+(
+  block_hash STRING,
+  block_number INT64,
+  block_timestamp TIMESTAMP,
+  transaction_hash STRING,
+  transaction_index INT64,
+  log_index INT64,
+  address STRING,
+  data STRING,
+  topics ARRAY<STRING>,
+  removed BOOL
+);"
