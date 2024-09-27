@@ -2,6 +2,7 @@
 spider2/evaluation_suite/*
 spider2/release_spider2/spider2c.jsonl
 spider2/evaluation_suite/gold/spider2c_eval.jsonl
+spider2/evaluation_suite/gold/*.duckdb
 spider2/delete.py
 get_doc.py
 get_bigquery_schema.py
