@@ -2,7 +2,7 @@
 spider2/evaluation_suite/*
 spider2/release_spider2/spider2c.jsonl
 spider2/evaluation_suite/gold/spider2c_eval.jsonl
-spider2/evaluation_suite/gold/*.duckdb
+spider2/evaluation_suite/gold/**/*.duckdb
 spider2/delete.py
 get_doc.py
 get_bigquery_schema.py
@@ -11,7 +11,10 @@ get_bigquery_schema.py
 spider2/resource/databases/local/*.sqlite
 spider2/examples/**/DB_schema/
 spider2/examples/**/*.sqlite
+spider2/examples/**/*.duckdb
 spider2/examples/airbnb002/seeds/RAW_REVIEWS.csv
+
+!spider2/resource/databases/local/local-map.jsonl
 
 methods/spider-agent-air/logs/*
 methods/spider-agent-air/output/*
@@ -51,7 +54,6 @@ spider2-lite/resource/databases/local/*.sqlite
 !spider2/evaluation_suite/evaluate_beta.py
 !spider2/evaluation_suite/gold/
 !spider2/evaluation_suite/gold_temp/
-!spider2/evaluation_suite/gpt-4o-test2/
 !spider2/evaluation_suite/eval_utils.py
 !spider2/evaluation_suite/example_submission_folder/
 !spider2/evaluation_suite/credentials.zip
@@ -112,3 +114,4 @@ spider2-lite/resource/databases/spider2-localdb
 # Ignore any folder named 'credentials'
 credentials/
 **/credentials/
+
