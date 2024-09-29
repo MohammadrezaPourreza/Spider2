@@ -34,7 +34,9 @@ def timeout(seconds):
             t.start()
             t.join(seconds)
             if t.is_alive():
-                raise TimeoutError(f"Function '{func.__name__}' timed out after {seconds} seconds")
+                # raise TimeoutError(f"Function '{func.__name__}' timed out after {seconds} seconds")
+                print(f"Function '{func.__name__}' timed out after {seconds} seconds")
+                return False, "Timeout"
             else:
                 if exception_container:
                     raise exception_container[0]
