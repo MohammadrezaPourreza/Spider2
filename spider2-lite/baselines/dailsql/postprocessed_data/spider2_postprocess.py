@@ -48,7 +48,7 @@ def main(root_path, dev_json, table_json):
 
                 new_sql_content = postprocess_sql_by_dialect(sql_content, selected_tables_to_dbid, file_name)  # core
 
-                new_sql_file_path = os.path.join(new_root_path, file_name)
+                new_sql_file_path = os.path.join(new_root_path, instance_id + '.sql')
                 with open(new_sql_file_path, 'w', encoding='utf-8') as sql_file:
                     sql_file.write(new_sql_content)
 

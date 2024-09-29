@@ -21,7 +21,7 @@ sys.path.append("./")
 
 
 
-def process_question(question_json, args, cross_domain):
+def process_question(prompt, question_json, args, cross_domain):
     question_format = prompt.format(target=question_json,
                                     max_seq_len=args.max_seq_len,
                                     max_ans_len=args.max_ans_len,
@@ -118,16 +118,23 @@ if __name__ == '__main__':
 
     question_loader = getattr(data, func_name)()
 
-    with Pool(processes=args.processes) as pool:
-        with tqdm(total=len(question_loader)) as pbar:
-            for question_json in question_loader:
-                pool.apply_async(
-                    process_question, 
-                    args=(question_json, args, cross_domain),
-                    callback=collect_result
-                )
-            pool.close()
-            pool.join() 
+    # with Pool(processes=args.processes) as pool:
+    #     with tqdm(total=len(question_loader)) as pbar:
+    #         for question_json in question_loader:
+    #             pool.apply_async(
+    #                 process_question, 
+    #                 args=(question_json, args, cross_domain),
+    #                 callback=collect_result
+    #             )
+    #         pool.close()
+    #         pool.join() 
+    
+    # process questions sequentially
+    pbar = tqdm(total=len(question_loader))
+    for question_json in question_loader:
+        result = process_question(prompt, question_json, args, cross_domain)
+        collect_result(result)
+    pbar.close()
     
     # cost estimated
     token_cnt = float(token_cnt) / len(questions)

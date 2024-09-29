@@ -15,6 +15,34 @@ import sqlite3
 from tqdm import tqdm
 import snowflake.connector
 
+import threading
+import functools
+
+def timeout(seconds):
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            result_container = []
+            exception_container = []
+            def target():
+                try:
+                    result = func(*args, **kwargs)
+                    result_container.append(result)
+                except Exception as e:
+                    exception_container.append(e)
+            t = threading.Thread(target=target)
+            t.start()
+            t.join(seconds)
+            if t.is_alive():
+                raise TimeoutError(f"Function '{func.__name__}' timed out after {seconds} seconds")
+            else:
+                if exception_container:
+                    raise exception_container[0]
+                return result_container[0] if result_container else None
+        return wrapper
+    return decorator
+
+
 def load_jsonl_to_dict(jsonl_file):
     data_dict = {}
     with open(jsonl_file, 'r') as file:
@@ -30,7 +58,7 @@ def load_json_list_to_dict(json_file_path):
     data_dict = {item['instance_id']: item for item in data_list}
     return data_dict
 
-
+@timeout(60)
 def compare_multi_pandas_table(pred, multi_gold, multi_condition_cols=[], multi_ignore_order=False):
     print('multi_condition_cols', multi_condition_cols)
 
@@ -45,7 +73,7 @@ def compare_multi_pandas_table(pred, multi_gold, multi_condition_cols=[], multi_
         
     
 
-
+@timeout(60)
 def compare_pandas_table(pred, gold, condition_cols=[], ignore_order=False):
     """_summary_
 
@@ -95,7 +123,7 @@ def compare_pandas_table(pred, gold, condition_cols=[], ignore_order=False):
 
     return score
 
-
+@timeout(60)
 def get_bigquery_sql_result(sql_query, is_save, save_dir=None, file_name="result.csv"):
     """
     is_save = True, output a 'result.csv'
@@ -124,7 +152,7 @@ def get_bigquery_sql_result(sql_query, is_save, save_dir=None, file_name="result
         return False, str(e)
     return True, None
 
-
+@timeout(60)
 def get_snowflake_sql_result(sql_query, is_save, save_dir=None, file_name="result.csv"):
     """
     is_save = True, output a 'result.csv'
@@ -150,7 +178,7 @@ def get_snowflake_sql_result(sql_query, is_save, save_dir=None, file_name="resul
         print("Error occurred while fetching data: ", e)  
         return False, str(e)
 
-
+@timeout(60)
 def get_sqlite_result(db_path, query, save_dir=None, file_name="result.csv"):
     conn = sqlite3.connect(db_path)
     try:
