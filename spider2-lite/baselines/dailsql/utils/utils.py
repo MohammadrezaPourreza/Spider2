@@ -235,7 +235,22 @@ def get_sample_rows_for_database_from_tables_json(db_id, tables_json):
 
     return md_rows
     
-def get_sql_for_database_from_tables_json(db_id, tables_json, use_column_desc=False):
+def is_in_schema(schema, db_id, table_name=None, column_name=None):
+    if schema is None:
+        return True
+    if db_id not in schema:
+        return False
+    if table_name is None:
+        return True
+    if table_name not in schema[db_id]:
+        return False
+    if column_name is None:
+        return True
+    if column_name not in schema[db_id][table_name]:
+        return False
+    return True
+    
+def get_sql_for_database_from_tables_json(db_id, tables_json, use_column_desc=False, selected_schema=None):
     
     if isinstance(tables_json, str):
         GT_dbs = [db_id]
@@ -247,6 +262,7 @@ def get_sql_for_database_from_tables_json(db_id, tables_json, use_column_desc=Fa
     for db in tables_json:
         if db["db_id"] not in GT_dbs: continue
        
+        target_db_id = db["db_id"]
         table_names = db["table_names_original"]
         columns = db["column_names_original"]
         column_types = db["column_types"]
@@ -254,6 +270,8 @@ def get_sql_for_database_from_tables_json(db_id, tables_json, use_column_desc=Fa
         primary_keys = db["primary_keys"]
         foreign_keys = db["foreign_keys"]
         sample_rows = db["sample_rows"]
+        if not is_in_schema(selected_schema, target_db_id):
+            continue ## skip this database if not in selected_schema
         
         if len(columns) != len(column_descs):
             COLUMN_DESC_FLAG = False
@@ -262,11 +280,14 @@ def get_sql_for_database_from_tables_json(db_id, tables_json, use_column_desc=Fa
             
         create_statements = []
         for table_index, table_name in enumerate(table_names):
-
+            if not is_in_schema(selected_schema, target_db_id, table_name):
+                continue ## skip this table if not in selected_schema
             table_columns = []
             for col in columns:
                 if col[0] == table_index:
                     col_name = col[1]
+                    if not is_in_schema(selected_schema, target_db_id, table_name, col_name):
+                        continue ## skip this column if not in selected_schema
                     col_type = column_types[columns.index(col)]
                     if COLUMN_DESC_FLAG:
                         col_desc = column_descs[columns.index(col)]
