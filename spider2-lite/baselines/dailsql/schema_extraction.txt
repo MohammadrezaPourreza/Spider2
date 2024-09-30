@@ -1,0 +1,148 @@
+You are given an SQL query. Your task is to extract the db_ids (the database identifiers), table_names (the names of the tables being queried), and column_names (the names of the columns referenced in the query). Organize this information in the form of a dictionary where:
+
+The keys of the dictionary represent the db_ids (database identifiers).
+Each db_id maps to another dictionary where:
+The keys are the table_names.
+The values are a list of the column_names used from that table.
+The final output should be a JSON object that follows this structure.
+
+Task Details:
+db_ids: Extract the database identifiers from the query (these are usually in the form of project.dataset in systems like BigQuery).
+table_names: Identify the table names used in the query, including any table wildcards if applicable (e.g., events_*).
+column_names: Extract the column names from the query, including fields nested inside structs (e.g., event_params.key, event_params.value.int_value).
+
+Few-Shot Examples:
+Example 1:
+Input SQL Query:
+
+
+SELECT 
+    user_id, 
+    product_name, 
+    sales_amount 
+FROM 
+    ecommerce.sales_data 
+WHERE 
+    sales_amount > 100;
+Expected Output:
+
+
+{{
+  "ecommerce": {{
+    "sales_data": [
+      "user_id", 
+      "product_name", 
+      "sales_amount"
+    ]
+  }}
+}}
+
+Example 2:
+Input SQL Query:
+
+
+SELECT 
+    customer.id, 
+    customer.name, 
+    orders.order_id, 
+    orders.order_date 
+FROM 
+    company_data.customers AS customer 
+JOIN 
+    company_data.orders AS orders 
+ON 
+    customer.id = orders.customer_id;
+Expected Output:
+
+
+{{
+  "company_data": {{
+    "customers": [
+      "id", 
+      "name"
+    ],
+    "orders": [
+      "order_id", 
+      "order_date", 
+      "customer_id"
+    ]
+  }}
+}}
+
+Example 3:
+Input SQL Query:
+
+
+SELECT
+  COUNT(DISTINCT MDaysUsers.user_pseudo_id) AS n_day_inactive_users_count
+FROM
+  (
+    SELECT
+      user_pseudo_id
+    FROM
+      `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*` AS T
+    CROSS JOIN
+      UNNEST(T.event_params) AS event_params
+    WHERE
+      event_params.key = 'engagement_time_msec' 
+      AND event_params.value.int_value > 0
+      AND event_timestamp > UNIX_MICROS(TIMESTAMP_SUB(TIMESTAMP('2021-01-07 23:59:59'), INTERVAL 7 DAY))
+      AND _TABLE_SUFFIX BETWEEN '20210101' AND '20210107'
+  ) AS MDaysUsers
+LEFT JOIN
+  (
+    SELECT
+      user_pseudo_id
+    FROM
+      `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*` AS T
+    CROSS JOIN
+      UNNEST(T.event_params) AS event_params
+    WHERE
+      event_params.key = 'engagement_time_msec' 
+      AND event_params.value.int_value > 0
+      AND event_timestamp > UNIX_MICROS(TIMESTAMP_SUB(TIMESTAMP('2021-01-07 23:59:59'), INTERVAL 2 DAY))
+      AND _TABLE_SUFFIX BETWEEN '20210105' AND '20210107'
+  ) AS NDaysUsers
+ON MDaysUsers.user_pseudo_id = NDaysUsers.user_pseudo_id
+WHERE
+  NDaysUsers.user_pseudo_id IS NULL;
+Expected Output:
+
+{{
+  "bigquery-public-data.ga4_obfuscated_sample_ecommerce": {{
+    "events_*": [
+      "user_pseudo_id",
+      "event_params.key",
+      "event_params.value.int_value",
+      "event_timestamp",
+      "_TABLE_SUFFIX"
+    ]
+  }}
+}}
+
+Now, it's your turn to output the schema for the following SQL query:
+
+Input SQL Query:
+{SQL_QUERY}
+
+Output Format:
+The final output should be in JSON format, with the structure:
+
+
+{{
+  "db_id": {{
+    "table_name": [
+      "column_name_1", 
+      "column_name_2", 
+      ...
+    ]
+  }}
+}}
+The column_names list should include any nested fields (like event_params.key or event_params.value.int_value). Only include table names and columns that are explicitly mentioned in the query.
+
+Instructions for Special Cases:
+Wildcard table names: If the query uses wildcard tables (e.g., events_*), use the wildcard table name in the output (e.g., "events_*").
+Alias handling: If a table has an alias in the query (e.g., FROM table AS T), use the original table name, not the alias.
+Nested fields: If a column is nested (e.g., event_params.value.int_value), ensure that the full path is included in the list of column names.
+
+Only output the dictionary in the described format. Do not include any additional information in the output.
