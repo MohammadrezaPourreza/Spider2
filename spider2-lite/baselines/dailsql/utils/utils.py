@@ -213,7 +213,14 @@ def get_sample_rows_for_database_from_tables_json(db_id, tables_json):
         for key, data in sample_rows.items():
             df = pd.DataFrame(data)
             df = df.head(1)  # only use the first rows, avoid too long prompt
-            markdown_table = df.to_markdown(index=False)
+            markdown_table = ""
+            for index, row in df.iterrows():
+                if index == 0:
+                    markdown_table += ""
+                    for col in df.columns:
+                        markdown_table += f"{row[col]} | "
+                    markdown_table = markdown_table[:-3]  # remove the last " | "
+                    markdown_table += "\n"
             markdown_string += f"table {key}:\n{markdown_table}\n\n"
         return markdown_string
 

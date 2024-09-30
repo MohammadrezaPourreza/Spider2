@@ -3,6 +3,7 @@ import json
 import os
 import os.path as osp
 import tiktoken
+import time
 
 
 proj_dir = osp.dirname(osp.dirname(osp.abspath(__file__)))
@@ -60,14 +61,19 @@ class SQLPrompt(BasicPrompt):
             raise NotImplementedError
         prompt_question = self.template_question_optimized.format(dialect, dialect, example["question"])
 
-        def check_length(prompt_components, new):
+        def check_length(prompt_components, new, step = "No step"):
             result = "\n\n".join(prompt_components) + prompt_question + new  # type: str
-            return len(result) < 1048576 - 1000 and len(tiktoken.get_encoding("cl100k_base").encode(result)) < 128000 - 1000
+            start_time = time.time()
+            if len(result) > 5000000:
+                return False
+            tokens = len(tiktoken.get_encoding("cl100k_base").encode(result))
+            print(f'>>> ({step})  Number of tokens in prompt: {tokens}, time: {time.time() - start_time}')
+            return tokens < (1000000 - 1000)
 
         prompt_components = [prompt_info]
         original_len = len(prompt_info)
         i = 1
-        while not check_length(prompt_components, ""): 
+        while not check_length(prompt_components, "", "hard truncate"):
             print('>>>database schema is too long. hard truncate.')
             prompt_components = [prompt_info[:int(original_len * (1 - i / 20))]]
             i += 1
@@ -75,7 +81,7 @@ class SQLPrompt(BasicPrompt):
         if args.use_sample_rows:
             sample_rows = get_sample_rows_for_database_from_tables_json(example["db_id"], tables_json)  
             new = self.sample_rows_info.format(sample_rows)
-            if check_length(prompt_components, new):
+            if check_length(prompt_components, new, "sample rows"):
                 prompt_components.append(new)
             else:
                 print("Sample rows info too long, skip. length: ", len(new))
@@ -83,7 +89,7 @@ class SQLPrompt(BasicPrompt):
             with open(osp.join(proj_dir, '../../resource/documentation/external_knowledge', example['external_knowledge']), "r", encoding="utf-8") as file:
                 content = file.read()
             new = self.external_knowledge_info.format(content)
-            if check_length(prompt_components, new):
+            if check_length(prompt_components, new, "external knowledge"):
                 prompt_components.append(new)
             else:
                 print("External knowledge too long, skip. length: ", len(new))
@@ -92,13 +98,13 @@ class SQLPrompt(BasicPrompt):
             strs = [f"{item['name']}: {item['summary']}" for item in example['special_function']]
             special_function = "\n".join(strs)
             new = self.special_function_info.format(special_function)
-            if check_length(prompt_components, new):
+            if check_length(prompt_components, new, "special functions"):
                 prompt_components.append(new)
             else:
                 print("Special functions info too long, skip. length: ", len(new))
         if args.use_plan and example['plan'] is not None:
             new = self.plan_info.format(example['plan'])
-            if check_length(prompt_components, new):
+            if check_length(prompt_components, new, "plan"):
                 prompt_components.append(new)
             else:
                 print("Plan too long, skip. length: ", len(new))
@@ -106,7 +112,7 @@ class SQLPrompt(BasicPrompt):
         if args.use_few_shot:  # put few-shot examples at the end. for fair comparison 
             with open(osp.join(proj_dir, '../utils/3-shot.txt'), 'r', encoding='utf-8') as file:
                 new = file.read()
-            if check_length(prompt_components, new):
+            if check_length(prompt_components, new, "few-shot"):
                 prompt_components.append(new)
             else:
                 print("Few-shot examples too long, skip. length: ", len(new))

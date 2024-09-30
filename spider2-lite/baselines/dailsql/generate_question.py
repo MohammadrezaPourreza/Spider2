@@ -91,10 +91,10 @@ if __name__ == '__main__':
     parser.add_argument("--use_external_knowledge", action="store_false", default=True)
     parser.add_argument("--use_few_shot", action="store_true", default=False)
     parser.add_argument("--use_special_function", action="store_true", default=False)
-    parser.add_argument("--use_plan", action="store_true", default=False)
+    parser.add_argument("--use_plan", action="store_true", default=True)
 
     parser.add_argument("--comment", type=str, default="")
-    parser.add_argument("--processes", type=int, default=120)
+    parser.add_argument("--processes", type=int, default=20)
 
 
     args = parser.parse_args()

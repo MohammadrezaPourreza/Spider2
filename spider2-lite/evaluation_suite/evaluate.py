@@ -275,6 +275,7 @@ def evaluate_spider2sql(args):
                                 error_info = 'Result Error'
 
             elif "local" in id:
+                continue
                 exe_flag, dbms_error_info = get_sqlite_result(f"../resource/databases/spider2-localdb/{spider2sql_metadata.get(id)['db']}.sqlite", pred_sql_query, "temp", f"{id}_pred.csv" )
                 if exe_flag == False:
                     score = 0

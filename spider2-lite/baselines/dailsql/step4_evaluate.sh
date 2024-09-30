@@ -1,8 +1,8 @@
 #!/bin/bash
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DEV=spider2-lite
-LLM=gpt-4o
+DEV=_spider2-lite
+LLM=gemini-1.5-pro
 eval_suite_dir=$(readlink -f "${script_dir}/../../evaluation_suite")
 
 cd ${eval_suite_dir}
