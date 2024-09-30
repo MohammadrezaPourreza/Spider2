@@ -257,7 +257,7 @@ def is_in_schema(schema, db_id, table_name=None, column_name=None):
         return False
     return True
     
-def get_sql_for_database_from_tables_json(db_id, tables_json, use_column_desc=False, selected_schema=None):
+def get_sql_for_database_from_tables_json(db_id, tables_json, use_column_desc=False, selected_schema=None, instance_id=None):
     
     if isinstance(tables_json, str):
         GT_dbs = [db_id]
@@ -336,7 +336,7 @@ def get_sql_for_database_from_tables_json(db_id, tables_json, use_column_desc=Fa
             create_statements.append(create_statement)
         
         return create_statements
-    raise ValueError(f"Database '{db_id}' not found")
+    raise ValueError(f"Database '{db_id}' not found, instance_id: {instance_id}")
 
 
 def get_tokenizer(tokenizer_type: str):
@@ -603,3 +603,18 @@ def jaccard_similarity(skeleton1, skeleton2):
             intersection += min(token_dict1[t], token_dict2[t])
     union = (len(tokens1) + len(tokens2)) - intersection
     return float(intersection) / union
+
+schemas = None
+
+def get_golden_schema(instance_id, schemas_path):
+    global schemas
+    try:
+        if not schemas:
+            with open(schemas_path, "r") as f:
+                schemas = json.load(f)
+        schema = schemas[instance_id]["schema"]
+        return schema
+    except Exception as e:
+        print(f"Error in get_golden_schema: {e}")
+        return None
+    

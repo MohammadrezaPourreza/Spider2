@@ -7,14 +7,13 @@ The values are a list of the column_names used from that table.
 The final output should be a JSON object that follows this structure.
 
 Task Details:
-db_ids: Extract the database identifiers from the query (these are usually in the form of project.dataset in systems like BigQuery).
+db_ids: Extract the database identifiers from the query (these are usually in the form of project.dataset in systems like BigQuery). If the query does not specify a db_id (for example, in SQLite queries), set the db_id to "public".
 table_names: Identify the table names used in the query, including any table wildcards if applicable (e.g., events_*).
 column_names: Extract the column names from the query, including fields nested inside structs (e.g., event_params.key, event_params.value.int_value).
 
 Few-Shot Examples:
 Example 1:
 Input SQL Query:
-
 
 SELECT 
     user_id, 
@@ -25,7 +24,6 @@ FROM
 WHERE 
     sales_amount > 100;
 Expected Output:
-
 
 {{
   "ecommerce": {{
@@ -40,7 +38,6 @@ Expected Output:
 Example 2:
 Input SQL Query:
 
-
 SELECT 
     customer.id, 
     customer.name, 
@@ -53,7 +50,6 @@ JOIN
 ON 
     customer.id = orders.customer_id;
 Expected Output:
-
 
 {{
   "company_data": {{
@@ -71,7 +67,6 @@ Expected Output:
 
 Example 3:
 Input SQL Query:
-
 
 SELECT
   COUNT(DISTINCT MDaysUsers.user_pseudo_id) AS n_day_inactive_users_count
@@ -120,6 +115,195 @@ Expected Output:
   }}
 }}
 
+Example 4:
+Input SQL Query:
+
+WITH watched_repos AS (     
+    SELECT         
+        repo.name AS repo     
+    FROM          
+        `githubarchive.month.2017*`     
+    WHERE         
+        type = "WatchEvent" 
+), repo_watch_counts AS (     
+    SELECT         
+        repo,         
+        COUNT(*) AS watch_count     
+    FROM         
+        watched_repos     
+    GROUP BY         
+        repo 
+)  
+SELECT     
+    r.repo,     
+    r.watch_count 
+FROM     
+    `bigquery-public-data.github_repos.sample_files` AS f 
+JOIN     
+    `bigquery-public-data.github_repos.sample_contents` AS c 
+ON     
+    f.id = c.id 
+JOIN      
+    repo_watch_counts AS r 
+ON     
+    f.repo_name = r.repo 
+WHERE     
+    f.path LIKE '%.py'      
+    AND c.size < 15000      
+    AND REGEXP_CONTAINS(c.content, r'def ') 
+GROUP BY     
+    r.repo, r.watch_count 
+ORDER BY     
+    r.watch_count DESC 
+LIMIT 3;
+Expected Output:
+
+{{
+  "githubarchive.month": {{
+    "2017*": [
+      "repo.name",
+      "type"
+    ]
+  }},
+  "bigquery-public-data.github_repos": {{
+    "sample_files": [
+      "id",
+      "repo_name",
+      "path"
+    ],
+    "sample_contents": [
+      "id",
+      "size",
+      "content"
+    ]
+  }}
+}}
+
+Example 5 (SQLite example):
+Input SQL Query:
+
+SELECT 
+    customer_id, 
+    order_date, 
+    total_amount 
+FROM 
+    Customer_Orders
+WHERE 
+    total_amount > 500;
+Expected Output:
+
+{{
+  "public": {{
+    "Customer_Orders": [
+      "customer_id", 
+      "order_date", 
+      "total_amount"
+    ]
+  }}
+}}
+
+Example 6 (SQLite example):
+Input SQL Query:
+
+WITH product_sales AS (
+    SELECT product_id, SUM(sale_amount) AS total_sales
+    FROM Sales
+    GROUP BY product_id
+)
+SELECT p.product_id, p.product_name, ps.total_sales
+FROM Products p
+JOIN product_sales ps ON p.product_id = ps.product_id;
+Expected Output:
+
+{{
+  "public": {{
+    "Sales": [
+      "product_id", 
+      "sale_amount"
+    ],
+    "Products": [
+      "product_id", 
+      "product_name"
+    ],
+    "product_sales": [
+      "product_id", 
+      "total_sales"
+    ]
+  }}
+}}
+
+Example 7:
+Input SQL Query:
+
+WITH customer_balance AS (
+    SELECT *,
+           SUM(txn_amount) OVER (PARTITION BY customer_id ORDER BY month_ ASC) AS balance
+    FROM (
+        SELECT customer_id, strftime('%Y-%m-01', txn_date) AS month_, SUM(txn_group) AS txn_amount 
+        FROM (
+            SELECT *,
+                   CASE WHEN txn_type = 'deposit' THEN txn_amount
+                        ELSE -1 * txn_amount END AS txn_group
+            FROM Customer_Transactions
+            ORDER BY customer_id, txn_date
+        ) AS update_txn_amount
+        GROUP BY customer_id, strftime('%Y-%m-01', txn_date)
+    ) AS monthly_totals
+),
+growth_rates AS (
+    SELECT customer_id, month_, balance, previous_month_balance, 
+           CASE WHEN previous_month_balance IS NULL THEN NULL
+                WHEN previous_month_balance = 0 THEN balance * 100
+                ELSE ROUND(((balance - previous_month_balance) * 1.0 / ABS(previous_month_balance)) * 100, 1) END AS growth_rate,
+           ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY month_ DESC) AS balance_index
+    FROM (
+        SELECT *,
+               LAG(balance) OVER (PARTITION BY customer_id ORDER BY month_) AS previous_month_balance
+        FROM customer_balance
+    ) AS add_previous_month_balance
+),
+cust_last_balance AS (
+    SELECT customer_id, month_, growth_rate,
+           CASE WHEN growth_rate > 5 THEN 1 ELSE 0 END AS growth_rate_check 
+    FROM growth_rates
+    WHERE balance_index = 1
+)
+SELECT ROUND((SUM(growth_rate_check) * 1.0 / COUNT(*) * 100), 2) || '%' AS percentage_growth_check
+FROM cust_last_balance;
+Expected Output:
+
+{{
+  "Customer_Transactions": {{
+    "update_txn_amount": [
+      "customer_id",
+      "txn_date",
+      "txn_amount",
+      "txn_type",
+      "txn_group"
+    ]
+  }},
+  "customer_balance": [
+    "customer_id",
+    "month_",
+    "txn_amount",
+    "balance"
+  ],
+  "growth_rates": [
+    "customer_id",
+    "month_",
+    "balance",
+    "previous_month_balance",
+    "growth_rate",
+    "balance_index"
+  ],
+  "cust_last_balance": [
+    "customer_id",
+    "month_",
+    "growth_rate",
+    "growth_rate_check"
+  ]
+}}
+
 Now, it's your turn to output the schema for the following SQL query:
 
 Input SQL Query:
@@ -127,7 +311,6 @@ Input SQL Query:
 
 Output Format:
 The final output should be in JSON format, with the structure:
-
 
 {{
   "db_id": {{
@@ -141,8 +324,9 @@ The final output should be in JSON format, with the structure:
 The column_names list should include any nested fields (like event_params.key or event_params.value.int_value). Only include table names and columns that are explicitly mentioned in the query.
 
 Instructions for Special Cases:
-Wildcard table names: If the query uses wildcard tables (e.g., events_*), use the wildcard table name in the output (e.g., "events_*").
-Alias handling: If a table has an alias in the query (e.g., FROM table AS T), use the original table name, not the alias.
-Nested fields: If a column is nested (e.g., event_params.value.int_value), ensure that the full path is included in the list of column names.
+- Wildcard table names: If the query uses wildcard tables (e.g., events_*), use the wildcard table name in the output (e.g., "events_*").
+- Alias handling: If a table has an alias in the query (e.g., FROM table AS T), use the original table name, not the alias.
+- Nested fields: If a column is nested (e.g., event_params.value.int_value), ensure that the full path is included in the list of column names.
+- SQLite queries: If the query is from the SQLite dialect and doesn't specify a db_id, set the db_id to "public".
 
 Only output the dictionary in the described format. Do not include any additional information in the output.

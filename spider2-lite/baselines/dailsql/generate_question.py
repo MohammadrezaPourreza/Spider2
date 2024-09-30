@@ -94,7 +94,12 @@ if __name__ == '__main__':
     parser.add_argument("--use_plan", action="store_true", default=True)
 
     parser.add_argument("--comment", type=str, default="")
-    parser.add_argument("--processes", type=int, default=20)
+    parser.add_argument("--processes", type=int, default=5)
+    
+    # CHESS integration
+    parser.add_argument("--schema_type", type=str, choices=["full", "golden", "noisy_golden"], default="full")
+    parser.add_argument("--golden_schema_path", type=str, default=None)
+    parser.add_argument("--fpr_noise", type=float, default=0.0)
 
 
     args = parser.parse_args()
@@ -169,5 +174,5 @@ if __name__ == '__main__':
     
     path_generate = f"postprocessed_data/{args.comment}_{args.dev}_CTX-{args.max_ans_len}"
     os.makedirs(path_generate, exist_ok=True)
-    json.dump(task, open(os.path.join(path_generate, "questions.json"), "w"), indent=4)
+    json.dump(task, open(os.path.join(path_generate, f"questions_{args.schema_type}.json"), "w"), indent=4)
     

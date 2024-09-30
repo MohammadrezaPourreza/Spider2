@@ -1,4 +1,4 @@
-from utils.utils import get_sql_for_database, get_sql_for_database_from_tables_json, get_sample_rows_for_database_from_tables_json
+from utils.utils import get_sql_for_database, get_sql_for_database_from_tables_json, get_sample_rows_for_database_from_tables_json, get_golden_schema
 import json
 import os
 import os.path as osp
@@ -46,8 +46,18 @@ class SQLPrompt(BasicPrompt):
         
     def format_question(self, example: dict, args):
         tables_json = json.load(open(osp.join(proj_dir, f'preprocessed_data/{args.dev}/tables_preprocessed.json'), 'r', encoding='utf-8'))
-        sqls = get_sql_for_database_from_tables_json(example["db_id"], tables_json, use_column_desc=args.use_column_desc)
-
+        schema_type = args.schema_type
+        if schema_type == "full":
+            selected_schema = None
+        elif schema_type == "golden":
+            selected_schema = get_golden_schema(instance_id=example["instance_id"], schemas_path=args.golden_schema_path)
+            if selected_schema is None:
+                print(f"Golden schema not found for {example['instance_id']}, use full schema")
+        start_time = time.time()
+        sqls = get_sql_for_database_from_tables_json(example["db_id"], tables_json, 
+                                                     use_column_desc=args.use_column_desc, selected_schema=selected_schema,
+                                                     instance_id=example["instance_id"])
+        print(f'>>> Time to get SQLs: {time.time() - start_time}')
         prompt_info = self.template_info.format("\n\n".join(sqls))
         prompt_extra_info = self.get_extra_info(example["db_id"])
 
@@ -66,6 +76,8 @@ class SQLPrompt(BasicPrompt):
             start_time = time.time()
             if len(result) > 5000000:
                 return False
+            else:
+                return True
             tokens = len(tiktoken.get_encoding("cl100k_base").encode(result))
             print(f'>>> ({step})  Number of tokens in prompt: {tokens}, time: {time.time() - start_time}')
             return tokens < (1000000 - 1000)
