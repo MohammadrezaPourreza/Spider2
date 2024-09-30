@@ -1,6 +1,6 @@
 import json.decoder
 from utils.enums import LLM
-from langchain_google_vertexai import ChatVertexAI
+from langchain_google_vertexai import VertexAI
 
 from google.oauth2 import service_account
 from google.cloud import aiplatform
@@ -34,18 +34,16 @@ def init_gemini():
     vertexai.init(project=GCP_PROJECT, location=GCP_REGION, credentials=service_account.Credentials.from_service_account_file(GCP_CREDENTIALS))
 
 
-   
-
 def ask_chat(model, message_text: str, temperature, max_tokens):
     print('>>>max_tokens:', max_tokens)
-    llm = ChatVertexAI(
+    llm = VertexAI(
         model=model,
         temperature=temperature,
         max_tokens=max_tokens,
         safety_settings=safety_settings
     )
     response = llm.invoke(message_text)
-    response_clean = [response.content]
+    response_clean = [response]
     return dict(
         response=response_clean,
         total_tokens=0

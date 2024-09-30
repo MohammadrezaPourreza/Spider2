@@ -160,26 +160,15 @@ if __name__ == '__main__':
 
     question_loader = DataLoader(questions, batch_size=args.batch_size, shuffle=False, drop_last=False)
 
-    # set_start_method('spawn', force=True)  # Ensures that the correct start method is used for multiprocessing
+    set_start_method('spawn', force=True)  # Ensures that the correct start method is used for multiprocessing
 
     token_cnt = 0
-    # with Pool(processes=args.processes) as pool:
-    #     with tqdm(total=len(question_loader)) as pbar:
-    #         for _ in pool.starmap(process_batch, [
-    #             (
-    #                 batch, submit_folder, db_ids, args, i, 
-    #                 args.openai_api_key, args.openai_group_id, args.model
-    #             ) for i, batch in enumerate(question_loader)
-    #         ]):
-    #             pbar.update(1)
-
-    # process questions sequentially
-    # pbar = tqdm(total=len(question_loader))
-    for i, batch in enumerate(question_loader):
-        try:
-            print(f"Processing {i}-th question", flush=True)
-            process_batch(batch, submit_folder, db_ids, args, i, 
-                args.openai_api_key, args.openai_group_id, args.model)
-            # pbar.update(1)
-        except Exception as e:
-            print(f"Error processing {i}-th question: {e}")
+    with Pool(processes=args.processes) as pool:
+        with tqdm(total=len(question_loader)) as pbar:
+            for _ in pool.starmap(process_batch, [
+                (
+                    batch, submit_folder, db_ids, args, i, 
+                    args.openai_api_key, args.openai_group_id, args.model
+                ) for i, batch in enumerate(question_loader)
+            ]):
+                pbar.update(1)
