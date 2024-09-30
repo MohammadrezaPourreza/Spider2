@@ -53,6 +53,9 @@ class LLM:
     GPT_4 = "gpt-4"
     GPT_4o = "gpt-4o"
 
+    # google models
+    GEMINI_15_PRO = "gemini-1.5-pro"
+
     # LLMs that use openai completion api
     TASK_COMPLETIONS = [
         TEXT_DAVINCI_003,
@@ -66,6 +69,7 @@ class LLM:
         GPT_35_TURBO_16K,
         GPT_35_TURBO_0301,
         GPT_4,
+        GEMINI_15_PRO,
         GPT_4o
     ]
 

@@ -8,6 +8,7 @@ get_doc.py
 get_bigquery_schema.py
 .vscode/*
 
+spider2-lite/baselines/dailsql/google_credentials
 spider2/resource/databases/local/*.sqlite
 spider2/examples/**/DB_schema/
 spider2/examples/**/*.sqlite

@@ -9,6 +9,7 @@ from torch.utils.data import DataLoader
 from multiprocessing import Pool, set_start_method
 
 from llm.chatgpt import init_chatgpt, ask_llm
+from llm.chatgemini import init_gemini, ask_llm
 from utils.enums import LLM
 from utils.post_process import process_duplication, get_sqls
 
@@ -33,7 +34,12 @@ def process_batch(batch, submit_folder, db_ids, args, i,
     # return  # count cost only
 
     # init openai api
-    init_chatgpt(args.openai_api_key, args.openai_group_id, args.model)
+    if args.model_family == "google":
+        init_gemini()
+    elif args.model_family == "openai":
+        init_chatgpt(args.openai_api_key, args.openai_group_id, args.model)
+    else:
+        raise NotImplementedError(f"model_family {args.model_family} not supported")
 
     if args.post_mode == 'consistency-from-generated-pass@n':  # load the saved sql from the output of pass@n
         cur_db_ids = db_ids[i * args.batch_size: (i+1) * args.batch_size]
@@ -103,11 +109,14 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--question", type=str)
     parser.add_argument("--openai_api_key", type=str)
+    parser.add_argument("--google_credentials", type=str, default=None)
     parser.add_argument("--openai_group_id", type=str, default=None)
+    parser.add_argument("--model_family", type=str, choices=["openai", "google"], default="google")
     parser.add_argument("--model", type=str, choices=[LLM.TEXT_DAVINCI_003, 
                                                       LLM.GPT_35_TURBO,
                                                       LLM.GPT_35_TURBO_0613,
                                                       LLM.GPT_35_TURBO_16K,
+                                                      LLM.GEMINI_15_PRO,
                                                       LLM.GPT_4, 
                                                       LLM.GPT_4o],
                         default=LLM.GPT_35_TURBO)
@@ -122,7 +131,6 @@ if __name__ == '__main__':
     parser.add_argument("--processes", type=int, default=5)  # New argument for specifying the number of processes
     parser.add_argument("--override", action="store_true")
     args = parser.parse_args()
-
 
     if args.is_sql_debug:
         QUESTION_FILE = "debug_questions.json"
@@ -152,15 +160,26 @@ if __name__ == '__main__':
 
     question_loader = DataLoader(questions, batch_size=args.batch_size, shuffle=False, drop_last=False)
 
-    set_start_method('spawn', force=True)  # Ensures that the correct start method is used for multiprocessing
+    # set_start_method('spawn', force=True)  # Ensures that the correct start method is used for multiprocessing
 
     token_cnt = 0
-    with Pool(processes=args.processes) as pool:
-        with tqdm(total=len(question_loader)) as pbar:
-            for _ in pool.starmap(process_batch, [
-                (
-                    batch, submit_folder, db_ids, args, i, 
-                    args.openai_api_key, args.openai_group_id, args.model
-                ) for i, batch in enumerate(question_loader)
-            ]):
-                pbar.update(1)
+    # with Pool(processes=args.processes) as pool:
+    #     with tqdm(total=len(question_loader)) as pbar:
+    #         for _ in pool.starmap(process_batch, [
+    #             (
+    #                 batch, submit_folder, db_ids, args, i, 
+    #                 args.openai_api_key, args.openai_group_id, args.model
+    #             ) for i, batch in enumerate(question_loader)
+    #         ]):
+    #             pbar.update(1)
+
+    # process questions sequentially
+    # pbar = tqdm(total=len(question_loader))
+    for i, batch in enumerate(question_loader):
+        try:
+            print(f"Processing {i}-th question", flush=True)
+            process_batch(batch, submit_folder, db_ids, args, i, 
+                args.openai_api_key, args.openai_group_id, args.model)
+            # pbar.update(1)
+        except Exception as e:
+            print(f"Error processing {i}-th question: {e}")
