@@ -73,28 +73,26 @@ def extract_json_from_output(llm_output: str) -> str:
 
 def extract_sql_queries(text):
     """
-    Extracts SQL queries enclosed within ```sql and ``` tags from the provided text.
+    Extracts SQL queries enclosed within <FINAL_ANSWER> and </FINAL_ANSWER> tags.
+
 
     Parameters:
         text (str): The large text containing SQL queries within code blocks.
 
     Returns:
-        List[str]: A list of extracted SQL queries.
+        a SQL query
     """
-    pattern = re.compile(
-        r'```sql\s*\n?(.*?)\n?```',  # Pattern to match ```sql ... ```
-        re.DOTALL | re.IGNORECASE    # Flags to match across lines and ignore case
-    )
-    matches = pattern.findall(text)
-    sql_queries = [match.strip() for match in matches]
-    if not sql_queries:
-        sql_queries = ["SELECT * FROM table"]
-    return sql_queries
+    if "<FINAL_ANSWER>" in text and "</FINAL_ANSWER>" in text:
+        pattern = re.compile(r"<FINAL_ANSWER>(.*?)</FINAL_ANSWER>", re.DOTALL)
+        return pattern.findall(text)[-1]
+    return text
+
 
     
 def process_sample(sample: dict, args, tables_json, formatted_time):
     """Process a single sample"""
-    llm = get_engine(args.model_name, temperature = 0.2)
+    schema_linker_llm = get_engine("gemini-1.5-pro-002", temperature = 0.2)
+    llm = get_engine(args.model_name)
     question = sample['instruction']
     instance_id = sample['instance_id']
     db_id = sample['db_id']
@@ -108,50 +106,62 @@ def process_sample(sample: dict, args, tables_json, formatted_time):
 
     generation_prompt = load_prompt("simple_sql_generation")
     gold_schema_extractor = load_prompt("extract_correct_schema")
+    self_refine = load_prompt("self_refiner_prompt")
 
     context = ""
     if external_knowledge:
         context = load_external_knowledge(external_knowledge)
 
+        # TODO remove this and token counter
+        context = context[:1000000]
+
     full_schema = get_sql_for_database_from_tables_json(db_id, tables_json, use_column_desc=True)
     full_schema = "\n\n".join(full_schema)
+
+    # TODO remove this and token counter
+    full_schema = full_schema[:1000000]
     
     gold_schema_extractor_user_message = gold_schema_extractor.format(
        DATABASE_SCHEMA=full_schema,
        QUERY = gold_query
     )
-    extracted_schema = invoke_engine(llm, gold_schema_extractor_user_message, log_path=logging_path, step_id="extract_schema")
+    extracted_schema = invoke_engine(schema_linker_llm, gold_schema_extractor_user_message, log_path=logging_path, step_id="extract_schema")
     extracted_schema = extract_json_from_output(extracted_schema)
 
     filtered_schema = get_sql_for_database_from_tables_json(db_id, tables_json, use_column_desc=True, seletected_schema=json.loads(extracted_schema), number_of_rows=1)
     filtered_schema = "\n\n".join(filtered_schema)
 
-    query_is_correct = False
-    counter = 0
-    llm_input = question
-
-    while not query_is_correct and counter < args.max_refinement:
-        generation_user_message = generation_prompt.format(
-            QUESTION=llm_input,
-            DATABASE_SCHEMA=filtered_schema,
-            CONTEXT=context
-        )
-        generated_sql = invoke_engine(llm, generation_user_message, log_path=logging_path, step_id="generate_sql")
-        generated_sql = extract_sql_queries(generated_sql)[-1]
-        query_is_correct, result = get_snowflake_sql_result(generated_sql, db_id)
-        if not query_is_correct:
-            print(f"The query is not correct. Please try again. round: {counter}, error: {result}")
-        llm_input += "\n\n" + "You generated this answer brefore: " + generated_sql + "\n\n" + "But the query is not correct. Please try again. here is the error: " + result
-        counter += 1
+    # TODO remove this and token counter
+    filtered_schema = filtered_schema[:1000000]
 
 
     generation_user_message = generation_prompt.format(
-        QUESTION=question,
-        DATABASE_SCHEMA=filtered_schema,
-        CONTEXT=context
-    )
+            QUESTION=question,
+            DB_ID=db_id,
+            DATABASE_SCHEMA=filtered_schema,
+            CONTEXT=context
+        )
     generated_sql = invoke_engine(llm, generation_user_message, log_path=logging_path, step_id="generate_sql")
-    generated_sql = extract_sql_queries(generated_sql)[-1]
+    generated_sql = extract_sql_queries(generated_sql)
+    query_is_correct, result = get_snowflake_sql_result(generated_sql, db_id)
+
+
+    query_is_correct = False
+    counter = 0
+
+    while not query_is_correct and counter < args.max_refinement:
+        generation_user_message = self_refine.format(
+            QUESTION=question,
+            DB_ID=db_id,
+            DATABASE_SCHEMA=filtered_schema,
+            CONTEXT=context,
+            QUERY=generated_sql,
+            RESULT=result
+        )
+        generated_sql = invoke_engine(llm, generation_user_message, log_path=logging_path, step_id="refine_sql")
+        generated_sql = extract_sql_queries(generated_sql)
+        query_is_correct, result = get_snowflake_sql_result(generated_sql, db_id)
+        counter += 1
 
     return {
        "question": question,
@@ -180,7 +190,7 @@ if __name__=="__main__":
     parser.add_argument("--table_file", type=str, default="preprocessed_data/spider2-snow/tables_preprocessed.json")
     parser.add_argument("--model_name", type=str, default="gemini-1.5-pro-002")
     parser.add_argument("--max_refinement", type=int, default=3)
-    parser.add_argument("--num_workers", type=int, default=4, help="Number of workers for data processing")
+    parser.add_argument("--num_workers", type=int, default=8, help="Number of workers for data processing")
     args = parser.parse_args()
     tables_json = json.load(open(osp.join(proj_dir, args.table_file), 'r', encoding='utf-8'))
 

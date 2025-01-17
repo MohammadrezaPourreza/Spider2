@@ -188,7 +188,7 @@ def get_snowflake_sql_result(sql_query, database_id, is_save, save_dir=None, fil
                 df.to_csv(os.path.join(save_dir, file_name), index=False)
                 return None, None
     except Exception as e:
-        print("Error occurred while fetching data: ", e)  
+        print(f"Error occurred while fetching data for {file_name}: ", e)  
         return False, str(e)
 
 

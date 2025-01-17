@@ -55,6 +55,10 @@ engine_configs = {
         "constructor": ChatOpenAI,
         "params": {"model": "gpt-4", "temperature": 0}
     },
+    "o1-mini": {
+        "constructor": ChatOpenAI,
+        "params": {"model": "o1-mini"}
+    },
     "gpt-3.5-turbo": {
         "constructor": ChatOpenAI,
         "params": {"model": "gpt-3.5-turbo", "temperature": 0}

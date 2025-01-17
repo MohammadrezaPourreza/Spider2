@@ -29,8 +29,121 @@ Database admin instructions (voliating any of the following will result is punis
 8. **GROUP BY or AGGREGATE:**
    - In queries with GROUP BY, all columns in the SELECT list must either: Be included in the GROUP BY clause, or Be used in an aggregate function (e.g., MAX, MIN, AVG, COUNT, SUM).
 
+9. **Case sensitivity:**
+   - Snowflake SQL dialect is case sensitive, so **Always** put the column names and table names inside " and " tags, with the exact same format that is provided in the DDL commands.
+
+10. **Table Names:**
+   - Table names should be in the format of "database_name.schema_name.table_name" to avoid any ambiguity.
+
 Now is the real question, following the instruction and examples, think step-by-step and finally generate the Snowflake SQL query.
-Follow all steps from the strategy. When you get to the final query, output the query string ONLY in the format ```sql ... ```. Make sure you only output one single query.
+Follow all steps from the strategy. When you get to the final query, output the query string ONLY in the format <FINAL_ANSWER> ... </FINAL_ANSWER>. Make sure you only output one single query.
+
+Here are some examples
+===========
+Example 1
+
+**************************
+【Table creation statements】
+CREATE TABLE "PATENTS.PUBLICATIONS"
+(
+    "application_number" TEXT COMMENT "Patent application number (DOCDB compatible), eg: 'US-87124404-A'. This may not always be set.",
+    "filing_date" NUMBER COMMENT "Is this text truncated?",
+    "abstract_localized" VARIANT COMMENT "Localized text",
+    "country_code" TEXT COMMENT "Country code, eg: 'US', 'EP', etc"
+)
+
+Sample rows: 
+Row 1: 
+application_number: DE-69611147-T, country_code: DE, abstract_localized: [], filing_date: 19961015, 
+=====================
+
+
+
+Database name:
+PATENTS
+
+**************************
+【Question】
+Question: 
+How many U.S. publications related to IoT (where the abstract includes the phrase 'internet of things') were filed each month from 2008 to 2022, including months with no filings?
+
+**************************
+【Answer】
+Let's think step by step.
+
+Identify Required Columns & Filters
+
+ - We need to filter U.S. publications ("country_code" = 'US') whose abstract contains the phrase "internet of things".
+ - We look up application number and filing date from "PATENTS.PATENTS.PUBLICATIONS" and also unnest the "abstract_localized" JSON array to find text containing "internet of things".
+
+Handle NULLs and Join Logic
+ - We use LATERAL FLATTEN on "abstract_localized" to inspect each piece of text.
+ - We filter out unwanted rows by applying WHERE LOWER(abstract_info.value:"text") LIKE '%internet of things%'.
+
+Generate Date Series
+ - Because we need monthly counts even for months with zero filings, we generate a calendar table (Date_Series_Table) spanning from 2008-01-01 up to just before 2023-01-01.
+
+Join & Group
+ - We left-join our generated dates with the filtered patents.
+ - Convert the numeric filing date into a proper date, group by year–month, and count distinct application numbers.
+
+Adhere to Snowflake Requirements
+ - Use exact column and table references in double quotes.
+ - Apply the correct date functions (TO_DATE, DATEADD, TO_CHAR) and grouping logic.
+ - Include a WHERE ... IS NOT NULL or filter to exclude invalid rows as needed.
+
+Final Query Output
+ - Return a single SQL statement.
+ - Make sure it’s enclosed in <FINAL_ANSWER> and </FINAL_ANSWER> tags.
+
+
+Below is the final Snowflake SQL query:
+<FINAL_ANSWER>
+WITH Patent_Matches AS (
+    SELECT
+      TO_DATE(CAST(ANY_VALUE(patentsdb."filing_date") AS STRING), 'YYYYMMDD') AS Patent_Filing_Date,
+      patentsdb."application_number" AS Patent_Application_Number,
+      MAX(abstract_info.value:"text") AS Patent_Title,
+      MAX(abstract_info.value:"language") AS Patent_Title_Language
+    FROM
+      PATENTS.PATENTS.PUBLICATIONS AS patentsdb,
+      LATERAL FLATTEN(input => patentsdb."abstract_localized") AS abstract_info
+    WHERE
+      LOWER(abstract_info.value:"text") LIKE '%internet of things%'
+      AND patentsdb."country_code" = 'US'
+    GROUP BY
+      Patent_Application_Number
+),
+
+Date_Series_Table AS (
+    SELECT
+        DATEADD(day, seq4(), DATE '2008-01-01') AS day,
+        0 AS Number_of_Patents
+    FROM
+        TABLE(
+            GENERATOR(
+                ROWCOUNT => 5479
+            )
+        )
+    ORDER BY
+        day
+)
+
+SELECT
+  TO_CHAR(Date_Series_Table.day, 'YYYY-MM') AS Patent_Date_YearMonth,
+  COUNT(Patent_Matches.Patent_Application_Number) AS Number_of_Patent_Applications
+FROM
+  Date_Series_Table
+  LEFT JOIN Patent_Matches
+    ON Date_Series_Table.day = Patent_Matches.Patent_Filing_Date
+WHERE
+    Date_Series_Table.day < DATE '2023-01-01'
+GROUP BY
+  TO_CHAR(Date_Series_Table.day, 'YYYY-MM')
+ORDER BY
+  Patent_Date_YearMonth;
+
+</FINAL_ANSWER>
 
 **************************
 【Context】
@@ -40,6 +153,9 @@ Follow all steps from the strategy. When you get to the final query, output the 
 【Table creation statements】
 {DATABASE_SCHEMA}
 
+Database name:
+{DB_ID}
+
 **************************
 【Question】
 Question: 
@@ -47,5 +163,9 @@ Question:
 
 **************************
 【Answer】
-Think step-by-step to generate a single SQL query that answers the given question. Finally provide the Snowflake SQL query inside ```sql and ``` tags.
+
+**Important**: make sure to use **"Database_Name.Full_table_name(with the dot)"** for refrencing tables. You just have to concatenate database name + table name provided in DDL commands and put it inside " and " tags.
+for example if DB name is FINANCIAL and table name is "FINANCIAL.TABLE1" you should use "FINANCIAL"."FINANCIAL"."TABLE1" as table name.
+
+Think step-by-step to generate a single SQL query that answers the given question. Finally provide the Snowflake SQL query inside <FINAL_ANSWER> and </FINAL_ANSWER> tags.
 Let's think step by step.

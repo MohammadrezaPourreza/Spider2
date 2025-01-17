@@ -1,0 +1,231 @@
+**Task Description:**
+You are an SQL database expert tasked with correcting a SQL query. A previous attempt to run a query did not yield the correct results, either due to errors in execution or because the result returned was empty or unexpected. Your role is to analyze the error based on the provided database schema and the details of the failed execution, and then provide a corrected version of the SQL query.
+
+Database admin instructions (voliating any of the following will result is punishble to death!):
+1. **SELECT Clause:**
+   - Select only the necessary columns by explicitly specifying them in the `SELECT` statement. Avoid redundant columns or values.
+
+2. **Handling NULLs:**
+   - To filter out NULL values, use `JOIN` or add a `WHERE <column> IS NOT NULL` clause.
+
+3. **FROM/JOIN Clauses:**
+   - Only include tables essential to the query. Snowflake supports `JOIN` types like `INNER JOIN`, `LEFT JOIN`, and `RIGHT JOIN`, so use these based on the relationships needed.
+
+4. **Thorough Question Analysis:**
+   - Review all specified conditions or constraints in the question to ensure they are fully addressed in the query.
+
+5. **DISTINCT Keyword:**
+   - Use `SELECT DISTINCT` when unique values are needed, such as for IDs or URLs.
+
+6. **Column Selection:**
+   - Pay close attention to column descriptions and any hints to select the correct column, especially when similar columns exist across tables.
+
+7. **Snowflake Functions Only:**
+   - Use functions available in Snowflake SQL. Avoid SQLite-specific functions and replace them with Snowflake equivalents.
+
+8. **GROUP BY or AGGREGATE:**
+   - In queries with GROUP BY, all columns in the SELECT list must either: Be included in the GROUP BY clause, or Be used in an aggregate function (e.g., MAX, MIN, AVG, COUNT, SUM).
+
+9. **Case sensitivity:**
+   - Snowflake SQL dialect is case sensitive, so **Always** put the column names and table names inside " and " tags, with the exact same format that is provided in the DDL commands.
+
+10. **Table Names:**
+   - Table names should be in the format of "database_name.schema_name.table_name" to avoid any ambiguity.
+
+**Procedure:**
+1. Review Database Schema:
+	- Examine the table creation statements to understand the database structure.
+2. Analyze Query Requirements:
+	- Original Question: Consider what information the query is supposed to retrieve.
+	- Executed SQL Query: Review the SQL query that was previously executed and led to an error or incorrect result.
+	- Execution Result: Analyze the outcome of the executed query to identify why it failed (e.g., syntax errors, incorrect column references, logical mistakes).
+3. Correct the Query: 
+	- Modify the SQL query to address the identified issues, ensuring it correctly fetches the requested data according to the database schema and query requirements.
+
+
+**Output Format:**
+
+Present your corrected query as a single line of SQL code, enclosed within XML delimiter tags <FINAL_ANSWER> and </FINAL_ANSWER>. Ensure there are no line breaks within the query.
+
+
+Here are some examples:
+======= Example 1 =======
+
+**************************
+【Table creation statements】
+CREATE TABLE "PATENTS.PUBLICATIONS"
+(
+    "application_number" TEXT COMMENT "Patent application number (DOCDB compatible), eg: 'US-87124404-A'. This may not always be set.",
+    "filing_date" NUMBER COMMENT "Is this text truncated?",
+    "abstract_localized" VARIANT COMMENT "Localized text",
+    "country_code" TEXT COMMENT "Country code, eg: 'US', 'EP', etc"
+)
+
+Sample rows: 
+Row 1: 
+application_number: DE-69611147-T, country_code: DE, abstract_localized: [], filing_date: 19961015, 
+=====================
+
+
+
+Database name:
+PATENTS
+
+**************************
+【Question】
+Question: 
+How many U.S. publications related to IoT (where the abstract includes the phrase 'internet of things') were filed each month from 2008 to 2022, including months with no filings?
+
+The SQL query executed was:
+WITH Patent_Matches AS (
+    SELECT
+      TO_DATE(CAST(ANY_VALUE(patentsdb."filing_date") AS STRING), 'YYYYMMDD') AS Patent_Filing_Date,
+      patentsdb."application_number" AS Patent_Application_Number,
+      MAX(abstract_info.value:"text") AS Patent_Title,
+      MAX(abstract_info.value:"language") AS Patent_Title_Language
+    FROM
+      "PATENTS.PUBLICATIONS" AS patentsdb,
+      LATERAL FLATTEN(input => patentsdb."abstract_localized") AS abstract_info
+    WHERE
+      LOWER(abstract_info.value:"text") LIKE '%internet of things%'
+      AND patentsdb."country_code" = 'US'
+    GROUP BY
+      Patent_Application_Number
+),
+
+Date_Series_Table AS (
+    SELECT
+        DATEADD(day, seq4(), DATE '2008-01-01') AS day,
+        0 AS Number_of_Patents
+    FROM
+        TABLE(
+            GENERATOR(
+                ROWCOUNT => 5479
+            )
+        )
+    ORDER BY
+        day
+)
+
+SELECT
+  TO_CHAR(Date_Series_Table.day, 'YYYY-MM') AS Patent_Date_YearMonth,
+  COUNT(Patent_Matches.Patent_Application_Number) AS Number_of_Patent_Applications
+FROM
+  Date_Series_Table
+  LEFT JOIN Patent_Matches
+    ON Date_Series_Table.day = Patent_Matches.Patent_Filing_Date
+WHERE
+    Date_Series_Table.day < DATE '2023-01-01'
+GROUP BY
+  TO_CHAR(Date_Series_Table.day, 'YYYY-MM')
+ORDER BY
+  Patent_Date_YearMonth;
+
+
+The execution result:
+SQL compilation error:
+Object '"PATENTS.PUBLICATIONS"' does not exist or not authorized.
+
+
+**************************
+
+Identify the Error
+The Snowflake engine returned the error:
+SQL compilation error:
+Object '"PATENTS.PUBLICATIONS"' does not exist or not authorized.
+
+This indicates that Snowflake could not find or access the table "PATENTS.PUBLICATIONS".
+
+Check Database Schema
+ - By reviewing the table creation statements and the actual database/schema names, we realize that the correct reference must include the database and schema in the proper format. In Snowflake, the convention is "database_name"."schema_name"."table_name" if strict case sensitivity is required, or simply database_name.schema_name.table_name for references without quotes (provided the names do not contain special or mixed-case characters).
+
+Correct the Table Reference
+ - The real table name resides under database "PATENTS" and schema "PATENTS", so its fully qualified name is: PATENTS.PATENTS.PUBLICATIONS
+ - Replacing "PATENTS.PUBLICATIONS" with PATENTS.PATENTS.PUBLICATIONS (or the quoted equivalent "PATENTS"."PATENTS"."PUBLICATIONS" if strict case sensitivity is required) resolves the Object does not exist error.
+
+Verify Other Clauses
+ - SELECT Clause: The query selects only necessary columns (filing_date, application_number, etc.), which is compliant with the instructions.
+ - Handling NULLs: The query uses a JOIN approach (LATERAL FLATTEN) to avoid null entries in the abstract_localized field, satisfying the requirement to filter out or handle NULLs.
+ - Date Series: A date series table is generated to ensure that months with zero filings are also listed.
+ - GROUP BY: Uses GROUP BY TO_CHAR(Date_Series_Table.day, 'YYYY-MM') properly since TO_CHAR(...) is the only non-aggregate expression in the SELECT clause.
+
+Final Corrected Query
+<FINAL_ANSWER>
+WITH Patent_Matches AS (
+    SELECT
+      TO_DATE(CAST(ANY_VALUE(patentsdb."filing_date") AS STRING), 'YYYYMMDD') AS Patent_Filing_Date,
+      patentsdb."application_number" AS Patent_Application_Number,
+      MAX(abstract_info.value:"text") AS Patent_Title,
+      MAX(abstract_info.value:"language") AS Patent_Title_Language
+    FROM
+      PATENTS.PATENTS.PUBLICATIONS AS patentsdb,
+      LATERAL FLATTEN(input => patentsdb."abstract_localized") AS abstract_info
+    WHERE
+      LOWER(abstract_info.value:"text") LIKE '%internet of things%'
+      AND patentsdb."country_code" = 'US'
+    GROUP BY
+      Patent_Application_Number
+),
+
+Date_Series_Table AS (
+    SELECT
+        DATEADD(day, seq4(), DATE '2008-01-01') AS day,
+        0 AS Number_of_Patents
+    FROM
+        TABLE(
+            GENERATOR(
+                ROWCOUNT => 5479
+            )
+        )
+    ORDER BY
+        day
+)
+
+SELECT
+  TO_CHAR(Date_Series_Table.day, 'YYYY-MM') AS Patent_Date_YearMonth,
+  COUNT(Patent_Matches.Patent_Application_Number) AS Number_of_Patent_Applications
+FROM
+  Date_Series_Table
+  LEFT JOIN Patent_Matches
+    ON Date_Series_Table.day = Patent_Matches.Patent_Filing_Date
+WHERE
+    Date_Series_Table.day < DATE '2023-01-01'
+GROUP BY
+  TO_CHAR(Date_Series_Table.day, 'YYYY-MM')
+ORDER BY
+  Patent_Date_YearMonth;
+</FINAL_ANSWER> 
+
+======= Your task =======
+**************************
+【Context】
+{CONTEXT}
+**************************
+【Table creation statements】
+{DATABASE_SCHEMA}
+
+Database name:
+{DB_ID}
+
+**************************
+The original question is:
+Question: 
+{QUESTION}
+
+The SQL query executed was:
+{QUERY}
+
+The execution result:
+{RESULT}
+
+**************************
+Based on the question, table schemas and the previous query, analyze the result try to fix the query.
+
+Give very detailed analysis first. When you are OK with the fixed query, output the query string ONLY inside the xml delimiter <FINAL_ANSWER></FINAL_ANSWER>.
+Inside the xml delimiter it should be the query in plain text. You cannot modify the database schema or the question, just output the corrected query.
+Make sure you only output one single query. The query should be a one liner without any line breaks.
+
+Example of correct format:
+<FINAL_ANSWER>
+SELECT column FROM table WHERE condition
+</FINAL_ANSWER>
