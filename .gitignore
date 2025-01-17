@@ -7,7 +7,13 @@ spider2/delete.py
 get_doc.py
 get_bigquery_schema.py
 .vscode/*
-
+.venv
+spider2-snow/evaluation_suite/temp/
+spider2-snow/baselines/deep_queries/utils/gcp_credentials
+spider2-snow/evaluation_suite
+spider2-snow/resource
+spider2-snow/baselines/deep_queries/logs
+spider2-snow/resource
 spider2/resource/databases/local/*.sqlite
 spider2/examples/**/DB_schema/
 spider2/examples/**/*.sqlite

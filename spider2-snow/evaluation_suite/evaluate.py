@@ -181,6 +181,8 @@ def get_snowflake_sql_result(sql_query, database_id, is_save, save_dir=None, fil
         df = pd.DataFrame(results, columns=columns)
         if df.empty:
             print("No data found for the specified query.")
+            df.to_csv(os.path.join(save_dir, file_name), index=False)
+            return None, None
         else:
             if is_save:
                 df.to_csv(os.path.join(save_dir, file_name), index=False)

@@ -1,0 +1,24 @@
+You are given a SQL query, and your task is to identify its ground truth schema. The schema should capture every table referenced in the query along with a list of its columns, based only on what the query explicitly reveals. Your output must be a JSON object formatted exactly as follows:
+
+{{
+  "table_name": ["column1", "column2", ...],
+  "table_name2": ["column1", "column2", ...]
+}}
+
+**************************
+【Table creation statements】
+{DATABASE_SCHEMA}
+
+Instructions:
+1. Identify all table names used in the SQL query.
+2. For each table, extract the corresponding column names mentioned in the query.
+3. Ensure that each table’s list contains only the columns explicitly referenced in the SQL query.
+4. Output the result strictly in the specified JSON format.
+5. If a table is mentioned without any columns (or columns are ambiguous), include it with an empty list.
+
+Now, process the following SQL query and provide the ground truth schema accordingly:
+
+{QUERY}
+
+Schema you extract should be a subset of the full schema that we provided above with the exact table names and columns that are mentioned in the full schema.
+Output the ground truth schema inside ```json and ``` tags.
