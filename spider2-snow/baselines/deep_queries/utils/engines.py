@@ -4,7 +4,7 @@ from typing import Dict, Any
 import copy
 import time
 import threading
-from concurrent.futures import ThreadPoolExecutor, TimeoutError as FuturesTimeoutError
+from concurrent.futures import ThreadPoolExecutor, TimeoutError as FuturesTimeoutError, as_completed
 
 from dotenv import load_dotenv
 from langchain_together import ChatTogether
@@ -218,3 +218,41 @@ def invoke_engine(engine, prompt, log_path=None, step_id=None, **kwargs):
             # Calculate wait time with exponential backoff, capped at max_wait
             wait_time = min(base_wait * (2 ** attempt), max_wait)
             time.sleep(wait_time)
+
+def invoke_engine_batch(engine, prompts, log_path=None, step_id=None, max_workers=None, **kwargs):
+    """
+    Invokes the given language model engine for each prompt in `prompts` in parallel
+    and returns a list of responses in the same order.
+
+    Args:
+        engine: The language model engine to use.
+        prompts (list): A list of prompt strings.
+        log_path (str, optional): Path to a log file or logger configuration.
+        step_id (str or int, optional): An identifier for logging steps.
+        max_workers (int, optional): Maximum number of threads to use. Defaults to len(prompts).
+        **kwargs: Additional keyword arguments for model invocation.
+
+    Returns:
+        list: A list of responses (strings or objects, depending on the model).
+    """
+    if max_workers is None:
+        max_workers = len(prompts) or 1  # Avoid zero if prompts is an empty list
+    
+    # Submit each prompt to be processed in its own thread
+    results = [None] * len(prompts)
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        future_to_index = {
+            executor.submit(invoke_engine, engine, prompt, log_path, step_id, **kwargs): i
+            for i, prompt in enumerate(prompts)
+        }
+
+        # Collect results as they complete, preserving original order
+        for future in as_completed(future_to_index):
+            index = future_to_index[future]
+            try:
+                results[index] = future.result()
+            except Exception as exc:
+                # Re-raise to stop further processing if any prompt fails
+                raise exc
+
+    return results

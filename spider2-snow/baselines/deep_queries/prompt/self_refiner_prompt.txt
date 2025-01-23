@@ -73,54 +73,42 @@ PATENTS
 
 **************************
 【Question】
-Question: 
-How many U.S. publications related to IoT (where the abstract includes the phrase 'internet of things') were filed each month from 2008 to 2022, including months with no filings?
+Question:
+How many German publications (where country_code = 'DE') mention "machine learning" in their abstract, grouped by the filing quarter from 2015 through 2021, including quarters with zero publications?
 
 The SQL query executed was:
-WITH Patent_Matches AS (
-    SELECT
-      TO_DATE(CAST(ANY_VALUE(patentsdb."filing_date") AS STRING), 'YYYYMMDD') AS Patent_Filing_Date,
-      patentsdb."application_number" AS Patent_Application_Number,
-      MAX(abstract_info.value:"text") AS Patent_Title,
-      MAX(abstract_info.value:"language") AS Patent_Title_Language
-    FROM
-      "PATENTS.PUBLICATIONS" AS patentsdb,
-      LATERAL FLATTEN(input => patentsdb."abstract_localized") AS abstract_info
-    WHERE
-      LOWER(abstract_info.value:"text") LIKE '%internet of things%'
-      AND patentsdb."country_code" = 'US'
-    GROUP BY
-      Patent_Application_Number
+WITH Filtered_Patents AS (
+   SELECT
+      TO_DATE(CAST(ANY_VALUE(pub."filing_date") AS STRING), 'YYYYMMDD') AS filing_dt,
+      pub."application_number" AS app_num,
+      MAX(abstract_data.value:"text") AS abstract_text
+   FROM 
+      "PATENTS.PUBLICATIONS" AS pub,
+      LATERAL FLATTEN(input => pub."abstract_localized") AS abstract_data
+   WHERE
+      pub."country_code" = 'DE' AND LOWER(abstract_data.value:"text") LIKE '%machine learning%'
+   GROUP BY
+      app_num 
 ),
 
-Date_Series_Table AS (
-    SELECT
-        DATEADD(day, seq4(), DATE '2008-01-01') AS day,
-        0 AS Number_of_Patents
-    FROM
-        TABLE(
-            GENERATOR(
-                ROWCOUNT => 5479
-            )
-        )
-    ORDER BY
-        day
+Date_Series AS (
+   SELECT
+      DATEADD(day, seq4(), DATE '2015-01-01') AS dt
+   FROM
+      TABLE (
+         GENERATOR(ROWCOUNT => 2557) -- Enough days to cover 2015-01-01 through 2022-01-01 (~7 years) 
+      )
+   WHERE dt < DATE '2022-01-01'
 )
 
 SELECT
-  TO_CHAR(Date_Series_Table.day, 'YYYY-MM') AS Patent_Date_YearMonth,
-  COUNT(Patent_Matches.Patent_Application_Number) AS Number_of_Patent_Applications
-FROM
-  Date_Series_Table
-  LEFT JOIN Patent_Matches
-    ON Date_Series_Table.day = Patent_Matches.Patent_Filing_Date
-WHERE
-    Date_Series_Table.day < DATE '2023-01-01'
+   TO_CHAR(ds.dt, 'YYYY-Q') AS filing_quarter,
+   COUNT(DISTINCT fp.app_num) AS publications_count
+FROM Date_Series ds
+   LEFT JOIN Filtered_Patents fp
+   ON ds.dt = fp.filing_dt
 GROUP BY
-  TO_CHAR(Date_Series_Table.day, 'YYYY-MM')
-ORDER BY
-  Patent_Date_YearMonth;
-
+   TO_CHAR(ds.dt, 'YYYY-Q') ORDER BY filing_quarter ;
 
 The execution result:
 SQL compilation error:
@@ -146,54 +134,42 @@ Correct the Table Reference
 Verify Other Clauses
  - SELECT Clause: The query selects only necessary columns (filing_date, application_number, etc.), which is compliant with the instructions.
  - Handling NULLs: The query uses a JOIN approach (LATERAL FLATTEN) to avoid null entries in the abstract_localized field, satisfying the requirement to filter out or handle NULLs.
- - Date Series: A date series table is generated to ensure that months with zero filings are also listed.
- - GROUP BY: Uses GROUP BY TO_CHAR(Date_Series_Table.day, 'YYYY-MM') properly since TO_CHAR(...) is the only non-aggregate expression in the SELECT clause.
+ - Date Series: A date series table is generated to group by the filing quarter from 2015 through 2021
 
 Final Corrected Query
 <FINAL_ANSWER>
-WITH Patent_Matches AS (
-    SELECT
-      TO_DATE(CAST(ANY_VALUE(patentsdb."filing_date") AS STRING), 'YYYYMMDD') AS Patent_Filing_Date,
-      patentsdb."application_number" AS Patent_Application_Number,
-      MAX(abstract_info.value:"text") AS Patent_Title,
-      MAX(abstract_info.value:"language") AS Patent_Title_Language
-    FROM
-      PATENTS.PATENTS.PUBLICATIONS AS patentsdb,
-      LATERAL FLATTEN(input => patentsdb."abstract_localized") AS abstract_info
-    WHERE
-      LOWER(abstract_info.value:"text") LIKE '%internet of things%'
-      AND patentsdb."country_code" = 'US'
-    GROUP BY
-      Patent_Application_Number
+WITH Filtered_Patents AS (
+   SELECT
+      TO_DATE(CAST(ANY_VALUE(pub."filing_date") AS STRING), 'YYYYMMDD') AS filing_dt,
+      pub."application_number" AS app_num,
+      MAX(abstract_data.value:"text") AS abstract_text
+   FROM 
+      PATENTS.PATENTS.PUBLICATIONS AS pub,
+      LATERAL FLATTEN(input => pub."abstract_localized") AS abstract_data
+   WHERE
+      pub."country_code" = 'DE' AND LOWER(abstract_data.value:"text") LIKE '%machine learning%'
+   GROUP BY
+      app_num 
 ),
 
-Date_Series_Table AS (
-    SELECT
-        DATEADD(day, seq4(), DATE '2008-01-01') AS day,
-        0 AS Number_of_Patents
-    FROM
-        TABLE(
-            GENERATOR(
-                ROWCOUNT => 5479
-            )
-        )
-    ORDER BY
-        day
+Date_Series AS (
+   SELECT
+      DATEADD(day, seq4(), DATE '2015-01-01') AS dt
+   FROM
+      TABLE (
+         GENERATOR(ROWCOUNT => 2557) -- Enough days to cover 2015-01-01 through 2022-01-01 (~7 years) 
+      )
+   WHERE dt < DATE '2022-01-01'
 )
 
 SELECT
-  TO_CHAR(Date_Series_Table.day, 'YYYY-MM') AS Patent_Date_YearMonth,
-  COUNT(Patent_Matches.Patent_Application_Number) AS Number_of_Patent_Applications
-FROM
-  Date_Series_Table
-  LEFT JOIN Patent_Matches
-    ON Date_Series_Table.day = Patent_Matches.Patent_Filing_Date
-WHERE
-    Date_Series_Table.day < DATE '2023-01-01'
+   TO_CHAR(ds.dt, 'YYYY-Q') AS filing_quarter,
+   COUNT(DISTINCT fp.app_num) AS publications_count
+FROM Date_Series ds
+   LEFT JOIN Filtered_Patents fp
+   ON ds.dt = fp.filing_dt
 GROUP BY
-  TO_CHAR(Date_Series_Table.day, 'YYYY-MM')
-ORDER BY
-  Patent_Date_YearMonth;
+   TO_CHAR(ds.dt, 'YYYY-Q') ORDER BY filing_quarter ;
 </FINAL_ANSWER> 
 
 ======= Your task =======

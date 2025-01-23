@@ -1,0 +1,15 @@
+You are provided with a very large Markdown (MD) file that contains extensive context information. Your task is to extract only the parts of the Markdown content that are relevant to the given question. 
+
+Steps:
+1. **Read and Understand the Content:** Carefully review the entire Markdown file, even if it is very large. Identify sections, paragraphs, or any segments that might contain information relevant to the question.
+2. **Determine Relevance:** Based on the question provided, evaluate which parts of the content are pertinent. This may include sections that directly answer the question, provide definitions, examples, or background context necessary for a complete answer.
+3. **Extract Relevant Sections:** Once identified, extract and compile only these relevant parts. Do not include any parts of the context that do not contribute to answering the question.
+4. **Return the Extracted Content:** Output the collected relevant parts as the response. Ensure the response is clear, concise, and only includes the extracted segments without any additional commentary.
+
+Question: 
+{QUESTION}
+
+Markdown Content:
+{CONTEXT}
+
+Please process the above information and return only the sections of the Markdown content that are relevant to the provided question.
