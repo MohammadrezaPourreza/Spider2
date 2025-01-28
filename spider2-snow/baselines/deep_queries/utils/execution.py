@@ -10,12 +10,16 @@ snowflake_credential= {
     "warehouse": "COMPUTE_WH_PARTICIPANT"
 }
 
+RESULTS_CACHE = {}
+
 
 def get_snowflake_sql_result(sql_query, database_id):
     """
     is_save = True, output a 'result.csv'
     if_save = False, output a string
     """
+    if sql_query in RESULTS_CACHE:
+        return RESULTS_CACHE[sql_query]
     try:
         conn = snowflake.connector.connect(
         database=database_id,
@@ -29,9 +33,11 @@ def get_snowflake_sql_result(sql_query, database_id):
         if df.empty:
             print("No data found for the specified query.")
         # return markdown_table(df)
+        RESULTS_CACHE[sql_query] = (True, df.to_markdown())
         return True, df.to_markdown()
     except Exception as e:
-        print("Error occurred while fetching data: ", e)  
+        print("Error occurred while fetching data: ", e) 
+        RESULTS_CACHE[sql_query] = (False, str(e)) 
         return False, str(e)
     
 def dump_sql_execution_results(sql_query, database_id, save_dir=None, file_name="result.csv"):
