@@ -14,7 +14,7 @@ def draw_query_tree(query, graph=None, parent=None):
     Returns:
         graphviz.Digraph: The graph representing the SQL tree.
     """
-    tree = qualify(parse_one(query, read='snowflake'), qualify_columns=True, validate_qualify_columns=False)
+    tree = qualify(parse_one(query, read='snowflake', dialect='snowflake'), qualify_columns=False, validate_qualify_columns=False)
 
     if graph is None:
         graph = Digraph(format="png")
