@@ -8,6 +8,6 @@ LLM=gemini-1.5-pro-002
 
 # step1. preprocess
 cd ${script_dir}  
-# python preprocessed_data/spider2_preprocess.py --dev $DEV
+python preprocessed_data/spider2_preprocess.py --dev $DEV
 
-python 
+# python 
