@@ -7,8 +7,11 @@ import networkx as nx
 import matplotlib.pyplot as plt
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import List, Dict, Tuple, Optional
+import argparse
+from dotenv import load_dotenv
 
-from src.llm.engines import get_engine, invoke_engine
+from llm.engines import get_engine, invoke_engine
+from llm.prompt_loader import load_prompt
 
 def parse_llm_output(string: str) -> List[Dict]:
     """
@@ -83,14 +86,15 @@ def save_dag_as_pdf(dag: nx.DiGraph, save_to_path: str) -> None:
     plt.savefig(save_to_path, format='pdf', bbox_inches='tight')
     plt.close()
 
-def process_llm_query(query_packet: Dict, engine: any, prompt_template: str) -> Tuple[str, str]:
+def process_llm_query(query_packet: Dict, engine: any, prompt_template: str, output_dir: str) -> Tuple[str, str]:
     """
-    Process a single query through the LLM.
+    Process a single query through the LLM and save the input/output log.
     
     Args:
         query_packet: Dictionary containing query information
         engine: The LLM engine
         prompt_template: Template for the prompt
+        output_dir: Directory to save the log file
         
     Returns:
         Tuple of (query_id, llm_response)
@@ -102,41 +106,49 @@ def process_llm_query(query_packet: Dict, engine: any, prompt_template: str) -> 
     prompt = prompt_template.format(main_question=question, sql_query=sql_query)
     response = invoke_engine(engine, prompt)
     
+    # Save input/output log
+    log_path = os.path.join(output_dir, f"log_{query_id}.txt")
+    with open(log_path, "w") as f:
+        f.write(f"Query ID: {query_id}\n")
+        f.write(f"\n\n##### Prompt #####\n\n")
+        f.write(f"{prompt}\n")
+        f.write(f"\n\n##### Response #####\n\n")
+        f.write(f"{response}\n")
+    
     return query_id, response
 
-def decompose_queries(
+def process_queries_with_llm(
     queries: List[Dict],
     model_name: str,
+    prompt_template: str,
     output_dir: str,
-    save_pdfs: bool = True,
-    prompt_template_path: str = "decomposition_prompt.txt"
-) -> None:
+    max_workers: int = 10
+) -> Dict[str, str]:
     """
-    Main function to decompose SQL queries using an LLM and create DAGs.
+    Process queries through LLM in parallel and collect responses.
     
     Args:
         queries: List of query dictionaries
         model_name: Name of the LLM model to use
-        output_dir: Directory to save outputs
-        save_pdfs: Whether to save PDF visualizations
-        prompt_template_path: Path to the prompt template file
+        prompt_template: Template for the prompt
+        output_dir: Directory to save output files
+        max_workers: Maximum number of worker threads
+        
+    Returns:
+        Dictionary mapping query IDs to LLM responses
     """
-    # Create output directory
-    os.makedirs(output_dir, exist_ok=True)
-    
-    # Initialize engine and load prompt
+    # Initialize engine and create output directory
     engine = get_engine(model_name)
-    with open(prompt_template_path, 'r') as f:
-        prompt_template = f.read()
+    os.makedirs(output_dir, exist_ok=True)
     
     # Filter queries with non-empty SQL
     queries_with_sql = [q for q in queries if q.get("query", "").strip()]
     
     # Process queries through LLM in parallel
     llm_results = {}
-    with ThreadPoolExecutor(max_workers=10) as executor:
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
         future_to_query = {
-            executor.submit(process_llm_query, query, engine, prompt_template): query
+            executor.submit(process_llm_query, query, engine, prompt_template, output_dir): query
             for query in queries_with_sql
         }
         
@@ -147,14 +159,23 @@ def decompose_queries(
             except Exception as e:
                 print(f"Error processing query: {e}")
     
-    # Process results sequentially
+    return llm_results
+
+def create_and_save_dags(
+    llm_results: Dict[str, str],
+    output_dir: str,
+    save_pdfs: bool = True
+) -> None:
+    """
+    Create and save DAGs from LLM responses.
+    
+    Args:
+        llm_results: Dictionary mapping query IDs to LLM responses
+        output_dir: Directory to save outputs
+        save_pdfs: Whether to save PDF visualizations
+    """
     for query_id, response in tqdm(llm_results.items(), desc="Creating DAGs"):
         try:
-            # Save input/output log
-            log_path = os.path.join(output_dir, f"log_{query_id}.txt")
-            with open(log_path, "w") as f:
-                f.write(f"Query ID: {query_id}\n\n##### Response #####\n\n{response}\n")
-            
             # Parse and create DAG
             components = parse_llm_output(response)
             dag = create_dag(components)
@@ -172,11 +193,57 @@ def decompose_queries(
         except Exception as e:
             print(f"Error processing results for query {query_id}: {e}")
 
-if __name__ == "__main__":
-    # Example usage
-    queries_path = "path/to/queries.json"
-    with open(queries_path, 'r') as f:
+def decompose_queries(
+    queries: List[Dict],
+    model_name: str,
+    output_dir: str,
+    save_pdfs: bool = True,
+    max_workers: int = 10
+) -> None:
+    """
+    Main function to decompose SQL queries using an LLM and create DAGs.
+    
+    Args:
+        queries: List of query dictionaries
+        model_name: Name of the LLM model to use
+        output_dir: Directory to save outputs
+        save_pdfs: Whether to save PDF visualizations
+        max_workers: Maximum number of worker threads
+    """
+    # Load prompt template using the prompt loader
+    prompt_template = load_prompt("decomposition_prompt")
+    
+    # Process queries through LLM
+    llm_results = process_queries_with_llm(queries, model_name, prompt_template, output_dir, max_workers)
+    
+    # Create and save DAGs
+    create_and_save_dags(llm_results, output_dir, save_pdfs)
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='SQL Decomposition Script')
+    
+    parser.add_argument('--input_queries_path', type=str, default='data/queries.json', help='Path to the input queries JSON file')
+    parser.add_argument('--model_name', type=str, default='gemini-1.5-pro-002', help='Name of the model to use for decomposition')
+    parser.add_argument('--save_pdfs', action='store_true', help='Flag to save PDF outputs')
+    parser.add_argument('--threads', type=int, default=10, help='Number of worker threads for parallel processing')
+    
+    args = parser.parse_args()
+    
+    # Load environment variables
+    load_dotenv()
+    
+    # Create timestamped output directory
+    logs_dir = os.getenv('LOGS_DIR')
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    output_dir = os.path.join(logs_dir, 'decomposed_sqls', f"{args.model_name}-{timestamp}")
+    os.makedirs(output_dir, exist_ok=True)
+    
+    # Load queries from input file
+    with open(args.input_queries_path, 'r') as f:
         queries = json.load(f)
     
-    output_dir = f"logs/decomposition_{datetime.now().strftime('%Y-%m-%d-%H-%M-%S')}"
-    decompose_queries(queries, "gemini-1.5-pro-002", output_dir, save_pdfs=True)
+    decompose_queries(queries,
+                     args.model_name, 
+                     output_dir, 
+                     args.save_pdfs,
+                     args.threads)

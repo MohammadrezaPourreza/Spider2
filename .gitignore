@@ -122,9 +122,6 @@ spider2-lite/baselines/yyx_tmp/
 **/run_check.sh
 **/sitecustomize.py
 
-
-
-
 # **/snowflake_credential.json
 **/bigquery_credential.json
 **/bigquery_credential*.json
@@ -150,3 +147,9 @@ notebooks/
 
 # Json files
 *.json
+
+# Logs
+logs/
+
+# Data
+data/
