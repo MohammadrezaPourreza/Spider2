@@ -274,6 +274,7 @@ def get_sql_for_database_from_tables_json(db_id, tables_json, use_column_desc=Fa
             COLUMN_DESC_FLAG = True
             
         create_statements = []
+        formatted_rows = []
         for table_index, table_name in enumerate(table_names):
             if seletected_schema is not None and not check_if_in_list(table_name, lowered_seletected_schema):
                 continue
@@ -316,7 +317,7 @@ def get_sql_for_database_from_tables_json(db_id, tables_json, use_column_desc=Fa
                 column_defs.append(column_def)
 
             table_columns_sample_rows = sample_rows[table_name]
-            sample_rows_formatted = "Sample rows: \n"
+            sample_rows_formatted = "Sample rows: \n (data values are trunctated to 50 characters)\n"
             for index, row in enumerate(table_columns_sample_rows):
                 if index >= number_of_rows:
                     break
@@ -324,7 +325,7 @@ def get_sql_for_database_from_tables_json(db_id, tables_json, use_column_desc=Fa
                 for col in row:
                     if seletected_schema and col not in lowered_columns_to_use:
                         continue
-                    sample_rows_formatted += f"{col}: {row[col]}, "
+                    sample_rows_formatted += f"{col}: {str(row[col])[:50]}, "
                 sample_rows_formatted += "\n"
                 sample_rows_formatted += "=====================\n"
 
@@ -337,12 +338,11 @@ def get_sql_for_database_from_tables_json(db_id, tables_json, use_column_desc=Fa
             
             create_statement += '\r\n)'
 
-            if sample_rows_formatted:
-                create_statement += f"\n\n{sample_rows_formatted}\n"
 
+            formatted_rows.append(sample_rows_formatted)
             create_statements.append(create_statement)
         
-        return create_statements
+        return create_statements, formatted_rows
     raise ValueError(f"Database '{db_id}' not found")
 
 
