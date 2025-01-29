@@ -42,6 +42,9 @@ GCP_CREDENTIALS = os.getenv("GCP_CREDENTIALS")
 
 # print(f"GCP_PROJECT: {GCP_PROJECT}, GCP_REGION: {GCP_REGION}")
 
+
+
+
 aiplatform.init(
   project=GCP_PROJECT,
   location=GCP_REGION,
@@ -55,7 +58,11 @@ engine_configs = {
         "constructor": ChatOpenAI,
         "params": {"model": "gpt-4", "temperature": 0}
     },
-    "o1-mini": {
+    "gpt-o1": {
+        "constructor": ChatOpenAI,
+        "params": {"model": "o1", "temperature": 0}
+    },
+    "gpt-o1-mini": {
         "constructor": ChatOpenAI,
         "params": {"model": "o1-mini"}
     },
@@ -171,7 +178,7 @@ def log_message(text, role, log_path, step_id=None):
         f.write(text_to_dump)
 
 
-def invoke_engine(engine, prompt, log_path=None, step_id=None, **kwargs):
+def invoke_engine(engine, prompt, log_path=None, step_id=None, max_retries=5, **kwargs):
     """
     Simple wrapper to invoke a language model engine and return its response.
 
@@ -185,8 +192,7 @@ def invoke_engine(engine, prompt, log_path=None, step_id=None, **kwargs):
              for other models, returns just the content
     """
     
-    
-    max_retries = 5
+
     base_wait = 5  # Start with 1 second
     max_wait = 60  # Max wait of 1 minute
     timeout = 30

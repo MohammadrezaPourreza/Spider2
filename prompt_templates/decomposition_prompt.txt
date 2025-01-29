@@ -1,0 +1,136 @@
+### Task Instructions
+You are tasked with breaking down a complex SQL query into its individual sub-components. Each sub-component represents a logical part of the query and must include the following elements:
+
+1. **Component ID**: A unique identifier for the sub-component (e.g., A, B, C, etc.).
+2. **Description**: A clear explanation of what this sub-component does in the context of the SQL query.
+3. **Equivalent Natural Question**: A self-contained and natural language question that explains what this sub-component is doing without relying on the other sub-components for context.
+4. **DAG Dependencies**: A list of IDs of the sub-components that this one depends on. If it is independent, this list should be empty.
+
+You will then output the results as a Python list of JSON objects, where each object contains the above fields.
+
+### Example Input
+Here is an example of the main question and corresponding SQL query to be broken down:
+
+#### Main Question:
+What is the average balance of the top 10 addresses with the most balance on the Ethereum blockchain, considering both incoming and outgoing transactions with valid addresses, but only those recorded as used on receipt, as well as transaction fees? Only keep successful transactions with no call type or where the call type is 'call'. The average balance, expressed in quadrillions (10^15), is rounded to two decimal places.
+
+#### SQL Query:
+```sql
+WITH double_entry_book AS (
+  -- Debits
+  SELECT 
+    "to_address" AS "address",
+    "value" AS "value"
+  FROM "ETHEREUM_BLOCKCHAIN"."ETHEREUM_BLOCKCHAIN"."TRACES"
+  WHERE "to_address" IS NOT NULL
+    AND "status" = 1
+    AND ("call_type" NOT IN ('delegatecall', 'callcode', 'staticcall') OR "call_type" IS NULL)
+  
+  UNION ALL
+  
+  -- Credits
+  SELECT 
+    "from_address" AS "address",
+    - "value" AS "value"
+  FROM "ETHEREUM_BLOCKCHAIN"."ETHEREUM_BLOCKCHAIN"."TRACES"
+  WHERE "from_address" IS NOT NULL
+    AND "status" = 1
+    AND ("call_type" NOT IN ('delegatecall', 'callcode', 'staticcall') OR "call_type" IS NULL)
+  
+  UNION ALL
+  
+  -- Transaction fees debits
+  SELECT 
+    "miner" AS "address",
+    SUM(CAST("receipt_gas_used" AS NUMBER) * CAST("gas_price" AS NUMBER)) AS "value"
+  FROM "ETHEREUM_BLOCKCHAIN"."ETHEREUM_BLOCKCHAIN"."TRANSACTIONS" AS "transactions"
+  JOIN "ETHEREUM_BLOCKCHAIN"."ETHEREUM_BLOCKCHAIN"."BLOCKS" AS "blocks"
+    ON "blocks"."number" = "transactions"."block_number"
+  GROUP BY "blocks"."miner"
+  
+  UNION ALL
+  
+  -- Transaction fees credits
+  SELECT 
+    "from_address" AS "address",
+    -(CAST("receipt_gas_used" AS NUMBER) * CAST("gas_price" AS NUMBER)) AS "value"
+  FROM "ETHEREUM_BLOCKCHAIN"."ETHEREUM_BLOCKCHAIN"."TRANSACTIONS"
+),
+top_10_balances AS (
+  SELECT
+    "Address",
+    SUM("value") AS "balance"
+  FROM double_entry_book
+  GROUP BY "address"
+  ORDER BY "balance" DESC
+  LIMIT 10
+)
+SELECT 
+    ROUND(AVG("balance") / 1e15, 2) AS "average_balance_trillion"
+FROM top_10_balances;
+```
+
+### Example Output
+Below is the parsed breakdown of the above query into sub-components:
+
+```python
+[
+  {{
+    "id": "A",
+    "description": "Filters the Ethereum TRACES table for successful transactions (status = 1) with to_address not null, excluding call types (delegatecall, callcode, staticcall). Each qualifying row represents Ether credited to the to_address.",
+    "equivalent_natural_question": "Which addresses on Ethereum have received Ether in straightforward, successful transactions (not using special call types), and how much Ether did each receive in total?",
+    "dag_dependencies": []
+  }},
+  {{
+    "id": "B",
+    "description": "Similar filter on the TRACES table for successful transactions, but focusing on the from_address. Each qualifying row represents Ether debited from the from_address (i.e., how much Ether the sender transferred out).",
+    "equivalent_natural_question": "Which addresses on Ethereum have sent Ether in straightforward, successful transactions (ignoring special call types), and how much Ether did each send in total?",
+    "dag_dependencies": []
+  }},
+  {{
+    "id": "C",
+    "description": "Joins TRANSACTIONS with BLOCKS to identify each block’s miner, and sums the gas fees (receipt_gas_used * gas_price) that go to that miner.",
+    "equivalent_natural_question": "Looking at all Ethereum blocks, how much total gas fee did each miner collect from all the transactions in their blocks?",
+    "dag_dependencies": []
+  }},
+  {{
+    "id": "D",
+    "description": "Calculates how much Ether each sender (from_address) paid in gas fees (receipt_gas_used * gas_price) over all transactions. This is a negative outflow for the sender.",
+    "equivalent_natural_question": "For every Ethereum transaction, how much gas fee did the sender pay, and what is the total gas fee spending by each sending address over time?",
+    "dag_dependencies": []
+  }},
+  {{
+    "id": "E",
+    "description": "Combines the results of the previous sub-components into one ledger-like table. Specifically, it gathers: Inflows for addresses receiving Ether (from the Traces data), Outflows for addresses sending Ether (also from Traces), Gas fees earned by miners, Gas fees paid by senders. All are unified with UNION ALL, so each address’s credits and debits appear in a single list.",
+    "equivalent_natural_question": "How can we build a single ledger that captures all Ether flows for every address on Ethereum—both the amounts moved from regular transactions and the gas fees paid by senders and collected by miners—so that each address’s net credit or debit is tracked in one place?",
+    "dag_dependencies": ["A", "B", "C", "D"]
+  }},
+  {{
+    "id": "F",
+    "description": "Groups the ledger (from E) by address, sums each address’s net Ether flow, then picks the 10 addresses with the highest balances.",
+    "equivalent_natural_question": "From a complete ledger of Ether inflows and outflows for every address (including normal transfers and gas fees), which addresses end up with the largest net balances, and which 10 addresses are at the very top of that list?",
+    "dag_dependencies": ["E"]
+  }},
+  {{
+    "id": "G",
+    "description": "From the top 10 addresses (identified in F), calculates the average of their balances, converts from Wei into quadrillions of Ether by dividing by 1e15, and rounds to two decimals.",
+    "equivalent_natural_question": "What is the average balance of the top 10 addresses with the most balance on the Ethereum blockchain, considering both incoming and outgoing transactions with valid addresses, but only those recorded as used on receipt, as well as transaction fees? Only keep successful transactions with no call type or where the call type is 'call'. The average balance, expressed in quadrillions (10^15), is rounded to two decimal places.",
+    "dag_dependencies": ["F"]
+  }}
+]
+
+```
+
+Final Instructions
+Using the input SQL query and the associated main question, perform the breakdown task as illustrated above. Your output must be in the same JSON-parsable Python list format, with the same fields for each sub-component. Ensure the equivalent natural question for the highest-level node matches the main question.
+
+
+### Input
+
+#### Main Question
+{main_question}
+
+#### SQL Query
+{sql_query}
+
+### Output
