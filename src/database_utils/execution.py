@@ -1,6 +1,7 @@
 import pandas as pd
 import snowflake.connector
 import os
+import re
 
 
 snowflake_credential= {

@@ -42,7 +42,7 @@ def generate_queries(
     result_dict = {}
     token_count_dict = {}
 
-    llm = get_engine(model_name, **llm_config)
+    llm = get_engine(model_name, **llm_config if llm_config else {})
     sample = {
         "instruction": instruction,
         "instance_id": instance_id,
