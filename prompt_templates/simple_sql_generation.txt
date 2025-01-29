@@ -1,0 +1,284 @@
+You are an experienced database expert.
+Now you need to generate a Snowflake SQL query given the database information, a question and some additional information.
+Any additional context that is necessary to answer the question is also provided as the context to help you write the SQL query.
+
+Given the table schema information description and the `Question`. You will be given table creation statements and you need understand the database and columns.
+
+Database admin instructions (voliating any of the following will result is punishble to death!):
+1. **SELECT Clause:**
+   - Select only the necessary columns by explicitly specifying them in the `SELECT` statement. Avoid redundant columns or values.
+
+2. **Handling NULLs:**
+   - To filter out NULL values, use `JOIN` or add a `WHERE <column> IS NOT NULL` clause.
+
+3. **FROM/JOIN Clauses:**
+   - Only include tables essential to the query. Snowflake supports `JOIN` types like `INNER JOIN`, `LEFT JOIN`, and `RIGHT JOIN`, so use these based on the relationships needed.
+
+4. **Thorough Question Analysis:**
+   - Review all specified conditions or constraints in the question to ensure they are fully addressed in the query.
+
+5. **DISTINCT Keyword:**
+   - Use `SELECT DISTINCT` when unique values are needed, such as for IDs or URLs.
+
+6. **Column Selection:**
+   - Pay close attention to column descriptions and any hints to select the correct column, especially when similar columns exist across tables.
+
+7. **Snowflake Functions Only:**
+   - Use functions available in Snowflake SQL. Avoid SQLite-specific functions and replace them with Snowflake equivalents.
+
+8. **GROUP BY or AGGREGATE:**
+   - In queries with GROUP BY, all columns in the SELECT list must either: Be included in the GROUP BY clause, or Be used in an aggregate function (e.g., MAX, MIN, AVG, COUNT, SUM).
+
+9. **Case sensitivity:**
+   - Snowflake SQL dialect is case sensitive, so **Always** put the column names and table names inside " and " tags, with the exact same format that is provided in the DDL commands.
+
+10. **Table Names:**
+   - Table names should be in the format of "database_name.schema_name.table_name" to avoid any ambiguity.
+
+Now is the real question, following the instruction and examples, think step-by-step and finally generate the Snowflake SQL query.
+Follow all steps from the strategy. When you get to the final query, output the query string ONLY in the format <FINAL_ANSWER> ... </FINAL_ANSWER>. Make sure you only output one single query.
+
+Here are some examples
+===========
+Example 1
+
+**************************
+【Table creation statements】
+CREATE TABLE "PATENTS.PUBLICATIONS"
+(
+    "application_number" TEXT COMMENT "Patent application number (DOCDB compatible), eg: 'US-87124404-A'. This may not always be set.",
+    "filing_date" NUMBER COMMENT "Is this text truncated?",
+    "abstract_localized" VARIANT COMMENT "Localized text",
+    "country_code" TEXT COMMENT "Country code, eg: 'US', 'EP', etc"
+)
+
+Sample rows: 
+Row 1: 
+application_number: DE-69611147-T, country_code: DE, abstract_localized: [], filing_date: 19961015, 
+=====================
+
+Database name:
+PATENTS
+
+**************************
+【Question】
+Question:
+How many German publications (where country_code = 'DE') mention "machine learning" in their abstract, grouped by the filing quarter from 2015 through 2021, including quarters with zero publications?
+
+**************************
+【Answer】
+Let's think step by step.
+
+ - Identify Required Columns & Filters:
+   - We focus on German publications where "country_code" = 'DE'.
+   - We need to filter abstracts containing the phrase "machine learning" (case-insensitive match).
+   - We use LATERAL FLATTEN to unnest the JSON array in "abstract_localized" so we can examine each text entry.
+
+ - Generate Date Series
+   - We want filing quarters from the start of 2015 (2015-01-01) to just before 2022 (2022-01-01).
+   - We generate a date for each day within that range, which will later be aggregated by quarter.
+   - This ensures we include quarters with zero publications.
+
+ - Join & Group
+   - We left-join the generated date series with our filtered patent data.
+   - Convert the numeric "filing_date" (stored as YYYYMMDD) into a proper date field in Snowflake using TO_DATE(CAST(... AS STRING), 'YYYYMMDD').
+   - Group by quarter—using TO_CHAR(date, 'YYYY-Q')—and count distinct application numbers.
+
+ - Construct the Final Query
+   - Include the necessary CTEs: one for filtered patents, one for the generated date series.
+   - Use LEFT JOIN on the matching date fields.
+   - Summarize results by quarter and return them in ascending order.
+
+Below is the final Snowflake SQL statement:
+<FINAL_ANSWER> 
+WITH Filtered_Patents AS (
+   SELECT
+      TO_DATE(CAST(ANY_VALUE(pub."filing_date") AS STRING), 'YYYYMMDD') AS filing_dt,
+      pub."application_number" AS app_num,
+      MAX(abstract_data.value:"text") AS abstract_text
+   FROM 
+      PATENTS.PATENTS.PUBLICATIONS AS pub,
+      LATERAL FLATTEN(input => pub."abstract_localized") AS abstract_data
+   WHERE
+      pub."country_code" = 'DE' AND LOWER(abstract_data.value:"text") LIKE '%machine learning%'
+   GROUP BY
+      app_num 
+),
+
+Date_Series AS (
+   SELECT
+      DATEADD(day, seq4(), DATE '2015-01-01') AS dt
+   FROM
+      TABLE (
+         GENERATOR(ROWCOUNT => 2557) -- Enough days to cover 2015-01-01 through 2022-01-01 (~7 years) 
+      )
+   WHERE dt < DATE '2022-01-01'
+)
+
+SELECT
+   TO_CHAR(ds.dt, 'YYYY-Q') AS filing_quarter,
+   COUNT(DISTINCT fp.app_num) AS publications_count
+FROM Date_Series ds
+   LEFT JOIN Filtered_Patents fp
+   ON ds.dt = fp.filing_dt
+GROUP BY
+   TO_CHAR(ds.dt, 'YYYY-Q') ORDER BY filing_quarter ;
+
+</FINAL_ANSWER>
+
+Example 2
+
+**************************
+【Table creation statements】
+
+CREATE TABLE "ETHEREUM_BLOCKCHAIN"."BLOCKS"
+(
+    "miner" TEXT,
+    "number" NUMBER COMMENT "The number of the block"
+);
+
+CREATE TABLE "ETHEREUM_BLOCKCHAIN"."TRACES"
+(
+    "value" NUMBER COMMENT "Value transferred in Wei",
+    "to_address" TEXT COMMENT "Receiver address if trace_type=call, etc.",
+    "call_type" TEXT COMMENT "One of call, callcode, delegatecall, staticcall",
+    "from_address" TEXT COMMENT "Address of the sender",
+    "status" NUMBER COMMENT "Either 1 (success) or 0 (failure)"
+);
+
+CREATE TABLE "ETHEREUM_BLOCKCHAIN"."TRANSACTIONS"
+(
+    "block_number" NUMBER COMMENT "Number of the block which contains this transaction",
+    "receipt_gas_used" NUMBER,
+    "from_address" TEXT,
+    "gas_price" NUMBER
+);
+
+Database name:
+ETHEREUM_BLOCKCHAIN
+
+=====================
+【Question】
+Question:
+What is the average balance of the top 10 addresses with the highest total balance on the Ethereum blockchain? 
+Include both incoming and outgoing transactions for valid addresses, plus transaction fees. 
+Only consider transactions that were successful ("status" = 1) and that have either no call_type or a call_type of 'call'. 
+Report the final average balance, in quadrillions (10^15), rounded to two decimal places.
+
+**************************
+【Answer】
+Let's think step by step.
+
+Below is a step-by-step explanation and the final SQL.
+
+ - Unifying Debits and Credits
+   - We create a CTE (double_entry_book) that combines debits (incoming transactions), credits (outgoing transactions), and transaction fees:
+      - Incoming: Uses "to_address" and the transferred "value".
+      - Outgoing: Uses "from_address" and the negative of the transferred "value".
+      - Transaction fee debits: Miner receives fees.
+      - Transaction fee credits: Sender (i.e., "from_address") pays fees.
+   - We filter for "status" = 1 (successful) and (call_type = 'call' OR call_type IS NULL) to exclude other call types.
+
+ - Top 10 Addresses
+      - We sum up the net balance for each address and sort descending to find the top 10 addresses.
+
+ - Average of Top 10, in Quadrillions
+      - We take the average of the top 10 sums and divide by 1e15.
+      - Finally, we round to two decimal places.
+
+Here is the final Snowflake SQL query:
+<FINAL_ANSWER>
+WITH double_entry_book AS (
+    -- Debits (incoming)
+    SELECT
+        "to_address" AS "address",
+        "value" AS "value"
+    FROM "ETHEREUM_BLOCKCHAIN"."ETHEREUM_BLOCKCHAIN"."TRACES"
+    WHERE
+        "to_address" IS NOT NULL
+        AND "status" = 1
+        AND (
+            "call_type" NOT IN ('delegatecall', 'callcode', 'staticcall')
+            OR "call_type" IS NULL
+        )
+
+    UNION ALL
+
+    -- Credits (outgoing)
+    SELECT
+        "from_address" AS "address",
+        - "value"     AS "value"
+    FROM "ETHEREUM_BLOCKCHAIN"."ETHEREUM_BLOCKCHAIN"."TRACES"
+    WHERE
+        "from_address" IS NOT NULL
+        AND "status" = 1
+        AND (
+            "call_type" NOT IN ('delegatecall', 'callcode', 'staticcall')
+            OR "call_type" IS NULL
+        )
+
+    UNION ALL
+
+    -- Transaction fee debits (miner receives fees)
+    SELECT
+        "blocks"."miner" AS "address",
+        SUM(
+            CAST("transactions"."receipt_gas_used" AS NUMBER)
+            * CAST("transactions"."gas_price" AS NUMBER)
+        ) AS "value"
+    FROM "ETHEREUM_BLOCKCHAIN"."ETHEREUM_BLOCKCHAIN"."TRANSACTIONS" AS "transactions"
+    JOIN "ETHEREUM_BLOCKCHAIN"."ETHEREUM_BLOCKCHAIN"."BLOCKS" AS "blocks"
+      ON "blocks"."number" = "transactions"."block_number"
+    GROUP BY "blocks"."miner"
+
+    UNION ALL
+
+    -- Transaction fee credits (sender pays fees)
+    SELECT
+        "from_address" AS "address",
+        - (
+            CAST("receipt_gas_used" AS NUMBER)
+            * CAST("gas_price" AS NUMBER)
+        ) AS "value"
+    FROM "ETHEREUM_BLOCKCHAIN"."ETHEREUM_BLOCKCHAIN"."TRANSACTIONS"
+),
+
+top_10_balances AS (
+    SELECT
+        "address",
+        SUM("value") AS "balance"
+    FROM double_entry_book
+    GROUP BY "address"
+    ORDER BY "balance" DESC
+    LIMIT 10
+)
+
+SELECT
+    ROUND(AVG("balance") / 1e15, 2) AS "average_balance_quadrillions"
+FROM top_10_balances;
+</FINAL_ANSWER>
+
+**************************
+【Context】
+{CONTEXT}
+
+**************************
+【Table creation statements】
+{DATABASE_SCHEMA}
+
+Database name:
+{DB_ID}
+
+**************************
+【Question】
+Question: 
+{QUESTION}
+
+**************************
+【Answer】
+
+**Important**: make sure to use **"Database_Name.Full_table_name(with the dot)"** for refrencing tables. You just have to concatenate database name + table name provided in DDL commands and put it inside " and " tags.
+for example if DB name is FINANCIAL and table name is "FINANCIAL.TABLE1" you should use "FINANCIAL"."FINANCIAL"."TABLE1" as table name.
+
+Think step-by-step to generate a single SQL query that answers the given question. Finally provide the Snowflake SQL query inside <FINAL_ANSWER> and </FINAL_ANSWER> tags.
+Let's think step by step.

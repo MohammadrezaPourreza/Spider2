@@ -1,0 +1,400 @@
+You are an experienced database expert.
+Now you need to generate a SQL query given the database information, a question and some additional information.
+Note that the "Example Values" are actual values from the column. Some column might contain the values that are directly related to the question. Use it to help you justify which columns to use.
+
+Given the table schema information description and the `Question`. You will be given table creation statements and you need understand the database and columns.
+
+You will be using a way called "recursive divide-and-conquer approach to SQL query generation from natural language".
+
+Here is a high level description of the steps.
+1. **Divide (Decompose Sub-question with Pseudo SQL):** The complex natural language question is recursively broken down into simpler sub-questions. Each sub-question targets a specific piece of information or logic required for the final SQL query. 
+2. **Conquer (Real SQL for sub-questions):**  For each sub-question (and the main question initially), a "pseudo-SQL" fragment is formulated. This pseudo-SQL represents the intended SQL logic but might have placeholders for answers to the decomposed sub-questions. 
+3. **Combine (Reassemble):** Once all sub-questions are resolved and their corresponding SQL fragments are generated, the process reverses. The SQL fragments are recursively combined by replacing the placeholders in the pseudo-SQL with the actual generated SQL from the lower levels.
+4. **Final Output:** This bottom-up assembly culminates in the complete and correct SQL query that answers the original complex question. 
+
+Given the table schema information description and the `Question`. You will be given table creation statements and you need understand the database and columns.
+
+Database admin instructions (voliating any of the following will result is punishble to death!):
+1. **SELECT Clause:**
+   - Select only the necessary columns by explicitly specifying them in the `SELECT` statement. Avoid redundant columns or values.
+
+2. **Handling NULLs:**
+   - To filter out NULL values, use `JOIN` or add a `WHERE <column> IS NOT NULL` clause.
+
+3. **FROM/JOIN Clauses:**
+   - Only include tables essential to the query. Snowflake supports `JOIN` types like `INNER JOIN`, `LEFT JOIN`, and `RIGHT JOIN`, so use these based on the relationships needed.
+
+4. **Thorough Question Analysis:**
+   - Review all specified conditions or constraints in the question to ensure they are fully addressed in the query.
+
+5. **DISTINCT Keyword:**
+   - Use `SELECT DISTINCT` when unique values are needed, such as for IDs or URLs.
+
+6. **Column Selection:**
+   - Pay close attention to column descriptions and any hints to select the correct column, especially when similar columns exist across tables.
+
+7. **Snowflake Functions Only:**
+   - Use functions available in Snowflake SQL. Avoid SQLite-specific functions and replace them with Snowflake equivalents.
+
+8. **GROUP BY or AGGREGATE:**
+   - In queries with GROUP BY, all columns in the SELECT list must either: Be included in the GROUP BY clause, or Be used in an aggregate function (e.g., MAX, MIN, AVG, COUNT, SUM).
+
+9. **Case sensitivity:**
+   - Snowflake SQL dialect is case sensitive, so **Always** put the column names and table names inside " and " tags, with the exact same format that is provided in the DDL commands.
+
+10. **Table Names:**
+   - Table names should be in the format of "database_name.schema_name.table_name" to avoid any ambiguity.
+
+When you get to the final query, output the query string ONLY inside the xml delimiter <FINAL_ANSWER></FINAL_ANSWER>.
+
+Here are some examples
+
+======= **Examples** =======
+
+======= Example 1 =======
+
+**************************
+【Table creation statements】
+CREATE TABLE "PATENTS.PUBLICATIONS"
+(
+    "application_number" TEXT COMMENT "Patent application number (DOCDB compatible), eg: 'US-87124404-A'. This may not always be set.",
+    "filing_date" NUMBER COMMENT "Is this text truncated?",
+    "abstract_localized" VARIANT COMMENT "Localized text",
+    "country_code" TEXT COMMENT "Country code, eg: 'US', 'EP', etc"
+)
+
+Sample rows: 
+Row 1: 
+application_number: DE-69611147-T, country_code: DE, abstract_localized: [], filing_date: 19961015, 
+=====================
+
+
+
+Database name:
+PATENTS
+
+**************************
+【Question】
+Question:
+How many German publications (where country_code = 'DE') mention "machine learning" in their abstract, grouped by the filing quarter from 2015 through 2021, including quarters with zero publications?
+
+**************************
+【Answer】
+Repeating the question, and generating the SQL with Recursive Divide-and-Conquer.
+
+Question:
+How many German publications (where country_code = 'DE') mention "machine learning" in their abstract,
+grouped by the filing quarter from 2015 through 2021, including quarters with zero publications?
+
+1. Divide (Decompose the question):
+We want to count the number of publications that meet specific criteria, grouped by quarter:
+   a. The publication's country_code is 'DE'.
+   b. The abstract contains the text 'machine learning'.
+   c. The filing date is between 2015-01-01 and 2021-12-31 (inclusive).
+   d. We need a group for each quarter within this date range, even if the count for that quarter is zero.
+
+Hence, we can break this down into sub-questions:
+
+   Sub-question 1: Identify the publications that fulfill:
+       - country_code = 'DE'
+       - abstract text containing 'machine learning'
+       - Keep the relevant application_number and filing_date.
+   Sub-question 2: Generate a continuous list (series) of all calendar days from 2015-01-01 through 2021-12-31 
+                   (plus one day buffer up to but not including 2022-01-01).
+                   This date series ensures that even if there are zero publications in a given quarter,
+                   we still capture and display that quarter.
+   Sub-question 3: Join the list of filtered publications (from Sub-question 1) with our date series (from Sub-question 2)
+                   on the matching filing date.
+   Sub-question 4: Group by quarter (YYYY-Q), then count the number of distinct publications (by application_number)
+                   in each quarter. This final step must use a LEFT JOIN so that if a date (and thus its quarter)
+                   has no matching publications, it still appears with a count of zero.
+
+2. Conquer (Formulate Sub-queries in Pseudo-SQL):
+   Sub-question 1 (Filtered Publications):
+   WITH Filtered_Patents AS (
+       SELECT
+           /* Convert numeric date to DATE using Snowflake's TO_DATE + CAST + 'YYYYMMDD' format */
+           TO_DATE(CAST(ANY_VALUE(pub."filing_date") AS STRING), 'YYYYMMDD') AS filing_dt,
+           pub."application_number" AS app_num,
+           MAX(abstract_data.value:"text") AS abstract_text
+       FROM
+           "PATENTS"."PATENTS"."PUBLICATIONS" AS pub,
+           LATERAL FLATTEN(input => pub."abstract_localized") AS abstract_data
+       WHERE
+           pub."country_code" = 'DE'
+           AND LOWER(abstract_data.value:"text") LIKE '%machine learning%'
+       GROUP BY
+           app_num
+   )
+
+   Sub-question 2 (Generate Date Series from 2015-01-01 to 2022-01-01):
+   Date_Series AS (
+       SELECT
+           DATEADD(day, seq4(), DATE '2015-01-01') AS dt
+       FROM
+           TABLE (GENERATOR(ROWCOUNT => 2557)) -- enough days to cover ~7 years
+       WHERE
+           dt < DATE '2022-01-01'
+   )
+
+   Sub-question 3 & 4 (Join on filing date, group by quarter, include quarters with zero publications):
+   SELECT
+       TO_CHAR(ds.dt, 'YYYY-Q') AS filing_quarter,
+       COUNT(DISTINCT fp.app_num) AS publications_count
+   FROM
+       Date_Series ds
+       LEFT JOIN Filtered_Patents fp ON ds.dt = fp.filing_dt
+   GROUP BY
+       TO_CHAR(ds.dt, 'YYYY-Q')
+   ORDER BY
+       filing_quarter ;
+
+3. Combine (Integrate all Sub-queries):
+We can integrate Sub-question 1 and Sub-question 2 using a WITH clause for both Filtered_Patents and Date_Series.
+Then, in the main SELECT, we perform a LEFT JOIN to ensure all quarters show up. We group by the quarter string, 
+and we count DISTINCT application_number to ensure each publication is counted once per quarter.
+
+4. Final Answer (Complete SQL):
+<FINAL_ANSWER>
+WITH Filtered_Patents AS (
+   SELECT
+      TO_DATE(CAST(ANY_VALUE(pub."filing_date") AS STRING), 'YYYYMMDD') AS filing_dt,
+      pub."application_number" AS app_num,
+      MAX(abstract_data.value:"text") AS abstract_text
+   FROM 
+      PATENTS.PATENTS.PUBLICATIONS AS pub,
+      LATERAL FLATTEN(input => pub."abstract_localized") AS abstract_data
+   WHERE
+      pub."country_code" = 'DE' AND LOWER(abstract_data.value:"text") LIKE '%machine learning%'
+   GROUP BY
+      app_num 
+),
+
+Date_Series AS (
+   SELECT
+      DATEADD(day, seq4(), DATE '2015-01-01') AS dt
+   FROM
+      TABLE (
+         GENERATOR(ROWCOUNT => 2557) -- Enough days to cover 2015-01-01 through 2022-01-01 (~7 years) 
+      )
+   WHERE dt < DATE '2022-01-01'
+)
+
+SELECT
+   TO_CHAR(ds.dt, 'YYYY-Q') AS filing_quarter,
+   COUNT(DISTINCT fp.app_num) AS publications_count
+FROM Date_Series ds
+   LEFT JOIN Filtered_Patents fp
+   ON ds.dt = fp.filing_dt
+GROUP BY
+   TO_CHAR(ds.dt, 'YYYY-Q') ORDER BY filing_quarter ;
+
+</FINAL_ANSWER>
+
+======= Example 2 =======
+**************************
+【Table creation statements】
+
+CREATE TABLE "ETHEREUM_BLOCKCHAIN"."BLOCKS"
+(
+    "miner" TEXT,
+    "number" NUMBER COMMENT "The number of the block"
+);
+
+CREATE TABLE "ETHEREUM_BLOCKCHAIN"."TRACES"
+(
+    "value" NUMBER COMMENT "Value transferred in Wei",
+    "to_address" TEXT COMMENT "Receiver address if trace_type=call, etc.",
+    "call_type" TEXT COMMENT "One of call, callcode, delegatecall, staticcall",
+    "from_address" TEXT COMMENT "Address of the sender",
+    "status" NUMBER COMMENT "Either 1 (success) or 0 (failure)"
+);
+
+CREATE TABLE "ETHEREUM_BLOCKCHAIN"."TRANSACTIONS"
+(
+    "block_number" NUMBER COMMENT "Number of the block which contains this transaction",
+    "receipt_gas_used" NUMBER,
+    "from_address" TEXT,
+    "gas_price" NUMBER
+);
+
+Database name:
+ETHEREUM_BLOCKCHAIN
+
+=====================
+【Question】
+Question:
+What is the average balance of the top 10 addresses with the highest total balance on the Ethereum blockchain? 
+Include both incoming and outgoing transactions for valid addresses, plus transaction fees. 
+Only consider transactions that were successful ("status" = 1) and that have either no call_type or a call_type of 'call'. 
+Report the final average balance, in quadrillions (10^15), rounded to two decimal places.
+
+=====================
+【Answer】
+Repeating the question, and generating the SQL with Recursive Divide-and-Conquer.
+
+Question:
+What is the average balance of the top 10 addresses with the highest total balance on the Ethereum blockchain?
+Include both incoming and outgoing transactions for valid addresses, plus transaction fees. 
+Only consider transactions that were successful ("status" = 1) and that have either no call_type or a call_type of 'call'. 
+Report the final average balance, in quadrillions (10^15), rounded to two decimal places.
+
+1. Divide (Break down the question into manageable steps):
+The ultimate goal is to compute:
+   - The total balance of every address.
+   - Identify the top 10 addresses by balance.
+   - Compute the average of those top 10 balances (in quadrillions, rounded to 2 decimals).
+
+To achieve this, we need to track both incoming and outgoing flows of value, as well as transaction fees.
+
+   Sub-question 1: Gather all incoming and outgoing "value" from successful traces ("status" = 1):
+       a. Incoming to the "to_address" => positive value
+       b. Outgoing from the "from_address" => negative value
+       c. Filter out call_type in ('delegatecall','callcode','staticcall'), or keep call_type = 'call' or NULL.
+
+   Sub-question 2: Handle transaction fees, which also affect balances:
+       a. The miner of each block receives fees (i.e. fee is positive for the miner).
+       b. The sender pays fees (i.e. fee is negative for the "from_address").
+
+   Sub-question 3: Combine these four flows (incoming, outgoing, miner fees, sender fees) into a single ledger-like 
+                   table ("double_entry_book") with "address" and "value" columns.
+
+   Sub-question 4: Group by address, sum the values => compute final balances per address.
+
+   Sub-question 5: Sort to get the top 10 addresses by balance. Then compute the average of these top 10 balances, 
+                   scaled to quadrillions (divide by 1e15), and rounded to two decimals.
+
+2. Conquer (Formulate the logic in sub-queries / pseudo-SQL):
+
+   a. Debits (incoming):
+      SELECT "to_address" AS "address", "value" AS "value"
+      FROM "TRACES"
+      WHERE "to_address" IS NOT NULL
+        AND "status" = 1
+        AND (call_type NOT IN ('delegatecall','callcode','staticcall') OR call_type IS NULL)
+
+   b. Credits (outgoing):
+      SELECT "from_address" AS "address", - "value" AS "value"
+      FROM "TRACES"
+      WHERE "from_address" IS NOT NULL
+        AND "status" = 1
+        AND (call_type NOT IN ('delegatecall','callcode','staticcall') OR call_type IS NULL)
+
+   c. Transaction fee debits (miner receives fees):
+      SELECT
+          "BLOCKS"."miner" AS "address",
+          SUM("TRANSACTIONS"."receipt_gas_used" * "TRANSACTIONS"."gas_price") AS "value"
+      FROM "TRANSACTIONS"
+      JOIN "BLOCKS" ON "BLOCKS"."number" = "TRANSACTIONS"."block_number"
+      GROUP BY "BLOCKS"."miner"
+
+   d. Transaction fee credits (sender pays fees):
+      SELECT
+          "from_address" AS "address",
+          - (
+            "receipt_gas_used" * "gas_price"
+          ) AS "value"
+      FROM "TRANSACTIONS"
+
+UNION ALL these four to get a "double_entry_book" (address, value).
+
+3. Combine (Assemble the final solution):
+   - Create a CTE "double_entry_book" that combines (a) + (b) + (c) + (d).
+   - Group by address => SUM(value) => final balances.
+   - Order by descending balance, pick top 10.
+   - Compute the average of these 10 balances in quadrillions => divide by 1e15 => round to 2 decimals.
+
+4. Final Output (Complete SQL Statement):
+<FINAL_ANSWER>
+WITH double_entry_book AS (
+    -- Debits (incoming)
+    SELECT
+        "to_address" AS "address",
+        "value" AS "value"
+    FROM "ETHEREUM_BLOCKCHAIN"."ETHEREUM_BLOCKCHAIN"."TRACES"
+    WHERE
+        "to_address" IS NOT NULL
+        AND "status" = 1
+        AND (
+            "call_type" NOT IN ('delegatecall', 'callcode', 'staticcall')
+            OR "call_type" IS NULL
+        )
+
+    UNION ALL
+
+    -- Credits (outgoing)
+    SELECT
+        "from_address" AS "address",
+        - "value"     AS "value"
+    FROM "ETHEREUM_BLOCKCHAIN"."ETHEREUM_BLOCKCHAIN"."TRACES"
+    WHERE
+        "from_address" IS NOT NULL
+        AND "status" = 1
+        AND (
+            "call_type" NOT IN ('delegatecall', 'callcode', 'staticcall')
+            OR "call_type" IS NULL
+        )
+
+    UNION ALL
+
+    -- Transaction fee debits (miner receives fees)
+    SELECT
+        "blocks"."miner" AS "address",
+        SUM(
+            CAST("transactions"."receipt_gas_used" AS NUMBER)
+            * CAST("transactions"."gas_price" AS NUMBER)
+        ) AS "value"
+    FROM "ETHEREUM_BLOCKCHAIN"."ETHEREUM_BLOCKCHAIN"."TRANSACTIONS" AS "transactions"
+    JOIN "ETHEREUM_BLOCKCHAIN"."ETHEREUM_BLOCKCHAIN"."BLOCKS" AS "blocks"
+      ON "blocks"."number" = "transactions"."block_number"
+    GROUP BY "blocks"."miner"
+
+    UNION ALL
+
+    -- Transaction fee credits (sender pays fees)
+    SELECT
+        "from_address" AS "address",
+        - (
+            CAST("receipt_gas_used" AS NUMBER)
+            * CAST("gas_price" AS NUMBER)
+        ) AS "value"
+    FROM "ETHEREUM_BLOCKCHAIN"."ETHEREUM_BLOCKCHAIN"."TRANSACTIONS"
+),
+
+top_10_balances AS (
+    SELECT
+        "address",
+        SUM("value") AS "balance"
+    FROM double_entry_book
+    GROUP BY "address"
+    ORDER BY "balance" DESC
+    LIMIT 10
+)
+
+SELECT
+    ROUND(AVG("balance") / 1e15, 2) AS "average_balance_quadrillions"
+FROM top_10_balances;
+</FINAL_ANSWER>
+
+===========
+
+Now is the real question, following the instruction and examples, generate the SQL with Recursive Divide-and-Conquer approach. Make sure you only output one single query.
+**************************
+【Context】
+{CONTEXT}
+
+**************************
+【Table creation statements】
+{DATABASE_SCHEMA}
+
+Database name:
+{DB_ID}
+
+**************************
+【Question】
+Question: 
+{QUESTION}
+
+**************************
+【Answer】
+Repeating the question, and generating the SQL with Recursive Divide-and-Conquer.
