@@ -23,6 +23,25 @@ def extract_sql_queries(text):
     return text
 
 
+def extract_json_from_output(llm_output: str) -> str:
+    """
+    Extracts the JSON content between the ```json and ``` tags from the given LLM output.
+
+    Parameters:
+        llm_output (str): The complete LLM output string.
+
+    Returns:
+        str: The extracted JSON string. If no JSON block is found, returns an empty string.
+    """
+    pattern = re.compile(r"```json\s*(.*?)\s*```", re.DOTALL)
+    match = pattern.search(llm_output)
+    if match:
+        # Extract the captured JSON string
+        json_content = match.group(1)
+        return json_content.strip()  # remove any extraneous whitespace
+    return ""
+
+
 def get_parser(parser_name: str) -> Any:
     """
     Returns the appropriate parser based on the provided parser name.
@@ -37,7 +56,8 @@ def get_parser(parser_name: str) -> Any:
         ValueError: If the parser name is invalid.
     """
     parser_configs = {
-        "query_generation": extract_sql_queries
+        "query_generation": extract_sql_queries,
+        "json_extractor": extract_json_from_output
     }
 
     if parser_name not in parser_configs:

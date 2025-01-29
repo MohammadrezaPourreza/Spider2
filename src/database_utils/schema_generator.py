@@ -4,6 +4,7 @@ import os
 import re
 import sqlite3
 import pandas as pd
+import random
 
 from transformers import AutoTokenizer
 from src.database_utils.enums import LLM
@@ -609,3 +610,23 @@ def jaccard_similarity(skeleton1, skeleton2):
             intersection += min(token_dict1[t], token_dict2[t])
     union = (len(tokens1) + len(tokens2)) - intersection
     return float(intersection) / union
+
+
+def create_input_schema(create_table_statements, sample_rows):
+    """
+    Creates a SQL schema for the given create table statements and sample rows.
+
+    Parameters:
+        create_table_statements (List[str]): A list of create table statements.
+        sample_rows (List[str]): A list of sample rows.
+
+    Returns:
+        str: The SQL schema.
+    """
+    combined = list(zip(create_table_statements, sample_rows))
+    random.shuffle(combined) 
+    create_table_statements, sample_rows = zip(*combined)
+    schema = ""
+    for create_table, sample_row in zip(create_table_statements, sample_rows):
+        schema += f"{create_table}\n\n{sample_row}\n\n"
+    return schema
