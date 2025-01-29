@@ -7,45 +7,42 @@ import concurrent.futures
 
 from tqdm import tqdm
 from src.query_generator import generate_queries
-from src.logging.logger import setup_logger
+from src.logging.logger import setup_logger, SessionLogger
+from src.database_utils.db_info import get_preprocessed_data
 from src.database_utils.evaluate import compare_sqls
 
-SPIDER_PREPROCESSED_DATASET_PATH=os.environ.get("SPIDER_PREPROCESSED_DATASET_PATH")
-text2sql_data = json.load(open(SPIDER_PREPROCESSED_DATASET_PATH, 'r', encoding='utf-8'))
 
-{
-        "id": "A",
-        "description": "This component retrieves the geometric data for Philadelphia from the PLACES_PENNSYLVANIA table.",
-        "equivalent_natural_question": "What is the geometric shape of Philadelphia as defined in the PLACES_PENNSYLVANIA table?",
-        "sql_query": "SELECT\n        *\n    FROM\n        GEO_OPENSTREETMAP_CENSUS_PLACES.GEO_US_CENSUS_PLACES.PLACES_PENNSYLVANIA\n    WHERE\n        \"place_name\" = 'Philadelphia'",
-        "dag_dependencies": []
-    }
-
-def process_sample(instance_id, dag, args, logger):
+def process_sample(instance_id, dag, args, logger: SessionLogger):
     external_knowledge = ""
-    original_gold_query = ""
     db_id = ""
     results = []
-    for sample in text2sql_data:
-        if sample["instance_id"] == instance_id:
-            external_knowledge = sample["external_knowledge"]
-            original_gold_query = sample["query"]
-            db_id = sample["db_id"]
-            break
+    preprocessed_data = get_preprocessed_data(instance_id)
+    if preprocessed_data:
+        external_knowledge = preprocessed_data["external_knowledge"]
+        db_id = preprocessed_data["db_id"]
+
+    logger.log_to_file(f"logs/{instance_id}.log", f"# Instance ID: {instance_id}\n- DB ID: {db_id}\n- Instruction: {preprocessed_data['instruction']}")
+
     for node in dag:
+        node_id = node["id"]
         sql_query = node["sql_query"]
         question = node["equivalent_natural_question"]
+        logger.log_to_file(f"logs/{instance_id}.log", f"## Node ID: {node_id}\nQuestion: {question}\nSQL Query: {sql_query}")
+        
         candidate_queries = generate_queries(
             model_name=args.model_name,
             instance_id=instance_id,
-            instruction=question,
             db_id=db_id,
+            instruction=question,
             external_knowledge=external_knowledge,
             num_candidates=args.num_candidates,
             max_refinement=args.max_refinement,
             gold_query=sql_query,
             generation_prompt_template=args.generation_prompt,
             refinement_prompt_template=args.refinement_prompt,
+            logger=logger,
+            step_id=f"node_{node_id}",
+            log_path=f"{logger.log_dir}/llm_calls/node_{node_id}.log"
         )
         node["generated_queries"] = candidate_queries
         sql_meta_data_info = []
@@ -112,7 +109,6 @@ if __name__=="__main__":
                         results.append(result)
                 except Exception as e:
                     print(f"An error occurred: {e}")
-    os.remove("temp")
     
     
     

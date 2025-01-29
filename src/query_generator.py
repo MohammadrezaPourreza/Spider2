@@ -9,7 +9,7 @@ from src.llm.prompt_loader import load_prompt
 from src.database_utils.sql_parser import get_sql_columns_dict
 from src.database_utils.db_catalog.load_context import load_external_knowledge
 from src.llm.parsers import get_parser
-
+from src.logging.logger import SessionLogger
 
 SPIDER_PREPROCESSED_TABLES_PATH=os.environ.get("SPIDER_PREPROCESSED_TABLES_PATH")
 tables_json = json.load(open(SPIDER_PREPROCESSED_TABLES_PATH, 'r', encoding='utf-8'))
@@ -29,8 +29,8 @@ def need_fixing(candidates: list[dict]):
 def generate_queries(
         model_name: str,
         instance_id: str,
-        instruction: str,
         db_id: str,
+        instruction: str,
         external_knowledge: str,
         num_candidates: int = 5,
         max_refinement: int = 3,
@@ -38,6 +38,8 @@ def generate_queries(
         generation_prompt_template: str = "simple_sql_generation",
         refinement_prompt_template: str = "self_refiner_prompt",
         llm_config: dict = None,
+        logger: SessionLogger = None,
+        **kwargs
         ):
     result_dict = {}
     token_count_dict = {}
@@ -89,7 +91,9 @@ def generate_queries(
             DATABASE_SCHEMA=filtered_schema,
             CONTEXT=context
         ))
-    generated_responses = invoke_engine_batch(llm, requests)
+    generated_responses = invoke_engine_batch(llm, requests, 
+                                              step_id=kwargs.get("step_id", None) + f"_generation",
+                                              log_path=kwargs.get("log_path", None))
     candidates = []
     for llm_response in generated_responses:
         generated_sql = extract_sql_queries(llm_response)
@@ -118,7 +122,9 @@ def generate_queries(
                 QUERY=sample['generated_query'],
                 RESULT=sample['result']
             ))
-        llm_responses = invoke_engine_batch(llm, requests)
+        llm_responses = invoke_engine_batch(llm, requests, 
+                                              step_id=kwargs.get("step_id", None) + f"_revise_{counter}",
+                                              log_path=kwargs.get("log_path", None))
         fixed_queries = []
         for llm_resp in llm_responses:
             generated_sql = extract_sql_queries(llm_resp)

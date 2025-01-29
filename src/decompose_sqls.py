@@ -30,6 +30,9 @@ def parse_llm_output(string: str) -> List[Dict]:
         if "```json" in string:
             string = string.split("```json")[1].strip()
             string = string.split("```")[0].strip()
+        if "```text" in string:
+            string = string.split("```text")[1].strip()
+            string = string.split("```")[0].strip()     
         components = json.loads(string)
         return components
     except json.JSONDecodeError as e:
@@ -104,14 +107,19 @@ def process_llm_query(query_packet: Dict, engine: any, prompt_template: str, out
     sql_query = query_packet["query"]
     
     prompt = prompt_template.format(main_question=question, sql_query=sql_query)
-    response = invoke_engine(engine, prompt)
     
-    # Save input/output log
+    # First write the prompt to file
     log_path = os.path.join(output_dir, f"log_{query_id}.txt")
     with open(log_path, "w") as f:
         f.write(f"Query ID: {query_id}\n")
         f.write(f"\n\n##### Prompt #####\n\n")
         f.write(f"{prompt}\n")
+    
+    # Get response from engine
+    response = invoke_engine(engine, prompt, timeout=300)
+    
+    # Append the response to the file
+    with open(log_path, "a") as f:
         f.write(f"\n\n##### Response #####\n\n")
         f.write(f"{response}\n")
     
@@ -141,18 +149,17 @@ def process_queries_with_llm(
     engine = get_engine(model_name)
     os.makedirs(output_dir, exist_ok=True)
     
-    # Filter queries with non-empty SQL
-    queries_with_sql = [q for q in queries if q.get("query", "").strip()]
+    
     
     # Process queries through LLM in parallel
     llm_results = {}
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
         future_to_query = {
             executor.submit(process_llm_query, query, engine, prompt_template, output_dir): query
-            for query in queries_with_sql
+            for query in queries
         }
         
-        for future in tqdm(as_completed(future_to_query), total=len(queries_with_sql)):
+        for future in tqdm(as_completed(future_to_query), total=len(queries)):
             try:
                 query_id, response = future.result()
                 llm_results[query_id] = response
@@ -241,6 +248,8 @@ if __name__ == '__main__':
     # Load queries from input file
     with open(args.input_queries_path, 'r') as f:
         queries = json.load(f)
+    # Filter queries with non-empty SQL
+    queries = [q for q in queries if q.get("query", "").strip()]
     
     decompose_queries(queries,
                      args.model_name, 

@@ -174,11 +174,13 @@ def invoke_with_log_probs(engine, prompt, **kwargs):
 def log_message(text, role, log_path, step_id=None):
     flag = f"=================== {role} at {step_id} ==================="
     text_to_dump = f"{flag}\n{text}\n{flag}\n"
+    # Create directory if it doesn't exist
+    os.makedirs(os.path.dirname(log_path), exist_ok=True)
     with open(log_path, "a") as f:
         f.write(text_to_dump)
 
 
-def invoke_engine(engine, prompt, log_path=None, step_id=None, max_retries=5, **kwargs):
+def invoke_engine(engine, prompt, log_path=None, step_id=None, max_retries=5, timeout=30, **kwargs):
     """
     Simple wrapper to invoke a language model engine and return its response.
 
@@ -195,7 +197,6 @@ def invoke_engine(engine, prompt, log_path=None, step_id=None, max_retries=5, **
 
     base_wait = 5  # Start with 1 second
     max_wait = 60  # Max wait of 1 minute
-    timeout = 30
     
     for attempt in range(max_retries):
         try:            
