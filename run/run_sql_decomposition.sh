@@ -1,5 +1,5 @@
-# Set up environment variables and paths
-INPUT_QUERIES_PATH="data/spider2-snow_preprocessed.json"
+source .env
+INPUT_QUERIES_PATH=$SPIDER_PREPROCESSED_DATASET_PATH
 MODEL_NAME="gemini-1.5-pro-002"
 
 # Run the Python script
