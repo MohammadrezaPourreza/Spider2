@@ -270,6 +270,11 @@ Database name:
 {DB_ID}
 
 **************************
+【Dependencies】
+Here we will some previous sub-questions and sub-sqls that can help you find the correct answer for the given question.
+{DEPENDENCIES}
+
+**************************
 【Question】
 Question: 
 {QUESTION}

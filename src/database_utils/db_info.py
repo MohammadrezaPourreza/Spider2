@@ -19,4 +19,6 @@ def get_preprocessed_data(instance_id: str) -> dict:
         dict: The preprocessed data dictionary for the instance, or None if not found
     """
    
-    return spider_preprocessed_data.get(instance_id, None)
+    for instance in spider_preprocessed_data:
+        if instance['instance_id'] == instance_id:
+            return instance

@@ -6,11 +6,42 @@ import time
 import concurrent.futures
 
 from tqdm import tqdm
-from src.query_generator import generate_queries
+from src.query_generator import generate_queries, self_consistency
 from src.logging.logger import setup_logger, SessionLogger
 from src.database_utils.db_info import get_preprocessed_data
 from src.database_utils.evaluate import compare_sqls
 
+
+def format_dependent_nodes(dag: list, nodes_to_use: list):
+    if len(nodes_to_use) == 0:
+        return ""
+    formatted_output = "\nHere are some previosuly asked questions that are hiighly relevant to the current question:\n\n"
+    formatted_output += "You **MUST** construct your final answer for the given question using the SQL queries provided below.\n\n"
+    formatted_output += "You can use CTEs to store the intermediate results for the below queries and use them in your final query.\n\n"
+    for node in dag:
+        if node["id"] not in nodes_to_use:
+            continue
+        formatted_output += f"Question: {node['equivalent_natural_question']}\n"
+        formatted_output += f"SQL Query: {node['selected_query']}\n\n"
+    return formatted_output
+
+
+def find_node(dag: list, node_id: int):
+    for node in dag:
+        if node['id'] == node_id:
+            return node
+    return None
+
+
+def find_all_dependent_nodes(dag: list, node_id: int):
+    dependent_nodes = []
+    nodes_to_process = find_node(dag, node_id)['dag_dependencies']
+    while nodes_to_process:
+        node_id = nodes_to_process.pop()
+        dependent_nodes.append(node_id)
+        nodes_to_process.extend(find_node(dag, node_id)['dag_dependencies'])
+    return dependent_nodes
+    
 
 def process_sample(instance_id, dag, args):
     external_knowledge = ""
@@ -20,6 +51,7 @@ def process_sample(instance_id, dag, args):
     if preprocessed_data:
         external_knowledge = preprocessed_data["external_knowledge"]
         db_id = preprocessed_data["db_id"]
+        original_query = preprocessed_data["query"]
 
     SessionLogger.log_to_md(f"logs/{instance_id}.md", (f"# Instance ID: {instance_id}\n"
                                                         f"### DB ID: \n{db_id}\n"
@@ -41,11 +73,12 @@ def process_sample(instance_id, dag, args):
             external_knowledge=external_knowledge,
             num_candidates=args.num_candidates,
             max_refinement=args.max_refinement,
-            gold_query=sql_query,
+            gold_query=original_query,
             generation_prompt_template=args.generation_prompt,
             refinement_prompt_template=args.refinement_prompt,
             step_id=f"node_{node_id}",
-            log_path=f"{SessionLogger.get_current_logger().log_dir}/llm_calls/node_{node_id}.log"
+            dependencies=format_dependent_nodes(dag, find_all_dependent_nodes(dag, node_id)),
+            log_path=f"{SessionLogger.get_current_logger().log_dir}/llm_calls/{instance_id}_node_{node_id}.log"
         )
         node["generated_queries"] = candidate_queries
         if candidate_queries:
@@ -56,6 +89,7 @@ def process_sample(instance_id, dag, args):
                                                           gold_sql_query=sql_query)
                     sql_meta_info['score'] = score
                     sql_meta_info['error_info'] = error_info
+                node["selected_query"] = self_consistency(candidate_queries['candidates'], db_id)
         results.append(node)
         SessionLogger.log_to_json(f"{instance_id}", results)
     return results
@@ -79,6 +113,7 @@ if __name__=="__main__":
     parser.add_argument("--num_candidates", type=int, default=5)
     parser.add_argument("--max_refinement", type=int, default=3)
     parser.add_argument("--num_workers", type=int, default=8, help="Number of workers for data processing")
+    parser.add_argument("--conditional_generation", type=bool, default=True)
     args = parser.parse_args()
     formatted_time = time.strftime("%Y%m%d-%H%M%S")
 

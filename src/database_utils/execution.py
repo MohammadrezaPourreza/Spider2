@@ -68,8 +68,8 @@ def get_snowflake_sql_result(sql_query, database_id, is_save=False, save_dir=Non
                     "message": "Data fetched successfully.",
                     "data": df}
     except Exception as e:
-        print(f"Error occurred while fetching data for {database_id}\n" 
-              f"```sql\n{sql_query}\n```: ", e)  
+        # print(f"Error occurred while fetching data for {database_id}\n" 
+        #       f"```sql\n{sql_query}\n```: ", e)  
         return {"status": False,
                 "message": f"Error: {e}",
                 "data": pd.DataFrame()}

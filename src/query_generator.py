@@ -54,7 +54,8 @@ def _prepare_schema(db_id: str, instance_id: str, gold_query: str, model_name: s
     return filtered_schema, token_count_dict
 
 def _generate_initial_candidates(llm, generation_prompt: str, num_candidates: int, 
-                               instruction: str, db_id: str, filtered_schema: str, 
+                               instruction: str, dependencies: str
+                               , db_id: str, filtered_schema: str, 
                                context: str, **kwargs) -> list[dict]:
     """
     Generates initial SQL query candidates using the LLM with parallel processing.
@@ -69,6 +70,7 @@ def _generate_initial_candidates(llm, generation_prompt: str, num_candidates: in
             QUESTION=instruction,
             DB_ID=db_id,
             DATABASE_SCHEMA=filtered_schema,
+            DEPENDENCIES=dependencies,
             CONTEXT=context
         )
         
@@ -104,7 +106,7 @@ def _create_candidate_dict(candidate_id: str, llm_response: str, parser, db_id: 
     }
 
 def _refine_candidates(llm, incorrect_samples: list[dict], correct_samples: list[dict],
-                      self_refine: str, instruction: str, db_id: str, 
+                      self_refine: str, instruction: str, dependencies: str, db_id: str, 
                       filtered_schema: str, context: str, counter: int, **kwargs) -> list[dict]:
     """
     Refines incorrect query candidates using self-refinement with parallel processing.
@@ -124,6 +126,7 @@ def _refine_candidates(llm, incorrect_samples: list[dict], correct_samples: list
             DB_ID=db_id,
             DATABASE_SCHEMA=filtered_schema,
             CONTEXT=context,
+            DEPENDENCIES=dependencies,
             QUERY=sample['generated_query'],
             RESULT=RESULT
         )
@@ -160,6 +163,7 @@ def generate_queries(
         max_refinement: int,
         gold_query: str = None,
         llm_config: dict = None,
+        dependencies: str = "",
         **kwargs
         ):
     """
@@ -196,7 +200,7 @@ def generate_queries(
     
     # Generate initial candidates
     candidates = _generate_initial_candidates(
-        llm, generation_prompt, num_candidates, instruction, 
+        llm, generation_prompt, num_candidates, instruction, dependencies,
         db_id, filtered_schema, context, **kwargs
     )
     full_candidates = candidates
@@ -207,7 +211,7 @@ def generate_queries(
     while incorrect_samples and counter < max_refinement:
         candidates = _refine_candidates(
             llm, incorrect_samples, correct_samples, self_refine,
-            instruction, db_id, filtered_schema, context, counter, **kwargs
+            instruction, dependencies, db_id, filtered_schema, context, counter, **kwargs
         )
         full_candidates.extend(candidates)
         result_dict[f'candidates refinement {counter+1}'] = candidates
