@@ -21,13 +21,17 @@ def process_sample(instance_id, dag, args):
         external_knowledge = preprocessed_data["external_knowledge"]
         db_id = preprocessed_data["db_id"]
 
-    SessionLogger.log_to_file(f"logs/{instance_id}.log", f"# Instance ID: {instance_id}\n- DB ID: {db_id}\n- Instruction: {preprocessed_data['instruction']}")
+    SessionLogger.log_to_md(f"logs/{instance_id}.md", (f"# Instance ID: {instance_id}\n"
+                                                        f"### DB ID: \n{db_id}\n"
+                                                        f"### Instruction:\n{preprocessed_data['instruction']}"))
 
     for node in dag:
         node_id = node["id"]
         sql_query = node["sql_query"]
         question = node["equivalent_natural_question"]
-        SessionLogger.log_to_file(f"logs/{instance_id}.log", f"## Node ID: {node_id}\nQuestion: {question}\nSQL Query: {sql_query}")
+        SessionLogger.log_to_md(f"logs/{instance_id}.md", (f"## Node: {node_id}\n"
+                                                          f"### Question:\n{question}\n"
+                                                          f"### SQL Query:\n```sql\n{sql_query}\n```"))
         
         candidate_queries = generate_queries(
             model_name=args.model_name,
@@ -47,9 +51,11 @@ def process_sample(instance_id, dag, args):
         if candidate_queries:
             if candidate_queries['candidates']:
                 for sql_meta_info in candidate_queries['candidates']:
-                    sql_meta_info['label'] = compare_sqls(database_id=db_id, 
+                    score, error_info = compare_sqls(database_id=db_id, 
                                                           pred_sql_query=sql_meta_info['generated_query'], 
                                                           gold_sql_query=sql_query)
+                    sql_meta_info['score'] = score
+                    sql_meta_info['error_info'] = error_info
         results.append(node)
         SessionLogger.log_to_json(f"{instance_id}", results)
     return results
@@ -76,7 +82,7 @@ if __name__=="__main__":
     args = parser.parse_args()
     formatted_time = time.strftime("%Y%m%d-%H%M%S")
 
-    setup_logger(run_id=f"generated_queries/{args.dag_log_dir}/{args.model_name}-{formatted_time}")
+    setup_logger(run_id=f"generated_queries/{args.dag_log_dir}/{args.model_name}/{formatted_time}")
     all_json_dags = load_all_json_dags(args.dag_log_dir)
     
     results = []

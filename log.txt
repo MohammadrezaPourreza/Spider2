@@ -1,0 +1,139 @@
+Processing rows (multithreaded):   0%|          | 0/5 [00:00<?, ?it/s]Schema is too long, disabling sample rows and descriptions for sample sf_bq155
+An error occurred: not enough values to unpack (expected 2, got 0)
+Processing rows (multithreaded):  20%|##        | 1/5 [00:00<00:03,  1.18it/s]An error occurred: not enough values to unpack (expected 2, got 0)
+condition_cols []
+condition_cols []
+An error occurred: not enough values to unpack (expected 2, got 0)
+Processing rows (multithreaded):  60%|######    | 3/5 [00:10<00:07,  3.93s/it]condition_cols []
+condition_cols []
+Error occurred while fetching data for GOOGLE_TRENDS
+```sql
+SELECT
+        "term",
+        "week",
+        CASE WHEN "score" IS NULL THEN NULL ELSE "dma_name" END AS "dma_name",
+        "rank",
+        "score",
+        ROW_NUMBER() OVER (
+            PARTITION BY "term", "week"
+            ORDER BY "score" DESC
+        ) AS rn
+    FROM
+        GOOGLE_TRENDS.GOOGLE_TRENDS.TOP_RISING_TERMS
+    WHERE
+        "week" = (SELECT "last_year_week" FROM LatestWeek)
+        AND "refresh_date" = (SELECT "latest_refresh_date" FROM LatestRefreshDate)
+```:  002003 (42S02): SQL compilation error:
+Object 'LATESTWEEK' does not exist or not authorized.
+Error occurred while fetching data for GOOGLE_TRENDS
+```sql
+SELECT
+        "term",
+        "week",
+        CASE WHEN "score" IS NULL THEN NULL ELSE "dma_name" END AS "dma_name",
+        "rank",
+        "score",
+        ROW_NUMBER() OVER (
+            PARTITION BY "term", "week"
+            ORDER BY "score" DESC
+        ) AS rn
+    FROM
+        GOOGLE_TRENDS.GOOGLE_TRENDS.TOP_RISING_TERMS
+    WHERE
+        "week" = (SELECT "last_year_week" FROM LatestWeek)
+        AND "refresh_date" = (SELECT "latest_refresh_date" FROM LatestRefreshDate)
+```:  002003 (42S02): SQL compilation error:
+Object 'LATESTWEEK' does not exist or not authorized.
+condition_cols []
+Processing rows (multithreaded):  80%|########  | 4/5 [00:49<00:15, 15.90s/it]condition_cols []
+condition_cols []
+Error occurred while fetching data for ETHEREUM_BLOCKCHAIN
+```sql
+
+WITH double_entry_book AS (
+    -- Incoming transactions
+    SELECT "to_address" AS address, "value"
+    FROM "ETHEREUM_BLOCKCHAIN"."ETHEREUM_BLOCKCHAIN"."TRACES"
+    WHERE "status" = 1
+
+    UNION ALL
+
+    -- Outgoing transactions (negative value)
+    SELECT "from_address" AS address, - "value"
+    FROM "ETHEREUM_BLOCKCHAIN"."ETHEREUM_BLOCKCHAIN"."TRACES"
+    WHERE "status" = 1
+
+    UNION ALL
+
+    -- Miner fees (credited to miner)
+    SELECT "miner" AS address, SUM("receipt_gas_used" * "gas_price") AS value
+    FROM "ETHEREUM_BLOCKCHAIN"."ETHEREUM_BLOCKCHAIN"."TRANSACTIONS" AS tx
+    JOIN "ETHEREUM_BLOCKCHAIN"."ETHEREUM_BLOCKCHAIN"."BLOCKS" AS bl ON tx."block_number" = bl."number"
+    GROUP BY "miner"
+
+    UNION ALL
+
+    -- Gas fees paid (debited from sender)
+    SELECT "from_address" AS address, - ("receipt_gas_used" * "gas_price") AS value
+    FROM "ETHEREUM_BLOCKCHAIN"."ETHEREUM_BLOCKCHAIN"."TRANSACTIONS"
+)
+
+SELECT address, SUM(value) AS net_balance
+FROM double_entry_book
+GROUP BY address
+ORDER BY net_balance DESC
+LIMIT 10;
+
+```:  000904 (42000): SQL compilation error: error line 29 at position 20
+invalid identifier 'VALUE'
+Error occurred while fetching data for ETHEREUM_BLOCKCHAIN
+```sql
+WITH double_entry_book AS (SELECT "to_address" AS address,"value" FROM ETHEREUM_BLOCKCHAIN.PUBLIC.TRACES WHERE "status"=1 UNION ALL SELECT "from_address" AS address,-"value" FROM ETHEREUM_BLOCKCHAIN.PUBLIC.TRACES WHERE "status"=1 UNION ALL SELECT "miner" AS address,SUM("receipt_gas_used" * "gas_price") AS value FROM ETHEREUM_BLOCKCHAIN.PUBLIC.TRANSACTIONS AS tx JOIN ETHEREUM_BLOCKCHAIN.PUBLIC.BLOCKS AS bl ON tx."block_number"=bl."number" GROUP BY "miner" UNION ALL SELECT "from_address" AS address,-("receipt_gas_used" * "gas_price") AS gas_value FROM ETHEREUM_BLOCKCHAIN.PUBLIC.TRANSACTIONS)SELECT address,SUM(CASE WHEN address in (SELECT "miner" from ETHEREUM_BLOCKCHAIN.PUBLIC.BLOCKS) THEN value ELSE COALESCE(value,0)+COALESCE(gas_value,0) END) AS net_balance FROM double_entry_book GROUP BY address ORDER BY net_balance DESC LIMIT 10
+```:  002003 (42S02): SQL compilation error:
+Object 'ETHEREUM_BLOCKCHAIN.PUBLIC.TRACES' does not exist or not authorized.
+Error occurred while fetching data for ETHEREUM_BLOCKCHAIN
+```sql
+
+WITH double_entry_book AS (
+    -- Incoming transactions
+    SELECT "to_address" AS address, "value"
+    FROM "ETHEREUM_BLOCKCHAIN"."ETHEREUM_BLOCKCHAIN"."TRACES"
+    WHERE "status" = 1
+
+    UNION ALL
+
+    -- Outgoing transactions (negative value)
+    SELECT "from_address" AS address, - "value"
+    FROM "ETHEREUM_BLOCKCHAIN"."ETHEREUM_BLOCKCHAIN"."TRACES"
+    WHERE "status" = 1
+
+    UNION ALL
+
+    -- Miner fees (credited to miner)
+    SELECT "miner" AS address, SUM("receipt_gas_used" * "gas_price") AS value
+    FROM "ETHEREUM_BLOCKCHAIN"."ETHEREUM_BLOCKCHAIN"."TRANSACTIONS" AS tx
+    JOIN "ETHEREUM_BLOCKCHAIN"."ETHEREUM_BLOCKCHAIN"."BLOCKS" AS bl ON tx."block_number" = bl."number"
+    GROUP BY "miner"
+
+    UNION ALL
+
+    -- Gas fees paid (debited from sender)
+    SELECT "from_address" AS address, - ("receipt_gas_used" * "gas_price") AS value
+    FROM "ETHEREUM_BLOCKCHAIN"."ETHEREUM_BLOCKCHAIN"."TRANSACTIONS"
+)
+
+SELECT address, SUM(value) AS net_balance
+FROM double_entry_book
+GROUP BY address
+ORDER BY net_balance DESC
+LIMIT 10;
+
+```:  000904 (42000): SQL compilation error: error line 29 at position 20
+invalid identifier 'VALUE'
+Error occurred while fetching data for ETHEREUM_BLOCKCHAIN
+```sql
+WITH double_entry_book AS (SELECT "to_address" AS address,"value" FROM ETHEREUM_BLOCKCHAIN.PUBLIC.TRACES WHERE "status"=1 UNION ALL SELECT "from_address" AS address,-"value" FROM ETHEREUM_BLOCKCHAIN.PUBLIC.TRACES WHERE "status"=1 UNION ALL SELECT "miner" AS address,SUM("receipt_gas_used" * "gas_price") AS value FROM ETHEREUM_BLOCKCHAIN.PUBLIC.TRANSACTIONS AS tx JOIN ETHEREUM_BLOCKCHAIN.PUBLIC.BLOCKS AS bl ON tx."block_number"=bl."number" GROUP BY "miner" UNION ALL SELECT "from_address" AS address,-("receipt_gas_used" * "gas_price") AS gas_value FROM ETHEREUM_BLOCKCHAIN.PUBLIC.TRANSACTIONS)SELECT address,SUM(CASE WHEN address in (SELECT "miner" from ETHEREUM_BLOCKCHAIN.PUBLIC.BLOCKS) THEN value ELSE COALESCE(value,0)+COALESCE(gas_value,0) END) AS net_balance FROM double_entry_book GROUP BY address ORDER BY net_balance DESC LIMIT 10
+```:  002003 (42S02): SQL compilation error:
+Object 'ETHEREUM_BLOCKCHAIN.PUBLIC.TRACES' does not exist or not authorized.
+condition_cols []
+Processing rows (multithreaded): 100%|##########| 5/5 [02:27<00:00, 43.08s/it]Processing rows (multithreaded): 100%|##########| 5/5 [02:27<00:00, 29.49s/it]

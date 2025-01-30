@@ -27,11 +27,11 @@ load_dotenv(override=True)
 proj_dir = osp.dirname(osp.abspath(__file__))
 
 safety_settings = {
-    HarmCategory.HARM_CATEGORY_UNSPECIFIED: HarmBlockThreshold.BLOCK_ONLY_HIGH,
-    HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_ONLY_HIGH,
-    HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_ONLY_HIGH,
-    HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_ONLY_HIGH,
-    HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_ONLY_HIGH,
+    HarmCategory.HARM_CATEGORY_UNSPECIFIED: HarmBlockThreshold.BLOCK_NONE,
+    HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_NONE,
+    HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_NONE,
+    HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_NONE,
+    HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_NONE,
 }
 
 
@@ -180,7 +180,7 @@ def log_message(text, role, log_path, step_id=None):
         f.write(text_to_dump)
 
 
-def invoke_engine(engine, prompt, log_path=None, step_id=None, max_retries=5, timeout=30, **kwargs):
+def invoke_engine(engine, prompt, log_path=None, step_id=None, max_retries=5, timeout=60, **kwargs):
     """
     Simple wrapper to invoke a language model engine and return its response.
 
@@ -218,48 +218,13 @@ def invoke_engine(engine, prompt, log_path=None, step_id=None, max_retries=5, ti
                     if log_path:
                         log_message("Request timed out", "Assistant", log_path, step_id)
                     raise TimeoutError(f"Request timed out after {timeout} seconds")
+                except Exception as e:
+                    log_message(f"Error: {e}", "Assistant", log_path, step_id)
         except Exception as e:
             if attempt == max_retries - 1:
-                raise  # Re-raise the exception on the last attempt
+                print(f"Error: {e}")
+                raise e # Re-raise the exception on the last attempt
             
             # Calculate wait time with exponential backoff, capped at max_wait
             wait_time = min(base_wait * (2 ** attempt), max_wait)
             time.sleep(wait_time)
-
-def invoke_engine_batch(engine, prompts, log_path=None, step_id=None, max_workers=None, **kwargs):
-    """
-    Invokes the given language model engine for each prompt in `prompts` in parallel
-    and returns a list of responses in the same order.
-
-    Args:
-        engine: The language model engine to use.
-        prompts (list): A list of prompt strings.
-        log_path (str, optional): Path to a log file or logger configuration.
-        step_id (str or int, optional): An identifier for logging steps.
-        max_workers (int, optional): Maximum number of threads to use. Defaults to len(prompts).
-        **kwargs: Additional keyword arguments for model invocation.
-
-    Returns:
-        list: A list of responses (strings or objects, depending on the model).
-    """
-    if max_workers is None:
-        max_workers = len(prompts) or 1  # Avoid zero if prompts is an empty list
-    
-    # Submit each prompt to be processed in its own thread
-    results = [None] * len(prompts)
-    with ThreadPoolExecutor(max_workers=max_workers) as executor:
-        future_to_index = {
-            executor.submit(invoke_engine, engine, prompt, log_path, step_id, **kwargs): i
-            for i, prompt in enumerate(prompts)
-        }
-
-        # Collect results as they complete, preserving original order
-        for future in as_completed(future_to_index):
-            index = future_to_index[future]
-            try:
-                results[index] = future.result()
-            except Exception as exc:
-                # Re-raise to stop further processing if any prompt fails
-                raise exc
-
-    return results

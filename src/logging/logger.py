@@ -150,6 +150,36 @@ class SessionLogger:
             with open(json_file, 'w') as f:
                 json.dump(updated_data, f, indent=2)
 
+    @classmethod
+    def log_to_md(cls, relative_path_to_file: str, content: str) -> None:
+        """
+        Logs content to a markdown file within the session's log directory.
+        
+        Args:
+            relative_path_to_file: Relative path to the markdown file (including .md extension)
+            content: Content to append to the markdown file
+        """
+        current_logger = cls.get_current_logger()
+        if not current_logger:
+            raise RuntimeError("No logger has been initialized. Call setup_logger first.")
+            
+        md_file = current_logger.log_dir / relative_path_to_file
+        
+        # Create directories if they don't exist
+        md_file.parent.mkdir(parents=True, exist_ok=True)
+        
+        # Get or create lock for this file
+        with cls._locks_lock:
+            file_lock = cls._file_locks.get(md_file)
+            if file_lock is None:
+                file_lock = threading.Lock()
+                cls._file_locks[md_file] = file_lock
+        
+        # Use the lock when writing to file
+        with file_lock:
+            with open(md_file, 'a', encoding='utf-8') as f:
+                f.write(content+"\n")
+
     _current_logger = None
 
     @classmethod

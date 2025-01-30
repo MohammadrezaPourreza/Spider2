@@ -1,10 +1,10 @@
-DAG_LOG_DIR="logs/decomposed_sqls/test"
+DAG_LOG_DIR="logs/decomposed_sqls/test_5"
 MODEL_NAME="gemini-1.5-pro-002"
 GENERATION_PROMPT="simple_sql_generation"
 REFINEMENT_PROMPT="self_refiner_prompt"
 NUM_CANDIDATES=1
 MAX_REFINEMENT=1
-NUM_WORKERS=1
+NUM_WORKERS=5
 
 # Run the Python script
 echo "Starting the query generation for DAGs..."

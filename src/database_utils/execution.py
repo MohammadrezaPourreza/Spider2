@@ -57,19 +57,22 @@ def get_snowflake_sql_result(sql_query, database_id, is_save=False, save_dir=Non
         results = cursor.fetchall()
         columns = [desc[0] for desc in cursor.description]
         df = pd.DataFrame(results, columns=columns)
-        if df.empty:
-            print("No data found for the specified query.")
+        if is_save:
             df.to_csv(os.path.join(save_dir, file_name), index=False)
-            return True, "No data found for the specified query."
+        if df.empty:
+            return {"status": False,
+                    "message": "No data found for the specified query.",
+                    "data": pd.DataFrame()}
         else:
-            if is_save:
-                df.to_csv(os.path.join(save_dir, file_name), index=False)
-                return True, "Data saved successfully."
-            else:
-                return True, df
+            return {"status": True,
+                    "message": "Data fetched successfully.",
+                    "data": df}
     except Exception as e:
-        print(f"Error occurred while fetching data for {file_name}: ", e)  
-        return False, str(e)
+        print(f"Error occurred while fetching data for {database_id}\n" 
+              f"```sql\n{sql_query}\n```: ", e)  
+        return {"status": False,
+                "message": f"Error: {e}",
+                "data": pd.DataFrame()}
     
 def dump_sql_execution_results(sql_query, database_id, save_dir=None, file_name="result.csv"):
     """

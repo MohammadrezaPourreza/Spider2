@@ -18,7 +18,7 @@ import logging
 
 import sys
 
-from execution import get_snowflake_sql_result
+from src.database_utils.execution import get_snowflake_sql_result
 
 snowflake_credential= {
     "user": "pourreza",
@@ -378,23 +378,25 @@ def evaluate_spider2sql(args):
         json.dump(output_results, f, indent=4)
 
 def compare_sqls(database_id, pred_sql_query, gold_sql_query):
-    pred_exe_flag, pred_df = get_snowflake_sql_result(pred_sql_query, database_id, is_save=False)  
-    gold_exe_flag, gold_df = get_snowflake_sql_result(gold_sql_query, database_id, is_save=False)
-    if not gold_exe_flag:
-        raise Exception(f"Gold SQL query execution failed: {gold_exe_flag}")
-    if not pred_exe_flag: 
+    error_info = None
+    
+    pred_result_dict = get_snowflake_sql_result(pred_sql_query, database_id, is_save=False)  
+    gold_result_dict = get_snowflake_sql_result(gold_sql_query, database_id, is_save=False)
+    if not gold_result_dict['status']:
+        return 0, "Gold SQL query execution failed."
+    if not pred_result_dict['status']: 
         score = 0
-        error_info = str(pred_df)
+        error_info = str(pred_result_dict['message'])
     else:                    
         try:
-            score = compare_pandas_table(pred_df, gold_df, [], False)
+            score = compare_pandas_table(pred_result_dict['data'], gold_result_dict['data'], [], False)
         except Exception as e:
             print(f"An error occurred: {e}")
             score = 0
             error_info = 'Python Script Error:' + str(e)
         if score == 0 and error_info is None:
-            error_info = 'Result Error'    
-    return score
+            error_info = "Does not match"    
+    return score, error_info
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run evaluations for NLP models.")
