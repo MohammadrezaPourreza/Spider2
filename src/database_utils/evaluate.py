@@ -18,6 +18,8 @@ import logging
 
 import sys
 
+from execution import get_snowflake_sql_result
+
 snowflake_credential= {
     "user": "pourreza",
     "password": "Sefteghoot@1378",
@@ -129,7 +131,6 @@ def compare_pandas_table(pred, gold, condition_cols=[], ignore_order=False):
 
     return score
 
-
 def get_bigquery_sql_result(sql_query, is_save, save_dir=None, file_name="result.csv"):
     """
     is_save = True, output a 'result.csv'
@@ -165,39 +166,6 @@ def get_bigquery_sql_result(sql_query, is_save, save_dir=None, file_name="result
     except Exception as e:
         print("Error occurred while fetching data: ", e)  
         return False, str(e)
-    return True, None
-
-
-def get_snowflake_sql_result(sql_query, database_id, is_save, save_dir=None, file_name="result.csv"):
-    """
-    is_save = True, output a 'result.csv'
-    if_save = False, output a string
-    """
-    conn = snowflake.connector.connect(
-        database=database_id,
-        **snowflake_credential
-    )
-    cursor = conn.cursor()
-    
-    try:
-        cursor.execute(sql_query)
-        results = cursor.fetchall()
-        columns = [desc[0] for desc in cursor.description]
-        df = pd.DataFrame(results, columns=columns)
-        if df.empty:
-            print("No data found for the specified query.")
-            df.to_csv(os.path.join(save_dir, file_name), index=False)
-            return True, "No data found for the specified query."
-        else:
-            if is_save:
-                df.to_csv(os.path.join(save_dir, file_name), index=False)
-                return True, "Data saved successfully."
-            else:
-                return True, df
-    except Exception as e:
-        print(f"Error occurred while fetching data for {file_name}: ", e)  
-        return False, str(e)
-
 
 def get_sqlite_result(db_path, query, save_dir=None, file_name="result.csv", chunksize=500):
     conn = sqlite3.connect(db_path)
@@ -409,20 +377,17 @@ def evaluate_spider2sql(args):
     ) as f:
         json.dump(output_results, f, indent=4)
 
-def compare_sqls(instance_id, pred_sql_query, gold_sql_query, database_id):
-    os.makedirs("temp", exist_ok=True)
-    pred_exe_flag, error_info = get_snowflake_sql_result(pred_sql_query, database_id, True, "temp", f"{instance_id}_pred.csv")  
-    gold_exe_flag, dbms_error_info = get_snowflake_sql_result(gold_sql_query, database_id, True, "temp", f"{instance_id}_gold.csv")
+def compare_sqls(database_id, pred_sql_query, gold_sql_query):
+    pred_exe_flag, pred_df = get_snowflake_sql_result(pred_sql_query, database_id, is_save=False)  
+    gold_exe_flag, gold_df = get_snowflake_sql_result(gold_sql_query, database_id, is_save=False)
     if not gold_exe_flag:
-        raise Exception(f"Gold SQL query execution failed: {dbms_error_info}")
+        raise Exception(f"Gold SQL query execution failed: {gold_exe_flag}")
     if not pred_exe_flag: 
         score = 0
-        error_info = error_info
+        error_info = str(pred_df)
     else:                    
-        pred_pd = pd.read_csv(os.path.join("temp", f"{instance_id}_pred.csv"))  
-        gold_pd = pd.read_csv(os.path.join("temp", f"{instance_id}_gold.csv"))
         try:
-            score = compare_pandas_table(pred_pd, gold_pd, [], False)
+            score = compare_pandas_table(pred_df, gold_df, [], False)
         except Exception as e:
             print(f"An error occurred: {e}")
             score = 0
@@ -430,9 +395,6 @@ def compare_sqls(instance_id, pred_sql_query, gold_sql_query, database_id):
         if score == 0 and error_info is None:
             error_info = 'Result Error'    
     return score
-
-
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run evaluations for NLP models.")

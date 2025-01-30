@@ -14,31 +14,61 @@ snowflake_credential= {
 RESULTS_CACHE = {}
 
 
-def get_snowflake_sql_result(sql_query, database_id):
+# def get_snowflake_sql_result(sql_query, database_id):
+#     """
+#     is_save = True, output a 'result.csv'
+#     if_save = False, output a string
+#     """
+#     if sql_query in RESULTS_CACHE:
+#         return RESULTS_CACHE[sql_query]
+#     try:
+#         conn = snowflake.connector.connect(
+#         database=database_id,
+#         **snowflake_credential
+#         )
+#         cursor = conn.cursor()
+#         cursor.execute(sql_query)
+#         results = cursor.fetchall()
+#         columns = [desc[0] for desc in cursor.description]
+#         df = pd.DataFrame(results, columns=columns)
+#         if df.empty:
+#             print("No data found for the specified query.")
+#         # return markdown_table(df)
+#         RESULTS_CACHE[sql_query] = (True, df)
+#         return True, df
+#     except Exception as e:
+#         print("Error occurred while fetching data: ", e) 
+#         RESULTS_CACHE[sql_query] = (False, str(e)) 
+#         return False, str(e)
+    
+def get_snowflake_sql_result(sql_query, database_id, is_save=False, save_dir=None, file_name="result.csv"):
     """
     is_save = True, output a 'result.csv'
     if_save = False, output a string
     """
-    if sql_query in RESULTS_CACHE:
-        return RESULTS_CACHE[sql_query]
-    try:
-        conn = snowflake.connector.connect(
+    conn = snowflake.connector.connect(
         database=database_id,
         **snowflake_credential
-        )
-        cursor = conn.cursor()
+    )
+    cursor = conn.cursor()
+    
+    try:
         cursor.execute(sql_query)
         results = cursor.fetchall()
         columns = [desc[0] for desc in cursor.description]
         df = pd.DataFrame(results, columns=columns)
         if df.empty:
             print("No data found for the specified query.")
-        # return markdown_table(df)
-        RESULTS_CACHE[sql_query] = (True, df.to_markdown())
-        return True, df.to_markdown()
+            df.to_csv(os.path.join(save_dir, file_name), index=False)
+            return True, "No data found for the specified query."
+        else:
+            if is_save:
+                df.to_csv(os.path.join(save_dir, file_name), index=False)
+                return True, "Data saved successfully."
+            else:
+                return True, df
     except Exception as e:
-        print("Error occurred while fetching data: ", e) 
-        RESULTS_CACHE[sql_query] = (False, str(e)) 
+        print(f"Error occurred while fetching data for {file_name}: ", e)  
         return False, str(e)
     
 def dump_sql_execution_results(sql_query, database_id, save_dir=None, file_name="result.csv"):

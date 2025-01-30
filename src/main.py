@@ -12,7 +12,7 @@ from src.database_utils.db_info import get_preprocessed_data
 from src.database_utils.evaluate import compare_sqls
 
 
-def process_sample(instance_id, dag, args, logger: SessionLogger):
+def process_sample(instance_id, dag, args):
     external_knowledge = ""
     db_id = ""
     results = []
@@ -21,13 +21,13 @@ def process_sample(instance_id, dag, args, logger: SessionLogger):
         external_knowledge = preprocessed_data["external_knowledge"]
         db_id = preprocessed_data["db_id"]
 
-    logger.log_to_file(f"logs/{instance_id}.log", f"# Instance ID: {instance_id}\n- DB ID: {db_id}\n- Instruction: {preprocessed_data['instruction']}")
+    SessionLogger.log_to_file(f"logs/{instance_id}.log", f"# Instance ID: {instance_id}\n- DB ID: {db_id}\n- Instruction: {preprocessed_data['instruction']}")
 
     for node in dag:
         node_id = node["id"]
         sql_query = node["sql_query"]
         question = node["equivalent_natural_question"]
-        logger.log_to_file(f"logs/{instance_id}.log", f"## Node ID: {node_id}\nQuestion: {question}\nSQL Query: {sql_query}")
+        SessionLogger.log_to_file(f"logs/{instance_id}.log", f"## Node ID: {node_id}\nQuestion: {question}\nSQL Query: {sql_query}")
         
         candidate_queries = generate_queries(
             model_name=args.model_name,
@@ -40,24 +40,18 @@ def process_sample(instance_id, dag, args, logger: SessionLogger):
             gold_query=sql_query,
             generation_prompt_template=args.generation_prompt,
             refinement_prompt_template=args.refinement_prompt,
-            logger=logger,
             step_id=f"node_{node_id}",
-            log_path=f"{logger.log_dir}/llm_calls/node_{node_id}.log"
+            log_path=f"{SessionLogger.get_current_logger().log_dir}/llm_calls/node_{node_id}.log"
         )
         node["generated_queries"] = candidate_queries
-        sql_meta_data_info = []
         if candidate_queries:
             if candidate_queries['candidates']:
-                for query in candidate_queries['candidates']:
-                    sql_meta_data_info.append(
-                        {
-                            "query": query['generated_query'],
-                            "label": compare_sqls(instance_id,query['generated_query'], sql_query, db_id)
-                        }
-                    )
-            node["sql_meta_data_info"] = sql_meta_data_info
+                for sql_meta_info in candidate_queries['candidates']:
+                    sql_meta_info['label'] = compare_sqls(database_id=db_id, 
+                                                          pred_sql_query=sql_meta_info['generated_query'], 
+                                                          gold_sql_query=sql_query)
         results.append(node)
-        logger.log_to_json(f"{instance_id}", results)
+        SessionLogger.log_to_json(f"{instance_id}", results)
     return results
 
 def load_all_json_dags(dag_log_dir):
@@ -82,19 +76,19 @@ if __name__=="__main__":
     args = parser.parse_args()
     formatted_time = time.strftime("%Y%m%d-%H%M%S")
 
-    logger = setup_logger(run_id=f"generated_queries/{args.dag_log_dir}/{args.model_name}-{formatted_time}")
+    setup_logger(run_id=f"generated_queries/{args.dag_log_dir}/{args.model_name}-{formatted_time}")
     all_json_dags = load_all_json_dags(args.dag_log_dir)
     
     results = []
     if args.num_workers == 1:
         for instance_id, sample in tqdm(all_json_dags.items(), total=len(all_json_dags)):
-            result = process_sample(instance_id, sample, args, logger)
+            result = process_sample(instance_id, sample, args)
             if result:
                 results.append(result)
     else:
         with concurrent.futures.ThreadPoolExecutor(max_workers=args.num_workers) as executor:
             futures = [
-                executor.submit(process_sample, instance_id, sample, args, logger)
+                executor.submit(process_sample, instance_id, sample, args)
                  for instance_id, sample in all_json_dags.items()
             ]
             
