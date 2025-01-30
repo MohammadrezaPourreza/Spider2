@@ -6,6 +6,7 @@ import time
 import concurrent.futures
 
 from tqdm import tqdm
+from copy import deepcopy
 from src.query_generator import generate_queries, self_consistency
 from src.logging.logger import setup_logger, SessionLogger
 from src.database_utils.db_info import get_preprocessed_data
@@ -35,11 +36,11 @@ def find_node(dag: list, node_id: int):
 
 def find_all_dependent_nodes(dag: list, node_id: int):
     dependent_nodes = []
-    nodes_to_process = find_node(dag, node_id)['dag_dependencies']
+    nodes_to_process = deepcopy(find_node(dag, node_id)['dag_dependencies'])
     while nodes_to_process:
         node_id = nodes_to_process.pop()
         dependent_nodes.append(node_id)
-        nodes_to_process.extend(find_node(dag, node_id)['dag_dependencies'])
+        nodes_to_process.extend(deepcopy(find_node(dag, node_id)['dag_dependencies']))
     return dependent_nodes
     
 

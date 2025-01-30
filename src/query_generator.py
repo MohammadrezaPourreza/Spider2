@@ -247,7 +247,7 @@ def self_consistency(candidates: list[dict], db_id):
             results_md = str(data.to_markdown())[:500]
             if results_md not in results_clusters:
                 results_clusters[results_md] = []
-            results_clusters[results_md].append(sample['generated_query'])
+            results_clusters[results_md].append(sample)
         sorted_clusters = sorted(
             results_clusters.items(), 
             key=lambda item: len(item[0]), 
