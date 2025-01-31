@@ -13,6 +13,21 @@ snowflake_credential= {
 
 RESULTS_CACHE = {}
 QUERY_TIMEOUT = 60
+DB_CONNECTIONS = {}
+
+def get_snowflake_db_connection(database_id):
+    if database_id in DB_CONNECTIONS:
+        return DB_CONNECTIONS[database_id]
+    try:
+        conn = snowflake.connector.connect(
+        database=database_id,
+        **snowflake_credential
+        )
+        DB_CONNECTIONS[database_id] = conn
+        return conn
+    except Exception as e:
+        print("Error occurred while fetching data: ", e) 
+        return None
 
 
 # def get_snowflake_sql_result(sql_query, database_id):
@@ -47,10 +62,7 @@ def get_snowflake_sql_result(sql_query, database_id, is_save=False, save_dir=Non
     is_save = True, output a 'result.csv'
     if_save = False, output a string
     """
-    conn = snowflake.connector.connect(
-        database=database_id,
-        **snowflake_credential
-    )
+    conn = get_snowflake_db_connection(database_id)
     cursor = conn.cursor()
     
     try:
@@ -81,10 +93,7 @@ def dump_sql_execution_results(sql_query, database_id, save_dir=None, file_name=
     if_save = False, output a string
     """
     try:
-        conn = snowflake.connector.connect(
-        database=database_id,
-        **snowflake_credential
-        )
+        conn = get_snowflake_db_connection(database_id)
         cursor = conn.cursor()
         cursor.execute(sql_query, timeout=QUERY_TIMEOUT)
         results = cursor.fetchall()

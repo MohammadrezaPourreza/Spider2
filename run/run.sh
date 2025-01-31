@@ -4,7 +4,7 @@ GENERATION_PROMPT="simple_sql_generation"
 REFINEMENT_PROMPT="self_refiner_prompt"
 NUM_CANDIDATES=5
 MAX_REFINEMENT=2
-NUM_WORKERS=10
+NUM_WORKERS=5
 CONDITIONAL_GENERATION="True"
 
 # Run the Python script
