@@ -100,7 +100,7 @@ def _create_candidate_dict(candidate_id: str, llm_response: str, parser, db_id: 
         "candidate_id": candidate_id,
         "candidate_llm_response": llm_response,
         "generated_query": generated_sql,
-        "result": data.head(5).to_markdown(index=False).replace("\\", "\\\\").replace('"', '\\"'),
+        "result": str(data.head(5).to_markdown(index=False).replace("\\", "\\\\").replace('"', '\\"'))[:500],
         "status": status,
         "message": message
     }
@@ -230,8 +230,7 @@ def generate_queries(
                                 (f"#### Candidate {candidate.get('candidate_id', 'N/A')}\n"
                                  f"```sql\n{candidate['generated_query']}\n```\n"
                                  f"#### Status\n{candidate['status']}\n"
-                                 f"#### Message\n{candidate['message']}\n"
-                                 f"#### Result\n{candidate['result']}\n"))
+                                 f"#### Message\n{candidate['message']}\n"))
     
     return result_dict
 
