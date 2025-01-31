@@ -2,6 +2,7 @@ import pandas as pd
 import snowflake.connector
 import os
 import re
+import time
 
 
 snowflake_credential= {
@@ -14,6 +15,14 @@ snowflake_credential= {
 RESULTS_CACHE = {}
 QUERY_TIMEOUT = 60
 DB_CONNECTIONS = {}
+
+def add_to_cache(sql_query, result):
+    global RESULTS_CACHE
+    time_stamp = time.time()
+    if len(RESULTS_CACHE) > 100:
+        oldest_key = min(RESULTS_CACHE, key=RESULTS_CACHE.get)
+        del RESULTS_CACHE[oldest_key]
+    RESULTS_CACHE[sql_query] = (time_stamp, result)
 
 def get_snowflake_db_connection(database_id):
     if database_id in DB_CONNECTIONS:
@@ -63,23 +72,32 @@ def get_snowflake_sql_result(sql_query, database_id, is_save=False, save_dir=Non
     if_save = False, output a string
     """
     conn = get_snowflake_db_connection(database_id)
+    if sql_query in RESULTS_CACHE:
+        return RESULTS_CACHE[sql_query][1]
     
     try:
         with conn.cursor() as cursor:
             cursor.execute(sql_query, timeout=QUERY_TIMEOUT)
             results = cursor.fetchall()
+            add_to_cache(sql_query, results)
             columns = [desc[0] for desc in cursor.description]
             df = pd.DataFrame(results, columns=columns)
             if is_save:
                 df.to_csv(os.path.join(save_dir, file_name), index=False)
             if df.empty:
-                return {"status": False,
-                        "message": "No data found for the specified query.",
-                        "data": pd.DataFrame()}
+                result = {
+                    "status": False,
+                    "message": "No data found for the specified query.",
+                    "data": pd.DataFrame()
+                }
             else:
-                return {"status": True,
-                        "message": "Data fetched successfully.",
-                        "data": df}
+                result = {
+                    "status": True,
+                    "message": "Data fetched successfully.",
+                    "data": df
+                }
+            add_to_cache(sql_query, result)
+            return result
     except Exception as e:
         # print(f"Error occurred while fetching data for {database_id}\n" 
         #       f"```sql\n{sql_query}\n```: ", e)  
