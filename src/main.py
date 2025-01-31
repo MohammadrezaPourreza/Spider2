@@ -23,7 +23,7 @@ def format_dependent_nodes(dag: list, nodes_to_use: list):
         if node["id"] not in nodes_to_use:
             continue
         formatted_output += f"Question: {node['equivalent_natural_question']}\n"
-        formatted_output += f"SQL Query: {node['selected_query']}\n\n"
+        formatted_output += f"SQL Query: {node['selected_query']['generated_query']}\n\n"
     return formatted_output
 
 

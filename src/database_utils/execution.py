@@ -12,6 +12,7 @@ snowflake_credential= {
 }
 
 RESULTS_CACHE = {}
+QUERY_TIMEOUT = 60
 
 
 # def get_snowflake_sql_result(sql_query, database_id):
@@ -53,7 +54,7 @@ def get_snowflake_sql_result(sql_query, database_id, is_save=False, save_dir=Non
     cursor = conn.cursor()
     
     try:
-        cursor.execute(sql_query)
+        cursor.execute(sql_query, timeout=QUERY_TIMEOUT)
         results = cursor.fetchall()
         columns = [desc[0] for desc in cursor.description]
         df = pd.DataFrame(results, columns=columns)
@@ -85,7 +86,7 @@ def dump_sql_execution_results(sql_query, database_id, save_dir=None, file_name=
         **snowflake_credential
         )
         cursor = conn.cursor()
-        cursor.execute(sql_query)
+        cursor.execute(sql_query, timeout=QUERY_TIMEOUT)
         results = cursor.fetchall()
         columns = [desc[0] for desc in cursor.description]
         df = pd.DataFrame(results, columns=columns)
