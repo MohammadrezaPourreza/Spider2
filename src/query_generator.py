@@ -238,7 +238,7 @@ def generate_queries(
 def self_consistency(candidates: list[dict], db_id):
     correct_samples, incorrect_samples = need_fixing(candidates)
     if len(correct_samples) == 0:
-        return incorrect_samples[0]['generated_query']
+        return incorrect_samples[0]
     else:
         results_clusters = {}
         for sample in correct_samples:
