@@ -63,23 +63,23 @@ def get_snowflake_sql_result(sql_query, database_id, is_save=False, save_dir=Non
     if_save = False, output a string
     """
     conn = get_snowflake_db_connection(database_id)
-    cursor = conn.cursor()
     
     try:
-        cursor.execute(sql_query, timeout=QUERY_TIMEOUT)
-        results = cursor.fetchall()
-        columns = [desc[0] for desc in cursor.description]
-        df = pd.DataFrame(results, columns=columns)
-        if is_save:
-            df.to_csv(os.path.join(save_dir, file_name), index=False)
-        if df.empty:
-            return {"status": False,
-                    "message": "No data found for the specified query.",
-                    "data": pd.DataFrame()}
-        else:
-            return {"status": True,
-                    "message": "Data fetched successfully.",
-                    "data": df}
+        with conn.cursor() as cursor:
+            cursor.execute(sql_query, timeout=QUERY_TIMEOUT)
+            results = cursor.fetchall()
+            columns = [desc[0] for desc in cursor.description]
+            df = pd.DataFrame(results, columns=columns)
+            if is_save:
+                df.to_csv(os.path.join(save_dir, file_name), index=False)
+            if df.empty:
+                return {"status": False,
+                        "message": "No data found for the specified query.",
+                        "data": pd.DataFrame()}
+            else:
+                return {"status": True,
+                        "message": "Data fetched successfully.",
+                        "data": df}
     except Exception as e:
         # print(f"Error occurred while fetching data for {database_id}\n" 
         #       f"```sql\n{sql_query}\n```: ", e)  
@@ -94,18 +94,18 @@ def dump_sql_execution_results(sql_query, database_id, save_dir=None, file_name=
     """
     try:
         conn = get_snowflake_db_connection(database_id)
-        cursor = conn.cursor()
-        cursor.execute(sql_query, timeout=QUERY_TIMEOUT)
-        results = cursor.fetchall()
-        columns = [desc[0] for desc in cursor.description]
-        df = pd.DataFrame(results, columns=columns)
-        if df.empty:
-            print("No data found for the specified query.")
-            df.to_csv(os.path.join(save_dir, file_name), index=False)
-            return None, None
-        else:
-            df.to_csv(os.path.join(save_dir, file_name), index=False)
-            return None, None
+        with conn.cursor() as cursor:
+            cursor.execute(sql_query, timeout=QUERY_TIMEOUT)
+            results = cursor.fetchall()
+            columns = [desc[0] for desc in cursor.description]
+            df = pd.DataFrame(results, columns=columns)
+            if df.empty:
+                print("No data found for the specified query.")
+                df.to_csv(os.path.join(save_dir, file_name), index=False)
+                return None, None
+            else:
+                df.to_csv(os.path.join(save_dir, file_name), index=False)
+                return None, None
     except Exception as e:
         print(f"Error occurred while fetching data for {file_name}: ", e)  
         return False, str(e)
