@@ -79,8 +79,8 @@ def _generate_initial_candidates(llm, generation_prompt: str, num_candidates: in
             'kwargs': {
                 'engine': llm,
                 'prompt': prompt,
-                'step_id': f"{kwargs.get('step_id', None)}_generation",
-                'log_path': kwargs.get('log_path', None)
+                'step_id': f"{kwargs.get('step_id', None)}_generation" if kwargs.get('enable_llm_call_logging', None) else None,
+                'log_path': kwargs.get('log_path', None) if kwargs.get('enable_llm_call_logging', None) else None
             }
         })
     
@@ -92,7 +92,7 @@ def _create_candidate_dict(candidate_id: str, llm_response: str, parser, db_id: 
     Creates a candidate dictionary with query execution results.
     """
     generated_sql = parser(llm_response)
-    result_dict = get_snowflake_sql_result(generated_sql, db_id)
+    result_dict = get_snowflake_sql_result(generated_sql, db_id, fetch="many")
     status = result_dict['status']
     data: pd.DataFrame = result_dict['data']
     message = result_dict['message']
@@ -136,8 +136,8 @@ def _refine_candidates(llm, incorrect_samples: list[dict], correct_samples: list
             'kwargs': {
                 'engine': llm,
                 'prompt': prompt,
-                'step_id': f"{kwargs.get('step_id', None)}_revise_{counter}",
-                'log_path': kwargs.get('log_path', None)
+                'step_id': f"{kwargs.get('step_id', None)}_revise_{counter}" if kwargs.get('enable_llm_call_logging', None) else None,
+                'log_path': kwargs.get('log_path', None) if kwargs.get('enable_llm_call_logging', None) else None
             }
         })
     
@@ -241,7 +241,7 @@ def self_consistency(candidates: list[dict], db_id):
     else:
         results_clusters = {}
         for sample in correct_samples:
-            result_dict = get_snowflake_sql_result(sample['generated_query'], db_id)
+            result_dict = get_snowflake_sql_result(sample['generated_query'], db_id, fetch="many")
             data = result_dict['data']
             results_md = str(data.to_markdown())[:500]
             if results_md not in results_clusters:

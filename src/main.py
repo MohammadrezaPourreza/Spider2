@@ -79,7 +79,8 @@ def process_sample(instance_id, dag, args):
             refinement_prompt_template=args.refinement_prompt,
             step_id=f"node_{node_id}",
             dependencies=format_dependent_nodes(dag, find_all_dependent_nodes(dag, node_id)),
-            log_path=f"{SessionLogger.get_current_logger().log_dir}/llm_calls/{instance_id}_node_{node_id}.log"
+            log_path=f"{SessionLogger.get_current_logger().log_dir}/llm_calls/{instance_id}_node_{node_id}.log",
+            enable_llm_call_logging=args.enable_llm_call_logging
         )
         node["generated_queries"] = candidate_queries
         if candidate_queries:
@@ -87,7 +88,7 @@ def process_sample(instance_id, dag, args):
                 for sql_meta_info in candidate_queries['candidates']:
                     score, error_info = compare_sqls(database_id=db_id, 
                                                           pred_sql_query=sql_meta_info['generated_query'], 
-                                                          gold_sql_query=sql_query)
+                                                          gold_sql_query=sql_query if node != dag[-1] else original_query)
                     sql_meta_info['score'] = score
                     sql_meta_info['error_info'] = error_info
                 node["selected_query"] = self_consistency(candidate_queries['candidates'], db_id)
@@ -114,7 +115,8 @@ if __name__=="__main__":
     parser.add_argument("--num_candidates", type=int, default=5)
     parser.add_argument("--max_refinement", type=int, default=3)
     parser.add_argument("--num_workers", type=int, default=8, help="Number of workers for data processing")
-    parser.add_argument("--conditional_generation", type=bool, default=True)
+    parser.add_argument("--conditional_generation", action="store_true")
+    parser.add_argument("--enable_llm_call_logging", action="store_true")
     args = parser.parse_args()
     formatted_time = time.strftime("%Y%m%d-%H%M%S")
 

@@ -66,7 +66,7 @@ def get_snowflake_db_connection(database_id):
 #         RESULTS_CACHE[sql_query] = (False, str(e)) 
 #         return False, str(e)
     
-def get_snowflake_sql_result(sql_query, database_id, is_save=False, save_dir=None, file_name="result.csv"):
+def get_snowflake_sql_result(sql_query, database_id, is_save=False, save_dir=None, file_name="result.csv", fetch="all"):
     """
     is_save = True, output a 'result.csv'
     if_save = False, output a string
@@ -78,7 +78,12 @@ def get_snowflake_sql_result(sql_query, database_id, is_save=False, save_dir=Non
     try:
         with conn.cursor() as cursor:
             cursor.execute(sql_query, timeout=QUERY_TIMEOUT)
-            results = cursor.fetchall()
+            if fetch == "all":
+                results = cursor.fetchall()
+            elif fetch == "one":
+                results = cursor.fetchone()
+            elif fetch == "many":
+                results = cursor.fetchmany(1000)
             add_to_cache(sql_query, results)
             columns = [desc[0] for desc in cursor.description]
             df = pd.DataFrame(results, columns=columns)
