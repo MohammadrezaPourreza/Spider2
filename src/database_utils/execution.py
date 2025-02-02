@@ -66,13 +66,26 @@ def get_snowflake_db_connection(database_id):
 #         RESULTS_CACHE[sql_query] = (False, str(e)) 
 #         return False, str(e)
     
+
+def check_snowflake_sql_syntax(sql_query, database_id):
+    """
+    Checks the syntax of the given SQL query by parsing it without execution.
+    """
+    conn = get_snowflake_db_connection(database_id)
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute(sql_query, timeout=QUERY_TIMEOUT)
+        return {"status": True, "message": "SQL syntax is valid."}
+    except Exception as e:
+        return {"status": False, "message": f"Syntax Error: {e}"}
+
 def get_snowflake_sql_result(sql_query, database_id, is_save=False, save_dir=None, file_name="result.csv", fetch="all"):
     """
     is_save = True, output a 'result.csv'
     if_save = False, output a string
     """
     conn = get_snowflake_db_connection(database_id)
-    if sql_query in RESULTS_CACHE:
+    if sql_query in RESULTS_CACHE and fetch != "all":
         return RESULTS_CACHE[sql_query][1]
     
     try:

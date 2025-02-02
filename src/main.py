@@ -6,7 +6,6 @@ import time
 import concurrent.futures
 
 from tqdm import tqdm
-from copy import deepcopy
 from src.query_generator import generate_queries, self_consistency
 from src.logging.logger import setup_logger, SessionLogger
 from src.database_utils.db_info import get_preprocessed_data
@@ -35,12 +34,22 @@ def find_node(dag: list, node_id: int):
 
 
 def find_all_dependent_nodes(dag: list, node_id: int):
+    """Find all dependent nodes of a given node in a DAG."""
+    visited = set()  # To avoid processing nodes multiple times
+    stack = [node_id]  # Stack for iterative DFS
     dependent_nodes = []
-    nodes_to_process = deepcopy(find_node(dag, node_id)['dag_dependencies'])
-    while nodes_to_process:
-        node_id = nodes_to_process.pop()
-        dependent_nodes.append(node_id)
-        nodes_to_process.extend(deepcopy(find_node(dag, node_id)['dag_dependencies']))
+
+    while stack:
+        current_id = stack.pop()
+        if current_id in visited:
+            continue  # Avoid cycles or redundant processing
+        visited.add(current_id)
+        dependent_nodes.append(current_id)
+
+        node = find_node(dag, current_id)
+        if node and 'dag_dependencies' in node:
+            stack.extend(node['dag_dependencies'])  # Extend without deepcopy
+    dependent_nodes.remove(node_id)
     return dependent_nodes
     
 
@@ -85,12 +94,13 @@ def process_sample(instance_id, dag, args):
         node["generated_queries"] = candidate_queries
         if candidate_queries:
             if candidate_queries['candidates']:
-                for sql_meta_info in candidate_queries['candidates']:
-                    score, error_info = compare_sqls(database_id=db_id, 
-                                                          pred_sql_query=sql_meta_info['generated_query'], 
-                                                          gold_sql_query=sql_query if node != dag[-1] else original_query)
-                    sql_meta_info['score'] = score
-                    sql_meta_info['error_info'] = error_info
+                if node == dag[-1]:
+                    for sql_meta_info in candidate_queries['candidates']:
+                        score, error_info = compare_sqls(database_id=db_id , 
+                                                            pred_sql_query=sql_meta_info['generated_query'], 
+                                                            gold_sql_query=original_query)
+                        sql_meta_info['score'] = score
+                        sql_meta_info['error_info'] = error_info
                 node["selected_query"] = self_consistency(candidate_queries['candidates'], db_id)
         results.append(node)
         SessionLogger.log_to_json(f"{instance_id}", results)

@@ -4,7 +4,7 @@ import pandas as pd
 
 from src.database_utils.schema_generator import get_sql_for_database_from_tables_json, create_input_schema
 from src.llm.engines import get_engine, invoke_engine
-from src.database_utils.execution import get_snowflake_sql_result
+from src.database_utils.execution import get_snowflake_sql_result, check_snowflake_sql_syntax
 from src.llm.tokenizer import count_tokens
 from src.llm.prompt_loader import load_prompt
 from src.database_utils.sql_parser import get_sql_columns_dict
@@ -92,15 +92,13 @@ def _create_candidate_dict(candidate_id: str, llm_response: str, parser, db_id: 
     Creates a candidate dictionary with query execution results.
     """
     generated_sql = parser(llm_response)
-    result_dict = get_snowflake_sql_result(generated_sql, db_id, fetch="many")
+    result_dict = check_snowflake_sql_syntax(generated_sql, db_id)
     status = result_dict['status']
-    data: pd.DataFrame = result_dict['data']
     message = result_dict['message']
     return {
         "candidate_id": candidate_id,
         "candidate_llm_response": llm_response,
         "generated_query": generated_sql,
-        "result": str(data.head(5).to_markdown(index=False).replace("\\", "\\\\").replace('"', '\\"'))[:500],
         "status": status,
         "message": message
     }
@@ -118,8 +116,7 @@ def _refine_candidates(llm, incorrect_samples: list[dict], correct_samples: list
     call_list = []
     for sample in incorrect_samples:
         RESULT = (
-            f"Execution Message: {sample['message']}\n"
-            f"Execution Data: {sample['result'] if sample['result'] else 'No result'}"
+            f"Execution Message: {sample['message']}"
         )
         prompt = self_refine.format(
             QUESTION=instruction,
