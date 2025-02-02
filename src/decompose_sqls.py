@@ -12,6 +12,7 @@ from dotenv import load_dotenv
 
 from llm.engines import get_engine, invoke_engine
 from llm.prompt_loader import load_prompt
+from database_utils.sql_decomposer import create_sub_queries
 
 def parse_llm_output(string: str) -> List[Dict]:
     """
@@ -168,6 +169,49 @@ def process_queries_with_llm(
     
     return llm_results
 
+def process_queries_without_llm(
+    queries: List[Dict],
+    output_dir: str
+) -> Dict[str, str]:
+    """
+    Process queries using SQL decomposer without LLM.
+    
+    Args:
+        queries: List of query dictionaries
+        output_dir: Directory to save output files
+        
+    Returns:
+        Dictionary mapping query IDs to decomposed components
+    """
+    
+    results = {}
+    for query in tqdm(queries, desc="Processing queries"):
+        query_id = query["instance_id"]
+        sql_query = query["query"]
+        
+        try:
+            # Get decomposed components
+            components = create_sub_queries(sql_query)
+            
+            # Add natural language descriptions
+            for component in components:
+                component['description'] = f"SQL component {component['id']}"
+                component['equivalent_natural_question'] = f"What is the result of SQL component {component['id']}?"
+            
+            # Save to file
+            log_path = os.path.join(output_dir, f"log_{query_id}.txt")
+            with open(log_path, "w") as f:
+                f.write(f"Query ID: {query_id}\n")
+                f.write(f"\n\n##### Components #####\n\n")
+                f.write(json.dumps(components, indent=2))
+            
+            results[query_id] = json.dumps(components)
+            
+        except Exception as e:
+            print(f"Error processing query {query_id}: {e}")
+            
+    return results
+
 def create_and_save_dags(
     llm_results: Dict[str, str],
     output_dir: str,
@@ -205,10 +249,11 @@ def decompose_queries(
     model_name: str,
     output_dir: str,
     save_pdfs: bool = True,
-    max_workers: int = 10
+    max_workers: int = 10,
+    decompose_with_llm: bool = True
 ) -> None:
     """
-    Main function to decompose SQL queries using an LLM and create DAGs.
+    Main function to decompose SQL queries using either LLM or SQL decomposer.
     
     Args:
         queries: List of query dictionaries
@@ -216,12 +261,17 @@ def decompose_queries(
         output_dir: Directory to save outputs
         save_pdfs: Whether to save PDF visualizations
         max_workers: Maximum number of worker threads
+        decompose_with_llm: Whether to use LLM for decomposition
     """
-    # Load prompt template using the prompt loader
-    prompt_template = load_prompt("decomposition_prompt")
-    
-    # Process queries through LLM
-    llm_results = process_queries_with_llm(queries, model_name, prompt_template, output_dir, max_workers)
+    if decompose_with_llm:
+        # Load prompt template using the prompt loader
+        prompt_template = load_prompt("decomposition_prompt")
+        
+        # Process queries through LLM
+        llm_results = process_queries_with_llm(queries, model_name, prompt_template, output_dir, max_workers)
+    else:
+        # Process queries using SQL decomposer
+        llm_results = process_queries_without_llm(queries, output_dir)
     
     # Create and save DAGs
     create_and_save_dags(llm_results, output_dir, save_pdfs)
@@ -233,6 +283,7 @@ if __name__ == '__main__':
     parser.add_argument('--model_name', type=str, default='gemini-1.5-pro-002', help='Name of the model to use for decomposition')
     parser.add_argument('--save_pdfs', action='store_true', help='Flag to save PDF outputs')
     parser.add_argument('--threads', type=int, default=10, help='Number of worker threads for parallel processing')
+    parser.add_argument('--decompose_with_llm', action='store_true', help='Use LLM for decomposition (default: False)')
     
     args = parser.parse_args()
     
@@ -255,4 +306,5 @@ if __name__ == '__main__':
                      args.model_name, 
                      output_dir, 
                      args.save_pdfs,
-                     args.threads)
+                     args.threads,
+                     args.decompose_with_llm)

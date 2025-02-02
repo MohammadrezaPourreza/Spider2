@@ -7,4 +7,5 @@ echo "Starting SQL decomposition..."
 python3 src/decompose_sqls.py \
     --input_queries_path "$INPUT_QUERIES_PATH" \
     --model_name "$MODEL_NAME" \
-    --save_pdfs
+    --save_pdfs \
+    # --decompose_with_llm 
