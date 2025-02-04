@@ -131,8 +131,8 @@ def remove_clause_from_select(select_expr, clause):
         "limit": "limit",
         "offset": "offset",
         "order": "order",
-        "having": "having",
-        "group": "group",
+        # "having": "having",
+        # "group": "group",
         "qualify": "qualify",
         "window": "window",
         "where": "where",
@@ -252,8 +252,8 @@ def remove_clauses_top_down_stepwise(sql_query, removal_order=None, only_last_se
             "limit",
             "offset",
             "order",
-            "having",
-            "group",
+            # "having",
+            # "group",
             "qualify",
             "window",
             "where",
@@ -350,12 +350,15 @@ def create_sub_queries(sql_query):
                 alias = alias_expr.name
         
         # Assign ID and store in map if it has an alias
-        current_id = get_next_id()
-        if alias:
-            id_map[alias] = current_id
+        if alias in id_map:
+            current_id = id_map[alias]
+        else:
+            current_id = get_next_id()
+            if alias:
+                id_map[alias] = current_id
         
-        # Get dependencies
-        dependencies = find_dependencies(select_expr)
+        # Get dependencies (note: may be incomplete at this point)
+        # dependencies = find_dependencies(select_expr)
         
         # Get all versions with progressively removed clauses
         versions = remove_clauses_top_down_stepwise(select_expr.sql(), only_last_select=True)[::-1]
@@ -366,41 +369,47 @@ def create_sub_queries(sql_query):
                 'id': current_id,
                 'alias': alias,
                 'sql_query': version,
-                'dag_dependencies': sorted(set(dependencies))
+                'dag_dependencies': []  # dependencies
             })
         if sub_queries[-1]['alias'] is None:
             last_component_id = sub_queries[-1]['id']
             for sub_query in sub_queries[::-1]:
-                sub_query['alias'] = "$MAIN$"
                 if sub_query['id'] != last_component_id:
                     break
-            
-        last_id, same_ids = None, []    
-        for sub_query in sub_queries:
-            if last_id is None or sub_query['id'] == last_id:
-                same_ids.append(sub_query)
-                last_id = sub_query['id']
-            else:
-                if len(same_ids) > 1:
-                    for i, sql_dict in enumerate(list(reversed(same_ids))[1:]):
-                        sql_dict['id'] = f"{last_id}.{i+1}"
-                last_id = sub_query['id']
-                same_ids = [sub_query]
-        if len(same_ids) > 1:
-            for i, sql_dict in enumerate(list(reversed(same_ids))[1:]):
-                sql_dict['id'] = f"{last_id}.{i+1}"
+                sub_query['alias'] = "$MAIN$"
                 
-            
-        prev_alias, prev_id = None, None
-        # print(len(sub_queries))
-        for sub_query in sub_queries:
-            # print(sub_query['id'], sub_query['dag_dependencies'])
-            if prev_alias is not None and sub_query['alias'] is not None and sub_query['alias'] == prev_alias:
-                sub_query['dag_dependencies'] = sorted(set(sub_query['dag_dependencies'] + [prev_id]))
-            prev_alias = sub_query['alias']
-            prev_id = sub_query['id']
     
     # Start processing from the root
     process_select(root_expr)
+    
+    # New: Post-process all sub_queries to update dag_dependencies using the final id_map.
+    for sub_query in sub_queries:
+        parsed = sqlglot.parse_one(sub_query['sql_query'], read="snowflake")
+        # Re-compute dependencies with the complete id_map.
+        sub_query['dag_dependencies'] = sorted(set(find_dependencies(parsed)))
+
+    last_id, same_ids = None, []    
+    for sub_query in sub_queries:
+        if last_id is None or sub_query['id'] == last_id:
+            same_ids.append(sub_query)
+            last_id = sub_query['id']
+        else:
+            if len(same_ids) > 1:
+                for i, sql_dict in enumerate(list(reversed(same_ids))[1:]):
+                    sql_dict['id'] = f"{last_id}.{i+1}"
+            last_id = sub_query['id']
+            same_ids = [sub_query]
+    if len(same_ids) > 1:
+        for i, sql_dict in enumerate(list(reversed(same_ids))[1:]):
+            sql_dict['id'] = f"{last_id}.{i+1}"
+
+    prev_alias, prev_id = None, None
+    # print(len(sub_queries))
+    for sub_query in sub_queries:
+        # print(sub_query['id'], sub_query['dag_dependencies'])
+        if prev_alias is not None and sub_query['alias'] is not None and sub_query['alias'] == prev_alias:
+            sub_query['dag_dependencies'] = sorted(set(sub_query['dag_dependencies'] + [prev_id]))
+        prev_alias = sub_query['alias']
+        prev_id = sub_query['id']
     
     return sub_queries

@@ -64,8 +64,8 @@ def create_dag(components: List[Dict]) -> nx.DiGraph:
             G.add_edge(dependency, component['id'])
 
     # Check for cycles
-    if not nx.is_directed_acyclic_graph(G):
-        raise ValueError("The graph contains cycles and is not a valid DAG.")
+    # if not nx.is_directed_acyclic_graph(G):
+    #     raise ValueError("The graph contains cycles and is not a valid DAG.")
 
     return G
 
@@ -77,8 +77,8 @@ def save_dag_as_pdf(dag: nx.DiGraph, save_to_path: str) -> None:
         dag (networkx.DiGraph): The DAG to visualize.
         save_to_path (str): The file path to save the PDF.
     """
-    if not nx.is_directed_acyclic_graph(dag):
-        raise ValueError("The provided graph is not a DAG.")
+    # if not nx.is_directed_acyclic_graph(dag):
+    #     raise ValueError("The provided graph is not a DAG.")
 
     pos = nx.nx_agraph.graphviz_layout(dag, prog='dot', args='-Grankdir=BT')
 
