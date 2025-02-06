@@ -136,7 +136,7 @@ def remove_clause_from_select(select_expr, clause):
         "qualify": "qualify",
         "window": "window",
         "where": "where",
-        "distinct": "distinct",
+        # "distinct": "distinct",
     }
     arg_key = clause_map.get(clause.lower())
     if not arg_key:
@@ -234,6 +234,18 @@ def get_selects_in_level_order(expr):
                     if isinstance(item, exp.Expression):
                         queue.append(item)
 
+def preprocess_sql(sql_query):
+    """Preprocess SQL query to handle edge cases"""
+    replacements = [
+        ("NOT DISTINCT", "NOT_DISTINCT"),
+        ("NOT_DISTINCT", "IS NOT NULL"),  # Convert NOT DISTINCT to simpler form
+        ("FILTER(WHERE", "FILTER (WHERE"),  # Add space to help parser
+        ("FILTER WHERE", "FILTER (WHERE")   # Normalize filter syntax
+    ]
+    for old, new in replacements:
+        sql_query = sql_query.replace(old, new)
+    return sql_query
+
 def remove_clauses_top_down_stepwise(sql_query, removal_order=None, only_last_select=False):
     """
     Remove clauses from a (possibly complex) SQL statement in a top-down
@@ -242,8 +254,20 @@ def remove_clauses_top_down_stepwise(sql_query, removal_order=None, only_last_se
     
     Returns a list of SQL strings showing the state after each removal.
     """
-    # Parse the SQL using sqlglot.
-    root_expr = sqlglot.parse_one(sql_query, read="snowflake")
+    sql_query = preprocess_sql(sql_query)
+    
+    try:
+        root_expr = sqlglot.parse_one(sql_query, read="snowflake")
+    except Exception as e:
+        # If parsing fails, try alternative dialects
+        try:
+            root_expr = sqlglot.parse_one(sql_query, read="bigquery")
+        except:
+            try:
+                root_expr = sqlglot.parse_one(sql_query, read="postgres")
+            except:
+                raise ValueError(f"Failed to parse SQL query: {str(e)}")
+
     versions = [root_expr.sql()]  # record the original query
 
     # Default removal order. Feel free to change the order or add new keys.
@@ -257,7 +281,7 @@ def remove_clauses_top_down_stepwise(sql_query, removal_order=None, only_last_se
             "qualify",
             "window",
             "where",
-            "distinct",
+            # "distinct",
         ]
 
     # Get all SELECT nodes in pre-order (top-down).
@@ -289,53 +313,84 @@ def create_sub_queries(sql_query):
         - alias: The CTE or subquery alias (if any)
         - sql_query: the SQL query string
         - dag_dependencies: list of IDs this query depends on
+
+    This version has been updated so that when a set operator (e.g. UNION or UNION ALL)
+    is present, the union expression is preserved as a single node. For example:
+        SELECT A UNION ALL SELECT B
+    (or even a UNION tree with three or more SELECTs) will be kept together rather than
+    splitting into two separate nodes.
     """
+
+    sql_query = preprocess_sql(sql_query)
+
     sub_queries = []
     id_map = {}  # Maps CTE/table names to their assigned IDs
-    processed_selects = set()  # Track processed SELECT expressions
+    processed_selects = set()
+    processed_unions = set()  # track processed UNION nodes
     next_id = ord('A')
-    
-    root_expr = sqlglot.parse_one(sql_query, read="snowflake")
-    
+
+    try:
+        root_expr = sqlglot.parse_one(sql_query, read="snowflake")
+    except Exception as e:
+        # If parsing fails, try alternative dialects
+        try:
+            root_expr = sqlglot.parse_one(sql_query, read="bigquery")
+        except:
+            try:
+                root_expr = sqlglot.parse_one(sql_query, read="postgres")
+            except:
+                raise ValueError(f"Failed to parse SQL query: {str(e)}")
+
     def get_next_id():
         nonlocal next_id
         current_id = chr(next_id)
         next_id += 1
         return current_id
-    
+
     def get_select_hash(select_expr):
         """Generate a unique hash for a SELECT expression"""
         return hash(select_expr.sql())
-    
-    def find_dependencies(select_expr):
+
+    def get_union_hash(union_expr):
+        """Generate a unique hash for a UNION expression"""
+        return hash(union_expr.sql())
+
+    def find_dependencies(expr):
         dependencies = set()
-        tables = select_expr.find_all(exp.Table)
-        for table in tables:
+        for table in expr.find_all(exp.Table):
             table_name = table.name
             if table_name in id_map:
                 dependencies.add(id_map[table_name])
         return list(dependencies)
-    
+
     def process_select(select_expr, visited=None):
+        """
+        Process a SELECT node that is NOT part of a set operator.
+        (Any SELECT node that is a child of a UNION is skipped so that the
+         UNION as a whole is processed instead.)
+        """
         if visited is None:
             visited = set()
-            
+        # Skip this SELECT if it is part of a UNION
+        if select_expr.parent and isinstance(select_expr.parent, exp.Union):
+            return
         select_hash = get_select_hash(select_expr)
         if select_hash in visited:
             return
         visited.add(select_hash)
-        
-        # Process dependencies first (bottom-up)
+
+        # Process any child SELECTs first (skipping those that belong to a UNION)
         for child in select_expr.find_all(exp.Select):
+            if child.parent and isinstance(child.parent, exp.Union):
+                continue
             if child != select_expr:
                 process_select(child, visited)
-        
-        # Skip if we've already processed this exact SELECT
+
         if select_hash in processed_selects:
             return
         processed_selects.add(select_hash)
-        
-        # Get the alias
+
+        # Try to get an alias (from a parent CTE or the SELECT’s own alias)
         alias = None
         parent = select_expr.parent
         while parent:
@@ -343,52 +398,111 @@ def create_sub_queries(sql_query):
                 alias = parent.alias
                 break
             parent = parent.parent
-        
         if not alias:
             alias_expr = select_expr.args.get('alias')
             if alias_expr:
                 alias = alias_expr.name
-        
-        # Assign ID and store in map if it has an alias
+
+        # Assign an ID based on the alias (if present) or get a new one
         if alias in id_map:
             current_id = id_map[alias]
         else:
             current_id = get_next_id()
             if alias:
                 id_map[alias] = current_id
-        
-        # Get dependencies (note: may be incomplete at this point)
-        # dependencies = find_dependencies(select_expr)
-        
-        # Get all versions with progressively removed clauses
+
+        # Generate versions (e.g. with progressively removed clauses)
         versions = remove_clauses_top_down_stepwise(select_expr.sql(), only_last_select=True)[::-1]
-        
-        # Add each version to our result list
         for version in versions:
             sub_queries.append({
                 'id': current_id,
                 'alias': alias,
                 'sql_query': version,
-                'dag_dependencies': []  # dependencies
+                'dag_dependencies': []  # will be computed below
             })
-        if sub_queries[-1]['alias'] is None:
+        if sub_queries and sub_queries[-1]['alias'] is None:
             last_component_id = sub_queries[-1]['id']
             for sub_query in sub_queries[::-1]:
                 if sub_query['id'] != last_component_id:
                     break
                 sub_query['alias'] = "$MAIN$"
-                
-    
-    # Start processing from the root
-    process_select(root_expr)
-    
-    # New: Post-process all sub_queries to update dag_dependencies using the final id_map.
+
+    def process_union(union_expr, visited=None):
+        """
+        Process a UNION (or other set operator) node.
+        Only the top-level UNION node is processed so that the full set expression
+        (e.g. SELECT A UNION ALL SELECT B [UNION ALL SELECT C ...]) is kept as one node.
+        """
+        if visited is None:
+            visited = set()
+        # Skip if this UNION is nested inside another UNION
+        if union_expr.parent and isinstance(union_expr.parent, exp.Union):
+            return
+        union_hash = get_union_hash(union_expr)
+        if union_hash in visited:
+            return
+        visited.add(union_hash)
+
+        # (We do not descend into the child SELECT nodes because they belong to this UNION.)
+        alias = None
+        parent = union_expr.parent
+        while parent:
+            if isinstance(parent, exp.CTE):
+                alias = parent.alias
+                break
+            parent = parent.parent
+        if not alias:
+            alias_expr = union_expr.args.get('alias')
+            if alias_expr:
+                alias = alias_expr.name
+
+        if alias in id_map:
+            current_id = id_map[alias]
+        else:
+            current_id = get_next_id()
+            if alias:
+                id_map[alias] = current_id
+
+        versions = remove_clauses_top_down_stepwise(union_expr.sql(), only_last_select=True)[::-1]
+        for version in versions:
+            sub_queries.append({
+                'id': current_id,
+                'alias': alias,
+                'sql_query': version,
+                'dag_dependencies': []  # dependencies will be computed later
+            })
+        if sub_queries and sub_queries[-1]['alias'] is None:
+            last_component_id = sub_queries[-1]['id']
+            for sub_query in sub_queries[::-1]:
+                if sub_query['id'] != last_component_id:
+                    break
+                sub_query['alias'] = "$MAIN$"
+
+    # === Process the main expression ===
+    if isinstance(root_expr, exp.Union):
+        process_union(root_expr)
+    elif isinstance(root_expr, exp.Select):
+        process_select(root_expr)
+    else:
+        # In cases where the root is not a SELECT (for example, when using a CTE),
+        # process any child SELECTs and UNIONs found.
+        for node in root_expr.find_all(exp.Select):
+            process_select(node)
+        for node in root_expr.find_all(exp.Union):
+            process_union(node)
+
+    # Also ensure any top-level UNION nodes in the tree are processed.
+    for union_expr in root_expr.find_all(exp.Union):
+        if not (union_expr.parent and isinstance(union_expr.parent, exp.Union)):
+            process_union(union_expr)
+
+    # === Post-process: update dag_dependencies, assign wrapped_sql_query, etc. ===
     for sub_query in sub_queries:
         parsed = sqlglot.parse_one(sub_query['sql_query'], read="snowflake")
         # Re-compute dependencies with the complete id_map.
         sub_query['dag_dependencies'] = sorted(set(find_dependencies(parsed)))
 
-    last_id, same_ids = None, []    
+    last_id, same_ids = None, []
     for sub_query in sub_queries:
         if last_id is None or sub_query['id'] == last_id:
             same_ids.append(sub_query)
@@ -404,12 +518,78 @@ def create_sub_queries(sql_query):
             sql_dict['id'] = f"{last_id}.{i+1}"
 
     prev_alias, prev_id = None, None
-    # print(len(sub_queries))
     for sub_query in sub_queries:
-        # print(sub_query['id'], sub_query['dag_dependencies'])
         if prev_alias is not None and sub_query['alias'] is not None and sub_query['alias'] == prev_alias:
             sub_query['dag_dependencies'] = sorted(set(sub_query['dag_dependencies'] + [prev_id]))
         prev_alias = sub_query['alias']
         prev_id = sub_query['id']
-    
+
+    # NEW CODE: Compute wrapped_sql_query without modifying the original sql_query.
+    # Build a mapping from id to sub_query.
+    subq_map = {sub['id']: sub for sub in sub_queries}
+
+    def get_dependency_closure(node_id, visited=None):
+        if visited is None:
+            visited = set()
+        if node_id in visited:
+            return set()
+        visited.add(node_id)
+        deps = set(subq_map[node_id]['dag_dependencies'])
+        closure = set(deps)
+        for dep in deps:
+            closure |= get_dependency_closure(dep, visited)
+        return closure
+
+    def order_top_level_dependencies(top_deps):
+        ordered = []
+        visited = set()
+        def dfs(nid):
+            if nid in visited:
+                return
+            visited.add(nid)
+            for dep in subq_map[nid]['dag_dependencies']:
+                if dep in top_deps:
+                    dfs(dep)
+            ordered.append(nid)
+        for nid in top_deps:
+            dfs(nid)
+        return ordered
+
+    def wrap_with_clause(deps_ordered, main_sql):
+        ct_list = []
+        for dep_id in deps_ordered:
+            alias = subq_map[dep_id]['alias'] or dep_id
+            ct_sql = subq_map[dep_id]['sql_query']
+            ct_list.append(f"{alias} AS ({ct_sql})")
+        with_clause = "WITH " + ", ".join(ct_list)
+        return f"{with_clause} {main_sql}"
+
+    # For each sub-query, create a wrapped_sql_query field.
+    for sub in sub_queries:
+        # For MAIN node: if it already has the required alias and no dependencies, do not wrap.
+        if sub['alias'] == "$MAIN$":
+            if sub['dag_dependencies']:
+                closure = get_dependency_closure(sub['id'])
+                top_level_deps = {nid for nid in closure if "." not in nid}
+                if sub['id'] in top_level_deps:
+                    top_level_deps.remove(sub['id'])
+                if top_level_deps:
+                    ordered_ids = order_top_level_dependencies(top_level_deps)
+                    sub['wrapped_sql_query'] = wrap_with_clause(ordered_ids, sub['sql_query'])
+                else:
+                    sub['wrapped_sql_query'] = sub['sql_query']
+            else:
+                sub['wrapped_sql_query'] = sub['sql_query']
+            continue
+        # Non-MAIN nodes: wrap dependencies normally.
+        closure = get_dependency_closure(sub['id'])
+        top_level_deps = {nid for nid in closure if "." not in nid}
+        if sub['id'] in top_level_deps:
+            top_level_deps.remove(sub['id'])
+        if top_level_deps:
+            ordered_ids = order_top_level_dependencies(top_level_deps)
+            sub['wrapped_sql_query'] = wrap_with_clause(ordered_ids, sub['sql_query'])
+        else:
+            sub['wrapped_sql_query'] = sub['sql_query']
+
     return sub_queries
